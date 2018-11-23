@@ -7,21 +7,20 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DekManagedLib
+namespace BelManagedLib
 {
-    public class ManagedClass
+    public class BelManagedClass
     {
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
         public delegate ResultData BelDelegate(EventData data);
-
         private BelDelegate _delegate;
 
-        public ManagedClass()
+        public BelManagedClass()
         {
-            _delegate = new BelDelegate(this.DoStuff);
+            _delegate = new BelDelegate(DoStuff);
         }
 
-        public BelDelegate GetDelegate()
+        public BelDelegate GetBelDelegate()
         {
             return _delegate;
         }
@@ -38,24 +37,5 @@ namespace DekManagedLib
             return bel.Result;
         }
 
-    }
-
-
-    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-    public struct EventData
-
-    {
-        public int Code;
-        public string Text;
-        public string FilePath;
-    }
-
-    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-    public struct ResultData
-
-    {
-        public int Code;
-        bool Cancel;
-        public string Message;
     }
 }

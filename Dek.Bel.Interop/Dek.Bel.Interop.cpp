@@ -9,11 +9,11 @@
 // And the exported function is defined as in the following.
 // Note how the.NET delegate gets invoked through the function pointer.
 
-INTEROPBRIDGE_API ResultData belInteropBridge(EventData data)
+DEKBELINTEROP_API ResultData* doBel(EventData data)
 {
-    DekManagedLib::ManagedClass^ c = gcnew DekManagedLib::ManagedClass();
+    BelManagedLib::BelManagedClass^ c = gcnew BelManagedLib::BelManagedClass();
 
-    System::IntPtr p = System::Runtime::InteropServices::Marshal::GetFunctionPointerForDelegate(c->GetDelegate());
+    System::IntPtr p = System::Runtime::InteropServices::Marshal::GetFunctionPointerForDelegate(c->GetBelDelegate());
 
     NativeToManaged funcPointer = (NativeToManaged)p.ToPointer();
 

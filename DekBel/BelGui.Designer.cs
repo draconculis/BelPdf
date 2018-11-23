@@ -30,12 +30,12 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(BelGui));
-            this.textBox1 = new System.Windows.Forms.TextBox();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.copyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.deselectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showTextRangeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
@@ -53,18 +53,20 @@
             this.closeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.closeToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.copyGUIDToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.categoriesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripStatusLabel_GUID = new System.Windows.Forms.ToolStripStatusLabel();
             this.fontDialog1 = new System.Windows.Forms.FontDialog();
             this.contextMenuStrip2 = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.button1 = new System.Windows.Forms.Button();
+            this.button_category = new System.Windows.Forms.Button();
+            this.textBox1_CategorySearch = new System.Windows.Forms.TextBox();
+            this.flowLayoutPanel_Categories = new System.Windows.Forms.FlowLayoutPanel();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.textBox10 = new System.Windows.Forms.TextBox();
+            this.textBoxFileName = new System.Windows.Forms.TextBox();
             this.textBox9 = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
-            this.textBox8 = new System.Windows.Forms.TextBox();
+            this.labelFilePage = new System.Windows.Forms.Label();
+            this.textBoxFilePage = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.textBox7 = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
@@ -75,9 +77,11 @@
             this.textBox_author = new System.Windows.Forms.TextBox();
             this.textBox4 = new System.Windows.Forms.TextBox();
             this.label_author = new System.Windows.Forms.Label();
-            this.textBox3 = new System.Windows.Forms.TextBox();
+            this.textBoxTitle = new System.Windows.Forms.TextBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.richTextBox1 = new System.Windows.Forms.RichTextBox();
+            this.contextMenuStrip_Category = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.setAsMainCategoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.removeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -87,23 +91,8 @@
             this.statusStrip1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
+            this.contextMenuStrip_Category.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // textBox1
-            // 
-            this.textBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.textBox1.ContextMenuStrip = this.contextMenuStrip1;
-            this.textBox1.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox1.Location = new System.Drawing.Point(3, 28);
-            this.textBox1.Multiline = true;
-            this.textBox1.Name = "textBox1";
-            this.textBox1.ReadOnly = true;
-            this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBox1.Size = new System.Drawing.Size(242, 87);
-            this.textBox1.TabIndex = 0;
             // 
             // contextMenuStrip1
             // 
@@ -149,7 +138,6 @@
             // 
             this.splitContainer1.Panel1.Controls.Add(this.richTextBox1);
             this.splitContainer1.Panel1.Controls.Add(this.toolStrip1);
-            this.splitContainer1.Panel1.Controls.Add(this.textBox1);
             // 
             // splitContainer1.Panel2
             // 
@@ -157,6 +145,19 @@
             this.splitContainer1.Size = new System.Drawing.Size(890, 243);
             this.splitContainer1.SplitterDistance = 120;
             this.splitContainer1.TabIndex = 1;
+            // 
+            // richTextBox1
+            // 
+            this.richTextBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.richTextBox1.DetectUrls = false;
+            this.richTextBox1.Location = new System.Drawing.Point(0, 29);
+            this.richTextBox1.Name = "richTextBox1";
+            this.richTextBox1.ReadOnly = true;
+            this.richTextBox1.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.ForcedVertical;
+            this.richTextBox1.ShowSelectionMargin = true;
+            this.richTextBox1.Size = new System.Drawing.Size(890, 86);
+            this.richTextBox1.TabIndex = 2;
+            this.richTextBox1.Text = "";
             // 
             // toolStrip1
             // 
@@ -281,7 +282,8 @@
             this.toolStripDropDownButton1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
             this.closeToolStripMenuItem1,
-            this.copyGUIDToolStripMenuItem});
+            this.copyGUIDToolStripMenuItem,
+            this.categoriesToolStripMenuItem});
             this.toolStripDropDownButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripDropDownButton1.Image")));
             this.toolStripDropDownButton1.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.toolStripDropDownButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
@@ -297,7 +299,7 @@
             this.exportDBToolStripMenuItem,
             this.closeToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(132, 22);
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(139, 22);
             this.fileToolStripMenuItem.Text = "File";
             // 
             // exportDBToolStripMenuItem
@@ -315,15 +317,22 @@
             // closeToolStripMenuItem1
             // 
             this.closeToolStripMenuItem1.Name = "closeToolStripMenuItem1";
-            this.closeToolStripMenuItem1.Size = new System.Drawing.Size(132, 22);
+            this.closeToolStripMenuItem1.Size = new System.Drawing.Size(139, 22);
             this.closeToolStripMenuItem1.Text = "Close";
             this.closeToolStripMenuItem1.Click += new System.EventHandler(this.closeToolStripMenuItem1_Click);
             // 
             // copyGUIDToolStripMenuItem
             // 
             this.copyGUIDToolStripMenuItem.Name = "copyGUIDToolStripMenuItem";
-            this.copyGUIDToolStripMenuItem.Size = new System.Drawing.Size(132, 22);
+            this.copyGUIDToolStripMenuItem.Size = new System.Drawing.Size(139, 22);
             this.copyGUIDToolStripMenuItem.Text = "Copy GUID";
+            // 
+            // categoriesToolStripMenuItem
+            // 
+            this.categoriesToolStripMenuItem.Name = "categoriesToolStripMenuItem";
+            this.categoriesToolStripMenuItem.Size = new System.Drawing.Size(139, 22);
+            this.categoriesToolStripMenuItem.Text = "Categories...";
+            this.categoriesToolStripMenuItem.Click += new System.EventHandler(this.categoriesToolStripMenuItem_Click);
             // 
             // toolStripStatusLabel_GUID
             // 
@@ -346,44 +355,63 @@
             this.contextMenuStrip2.Name = "contextMenuStrip2";
             this.contextMenuStrip2.Size = new System.Drawing.Size(61, 4);
             // 
-            // comboBox1
-            // 
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(6, 22);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(365, 24);
-            this.comboBox1.TabIndex = 5;
-            // 
             // groupBox1
             // 
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.groupBox1.Controls.Add(this.button1);
-            this.groupBox1.Controls.Add(this.comboBox1);
-            this.groupBox1.Location = new System.Drawing.Point(460, 250);
+            this.groupBox1.Controls.Add(this.button_category);
+            this.groupBox1.Controls.Add(this.textBox1_CategorySearch);
+            this.groupBox1.Controls.Add(this.flowLayoutPanel_Categories);
+            this.groupBox1.Location = new System.Drawing.Point(437, 250);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(420, 52);
+            this.groupBox1.Size = new System.Drawing.Size(443, 134);
             this.groupBox1.TabIndex = 6;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Category";
             // 
-            // button1
+            // button_category
             // 
-            this.button1.Location = new System.Drawing.Point(377, 23);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(37, 23);
-            this.button1.TabIndex = 6;
-            this.button1.Text = "…";
-            this.button1.UseVisualStyleBackColor = true;
+            this.button_category.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.button_category.Location = new System.Drawing.Point(373, 18);
+            this.button_category.Name = "button_category";
+            this.button_category.Size = new System.Drawing.Size(63, 23);
+            this.button_category.TabIndex = 8;
+            this.button_category.Text = "Add";
+            this.button_category.UseVisualStyleBackColor = true;
+            this.button_category.Click += new System.EventHandler(this.button_category_Click);
+            // 
+            // textBox1_CategorySearch
+            // 
+            this.textBox1_CategorySearch.AcceptsReturn = true;
+            this.textBox1_CategorySearch.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBox1_CategorySearch.Location = new System.Drawing.Point(10, 18);
+            this.textBox1_CategorySearch.Name = "textBox1_CategorySearch";
+            this.textBox1_CategorySearch.Size = new System.Drawing.Size(357, 23);
+            this.textBox1_CategorySearch.TabIndex = 7;
+            this.textBox1_CategorySearch.TextChanged += new System.EventHandler(this.textBox1_CategorySearch_TextChanged_1);
+            this.textBox1_CategorySearch.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBox1_CategorySearch_KeyDown);
+            this.textBox1_CategorySearch.KeyUp += new System.Windows.Forms.KeyEventHandler(this.textBox1_CategorySearch_KeyUp);
+            // 
+            // flowLayoutPanel_Categories
+            // 
+            this.flowLayoutPanel_Categories.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.flowLayoutPanel_Categories.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.flowLayoutPanel_Categories.Location = new System.Drawing.Point(10, 44);
+            this.flowLayoutPanel_Categories.Name = "flowLayoutPanel_Categories";
+            this.flowLayoutPanel_Categories.Size = new System.Drawing.Size(426, 84);
+            this.flowLayoutPanel_Categories.TabIndex = 6;
             // 
             // groupBox2
             // 
             this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBox2.Controls.Add(this.textBox10);
+            this.groupBox2.Controls.Add(this.textBoxFileName);
             this.groupBox2.Controls.Add(this.textBox9);
             this.groupBox2.Controls.Add(this.label6);
-            this.groupBox2.Controls.Add(this.label5);
-            this.groupBox2.Controls.Add(this.textBox8);
+            this.groupBox2.Controls.Add(this.labelFilePage);
+            this.groupBox2.Controls.Add(this.textBoxFilePage);
             this.groupBox2.Controls.Add(this.label4);
             this.groupBox2.Controls.Add(this.textBox7);
             this.groupBox2.Controls.Add(this.label3);
@@ -394,20 +422,21 @@
             this.groupBox2.Controls.Add(this.textBox_author);
             this.groupBox2.Controls.Add(this.textBox4);
             this.groupBox2.Controls.Add(this.label_author);
-            this.groupBox2.Controls.Add(this.textBox3);
+            this.groupBox2.Controls.Add(this.textBoxTitle);
             this.groupBox2.Location = new System.Drawing.Point(2, 250);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(417, 209);
+            this.groupBox2.Size = new System.Drawing.Size(429, 209);
             this.groupBox2.TabIndex = 7;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Source";
+            this.groupBox2.Enter += new System.EventHandler(this.groupBox2_Enter);
             // 
-            // textBox10
+            // textBoxFileName
             // 
-            this.textBox10.Location = new System.Drawing.Point(9, 151);
-            this.textBox10.Name = "textBox10";
-            this.textBox10.Size = new System.Drawing.Size(405, 23);
-            this.textBox10.TabIndex = 15;
+            this.textBoxFileName.Location = new System.Drawing.Point(9, 151);
+            this.textBoxFileName.Name = "textBoxFileName";
+            this.textBoxFileName.Size = new System.Drawing.Size(405, 23);
+            this.textBoxFileName.TabIndex = 15;
             // 
             // textBox9
             // 
@@ -426,22 +455,22 @@
             this.label6.Text = "Year";
             this.label6.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // label5
+            // labelFilePage
             // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(270, 183);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(68, 16);
-            this.label5.TabIndex = 12;
-            this.label5.Text = "Scan page";
-            this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.labelFilePage.AutoSize = true;
+            this.labelFilePage.Location = new System.Drawing.Point(270, 183);
+            this.labelFilePage.Name = "labelFilePage";
+            this.labelFilePage.Size = new System.Drawing.Size(60, 16);
+            this.labelFilePage.TabIndex = 12;
+            this.labelFilePage.Text = "File page";
+            this.labelFilePage.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // textBox8
+            // textBoxFilePage
             // 
-            this.textBox8.Location = new System.Drawing.Point(344, 180);
-            this.textBox8.Name = "textBox8";
-            this.textBox8.Size = new System.Drawing.Size(67, 23);
-            this.textBox8.TabIndex = 11;
+            this.textBoxFilePage.Location = new System.Drawing.Point(344, 180);
+            this.textBoxFilePage.Name = "textBoxFilePage";
+            this.textBoxFilePage.Size = new System.Drawing.Size(67, 23);
+            this.textBoxFilePage.TabIndex = 11;
             // 
             // label4
             // 
@@ -530,32 +559,44 @@
             this.label_author.Text = "Author(s)";
             this.label_author.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // textBox3
+            // textBoxTitle
             // 
-            this.textBox3.Location = new System.Drawing.Point(6, 18);
-            this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(405, 23);
-            this.textBox3.TabIndex = 0;
+            this.textBoxTitle.Location = new System.Drawing.Point(6, 18);
+            this.textBoxTitle.Name = "textBoxTitle";
+            this.textBoxTitle.Size = new System.Drawing.Size(405, 23);
+            this.textBoxTitle.TabIndex = 0;
             // 
             // groupBox3
             // 
-            this.groupBox3.Location = new System.Drawing.Point(466, 390);
+            this.groupBox3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.groupBox3.Location = new System.Drawing.Point(447, 390);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(415, 59);
+            this.groupBox3.Size = new System.Drawing.Size(434, 59);
             this.groupBox3.TabIndex = 8;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "groupBox3";
             // 
-            // richTextBox1
+            // contextMenuStrip_Category
             // 
-            this.richTextBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.richTextBox1.Location = new System.Drawing.Point(239, 29);
-            this.richTextBox1.Name = "richTextBox1";
-            this.richTextBox1.ReadOnly = true;
-            this.richTextBox1.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
-            this.richTextBox1.Size = new System.Drawing.Size(616, 86);
-            this.richTextBox1.TabIndex = 2;
-            this.richTextBox1.Text = "";
+            this.contextMenuStrip_Category.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.setAsMainCategoryToolStripMenuItem,
+            this.removeToolStripMenuItem});
+            this.contextMenuStrip_Category.Name = "contextMenuStrip_Category";
+            this.contextMenuStrip_Category.Size = new System.Drawing.Size(184, 48);
+            // 
+            // setAsMainCategoryToolStripMenuItem
+            // 
+            this.setAsMainCategoryToolStripMenuItem.Name = "setAsMainCategoryToolStripMenuItem";
+            this.setAsMainCategoryToolStripMenuItem.Size = new System.Drawing.Size(183, 22);
+            this.setAsMainCategoryToolStripMenuItem.Text = "Set as main category";
+            this.setAsMainCategoryToolStripMenuItem.Click += new System.EventHandler(this.setAsMainCategoryToolStripMenuItem_Click);
+            // 
+            // removeToolStripMenuItem
+            // 
+            this.removeToolStripMenuItem.Name = "removeToolStripMenuItem";
+            this.removeToolStripMenuItem.Size = new System.Drawing.Size(183, 22);
+            this.removeToolStripMenuItem.Text = "Remove";
+            this.removeToolStripMenuItem.Click += new System.EventHandler(this.removeToolStripMenuItem_Click);
             // 
             // BelGui
             // 
@@ -585,16 +626,16 @@
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
             this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
+            this.contextMenuStrip_Category.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
         }
 
         #endregion
-
-        private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.TextBox textBox2;
         private System.Windows.Forms.StatusStrip statusStrip1;
@@ -620,9 +661,7 @@
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip2;
         private System.Windows.Forms.ToolStripButton toolStripButton5;
         private System.Windows.Forms.ToolStripTextBox toolStripTextBox1;
-        private System.Windows.Forms.ComboBox comboBox1;
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.Button button1;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox textBox6;
@@ -632,15 +671,22 @@
         private System.Windows.Forms.TextBox textBox_author;
         private System.Windows.Forms.TextBox textBox4;
         private System.Windows.Forms.Label label_author;
-        private System.Windows.Forms.TextBox textBox3;
-        private System.Windows.Forms.TextBox textBox10;
+        private System.Windows.Forms.TextBox textBoxTitle;
+        private System.Windows.Forms.TextBox textBoxFileName;
         private System.Windows.Forms.TextBox textBox9;
         private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.TextBox textBox8;
+        private System.Windows.Forms.Label labelFilePage;
+        private System.Windows.Forms.TextBox textBoxFilePage;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.TextBox textBox7;
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.RichTextBox richTextBox1;
+        private System.Windows.Forms.Button button_category;
+        private System.Windows.Forms.TextBox textBox1_CategorySearch;
+        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel_Categories;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip_Category;
+        private System.Windows.Forms.ToolStripMenuItem setAsMainCategoryToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem removeToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem categoriesToolStripMenuItem;
     }
 }

@@ -1,12 +1,10 @@
-// TestMarshal.cpp : This file contains the 'main' function. Program execution begins and ends there.
-//
-
 #include "pch.h"
 #include <iostream>
 #include "Dek.Bel.Interop.h"
 #include <TCHAR.H>
 
-int main()
+
+int __cdecl main()
 {
     std::cout << "Marshal!\n"; 
 
@@ -18,10 +16,16 @@ int main()
 
     //data.Message = L"Hello from native code!";
     data.Text = (TCHAR*)L"WALLYHO";
-
+    data.Code = 12;
+    data.FilePath = (TCHAR*)L"filepath";
     std::cout << "data!\n";
 
-    belInteropBridge(data);
-    
+    ResultData* res = doBel(data);
+
+    std::cout << (TCHAR&)(res->Message) << "\n";
+    std::cout << res->Code << "\n";
+    std::cout << res->Cancel << "\n";
+
+
     return 0;
 }
