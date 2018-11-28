@@ -61,7 +61,7 @@ namespace Dek.Bel
             }
             catch (CompositionException compositionException)
             {
-                MessageBox.Show($"Critical error: {Environment.NewLine}{compositionException}", "Ho hum");
+                MessageBox.Show($"{Environment.NewLine}{compositionException}", "Composition error");
             }
         }
 

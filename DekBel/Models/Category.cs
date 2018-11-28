@@ -8,6 +8,7 @@ namespace Dek.Bel.Categories
 {
     public class Category
     {
+        // Key
         public string Code { get; }
         public string Name { get; }
         public string Description { get; }

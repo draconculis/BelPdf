@@ -18,4 +18,17 @@ namespace BelManagedLib
         public bool Cancel { get; set; }
         public string Message { get; set; }
     }
+
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+    public struct RequestFileStorageData
+    {
+        public string FilePath { get; set; }
+    }
+
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+    public class ResultFileStorageData
+    {
+        public bool Cancel { get; set; }
+        public string StorageFilePath { get; set; }
+    }
 }

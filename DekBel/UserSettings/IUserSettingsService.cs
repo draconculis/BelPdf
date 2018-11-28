@@ -2,8 +2,8 @@
 {
     public interface IUserSettingsService
     {
-        string ProgramDataPath { get; set; }
-        string DBName { get; set; }
+        string StorageFolder { get; set; }
+        string DBName { get; }
         string DBPath { get; }
     }
 }

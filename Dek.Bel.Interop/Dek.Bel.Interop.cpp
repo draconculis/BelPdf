@@ -20,3 +20,15 @@ DEKBELINTEROP_API ResultData* doBel(EventData data)
     // invoke the delegate
     return funcPointer(data);
 }
+
+DEKBELINTEROP_API ResultFileStorageData* doBelRequestFileStorage(RequestFileStorageData data)
+{
+    BelManagedLib::BelManagedClass^ c = gcnew BelManagedLib::BelManagedClass();
+
+    System::IntPtr p = System::Runtime::InteropServices::Marshal::GetFunctionPointerForDelegate(c->GetFileStorageDelegate());
+
+    NativeToManagedF funcPointer = (NativeToManagedF)p.ToPointer();
+
+    // invoke the delegate
+    return funcPointer(data);
+}
