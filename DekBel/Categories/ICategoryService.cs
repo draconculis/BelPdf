@@ -5,9 +5,9 @@ namespace Dek.Bel.Categories
 {
     public interface ICategoryService
     {
-        IEnumerable<Category> Categories { get; }
-        void Add(Category cat);
-        void Remove(Category cat);
+        IEnumerable<CategoryModel> Categories { get; }
+        void Add(CategoryModel cat);
+        void Remove(CategoryModel cat);
 
         Label CreateCategoryLabelControl(string text, bool isMain, ContextMenuStrip menu);
         void ClearMainStyleFromLabels(IEnumerable<Label> labels);

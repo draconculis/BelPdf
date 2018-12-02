@@ -10,8 +10,8 @@ namespace Dek.Bel.DB
         string TableCategoryName { get; }
         string TableCitationCategoryName { get; }
 
-        string TableFileName { get; }
-        string TableCitationFileName { get; }
+        string TableStorageName { get; }
+        string TableCitationStorageName { get; }
 
         DataTable Select(string query);
         bool ValueExists(string table, string column, string value);

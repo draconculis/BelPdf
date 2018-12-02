@@ -18,11 +18,13 @@ namespace Dek.Bel.DB
         SQLiteConnection m_dbConnection;
 
         // Table names
+        public string TableBookName => "Book";
         public string TableCitationName => "Citation";
         public string TableCategoryName => "Category";
         public string TableCitationCategoryName => "CitationCategory";
-        public string TableFileName => "File";
-        public string TableCitationFileName => "CitationFile";
+        public string TableStorageName => "Storage";
+        public string TableCitationStorageName => "CitationFile";
+        public string TableCitationBookName => "CitationBook";
 
         private const string ColCode = "Code";
         private const string ColName = "Name";
@@ -46,8 +48,45 @@ namespace Dek.Bel.DB
 
         public void CreateTables()
         {
+            // Book
+            // CREATE TABLE "Book" ( `Id` TEXT NOT NULL, `Title` TEXT NOT NULL, `Author` TEXT, `PublishDate` TEXT, `Edition` TEXT, `Editors` TEXT, `EditionPublishDate` TEXT, `ISBN` TEXT, `Comment` TEXT, PRIMARY KEY(`BookId`) )
+            if (CreateTable(TableBookName,
+                "`Id` TEXT NOT NULL, " +
+                "`Title` TEXT NOT NULL, " +
+                "`Author` TEXT, " +
+                "`PublishDate` TEXT, " +
+                "`Edition` TEXT, " +
+                "`Editors` TEXT, " +
+                "`EditionPublishDate` TEXT, " +
+                "`ISBN` TEXT, " +
+                "`Comment` TEXT",
+                "`Id`"))
+            {
+                CreateIndex(TableBookName, "ISBN");
+            }
+
+            // Citation
+            // CREATE TABLE `Citation` ( `Id` TEXT NOT NULL, `Citation1` TEXT NOT NULL, `Citation2` TEXT NOT NULL, `CreatedDate` TEXT NOT NULL, `EditedDate` TEXT NOT NULL, PRIMARY KEY(`CitationId`) )
+            if (CreateTable(TableCitationName,
+                "`Id` TEXT NOT NULL, "+
+                "`Citation1` TEXT NOT NULL, " +
+                "`Citation2` TEXT NOT NULL, " +
+                "`CreatedDate` TEXT NOT NULL, " +
+                "`EditedDate` TEXT NOT NULL",
+                "`Id`"))
+            {
+                CreateIndex(TableCitationName, "Code");
+            }
+
             // Categories
-            if (CreateTable(TableCategoryName, "Code TEXT PRIMARY KEY, Name TEXT NOT NULL, Description TEXT"))
+            // 
+
+            if (CreateTable(TableCategoryName,
+            "`Id` TEXT NOT NULL, " +
+            "`Code` TEXT, " +
+            "`Name` TEXT NOT NULL, " +
+            "`Description`  TEXT",
+            "`Id`"))
             {
                 CreateIndex(TableCategoryName, "Code");
                 CreateIndex(TableCategoryName, "Name");
@@ -58,21 +97,61 @@ namespace Dek.Bel.DB
                 Insert(TableCategoryName, $"{ColCode},{ColName},{ColDescription}", "'CATD','Category D','A fourth category.'");
             }
 
-            // Files
-            if (CreateTable(TableFileName, 
-                "Hash TEXT PRIMARY KEY, " +
-                "SrcPath TEXT NOT NULL, " +
-                "StoName TEXT NOT NULL"
-                ))
+            // Storage
+            //CREATE TABLE "Storage"( `Id` TEXT NOT NULL, `Hash` TEXT NOT NULL, `SourceFileName` TEXT NOT NULL, `SourceFilePath` TEXT NOT NULL, `StorageFileName` TEXT NOT NULL UNIQUE, `Author` TEXT, `Date` TEXT, `Comment` TEXT, PRIMARY KEY(`Id`))
+            if (CreateTable(TableStorageName,
+                "`Id` TEXT NOT NULL, " +
+                "`Hash` TEXT NOT NULL, " +
+                "`SourceFileName` TEXT NOT NULL, " +
+                "`SourceFilePath` TEXT NOT NULL, " +
+                "`StorageFileName` TEXT NOT NULL UNIQUE, "+
+                "`Author` TEXT, "+
+                "`Date` TEXT, `Comment` TEXT",
+                "`Id`"))
             {
-                CreateIndex(TableFileName, "SrcPath");
-                CreateIndex(TableFileName, "Hash");
-                CreateIndex(TableFileName, "StorageName");
+                CreateIndex(TableStorageName, "Hash");
+                CreateIndex(TableStorageName, "SourceFileName");
+                CreateIndex(TableStorageName, "StorageFileName");
             }
 
+            // CitationStorage
+            // CREATE TABLE `CitationStorage` ( `CitationId` TEXT NOT NULL, `StorageId` TEXT NOT NULL, PRIMARY KEY(`StorageId`) )
+            if (CreateTable(TableCitationStorageName,
+                "`CitationId` TEXT NOT NULL, " +
+                "`StorageId` TEXT NOT NULL",
+                "`CitationId`, `StorageId`"
+                ))
+            {
+                CreateIndex(TableCitationStorageName, "CitationId");
+                CreateIndex(TableCitationStorageName, "StorageId");
+            }
 
+            // CitationCategory
 
+            if (CreateTable(TableCitationCategoryName,
+                "`CitationId` TEXT NOT NULL, " +
+                "`CategoryId` TEXT NOT NULL, "+
+                "`Weight` INTEGER NOT NULL",
+                "`CitationId`, `CategoryId`"
+                ))
+            {
+                CreateIndex(TableCitationCategoryName, "CitationId");
+                CreateIndex(TableCitationCategoryName, "CategoryId");
+            }
+
+            // CitationBook
+            // CREATE TABLE `CitationBook` ( `BookId` TEXT NOT NULL, `CitationId` TEXT NOT NULL, PRIMARY KEY(`BookId`,`CitationId`) )
+            if (CreateTable(TableCitationBookName,
+                "`CitationId` TEXT NOT NULL, " +
+                "`BookId` TEXT NOT NULL",
+                "`CitationId`, `BookId`"
+                ))
+            {
+                CreateIndex(TableCitationBookName, "CitationId");
+                CreateIndex(TableCitationBookName, "BookId");
+            }
         }
+
 
         public DataTable Select(string query)
         {
@@ -137,7 +216,7 @@ namespace Dek.Bel.DB
         }
 
 
-        public bool CreateTable(string tablename, string columnDesc)
+        public bool CreateTable(string tablename, string columnDesc, string primaryKey)
         {
             try
             {
@@ -149,8 +228,12 @@ namespace Dek.Bel.DB
                     if (name != null && name.ToString() == $"{tablename}")
                         return false;
 
+                    //"CREATE TABLE `Storage` ( `Hash` TEXT NOT NULL, `SourceFileName` TEXT NOT NULL, `SourceFilePath` TEXT NOT NULL, `StorageFileName` TEXT NOT NULL UNIQUE, PRIMARY KEY(`Hash`) )"
                     // acount table not exist, create table and insert 
-                    command.CommandText = $"CREATE TABLE {tablename} ({columnDesc})";
+                    if (columnDesc.EndsWith(","))
+                        throw new Exception("Create: Ending ,, stupido!");
+
+                    command.CommandText = $"CREATE TABLE `{tablename}` ({columnDesc}, PRIMARY KEY(`{primaryKey}`)) ";
                     command.ExecuteNonQuery();
                 }
             }

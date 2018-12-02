@@ -6,16 +6,16 @@ using System.Threading.Tasks;
 
 namespace Dek.Bel.Categories
 {
-    public class Category
+    public class CategoryModel
     {
-        // Key
+        public string Id { get; }
         public string Code { get; }
         public string Name { get; }
         public string Description { get; }
 
         private string FullName => $"{Code} - {Name}";
 
-        public Category(string code, string name, string desc)
+        public CategoryModel(string code, string name, string desc)
         {
             if (string.IsNullOrWhiteSpace(name) || string.IsNullOrWhiteSpace(code))
                 throw new ArgumentException();

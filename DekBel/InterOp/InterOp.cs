@@ -37,21 +37,45 @@ namespace BelManagedLib
 
         public ResultData DoStuff(EventData data)
         {
-            //Debug.WriteLine("Make a day!!!!!!!!!!!!!!!!!!!!");
-            //Debug.WriteLine(data.I);
-            //Debug.WriteLine(data.Text);
+            /*
+            #define DEKBELCODE_ADDVOLUMETITLE          100
+            #define DEKBELCODE_ADDBOOKTITLE            110
+            #define DEKBELCODE_ADDCHAPTER              120
+            #define DEKBELCODE_ADDCITATION             200
+            #define DEKBELCODE_ADDANDSHOWCITATION      300
+            #define DEKBELCODE_STARTAUTOPAGINATION     400
+            */
+            ResultData res = null;
 
-            BelGui bel = new BelGui(data);
-            bel.ShowDialog();
+            switch (data.Code)
+            {
+                case 100: // DEKBELCODE_ADDVOLUMETITLE
+                    break;
+                case 110: // DEKBELCODE_ADDBOOKTITLE
+                    break;
+                case 120: // DEKBELCODE_ADDCHAPTER
+                    break;
+                case 200: // DEKBELCODE_ADDCITATION
+                    break;
+                case 300: // DEKBELCODE_ADDANDSHOWCITATION
+                    BelGui bel = new BelGui(data);
+                    bel.ShowDialog();
+                    res = bel.Result;
+                    break;
+                case 400: // DEKBELCODE_STARTAUTOPAGINATION
+                    break;
+                default:
+                    break;
+            }
 
-            return bel.Result;
+            return res;
         }
 
         // Copy to storage and add db entry
         public ResultFileStorageData RequestFileStoragePath(RequestFileStorageData data)
         {
             StorageService svc = new StorageService();
-            return svc.InitiateStorageForFile(data);
+            return svc.InitiateNewStorageForFile(data);
         }
 
     }

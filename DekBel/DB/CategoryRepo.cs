@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,7 +19,7 @@ namespace Dek.Bel.DB
         private const string ColName = "Name";
         private const string ColDescription = "Description";
 
-        public void AddOrUpdateCategory(Category cat)
+        public void AddOrUpdateCategory(CategoryModel cat)
         {
             bool isUpdate = dBService.ValueExists(TableName, ColCode, cat.Code);
 
@@ -40,6 +41,20 @@ namespace Dek.Bel.DB
                     $"{ColCode},{ColName},{ColDescription}", 
                     $"'{cat.Code}','{cat.Name}','{cat.Description}'");
             }
+        }
+
+        public List<CategoryModel> SearchCategoriesByNameOrCode(string search)
+        {
+            string sql = $"SELECT Code, Name, Description FROM {dBService.TableCategoryName} WHERE Name LIKE '%{search}%' OR Code LIKE '%{search}%'";
+            DataTable table = dBService.Select(sql);
+
+            var res = new List<CategoryModel>();
+            foreach (DataRow row in table.Rows)
+            {
+                res.Add(new CategoryModel((string)row[0], (string)row[1], (string)row[2]));
+            }
+
+            return res;
         }
     }
 }

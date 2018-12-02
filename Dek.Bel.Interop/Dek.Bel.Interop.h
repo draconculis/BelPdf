@@ -13,6 +13,10 @@
 // data structure for the callback functions
 struct EventData {
     int Code;
+    int StartPage;
+    int StopPage;
+    int StartGlyph;
+    int StopGlyph;
     TCHAR* Text;
     TCHAR* FilePath;
 };

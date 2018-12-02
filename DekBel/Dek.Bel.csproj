@@ -63,7 +63,7 @@
     <Compile Include="BelGui.Designer.cs">
       <DependentUpon>BelGui.cs</DependentUpon>
     </Compile>
-    <Compile Include="Models\Category.cs" />
+    <Compile Include="Models\CategoryModel.cs" />
     <Compile Include="Categories\CategoryService.cs" />
     <Compile Include="Categories\FormCategoryEdit.cs">
       <SubType>Form</SubType>
@@ -81,10 +81,11 @@
       <DependentUpon>FormCategory.cs</DependentUpon>
     </Compile>
     <Compile Include="DB\CategoryRepo.cs" />
-    <Compile Include="DB\FileRepo.cs" />
+    <Compile Include="DB\StorageRepo.cs" />
     <Compile Include="DB\IDBService.cs" />
     <Compile Include="DB\Sqlite.cs" />
-    <Compile Include="Models\FileStorageInfo.cs" />
+    <Compile Include="Models\Citation.cs" />
+    <Compile Include="Models\StorageModel.cs" />
     <Compile Include="Storage\StorageService.cs" />
     <Compile Include="InterOp\Data.cs" />
     <Compile Include="InterOp\InterOp.cs" />

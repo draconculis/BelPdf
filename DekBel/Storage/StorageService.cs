@@ -19,7 +19,7 @@ namespace Dek.Bel.Storage
     public class StorageService
     {
         //[Import] public IDBService DBService { get; set; }
-        [Import] public FileRepo FileRepo { get; set; }
+        [Import] public StorageRepo FileRepo { get; set; }
         [Import] public IUserSettingsService UserSettingsService { get; set; }
 
         public StorageService()
@@ -45,18 +45,21 @@ namespace Dek.Bel.Storage
         }
 
         // The meat, entry point from interop
-        public ResultFileStorageData InitiateStorageForFile(RequestFileStorageData fileStorageData)
+        public ResultFileStorageData InitiateNewStorageForFile(RequestFileStorageData fileStorageData)
         {
             string srcPath = fileStorageData.FilePath;
             string stoFileName = GetStorageFileName(srcPath);
             string stoFolder = UserSettingsService.StorageFolder;
             string stoPath = Path.Combine(stoFolder, stoFileName);
-            
+            string srcHash = CalculateFileMD5(srcPath);
+
+            // Do we exist in db
+
+
 
             if (File.Exists(stoPath))
             {
-                string srcHash = CalculateFileMD5(srcPath);
-                stoPath = HandleStoFileCollision(srcHash, stoPath);
+                stoPath = GenerateUniqueStoName(stoFileName);
             }
             else
             {
@@ -72,9 +75,9 @@ namespace Dek.Bel.Storage
             return res;
         }
 
-        private string HandleStoFileCollision(string srcHash, string stoPath)
+        private string GenerateUniqueStoName(string stoPath)
         {
-            string stoHash = CalculateFileMD5(stoPath);
+            
 
 
 
@@ -82,12 +85,12 @@ namespace Dek.Bel.Storage
             return stoPath;
         }
 
-        private string GetStorageFileName(string fileName)
+        private string GetStorageFileName(string fileName, int iteration = 1)
         {
             string name = Path.GetFileNameWithoutExtension(fileName);
             string ext = Path.GetExtension(fileName);
 
-            string storageFileName = name + ".bel" + ext;
+            string storageFileName = name + ".bel." + iteration.ToString() + ext;
 
             return storageFileName;
         }

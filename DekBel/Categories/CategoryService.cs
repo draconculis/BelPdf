@@ -14,8 +14,8 @@ namespace Dek.Bel.Categories
     [Export(typeof(ICategoryService))]
     public class CategoryService : ICategoryService
     {
-        private List<Category> m_Categories { get; set; }
-        public IEnumerable<Category> Categories => m_Categories;
+        private List<CategoryModel> m_Categories { get; set; }
+        public IEnumerable<CategoryModel> Categories => m_Categories;
         private IDBService m_DBService;
 
         private BorderStyle m_DefaultBorderStyle;
@@ -24,7 +24,7 @@ namespace Dek.Bel.Categories
         CategoryService(IDBService dBService)
         {
             m_DefaultBorderStyle = new Label().BorderStyle;
-            m_Categories = new List<Category>();
+            m_Categories = new List<CategoryModel>();
 
             m_DBService = dBService;
 
@@ -44,20 +44,20 @@ namespace Dek.Bel.Categories
             {
                 foreach(DataRow row in res.Rows)
                 {
-                    Category cat = new Category((string)(row[0]), (string)(row[1]), (string)(row[2]));
+                    var cat = new CategoryModel((string)(row[0]), (string)(row[1]), (string)(row[2]));
                     m_Categories.Add(cat);
                 }
             }
         }
 
-        public void Add(string name, string code, string desc) => Add(new Category(name, code, desc));
+        public void Add(string name, string code, string desc) => Add(new CategoryModel(name, code, desc));
 
         /// <summary>
         /// Add a new category.
         /// </summary>
         /// <param name="cat"></param>
         /// <exception cref="ArgumentException">Throws arg exception if code not unique</exception>
-        public void Add(Category cat)
+        public void Add(CategoryModel cat)
         {
             if (m_Categories.Any(c => c.Code.Equals(cat.Code, StringComparison.CurrentCultureIgnoreCase)))
                 throw new ArgumentException($"Code {cat.Code} not unique.");
@@ -65,18 +65,18 @@ namespace Dek.Bel.Categories
             m_Categories.Add(cat);
         }
 
-        public void Remove(Category cat)
+        public void Remove(CategoryModel cat)
         {
             m_Categories.Remove(cat);
         }
 
-        public void Update(Category cat)
+        public void Update(CategoryModel cat)
         {
             m_Categories.Remove(cat);
 
         }
 
-        public Category this[string code]
+        public CategoryModel this[string code]
         {
             get => m_Categories.FirstOrDefault(c => c.Code.Equals(code, StringComparison.CurrentCultureIgnoreCase));
         }

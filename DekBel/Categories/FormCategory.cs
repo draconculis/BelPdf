@@ -14,8 +14,8 @@ namespace Dek.Bel.Categories
     public partial class FormCategory : Form
     {
         public ICategoryService m_CategoryService;
-        private IEnumerable<Category> m_FilteredCategories => m_CategoryService.Categories.Where(c => Filter(c)).ToList();
-        private Predicate<Category> Filter;
+        private IEnumerable<CategoryModel> m_FilteredCategories => m_CategoryService.Categories.Where(c => Filter(c)).ToList();
+        private Predicate<CategoryModel> Filter;
 
         public FormCategory(ICategoryService categoryService)
         {
@@ -112,7 +112,7 @@ namespace Dek.Bel.Categories
 
 
             int row = dataGridView1.SelectedCells[0].RowIndex;
-            var cat = new Category(
+            var cat = new CategoryModel(
                 dataGridView1.Rows[row].Cells[0].Value as string,
                 dataGridView1.Rows[row].Cells[1].Value as string,
                 dataGridView1.Rows[row].Cells[2].Value as string);

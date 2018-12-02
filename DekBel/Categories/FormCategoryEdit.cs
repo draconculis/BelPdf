@@ -8,11 +8,11 @@ namespace Dek.Bel.Categories
 {
     public partial class FormCategoryEdit : Form
     {
-        public Category Category { get; private set; }
-        IEnumerable<Category> Categories;
+        public CategoryModel Category { get; private set; }
+        IEnumerable<CategoryModel> Categories;
 
         // Update
-        public FormCategoryEdit(IEnumerable<Category> categories, Category cat)
+        public FormCategoryEdit(IEnumerable<CategoryModel> categories, CategoryModel cat)
         {
             Categories = categories;
             InitializeComponent();
@@ -24,7 +24,7 @@ namespace Dek.Bel.Categories
         }
 
         // Add
-        public FormCategoryEdit(IEnumerable<Category> categories)
+        public FormCategoryEdit(IEnumerable<CategoryModel> categories)
         {
             Categories = categories;
             InitializeComponent();
@@ -45,7 +45,7 @@ namespace Dek.Bel.Categories
 
         private void buttonOK_Click(object sender, EventArgs e)
         {
-            Category = new Category(textBoxCode.Text.Trim(), textBoxName.Text.Trim(), textBoxDesc.Text.Trim());
+            Category = new CategoryModel(textBoxCode.Text.Trim(), textBoxName.Text.Trim(), textBoxDesc.Text.Trim());
             DialogResult = DialogResult.OK;
             Close();
         }
