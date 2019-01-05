@@ -109,6 +109,8 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>E:\pdf\BelPdf\Dek.Bel.Interop\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateMapFile>true</GenerateMapFile>
+      <MapExports>true</MapExports>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -193,9 +195,11 @@
   <ItemGroup>
     <ProjectReference Include="..\Dek.Bel.Interop\Dek.Bel.Interop.vcxproj">
       <Project>{60898bf8-90cf-49b1-b865-0d4e3c577399}</Project>
+      <CopyLocalSatelliteAssemblies>true</CopyLocalSatelliteAssemblies>
     </ProjectReference>
     <ProjectReference Include="..\DekBel\Dek.Bel.csproj">
       <Project>{97cf51e4-6ac7-4144-841f-7f78835727d2}</Project>
+      <CopyLocalSatelliteAssemblies>true</CopyLocalSatelliteAssemblies>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -7,6 +7,8 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using Dek.Bel.Storage;
+using Dek.Bel.DB;
+using Dek.Bel.InterOp;
 
 namespace BelManagedLib
 {
@@ -14,10 +16,11 @@ namespace BelManagedLib
     {
         [UnmanagedFunctionPointer(CallingConvention.StdCall)]
         public delegate ResultData BelDelegate(EventData data);
+        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
         public delegate ResultFileStorageData BelRequestFileStoragePathDelegate(RequestFileStorageData data);
+
         private BelDelegate _delegate;
         private BelRequestFileStoragePathDelegate _fileStoragedelegate;
-
 
         public BelManagedClass()
         {
@@ -47,22 +50,29 @@ namespace BelManagedLib
             */
             ResultData res = null;
 
-            switch (data.Code)
+            switch ((CodesEnum)data.Code)
             {
-                case 100: // DEKBELCODE_ADDVOLUMETITLE
+                case CodesEnum.DEKBELCODE_ADDVOLUMETITLE:
                     break;
-                case 110: // DEKBELCODE_ADDBOOKTITLE
+                case CodesEnum.DEKBELCODE_ADDBOOKTITLE:
                     break;
-                case 120: // DEKBELCODE_ADDCHAPTER
+                case CodesEnum.DEKBELCODE_ADDCHAPTER:
                     break;
-                case 200: // DEKBELCODE_ADDCITATION
+                case CodesEnum.DEKBELCODE_ADDCITATION:
+                    var rawCitation = CitationRepo.AddRawCitations(data);
+                    res = new ResultData
+                    {
+                        Code = 0,
+                        Message = "Added raw citation",
+                        Cancel = false,
+                    };
                     break;
-                case 300: // DEKBELCODE_ADDANDSHOWCITATION
+                case CodesEnum.DEKBELCODE_ADDANDSHOWCITATION:
                     BelGui bel = new BelGui(data);
                     bel.ShowDialog();
                     res = bel.Result;
                     break;
-                case 400: // DEKBELCODE_STARTAUTOPAGINATION
+                case CodesEnum.DEKBELCODE_STARTAUTOPAGINATION:
                     break;
                 default:
                     break;
@@ -75,7 +85,7 @@ namespace BelManagedLib
         public ResultFileStorageData RequestFileStoragePath(RequestFileStorageData data)
         {
             StorageService svc = new StorageService();
-            return svc.InitiateNewStorageForFile(data);
+            return svc.GetStorage(data);
         }
 
     }

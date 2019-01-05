@@ -10,5 +10,10 @@ namespace Dek.Bel.Models
     {
         public int PhysicalPage { get; set; }
 
+
+        // Fetmarkering med ¤ Fet ¤, speciell markering i citat
+
+
+
     }
 }

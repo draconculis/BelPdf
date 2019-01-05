@@ -51,7 +51,7 @@ namespace Dek.Bel
         public BelGui()
         {
             InitializeComponent();
-            Meffify();
+            //Meffify();
 
             toolStripTextBox1.Text = (string)Properties.Settings.Default["DeselectionMarker"];
         }
@@ -222,11 +222,6 @@ namespace Dek.Bel
         {
             FormCategory fc = new FormCategory(m_CategoryService);
             fc.ShowDialog();
-        }
-
-        private void groupBox2_Enter(object sender, EventArgs e)
-        {
-
         }
 
         private void button_category_Click(object sender, EventArgs e)

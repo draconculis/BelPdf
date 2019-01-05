@@ -1,5 +1,6 @@
 ﻿using BelManagedLib;
 using Dek.Bel.DB;
+using Dek.Cls;
 using Dek.Bel.UserSettings;
 using System;
 using System.Collections.Generic;
@@ -11,6 +12,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Dek.Bel.Cls;
 
 namespace Dek.Bel.Storage
 {
@@ -19,12 +21,12 @@ namespace Dek.Bel.Storage
     public class StorageService
     {
         //[Import] public IDBService DBService { get; set; }
-        [Import] public StorageRepo FileRepo { get; set; }
+        [Import] public StorageRepo m_StorageRepo { get; set; }
         [Import] public IUserSettingsService UserSettingsService { get; set; }
 
         public StorageService()
         {
-            Meffify();
+            Mef.Initialize(this);
         }
 
         private void Meffify()
@@ -40,60 +42,113 @@ namespace Dek.Bel.Storage
             }
             catch (CompositionException compositionException)
             {
-                MessageBox.Show($"{Environment.NewLine}{compositionException}", "Composition error");
+                MessageBox.Show($"{compositionException}", "Composition error");
             }
         }
 
         // The meat, entry point from interop
-        public ResultFileStorageData InitiateNewStorageForFile(RequestFileStorageData fileStorageData)
+        public ResultFileStorageData GetStorage(RequestFileStorageData fileStorageData)
         {
             string srcPath = fileStorageData.FilePath;
-            string stoFileName = GetStorageFileName(srcPath);
-            string stoFolder = UserSettingsService.StorageFolder;
-            string stoPath = Path.Combine(stoFolder, stoFileName);
             string srcHash = CalculateFileMD5(srcPath);
 
-            // Do we exist in db
+            // Do we even exist in db?
+            Models.StorageModel storage = m_StorageRepo.GetStorageByHash(srcHash);
+            if (storage == null)
+                storage = CreateNewStorageForFile(fileStorageData, srcHash);
 
-
-
-            if (File.Exists(stoPath))
+            var res = new ResultFileStorageData
             {
-                stoPath = GenerateUniqueStoName(stoFileName);
-            }
-            else
-            {
-                File.Copy(srcPath, stoPath);
-            }
+                StorageFilePath = Path.Combine(UserSettingsService.StorageFolder, storage.StorageName),
+                Cancel = false,
+            };
 
-            
-
-
-
-            var res = new ResultFileStorageData();
-            res.StorageFilePath = stoPath;
             return res;
         }
 
-        private string GenerateUniqueStoName(string stoPath)
+        /// <summary>
+        /// We do not currently have a storage in DB. Create new and copy file to new storage!
+        /// </summary>
+        /// <param name="fileStorageData"></param>
+        /// <param name="sourceHash"></param>
+        /// <returns></returns>
+        public Models.StorageModel CreateNewStorageForFile(RequestFileStorageData fileStorageData, string sourceHash = null)
         {
-            
+            if (sourceHash.IsNullOrWhiteSpace())
+                sourceHash = CalculateFileMD5(fileStorageData.FilePath);
 
+            string stoFolder = UserSettingsService.StorageFolder;
+            string stoFileName = GetUniqueStoName(fileStorageData.FilePath, stoFolder);
+            string stoPath = Path.Combine(stoFolder, stoFileName);
 
+            File.Copy(fileStorageData.FilePath, stoPath);
 
+            var model = new Models.StorageModel
+            {
+                Id = new Id(),
+                Hash = sourceHash,
+                FileName = Path.GetFileName(fileStorageData.FilePath),
+                FilePath = fileStorageData.FilePath,
+                StorageName = stoFileName,
+                BookId = Id.Empty,
+                Date = DateTime.Now,
+            };
 
-            return stoPath;
+            m_StorageRepo.Insert(model);
+            return model;
         }
 
-        private string GetStorageFileName(string fileName, int iteration = 1)
+
+        /// <summary>
+        /// Looks in the storage folder and generates a new unique file name.
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <param name="fileStorageFolder"></param>
+        /// <returns></returns>
+        private string GetUniqueStoName(string fileName, string fileStorageFolder)
         {
-            string name = Path.GetFileNameWithoutExtension(fileName);
-            string ext = Path.GetExtension(fileName);
+            string newFileName = GenerateFirstStoName(fileName);
+            string stoFolder = UserSettingsService.StorageFolder;
+            while (File.Exists(Path.Combine(stoFolder, newFileName)))
+                newFileName = GenerateNextStoName(newFileName);
 
-            string storageFileName = name + ".bel." + iteration.ToString() + ext;
-
-            return storageFileName;
+            return newFileName;
         }
+
+        /// <summary>
+        /// Return a new filename from a source fileName, e.g:
+        /// "myfile.something.pdf" -> "myfile.something.bel.1.pdf"
+        /// </summary>
+        /// <param name="stoFileName"></param>
+        /// <returns></returns>
+        private string GenerateFirstStoName(string fileName)             // xx.pdf
+        {
+            string name0 = Path.GetFileNameWithoutExtension(fileName);   // xx
+            string ext = Path.GetExtension(fileName);                    // .pdf
+
+            return $"{name0}.bel.1{ext}";
+        }
+
+        /// <summary>
+        /// Return a new filename from a generated stoFileName, e.g:
+        /// "myfile.something.bel.1.pdf" -> "myfile.something.bel.2.pdf"
+        /// </summary>
+        /// <param name="stoFileName"></param>
+        /// <returns></returns>
+        private string GenerateNextStoName(string stoFileName)            // xx.bel.1.pdf
+        {
+            string name0 = Path.GetFileNameWithoutExtension(stoFileName); // xx.bel.1
+            string name1 = Path.GetFileNameWithoutExtension(name0);       // xx.bel
+            string name2 = Path.GetFileNameWithoutExtension(name1);       // xx
+            string ext = Path.GetExtension(stoFileName);                  // .pdf
+            string extNumeral = Path.GetExtension(name0);                 // .1
+
+            int.TryParse(extNumeral.Substring(1), out int numeral);
+            numeral++;
+            return $"{name2}.bel.{numeral.ToString()}{ext}";
+        }
+
+
 
         public string CalculateFileMD5(string filePath)
         {

@@ -1,4 +1,5 @@
 ﻿using Dek.Cls;
+using System;
 
 namespace Dek.Cls
 {
@@ -9,16 +10,12 @@ namespace Dek.Cls
             if (string.IsNullOrEmpty(me))
                 return string.Empty;
 
-            int len = me.Length;
-            int last = len - 1;
-
             // sane order
             if (start > stop)
-            {
-                int tmp = stop;
-                stop = start;
-                start = tmp;
-            }
+                return me.Range(stop, start);
+
+            int len = me.Length;
+            int last = len - 1;
 
             // clamp
             if (stop < 0) stop = 0;
@@ -30,5 +27,28 @@ namespace Dek.Cls
         }
 
         public static string Range(this string me, TextRange range) => me.Range(range.Start, range.Stop);
+
+        public static Guid ToGuid(this string me)
+        {
+            try
+            {
+                Guid.TryParse(me, out Guid guid);
+                return guid;
+            }
+            catch
+            {
+                return Guid.Empty;
+            }
+        }
+
+        public static bool IsNullOrEmpty(this string me)
+        {
+            return string.IsNullOrEmpty(me);
+        }
+
+        public static bool IsNullOrWhiteSpace(this string me)
+        {
+            return string.IsNullOrWhiteSpace(me);
+        }
     }
 }

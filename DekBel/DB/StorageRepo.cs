@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.ComponentModel.Composition;
 using Dek.Bel.Models;
 using System.Data;
+using Dek.Bel.Cls;
 
 namespace Dek.Bel.DB
 {
@@ -13,12 +14,7 @@ namespace Dek.Bel.DB
     public class StorageRepo
     {
         [Import] IDBService dBService { get; set; }
-        string SqlSelectFields = $"SELECT `Id`, `Hash`, `FileName`, `FilePath`, `SourcePath`";
-
-        public void AddOrUpdateFile(string sourceFile)
-        {
-
-        }
+        string SqlSelectFields = $"SELECT `Id`, `Hash`, `SourceFileName`, `SourceFilePath`, `StorageFileName`, `BookId`, `Date`, `Comment`";
 
         public StorageModel GetStorageByHash(string hash)
         {
@@ -41,11 +37,13 @@ namespace Dek.Bel.DB
 
             StorageModel stoModel = new StorageModel()
             {
-                Id = (string)(res.Rows[0].ItemArray[0]),
+                Id = new Id(res.Rows[0].ItemArray[0] as string),
                 Hash = (string)(res.Rows[0].ItemArray[1]),
                 FileName = (string)(res.Rows[0].ItemArray[2]),
                 FilePath = (string)(res.Rows[0].ItemArray[3]),
                 StorageName = (string)(res.Rows[0].ItemArray[4]),
+                BookId = new Id(res.Rows[0].ItemArray[5] as string),
+                //Date = DateTime.Parse((string)(row.ItemArray[4])),
             };
 
             return stoModel;
@@ -63,15 +61,31 @@ namespace Dek.Bel.DB
             {
                 models.Add(new StorageModel()
                 {
-                    Id = (string)(row.ItemArray[0]),
+                    Id = new Id(res.Rows[0].ItemArray[0] as string),
                     Hash = (string)(row.ItemArray[1]),
                     FileName = (string)(row.ItemArray[2]),
                     FilePath = (string)(row.ItemArray[3]),
                     StorageName = (string)(row.ItemArray[4]),
+                    BookId = new Id(res.Rows[0].ItemArray[5] as string),
+                    //Date = DateTime.Parse((string)(row.ItemArray[6])),
+                    Comment = (string)(row.ItemArray[7]),
                 });
             }
 
             return models;
+        }
+
+
+        public string Insert(StorageModel model)
+        {
+            if (model.Id.IsNull)
+                model.Id = new Id();
+
+            dBService.Insert(dBService.TableStorageName,
+                $"`Id`, `Hash`, `SourceFileName`, `SourceFilePath`, `StorageFileName`, `BookId`, `Date`, `Comment`",
+                $"'{model.Id}','{model.Hash}','{model.FileName}','{model.FilePath}','{model.StorageName}','{model.BookId}','{model.Date.ToSaneString()}','{model.Comment}'");
+
+            return model.Id.ToString();
         }
     }
 }

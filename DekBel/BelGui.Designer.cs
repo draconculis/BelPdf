@@ -37,12 +37,24 @@
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
+            this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripSplitButton1 = new System.Windows.Forms.ToolStripSplitButton();
+            this.adjustedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.removeLineEndingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.originalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripButton2 = new System.Windows.Forms.ToolStripButton();
             this.toolStripButton3 = new System.Windows.Forms.ToolStripButton();
             this.toolStripButton4 = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripTextBox1 = new System.Windows.Forms.ToolStripTextBox();
             this.toolStripButton5 = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripButton6 = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButton8 = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripButton7 = new System.Windows.Forms.ToolStripButton();
             this.richTextBox2 = new System.Windows.Forms.RichTextBox();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripDropDownButton1 = new System.Windows.Forms.ToolStripDropDownButton();
@@ -56,13 +68,20 @@
             this.fontDialog1 = new System.Windows.Forms.FontDialog();
             this.contextMenuStrip2 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.listBox1 = new System.Windows.Forms.ListBox();
+            this.comboBox2 = new System.Windows.Forms.ComboBox();
             this.button_category = new System.Windows.Forms.Button();
             this.textBox1_CategorySearch = new System.Windows.Forms.TextBox();
             this.flowLayoutPanel_Categories = new System.Windows.Forms.FlowLayoutPanel();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.label8 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.textBox_PageB = new System.Windows.Forms.TextBox();
             this.textBox9 = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
-            this.labelFilePage = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.textBox_PageA = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
@@ -71,35 +90,16 @@
             this.textBox_author = new System.Windows.Forms.TextBox();
             this.label_author = new System.Windows.Forms.Label();
             this.textBoxTitle = new System.Windows.Forms.TextBox();
+            this.labelFilePage = new System.Windows.Forms.Label();
             this.contextMenuStrip_Category = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.setAsMainCategoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.removeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
-            this.toolStripButton6 = new System.Windows.Forms.ToolStripButton();
-            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripButton7 = new System.Windows.Forms.ToolStripButton();
-            this.textBox_PageB = new System.Windows.Forms.TextBox();
-            this.label7 = new System.Windows.Forms.Label();
             this.groupBox_Source = new System.Windows.Forms.GroupBox();
-            this.label_Page = new System.Windows.Forms.Label();
-            this.label1_MD5 = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.textBox2 = new System.Windows.Forms.TextBox();
-            this.label8 = new System.Windows.Forms.Label();
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
-            this.toolStripSplitButton1 = new System.Windows.Forms.ToolStripSplitButton();
-            this.adjustedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.removeLineEndingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.originalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
-            this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.textBox_FileName = new System.Windows.Forms.TextBox();
-            this.toolStripButton8 = new System.Windows.Forms.ToolStripButton();
-            this.comboBox2 = new System.Windows.Forms.ComboBox();
-            this.listBox1 = new System.Windows.Forms.ListBox();
+            this.label1_MD5 = new System.Windows.Forms.Label();
+            this.label_Page = new System.Windows.Forms.Label();
+            this.label7 = new System.Windows.Forms.Label();
             this.contextMenuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -165,8 +165,8 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.richTextBox2);
-            this.splitContainer1.Size = new System.Drawing.Size(1193, 200);
-            this.splitContainer1.SplitterDistance = 111;
+            this.splitContainer1.Size = new System.Drawing.Size(1193, 199);
+            this.splitContainer1.SplitterDistance = 110;
             this.splitContainer1.TabIndex = 1;
             // 
             // richTextBox1
@@ -181,7 +181,7 @@
             this.richTextBox1.ReadOnly = true;
             this.richTextBox1.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.ForcedVertical;
             this.richTextBox1.ShowSelectionMargin = true;
-            this.richTextBox1.Size = new System.Drawing.Size(1190, 80);
+            this.richTextBox1.Size = new System.Drawing.Size(1190, 79);
             this.richTextBox1.TabIndex = 2;
             this.richTextBox1.Text = "";
             // 
@@ -209,6 +209,52 @@
             this.toolStrip1.Size = new System.Drawing.Size(1191, 26);
             this.toolStrip1.TabIndex = 1;
             this.toolStrip1.Text = "toolStrip1";
+            // 
+            // toolStripButton1
+            // 
+            this.toolStripButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.toolStripButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton1.Image")));
+            this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButton1.Name = "toolStripButton1";
+            this.toolStripButton1.Size = new System.Drawing.Size(67, 23);
+            this.toolStripButton1.Text = "Show orig.";
+            // 
+            // toolStripSeparator5
+            // 
+            this.toolStripSeparator5.Name = "toolStripSeparator5";
+            this.toolStripSeparator5.Size = new System.Drawing.Size(6, 26);
+            // 
+            // toolStripSplitButton1
+            // 
+            this.toolStripSplitButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.toolStripSplitButton1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.adjustedToolStripMenuItem,
+            this.removeLineEndingsToolStripMenuItem,
+            this.originalToolStripMenuItem});
+            this.toolStripSplitButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripSplitButton1.Image")));
+            this.toolStripSplitButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripSplitButton1.Name = "toolStripSplitButton1";
+            this.toolStripSplitButton1.Size = new System.Drawing.Size(82, 23);
+            this.toolStripSplitButton1.Text = "Formatting";
+            this.toolStripSplitButton1.ButtonClick += new System.EventHandler(this.toolStripSplitButton1_ButtonClick);
+            // 
+            // adjustedToolStripMenuItem
+            // 
+            this.adjustedToolStripMenuItem.Name = "adjustedToolStripMenuItem";
+            this.adjustedToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
+            this.adjustedToolStripMenuItem.Text = "Adjusted";
+            // 
+            // removeLineEndingsToolStripMenuItem
+            // 
+            this.removeLineEndingsToolStripMenuItem.Name = "removeLineEndingsToolStripMenuItem";
+            this.removeLineEndingsToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
+            this.removeLineEndingsToolStripMenuItem.Text = "Remove line endings";
+            // 
+            // originalToolStripMenuItem
+            // 
+            this.originalToolStripMenuItem.Name = "originalToolStripMenuItem";
+            this.originalToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
+            this.originalToolStripMenuItem.Text = "Original";
             // 
             // toolStripSeparator1
             // 
@@ -247,6 +293,11 @@
             this.toolStripButton4.Text = "A⁻";
             this.toolStripButton4.Click += new System.EventHandler(this.toolStripButton4_Click);
             // 
+            // toolStripSeparator4
+            // 
+            this.toolStripSeparator4.Name = "toolStripSeparator4";
+            this.toolStripSeparator4.Size = new System.Drawing.Size(6, 26);
+            // 
             // toolStripTextBox1
             // 
             this.toolStripTextBox1.Name = "toolStripTextBox1";
@@ -267,6 +318,44 @@
             this.toolStripButton5.Text = "…";
             this.toolStripButton5.ToolTipText = "Use ellipsis";
             this.toolStripButton5.Click += new System.EventHandler(this.toolStripButton5_Click);
+            // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 26);
+            // 
+            // toolStripButton6
+            // 
+            this.toolStripButton6.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.toolStripButton6.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton6.Image")));
+            this.toolStripButton6.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButton6.Name = "toolStripButton6";
+            this.toolStripButton6.Size = new System.Drawing.Size(51, 23);
+            this.toolStripButton6.Text = "Exclude";
+            // 
+            // toolStripButton8
+            // 
+            this.toolStripButton8.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.toolStripButton8.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton8.Image")));
+            this.toolStripButton8.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButton8.Name = "toolStripButton8";
+            this.toolStripButton8.Size = new System.Drawing.Size(44, 23);
+            this.toolStripButton8.Text = "Delete";
+            // 
+            // toolStripSeparator3
+            // 
+            this.toolStripSeparator3.Name = "toolStripSeparator3";
+            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 26);
+            // 
+            // toolStripButton7
+            // 
+            this.toolStripButton7.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.toolStripButton7.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.toolStripButton7.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton7.Image")));
+            this.toolStripButton7.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButton7.Name = "toolStripButton7";
+            this.toolStripButton7.Size = new System.Drawing.Size(32, 23);
+            this.toolStripButton7.Text = "Edit";
             // 
             // richTextBox2
             // 
@@ -381,12 +470,34 @@
             this.groupBox1.Controls.Add(this.button_category);
             this.groupBox1.Controls.Add(this.textBox1_CategorySearch);
             this.groupBox1.Controls.Add(this.flowLayoutPanel_Categories);
-            this.groupBox1.Location = new System.Drawing.Point(740, 3);
+            this.groupBox1.Location = new System.Drawing.Point(740, 4);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(443, 136);
             this.groupBox1.TabIndex = 6;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Category";
+            // 
+            // listBox1
+            // 
+            this.listBox1.FormattingEnabled = true;
+            this.listBox1.ItemHeight = 16;
+            this.listBox1.Location = new System.Drawing.Point(169, 42);
+            this.listBox1.Name = "listBox1";
+            this.listBox1.ScrollAlwaysVisible = true;
+            this.listBox1.Size = new System.Drawing.Size(172, 84);
+            this.listBox1.TabIndex = 10;
+            this.listBox1.Visible = false;
+            this.listBox1.Click += new System.EventHandler(this.listBox1_Click);
+            // 
+            // comboBox2
+            // 
+            this.comboBox2.FormattingEnabled = true;
+            this.comboBox2.Location = new System.Drawing.Point(10, 18);
+            this.comboBox2.Name = "comboBox2";
+            this.comboBox2.Size = new System.Drawing.Size(331, 24);
+            this.comboBox2.TabIndex = 9;
+            this.comboBox2.KeyDown += new System.Windows.Forms.KeyEventHandler(this.comboBox2_KeyDown);
+            this.comboBox2.KeyUp += new System.Windows.Forms.KeyEventHandler(this.comboBox2_KeyUp);
             // 
             // button_category
             // 
@@ -442,13 +553,62 @@
             this.groupBox2.Controls.Add(this.textBox_author);
             this.groupBox2.Controls.Add(this.label_author);
             this.groupBox2.Controls.Add(this.textBoxTitle);
-            this.groupBox2.Location = new System.Drawing.Point(2, 2);
+            this.groupBox2.Location = new System.Drawing.Point(2, 3);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(732, 235);
             this.groupBox2.TabIndex = 7;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Volume";
-            this.groupBox2.Enter += new System.EventHandler(this.groupBox2_Enter);
+            // 
+            // comboBox1
+            // 
+            this.comboBox1.FormattingEnabled = true;
+            this.comboBox1.Location = new System.Drawing.Point(252, 47);
+            this.comboBox1.Name = "comboBox1";
+            this.comboBox1.Size = new System.Drawing.Size(474, 24);
+            this.comboBox1.TabIndex = 21;
+            // 
+            // textBox2
+            // 
+            this.textBox2.Location = new System.Drawing.Point(399, 105);
+            this.textBox2.Name = "textBox2";
+            this.textBox2.Size = new System.Drawing.Size(327, 23);
+            this.textBox2.TabIndex = 20;
+            this.textBox2.TextChanged += new System.EventHandler(this.textBox2_TextChanged);
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(338, 108);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(48, 16);
+            this.label8.TabIndex = 19;
+            this.label8.Text = "Transl.";
+            this.label8.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(338, 82);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(53, 16);
+            this.label5.TabIndex = 18;
+            this.label5.Text = "Sub Ch.";
+            this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // textBox1
+            // 
+            this.textBox1.Location = new System.Drawing.Point(399, 76);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(327, 23);
+            this.textBox1.TabIndex = 17;
+            // 
+            // textBox_PageB
+            // 
+            this.textBox_PageB.Location = new System.Drawing.Point(120, 47);
+            this.textBox_PageB.Name = "textBox_PageB";
+            this.textBox_PageB.Size = new System.Drawing.Size(67, 23);
+            this.textBox_PageB.TabIndex = 16;
             // 
             // textBox9
             // 
@@ -466,16 +626,6 @@
             this.label6.TabIndex = 13;
             this.label6.Text = "Year";
             this.label6.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // labelFilePage
-            // 
-            this.labelFilePage.AutoSize = true;
-            this.labelFilePage.Location = new System.Drawing.Point(9, 41);
-            this.labelFilePage.Name = "labelFilePage";
-            this.labelFilePage.Size = new System.Drawing.Size(90, 16);
-            this.labelFilePage.TabIndex = 12;
-            this.labelFilePage.Text = "Physical page:";
-            this.labelFilePage.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // label4
             // 
@@ -547,6 +697,16 @@
             this.textBoxTitle.Size = new System.Drawing.Size(720, 23);
             this.textBoxTitle.TabIndex = 0;
             // 
+            // labelFilePage
+            // 
+            this.labelFilePage.AutoSize = true;
+            this.labelFilePage.Location = new System.Drawing.Point(9, 41);
+            this.labelFilePage.Name = "labelFilePage";
+            this.labelFilePage.Size = new System.Drawing.Size(90, 16);
+            this.labelFilePage.TabIndex = 12;
+            this.labelFilePage.Text = "Physical page:";
+            this.labelFilePage.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
             // contextMenuStrip_Category
             // 
             this.contextMenuStrip_Category.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -589,52 +749,10 @@
             this.splitContainer2.Panel2.Controls.Add(this.groupBox1);
             this.splitContainer2.Panel2.Controls.Add(this.groupBox2);
             this.splitContainer2.Size = new System.Drawing.Size(1195, 446);
-            this.splitContainer2.SplitterDistance = 202;
+            this.splitContainer2.SplitterDistance = 201;
             this.splitContainer2.TabIndex = 9;
             this.splitContainer2.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.splitContainer2_SplitterMoved);
             this.splitContainer2.MouseClick += new System.Windows.Forms.MouseEventHandler(this.splitContainer2_MouseClick);
-            // 
-            // toolStripButton6
-            // 
-            this.toolStripButton6.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.toolStripButton6.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton6.Image")));
-            this.toolStripButton6.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButton6.Name = "toolStripButton6";
-            this.toolStripButton6.Size = new System.Drawing.Size(51, 23);
-            this.toolStripButton6.Text = "Exclude";
-            // 
-            // toolStripSeparator3
-            // 
-            this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 26);
-            // 
-            // toolStripButton7
-            // 
-            this.toolStripButton7.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.toolStripButton7.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.toolStripButton7.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton7.Image")));
-            this.toolStripButton7.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButton7.Name = "toolStripButton7";
-            this.toolStripButton7.Size = new System.Drawing.Size(32, 23);
-            this.toolStripButton7.Text = "Edit";
-            // 
-            // textBox_PageB
-            // 
-            this.textBox_PageB.Location = new System.Drawing.Point(120, 47);
-            this.textBox_PageB.Name = "textBox_PageB";
-            this.textBox_PageB.Size = new System.Drawing.Size(67, 23);
-            this.textBox_PageB.TabIndex = 16;
-            // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(9, 60);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(33, 16);
-            this.label7.TabIndex = 20;
-            this.label7.Text = "MD5";
-            this.label7.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.label7.Click += new System.EventHandler(this.label7_Click);
             // 
             // groupBox_Source
             // 
@@ -650,14 +768,15 @@
             this.groupBox_Source.TabStop = false;
             this.groupBox_Source.Text = "Source";
             // 
-            // label_Page
+            // textBox_FileName
             // 
-            this.label_Page.AutoSize = true;
-            this.label_Page.Location = new System.Drawing.Point(101, 41);
-            this.label_Page.Name = "label_Page";
-            this.label_Page.Size = new System.Drawing.Size(63, 16);
-            this.label_Page.TabIndex = 24;
-            this.label_Page.Text = "123 - 456";
+            this.textBox_FileName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBox_FileName.Location = new System.Drawing.Point(10, 16);
+            this.textBox_FileName.Name = "textBox_FileName";
+            this.textBox_FileName.ReadOnly = true;
+            this.textBox_FileName.Size = new System.Drawing.Size(427, 23);
+            this.textBox_FileName.TabIndex = 26;
             // 
             // label1_MD5
             // 
@@ -669,145 +788,25 @@
             this.label1_MD5.TabIndex = 25;
             this.label1_MD5.Text = "00000000-0000-0000-0000-000000000000";
             // 
-            // label5
+            // label_Page
             // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(338, 82);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(53, 16);
-            this.label5.TabIndex = 18;
-            this.label5.Text = "Sub Ch.";
-            this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.label_Page.AutoSize = true;
+            this.label_Page.Location = new System.Drawing.Point(101, 41);
+            this.label_Page.Name = "label_Page";
+            this.label_Page.Size = new System.Drawing.Size(63, 16);
+            this.label_Page.TabIndex = 24;
+            this.label_Page.Text = "123 - 456";
             // 
-            // textBox1
+            // label7
             // 
-            this.textBox1.Location = new System.Drawing.Point(399, 76);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(327, 23);
-            this.textBox1.TabIndex = 17;
-            // 
-            // textBox2
-            // 
-            this.textBox2.Location = new System.Drawing.Point(399, 105);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(327, 23);
-            this.textBox2.TabIndex = 20;
-            this.textBox2.TextChanged += new System.EventHandler(this.textBox2_TextChanged);
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(338, 108);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(48, 16);
-            this.label8.TabIndex = 19;
-            this.label8.Text = "Transl.";
-            this.label8.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // comboBox1
-            // 
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(252, 47);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(474, 24);
-            this.comboBox1.TabIndex = 21;
-            // 
-            // toolStripSplitButton1
-            // 
-            this.toolStripSplitButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.toolStripSplitButton1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.adjustedToolStripMenuItem,
-            this.removeLineEndingsToolStripMenuItem,
-            this.originalToolStripMenuItem});
-            this.toolStripSplitButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripSplitButton1.Image")));
-            this.toolStripSplitButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripSplitButton1.Name = "toolStripSplitButton1";
-            this.toolStripSplitButton1.Size = new System.Drawing.Size(82, 23);
-            this.toolStripSplitButton1.Text = "Formatting";
-            this.toolStripSplitButton1.ButtonClick += new System.EventHandler(this.toolStripSplitButton1_ButtonClick);
-            // 
-            // adjustedToolStripMenuItem
-            // 
-            this.adjustedToolStripMenuItem.Name = "adjustedToolStripMenuItem";
-            this.adjustedToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
-            this.adjustedToolStripMenuItem.Text = "Adjusted";
-            // 
-            // removeLineEndingsToolStripMenuItem
-            // 
-            this.removeLineEndingsToolStripMenuItem.Name = "removeLineEndingsToolStripMenuItem";
-            this.removeLineEndingsToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
-            this.removeLineEndingsToolStripMenuItem.Text = "Remove line endings";
-            // 
-            // originalToolStripMenuItem
-            // 
-            this.originalToolStripMenuItem.Name = "originalToolStripMenuItem";
-            this.originalToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
-            this.originalToolStripMenuItem.Text = "Original";
-            // 
-            // toolStripSeparator2
-            // 
-            this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 26);
-            // 
-            // toolStripSeparator4
-            // 
-            this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(6, 26);
-            // 
-            // toolStripButton1
-            // 
-            this.toolStripButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.toolStripButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton1.Image")));
-            this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButton1.Name = "toolStripButton1";
-            this.toolStripButton1.Size = new System.Drawing.Size(67, 23);
-            this.toolStripButton1.Text = "Show orig.";
-            // 
-            // toolStripSeparator5
-            // 
-            this.toolStripSeparator5.Name = "toolStripSeparator5";
-            this.toolStripSeparator5.Size = new System.Drawing.Size(6, 26);
-            // 
-            // textBox_FileName
-            // 
-            this.textBox_FileName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox_FileName.Location = new System.Drawing.Point(10, 16);
-            this.textBox_FileName.Name = "textBox_FileName";
-            this.textBox_FileName.ReadOnly = true;
-            this.textBox_FileName.Size = new System.Drawing.Size(427, 23);
-            this.textBox_FileName.TabIndex = 26;
-            // 
-            // toolStripButton8
-            // 
-            this.toolStripButton8.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.toolStripButton8.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton8.Image")));
-            this.toolStripButton8.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButton8.Name = "toolStripButton8";
-            this.toolStripButton8.Size = new System.Drawing.Size(44, 23);
-            this.toolStripButton8.Text = "Delete";
-            // 
-            // comboBox2
-            // 
-            this.comboBox2.FormattingEnabled = true;
-            this.comboBox2.Location = new System.Drawing.Point(10, 18);
-            this.comboBox2.Name = "comboBox2";
-            this.comboBox2.Size = new System.Drawing.Size(331, 24);
-            this.comboBox2.TabIndex = 9;
-            this.comboBox2.KeyDown += new System.Windows.Forms.KeyEventHandler(this.comboBox2_KeyDown);
-            this.comboBox2.KeyUp += new System.Windows.Forms.KeyEventHandler(this.comboBox2_KeyUp);
-            // 
-            // listBox1
-            // 
-            this.listBox1.FormattingEnabled = true;
-            this.listBox1.ItemHeight = 16;
-            this.listBox1.Location = new System.Drawing.Point(169, 42);
-            this.listBox1.Name = "listBox1";
-            this.listBox1.ScrollAlwaysVisible = true;
-            this.listBox1.Size = new System.Drawing.Size(172, 84);
-            this.listBox1.TabIndex = 10;
-            this.listBox1.Visible = false;
-            this.listBox1.Click += new System.EventHandler(this.listBox1_Click);
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(9, 60);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(33, 16);
+            this.label7.TabIndex = 20;
+            this.label7.Text = "MD5";
+            this.label7.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.label7.Click += new System.EventHandler(this.label7_Click);
             // 
             // BelGui
             // 

@@ -19,6 +19,8 @@ struct EventData {
     int StopGlyph;
     TCHAR* Text;
     TCHAR* FilePath;
+    TCHAR* SelectionRectsString;
+    int Len;
 };
 
 struct ResultData {

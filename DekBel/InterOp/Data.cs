@@ -1,4 +1,5 @@
-﻿using System.Runtime.InteropServices;
+﻿using System.Drawing;
+using System.Runtime.InteropServices;
 
 namespace BelManagedLib
 {
@@ -12,6 +13,8 @@ namespace BelManagedLib
         public int StopGlyph { get; set; }
         public string Text { get; set; }
         public string FilePath { get; set; }
+        public string SelectionRectsString { get; set; }
+        public int Len { get; set; }
     }
 
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
