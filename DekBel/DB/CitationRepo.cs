@@ -16,7 +16,12 @@ namespace Dek.Bel.DB
         [Import] IDBService dBService { get; set; }
         string SqlSelectFields = $"SELECT `Id`, `Fragment`, `PageStart`, `PageStop`, `GlyphStart`, `GlyphStop`, `Rectangles`, `Date`";
 
-        public static RawCitation AddRawCitations(EventData messsage)
+        public CitationRepo()
+        {
+            Mef.Initialize(this);
+        }
+
+        public RawCitation AddRawCitations(EventData messsage)
         {
             RawCitation raw = new RawCitation
             {
@@ -30,7 +35,7 @@ namespace Dek.Bel.DB
                 Date = DateTime.Now,
             };
 
-
+            dBService.InsertOrUpdate(raw);
 
             return raw;
         }

@@ -41,12 +41,12 @@ namespace BelManagedLib
         public ResultData DoStuff(EventData data)
         {
             /*
-            #define DEKBELCODE_ADDVOLUMETITLE          100
-            #define DEKBELCODE_ADDBOOKTITLE            110
-            #define DEKBELCODE_ADDCHAPTER              120
-            #define DEKBELCODE_ADDCITATION             200
-            #define DEKBELCODE_ADDANDSHOWCITATION      300
-            #define DEKBELCODE_STARTAUTOPAGINATION     400
+            #define DEKBELCODE_ADDVOLUMETITLE          9100
+            #define DEKBELCODE_ADDBOOKTITLE            9110
+            #define DEKBELCODE_ADDCHAPTER              9120
+            #define DEKBELCODE_ADDCITATION             9200
+            #define DEKBELCODE_ADDANDSHOWCITATION      9300
+            #define DEKBELCODE_STARTAUTOPAGINATION     9400
             */
             ResultData res = null;
 
@@ -59,11 +59,12 @@ namespace BelManagedLib
                 case CodesEnum.DEKBELCODE_ADDCHAPTER:
                     break;
                 case CodesEnum.DEKBELCODE_ADDCITATION:
-                    var rawCitation = CitationRepo.AddRawCitations(data);
+                    var citationRepo = new CitationRepo();
+                    var result = citationRepo.AddRawCitations(data);
                     res = new ResultData
                     {
                         Code = 0,
-                        Message = "Added raw citation",
+                        Message = $"Added raw citation. Id = {result.Id}.",
                         Cancel = false,
                     };
                     break;

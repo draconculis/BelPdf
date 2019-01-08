@@ -38,10 +38,10 @@ namespace Dek.Bel.DB
         public Sqlite(IUserSettingsService userSettingsService)
         {
             m_UserSettingsService = userSettingsService;
-            Init();
+            InitLocal();
         }
 
-        public void Init()
+        public void InitLocal()
         {
             if(!File.Exists(m_UserSettingsService.DBPath))
                 SQLiteConnection.CreateFile(m_UserSettingsService.DBPath);
@@ -531,7 +531,7 @@ namespace Dek.Bel.DB
             }
 
             string tableName = obj.GetType().Name;
-            if (keyFound)
+            if (IdExists(obj))
             {
                 Update(tableName, updateValues, updateWhereValues);
             }
@@ -541,8 +541,7 @@ namespace Dek.Bel.DB
             }
         }
 
-
-        public void Update(string tablename, string where, string columnValues)
+        public void Update(string tablename, string columnValues, string where)
         {
             try
             {
@@ -568,6 +567,46 @@ namespace Dek.Bel.DB
                 m_dbConnection.Close();
             }
 
+        }
+
+        public bool IdExists(object obj)
+        {
+            string tableName = obj.GetType().Name;
+
+            string whereKeyValues = "";
+            foreach (var prop in obj.GetType().GetProperties())
+            {
+                object attributes = prop.GetCustomAttributes(typeof(KeyAttribute), true).FirstOrDefault();
+                if (prop.Name.ToLower() == "id" || attributes != null)
+                {
+                    whereKeyValues += (whereKeyValues.Length > 0 ? " AND " : "") + $"`{prop.Name}` = '{prop.GetValue(obj, null)}'";
+                }
+            }
+
+            try
+                {
+                using (SQLiteCommand command = m_dbConnection.CreateCommand())
+                {
+                    m_dbConnection.Open();
+                    command.CommandText = $"SELECT * FROM {tableName} WHERE {whereKeyValues}";
+                    bool idExists = command.ExecuteScalar() != null;
+                    return idExists;
+                }
+            }
+            catch (SQLiteException sqlex)
+            {
+                MessageBox.Show($"{sqlex}");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"{ex}");
+            }
+            finally
+            {
+                m_dbConnection.Close();
+            }
+
+            return true;
         }
 
         public void Dispose()

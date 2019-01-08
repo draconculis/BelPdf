@@ -3,12 +3,12 @@
 #include "Dek.Bel.Interop.h"
 #include <TCHAR.H>
 
-#define DEKBELCODE_ADDVOLUMETITLE          100
-#define DEKBELCODE_ADDBOOKTITLE            110
-#define DEKBELCODE_ADDCHAPTER              120
-#define DEKBELCODE_ADDCITATION             200
-#define DEKBELCODE_ADDANDSHOWCITATION      300
-#define DEKBELCODE_STARTAUTOPAGINATION     400
+#define DEKBELCODE_ADDVOLUMETITLE          9100
+#define DEKBELCODE_ADDBOOKTITLE            9110
+#define DEKBELCODE_ADDCHAPTER              9120
+#define DEKBELCODE_ADDCITATION             9200
+#define DEKBELCODE_ADDANDSHOWCITATION      9300
+#define DEKBELCODE_STARTAUTOPAGINATION     9400
 
 
 int __cdecl main()
@@ -28,7 +28,7 @@ int __cdecl main()
     data.Len = 1;
 
     data.Text = (TCHAR*)L"WALLYHO";
-    data.Code = DEKBELCODE_ADDANDSHOWCITATION;
+    data.Code = DEKBELCODE_ADDCITATION;
     data.FilePath = (TCHAR*)L"c:\\28";
     
     std::cout << "doBel!\n";
