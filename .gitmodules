@@ -1,0 +1,3 @@
+[submodule "sumatrapdf"]
+	path = sumatrapdf
+	url = https://github.com/sumatrapdfreader/sumatrapdf.git
