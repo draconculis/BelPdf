@@ -8,6 +8,8 @@ using System.Data;
 using System.Data.SQLite;
 using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -35,145 +37,302 @@ namespace Dek.Bel.DB
         private const string ColDescription = "Description";
 
         [ImportingConstructor]
-        public Sqlite(IUserSettingsService userSettingsService)
+        public Sqlite(IUserSettingsService userSettingsService, IDBCreator creator)
         {
             m_UserSettingsService = userSettingsService;
-            InitLocal();
+            InitLocal(creator);
         }
 
-        public void InitLocal()
+        public void InitLocal(IDBCreator creator)
         {
             if(!File.Exists(m_UserSettingsService.DBPath))
                 SQLiteConnection.CreateFile(m_UserSettingsService.DBPath);
 
             m_dbConnection = new SQLiteConnection($"Data Source={m_UserSettingsService.DBPath};Version=3;New=False;");
-            CreateTables();
+            creator.Create(this);
         }
 
-        public void CreateTables()
+        public List<T> Select<T>(string where = null) where T : new()
         {
-            // Book
-            // CREATE TABLE "Book" ( `Id` TEXT NOT NULL, `Title` TEXT NOT NULL, `Author` TEXT, `PublishDate` TEXT, `Edition` TEXT, `Editors` TEXT, `EditionPublishDate` TEXT, `ISBN` TEXT, `Comment` TEXT, PRIMARY KEY(`BookId`) )
-            if (CreateTable(TableBookName,
-                "`Id` TEXT, " +
-                "`Title` TEXT NOT NULL, " +
-                "`Author` TEXT, " +
-                "`PublishDate` TEXT, " +
-                "`Edition` TEXT, " +
-                "`Editors` TEXT, " +
-                "`EditionPublishDate` TEXT, " +
-                "`ISBN` TEXT, " +
-                "`Comment` TEXT",
-                "`Id`"))
+            T obj = new T();
+            List<T> result = new List<T>();
+            string tableName = obj.GetType().Name;
+
+            string sqlQuery = $"SELECT * FROM {tableName}";
+            if (!string.IsNullOrWhiteSpace(where))
+                sqlQuery += $" WHERE {where}";
+
+            DataTable dt = SelectBySql(sqlQuery);
+
+            for (int i = 0; i < dt.Rows.Count; i++)
             {
-                CreateIndex(TableBookName, "ISBN");
+                obj = new T();
+                foreach (var prop in obj.GetType().GetProperties())
+                {
+                    LoadProperty(obj, prop, dt.Rows[i]);
+                    //string name = prop.Name;
+                    //object val = dt.Rows[i][name];
+                    //bool isNullable = Nullable.GetUnderlyingType(prop.GetType()) != null;
+                    //bool isEnum = prop.GetType().IsEnum;
+                    //Type type = prop.PropertyType;
+                    //string typeName = type.Name;
+                    //if (isEnum)
+                    //    typeName = "enum";
+
+                    //switch (typeName)
+                    //{
+                    //    case "int":
+                    //        prop.SetValue(obj, (int)(Int64)val);
+                    //        break;
+                    //    case "uint":
+                    //        prop.SetValue(obj, (uint)(UInt64)val);
+                    //        break;
+                    //    case nameof(Int32):
+                    //        prop.SetValue(obj, (Int32)(Int64)val);
+                    //        break;
+                    //    case nameof(UInt32):
+                    //        prop.SetValue(obj, (UInt32)(UInt64)val);
+                    //        break;
+                    //    case "long":
+                    //        prop.SetValue(obj, (long)(Int64)val);
+                    //        break;
+                    //    case nameof(Int64):
+                    //        prop.SetValue(obj, (Int64)val);
+                    //        break;
+                    //    case "ulong":
+                    //        prop.SetValue(obj, (ulong)(Int64)val);
+                    //        break;
+                    //    case nameof(UInt64):
+                    //        prop.SetValue(obj, (UInt64)(Int64)val);
+                    //        break;
+                    //    case nameof(Decimal):
+                    //        prop.SetValue(obj, (Decimal)val);
+                    //        break;
+                    //    case nameof(DateTime):
+                    //        prop.SetValue(obj, ((string)val).ToSaneDateTime());
+                    //        break;
+                    //    case "enum":
+                    //        prop.SetValue(obj, Enum.Parse(type, ((string)val)));
+                    //        break;
+                    //    case nameof(Id):
+                    //        prop.SetValue(obj, Id.NewId((string)val));
+                    //        break;
+                    //    default:
+                    //        prop.SetValue(obj, val);
+                    //        break;
+                    //}
+                }
+                result.Add(obj);
             }
 
-            // Citation
-            // CREATE TABLE `Citation` ( `Id` TEXT NOT NULL, `Citation1` TEXT NOT NULL, `Citation2` TEXT NOT NULL, `CreatedDate` TEXT NOT NULL, `EditedDate` TEXT NOT NULL, PRIMARY KEY(`CitationId`) )
-            if (CreateTable(TableCitationName,
-                "`Id` TEXT, " +
-                "`Citation1` TEXT NOT NULL, " +
-                "`Citation2` TEXT NOT NULL, " +
-                "`CreatedDate` TEXT NOT NULL, " +
-                "`EditedDate` TEXT NOT NULL",
-                "`Id`"))
+            return result;
+        }
+
+        public T SelectById<T>(Id id) where T : new()
+        {
+            T obj = new T();
+            string tableName = obj.GetType().Name;
+
+            string sqlQuery = $"SELECT * FROM {tableName} WHERE Id={id}";
+
+            DataTable dt = SelectBySql(sqlQuery);
+            if (dt.Rows.Count != 1)
+                return default(T);
+
+            LoadObject(obj, dt.Rows[0]);
+
+            return obj;
+        }
+
+        /// <summary>
+        /// Select with one extension table. Requires naming of ext ref in ext table to be "MainTableId" if main table is "MainTable".
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="T1"></typeparam>
+        /// <param name="where"></param>
+        /// <returns></returns>
+        public List<(T Main, T1 Ext1)> Select<T, T1>(string where) where T : new() where T1 : new()
+        {
+            T main = new T();
+            List<T> result = new List<T>();
+            string mainTableName = main.GetType().Name;
+
+            string columnSql = "";
+            string mainTableId = "Id";
+            foreach (var prop in main.GetType().GetProperties())
             {
-                CreateIndex(TableCitationName, "Code");
+                if (prop.GetCustomAttributes(typeof(KeyAttribute), true).FirstOrDefault() != null)
+                    mainTableId = prop.Name;
+
+                if (columnSql.Length > 0)
+                    columnSql += ", ";
+                columnSql += $"{prop.Name}";
             }
 
-            //if (CreateTable(TableRawCitationName,
-            //    "`Id` TEXT, " +
-            //    "`Fragment` TEXT NOT NULL, " +
-            //    "`PageStart` INT NOT NULL, " +
-            //    "`PageStop` INT NOT NULL, " +
-            //    "`GlyphStart` INT NOT NULL, " +
-            //    "`GlyphStop` INT NOT NULL, " +
-            //    "`Rectangles` TEXT NOT NULL, " +
-            //    "`Date` TEXT NOT NULL ",
-            //    "`Id`"))
-            //{
-            //    CreateIndex(TableCitationName, "Code");
-            //}
-
-            CreateTable(typeof(RawCitation));
-
-            // Categories
-            // 
-
-            if (CreateTable(TableCategoryName,
-            "`Id` TEXT, " +
-            "`Code` TEXT, " +
-            "`Name` TEXT NOT NULL, " +
-            "`Description`  TEXT",
-            "`Id`"))
+            List<Type> extTypes = new List<Type> { typeof(T1) };
+            string fromSql = $"{mainTableName}";
+            foreach (Type type in extTypes)
             {
-                CreateIndex(TableCategoryName, "Code");
-                CreateIndex(TableCategoryName, "Name");
-                Insert(TableCategoryName, $"{ColCode},{ColName},{ColDescription}", "'CATA','Category A','A first category.'");
-                Insert(TableCategoryName, $"{ColCode},{ColName},{ColDescription}", "'CATB','Category B','A second category.'");
-                Insert(TableCategoryName, $"{ColCode},{ColName},{ColDescription}", "'CATC','Category C','A third category.'");
-                Insert(TableCategoryName, $"{ColCode},{ColName},{ColDescription}", "'CATC','Category C','A third category.'");
-                Insert(TableCategoryName, $"{ColCode},{ColName},{ColDescription}", "'CATD','Category D','A fourth category.'");
+
+                T1 ext = new T1();
+                string extTableName = ext.GetType().Name;
+                string extTableId = $"{mainTableName}{mainTableId}";
+
+                foreach (var prop in type.GetType().GetProperties())
+                {
+                    if (prop.GetCustomAttributes(typeof(KeyAttribute), true).FirstOrDefault() != null)
+                        extTableId = prop.Name;
+
+                    string refKey = ((RefKeyAttribute)prop.GetCustomAttributes(typeof(RefKeyAttribute), true).FirstOrDefault())?.RefKey;
+                    if (refKey != null)
+                        extTableId = refKey;
+
+                    if (refKey != null || prop.Name == extTableId)
+                        continue;
+
+                    columnSql += ", ";
+                    columnSql += $"{extTableName}.{prop.Name} as '{extTableName}.{prop.Name}'";
+                }
+                fromSql += $" left join {extTableName}.{extTableId} on {mainTableName}.{mainTableId}";
             }
 
-            // Storage
-            //CREATE TABLE "Storage"( `Id` TEXT NOT NULL, `Hash` TEXT NOT NULL, `SourceFileName` TEXT NOT NULL, `SourceFilePath` TEXT NOT NULL, `StorageFileName` TEXT NOT NULL UNIQUE, `Author` TEXT, `Date` TEXT, `Comment` TEXT, PRIMARY KEY(`Id`))
-            if (CreateTable(TableStorageName,
-                "`Id` TEXT, " +
-                "`Hash` TEXT NOT NULL, " +
-                "`SourceFileName` TEXT NOT NULL, " + // "file.pdf"
-                "`SourceFilePath` TEXT NOT NULL, " + // "c:\some\place\file.pdf"
-                "`StorageFileName` TEXT NOT NULL UNIQUE, " +
-                "`BookId` TEXT, "+
-                "`Date` TEXT, `Comment` TEXT",
-                "`Id`"))
+            string sqlQuery = $"SELECT {columnSql} FROM {fromSql} WHERE {where}";
+            DataTable dt = SelectBySql(sqlQuery);
+
+            var res = new List<(T Main, T1 Ext1)>();
+            for (int i = 0; i < dt.Rows.Count; i++)
             {
-                CreateIndex(TableStorageName, "Hash");
-                CreateIndex(TableStorageName, "SourceFileName");
-                CreateIndex(TableStorageName, "StorageFileName");
+                DataRow row = dt.Rows[i];
+                main = new T();
+                LoadObject(main, row);
+                T1 ext1 = new T1();
+                LoadObject(ext1, row, true);
+
+                res.Add((main, ext1));
             }
 
-            // CitationStorage
-            // CREATE TABLE `CitationStorage` ( `CitationId` TEXT NOT NULL, `StorageId` TEXT NOT NULL, PRIMARY KEY(`StorageId`) )
-            if (CreateTable(TableCitationStorageName,
-                "`CitationId` TEXT NOT NULL, " +
-                "`StorageId` TEXT NOT NULL",
-                "`CitationId`, `StorageId`"
-                ))
+            return res;
+        }
+
+        /// <summary>
+        /// Loads one object propery with the correct value from the provided DataRow.
+        /// Property name matches column name. If prefixTableName then columnName is 'tableName.propertyName'.
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <param name="prop"></param>
+        /// <param name="row"></param>
+        private void LoadProperty(object obj, PropertyInfo prop, DataRow row, bool prefixTableName = false)
+        {
+            string name = (prefixTableName ? $"{obj.GetType().Name}." : "") + prop.Name;
+            object val;
+            try
             {
-                CreateIndex(TableCitationStorageName, "CitationId");
-                CreateIndex(TableCitationStorageName, "StorageId");
+                val = row[name];
+            }
+            catch
+            {
+                return;
             }
 
-            // CitationCategory
+            bool isNullable = Nullable.GetUnderlyingType(prop.GetType()) != null;
+            bool isEnum = prop.GetType().IsEnum;
+            Type type = prop.PropertyType;
+            string typeName = type.Name;
+            if (isEnum)
+                typeName = "enum";
 
-            if (CreateTable(TableCitationCategoryName,
-                "`CitationId` TEXT NOT NULL, " +
-                "`CategoryId` TEXT NOT NULL, "+
-                "`Weight` INTEGER NOT NULL",
-                "`CitationId`, `CategoryId`"
-                ))
+            switch (typeName)
             {
-                CreateIndex(TableCitationCategoryName, "CitationId");
-                CreateIndex(TableCitationCategoryName, "CategoryId");
-            }
-
-            // CitationBook
-            // CREATE TABLE `CitationBook` ( `BookId` TEXT NOT NULL, `CitationId` TEXT NOT NULL, PRIMARY KEY(`BookId`,`CitationId`) )
-            if (CreateTable(TableCitationBookName,
-                "`CitationId` TEXT NOT NULL, " +
-                "`BookId` TEXT NOT NULL",
-                "`CitationId`, `BookId`"
-                ))
-            {
-                CreateIndex(TableCitationBookName, "CitationId");
-                CreateIndex(TableCitationBookName, "BookId");
+                case "int":
+                    prop.SetValue(obj, (int)(Int64)val);
+                    break;
+                case "uint":
+                    prop.SetValue(obj, (uint)(UInt64)val);
+                    break;
+                case nameof(Int32):
+                    prop.SetValue(obj, (Int32)(Int64)val);
+                    break;
+                case nameof(UInt32):
+                    prop.SetValue(obj, (UInt32)(UInt64)val);
+                    break;
+                case "long":
+                    prop.SetValue(obj, (long)(Int64)val);
+                    break;
+                case nameof(Int64):
+                    prop.SetValue(obj, (Int64)val);
+                    break;
+                case "ulong":
+                    prop.SetValue(obj, (ulong)(Int64)val);
+                    break;
+                case nameof(UInt64):
+                    prop.SetValue(obj, (UInt64)(Int64)val);
+                    break;
+                case nameof(Decimal):
+                    prop.SetValue(obj, (Decimal)val);
+                    break;
+                case nameof(DateTime):
+                    prop.SetValue(obj, ((string)val).ToSaneDateTime());
+                    break;
+                case "enum":
+                    prop.SetValue(obj, Enum.Parse(type, ((string)val)));
+                    break;
+                case nameof(Id):
+                    prop.SetValue(obj, Id.NewId((string)val));
+                    break;
+                default:
+                    prop.SetValue(obj, val);
+                    break;
             }
         }
 
 
-        public DataTable Select(string query)
+        /// <summary>
+        /// Load an object from a DataRow. Column name to load from matches property name in object.
+        /// </summary>
+        /// <param name="obj">Object to load into.</param>
+        /// <param name="row">A datarow with columns that matches property names in obj.</param>
+        /// <param name="prefixTableName">Name of a column in dataRow is either "ColumnName" or "TableName.ColumnName" depending on param prefixTableName.</param>
+        private void LoadObject(object obj, DataRow row, bool prefixTableName = false)
+        {
+            foreach (var prop in obj.GetType().GetProperties())
+            {
+                LoadProperty(obj, prop, row, prefixTableName);
+
+                //string name = (prefixTableName ? $"{obj.GetType().Name}." : "") + prop.Name;
+                //object val = null;
+                //try
+                //{
+                //    val = row[name];
+                //}
+                //catch
+                //{
+                //    continue;
+                //}
+                //bool isNullable = Nullable.GetUnderlyingType(prop.GetType()) != null;
+                //bool isEnum = prop.GetType().IsEnum;
+                //Type type = prop.GetType();
+                //string typeName = type.Name;
+                //if (isEnum)
+                //    typeName = "enum";
+
+                //switch (typeName)
+                //{
+                //    case nameof(DateTime):
+                //        prop.SetValue(obj, ((string)val).ToSaneDateTime());
+                //        break;
+                //    case "enum":
+                //        prop.SetValue(obj, Enum.Parse(type, ((string)val)));
+                //        break;
+                //    default:
+                //        prop.SetValue(obj, val);
+                //        break;
+                //}
+
+            }
+
+        }
+
+        public DataTable SelectBySql(string query)
         {
             DataTable dt = new DataTable();
 
@@ -204,47 +363,6 @@ namespace Dek.Bel.DB
             return dt;
         }
 
-        public List<T> Select<T>(string where) where T : new()
-        {
-            T obj = new T();
-            List<T> result = new List<T>();
-            string tableName = obj.GetType().Name;
-
-            string sqlQuery = $"SELECT * FROM {tableName} WHERE {where}";
-            DataTable dt = Select(sqlQuery);
-
-            for (int i = 0; i < dt.Rows.Count; i++)
-            {
-                obj = new T();
-                foreach (var prop in obj.GetType().GetProperties())
-                {
-                    string name = prop.Name;
-                    object val = dt.Rows[i][name];
-                    bool isNullable = Nullable.GetUnderlyingType(prop.GetType()) != null;
-                    bool isEnum = prop.GetType().IsEnum;
-                    Type type = prop.GetType();
-                    string typeName = type.Name;
-                    if (isEnum)
-                        typeName = "enum";
-
-                    switch (typeName)
-                    {
-                        case nameof(DateTime):
-                            prop.SetValue(obj, ((string)val).ToSaneDateTime());
-                            break;
-                        case "enum":
-                            prop.SetValue(obj, Enum.Parse(type, ((string)val)));
-                            break;
-                        default:
-                            prop.SetValue(obj, val);
-                            break;
-                    }
-
-                }
-            }
-
-            return result;
-        }
 
         public bool ValueExists(string table, string column, string value)
         {
@@ -299,11 +417,23 @@ namespace Dek.Bel.DB
                     //"CREATE TABLE `Storage` ( `Hash` TEXT NOT NULL, `SourceFileName` TEXT NOT NULL, `SourceFilePath` TEXT NOT NULL, `StorageFileName` TEXT NOT NULL UNIQUE, PRIMARY KEY(`Hash`) )"
                     // table not exist, create table and insert 
                     if (columnDesc.EndsWith(","))
-                        throw new Exception("Create: No ending ',', stupido!");
-                    if(!primaryKey.StartsWith("`") || !primaryKey.EndsWith("`"))
-                        throw new Exception("Create: No `backticks` in primary key desc, stupido!");
+                        throw new Exception($"Create {tablename}: No ending ',', stupido!");
 
-                    command.CommandText = $"CREATE TABLE `{tablename}` ({columnDesc}, PRIMARY KEY({primaryKey})) ";
+                    bool primaryDescEmpty = string.IsNullOrWhiteSpace(primaryKey);
+
+                    if (primaryDescEmpty)
+                    {
+                        // Accept no primary key
+                        command.CommandText = $"CREATE TABLE `{tablename}` ({columnDesc})";
+                    }
+                    else
+                    {
+                        if (!primaryKey.StartsWith("`") || !primaryKey.EndsWith("`"))
+                            throw new Exception($"Create {tablename}: No `backticks` in primary key desc, stupido!");
+
+                        command.CommandText = $"CREATE TABLE `{tablename}` ({columnDesc}, PRIMARY KEY({primaryKey})) ";
+                    }
+
                     MessageBox.Show(command.CommandText);
                     command.ExecuteNonQuery();
                 }
@@ -387,7 +517,7 @@ namespace Dek.Bel.DB
             string keyDefs = "";
             foreach (var prop in obj.GetType().GetProperties())
             {
-                string typeName = prop.GetType().Name;
+                string typeName = prop.PropertyType.Name;
                 object keyAttributes = prop.GetCustomAttributes(typeof(KeyAttribute), true).FirstOrDefault();
                 bool isKey = prop.Name.ToLower() == "id" || keyAttributes != null;
                 string sqlType;
@@ -402,20 +532,33 @@ namespace Dek.Bel.DB
                 // Datetime defaults to TEST
                 switch (typeName)
                 {
+                    case "byte":
+                    case "Byte":
                     case "sbyte":
+                    case "SByte":
                     case "short":
                     case "int":
                     case "long":
-                    case "byte":
                     case "ushort":
                     case "uint":
                     case "ulong":
                     case "bool":
+                    case "Boolean":
+                    case "Int32":
+                    case "UInt32":
+                    case "Int16":
+                    case "UInt16":
+                    case "Int64":
+                    case "UInt64":
+                    case "Single":
                         sqlType = "INTEGER";
                         break;
                     case "float":
+                    case "Float":
                     case "double":
+                    case "Double":
                     case "decimal":
+                    case "Decimal":
                         sqlType = "REAL";
                         break;
                     default:
@@ -607,6 +750,41 @@ namespace Dek.Bel.DB
             }
 
             return true;
+        }
+
+        public void ClearTable<T>() where T : new()
+        {
+            ClearTable(new T());
+        }
+
+        public void ClearTable(object model)
+        {
+            if (model == null)
+                return;
+
+            try
+            {
+                using (SQLiteCommand command = m_dbConnection.CreateCommand())
+                {
+                    string tableName = model.GetType().Name;
+
+                    m_dbConnection.Open();
+                    command.CommandText = $"DELETE FROM '{tableName}'";
+                    command.ExecuteNonQuery();
+                }
+            }
+            catch (SQLiteException sqlex)
+            {
+                MessageBox.Show(sqlex.ToString(), "Sql exception");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString(), "Exception");
+            }
+            finally
+            {
+                m_dbConnection.Close();
+            }
         }
 
         public void Dispose()

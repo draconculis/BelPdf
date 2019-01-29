@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Dek.Bel.Models;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -8,11 +9,11 @@ namespace Dek.Bel.Categories
 {
     public partial class FormCategoryEdit : Form
     {
-        public CategoryModel Category { get; private set; }
-        IEnumerable<CategoryModel> Categories;
+        public Category Category { get; private set; }
+        IEnumerable<Category> Categories;
 
         // Update
-        public FormCategoryEdit(IEnumerable<CategoryModel> categories, CategoryModel cat)
+        public FormCategoryEdit(IEnumerable<Category> categories, Category cat)
         {
             Categories = categories;
             InitializeComponent();
@@ -24,7 +25,7 @@ namespace Dek.Bel.Categories
         }
 
         // Add
-        public FormCategoryEdit(IEnumerable<CategoryModel> categories)
+        public FormCategoryEdit(IEnumerable<Category> categories)
         {
             Categories = categories;
             InitializeComponent();
@@ -45,7 +46,12 @@ namespace Dek.Bel.Categories
 
         private void buttonOK_Click(object sender, EventArgs e)
         {
-            Category = new CategoryModel(textBoxCode.Text.Trim(), textBoxName.Text.Trim(), textBoxDesc.Text.Trim());
+            Category = new Category{
+                Code = textBoxCode.Text.Trim(),
+                Name = textBoxName.Text.Trim(),
+                Description = textBoxDesc.Text.Trim(),
+            };
+
             DialogResult = DialogResult.OK;
             Close();
         }

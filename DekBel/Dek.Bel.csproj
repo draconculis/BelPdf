@@ -101,13 +101,23 @@
       <DependentUpon>BelGui.cs</DependentUpon>
     </Compile>
     <Compile Include="Cls\DateTime.cs" />
-    <Compile Include="Cls\Id.cs" />
+    <Compile Include="DB\HistoryRepo.cs" />
+    <Compile Include="DB\Id.cs" />
     <Compile Include="Cls\Mef.cs" />
     <Compile Include="DB\CitationRepo.cs" />
+    <Compile Include="DB\DBCreator.cs" />
+    <Compile Include="DB\IDBCreator.cs" />
+    <Compile Include="DB\IModel.cs" />
+    <Compile Include="DB\IndexAttribute.cs" />
     <Compile Include="DB\KeyAttribute.cs" />
+    <Compile Include="DB\RefAttribute.cs" />
     <Compile Include="InterOp\CodesEnum.cs" />
+    <Compile Include="ModelsForViewing.cs" />
+    <Compile Include="Models\Author.cs" />
+    <Compile Include="Models\AuthorType.cs" />
     <Compile Include="Models\Book.cs" />
-    <Compile Include="Models\CategoryModel.cs" />
+    <Compile Include="Models\BookAuthor.cs" />
+    <Compile Include="Models\Category.cs" />
     <Compile Include="Categories\CategoryService.cs" />
     <Compile Include="Categories\FormCategoryEdit.cs">
       <SubType>Form</SubType>
@@ -128,11 +138,16 @@
     <Compile Include="DB\StorageRepo.cs" />
     <Compile Include="DB\IDBService.cs" />
     <Compile Include="DB\Sqlite.cs" />
+    <Compile Include="Models\Chapter.cs" />
     <Compile Include="Models\Citation.cs" />
+    <Compile Include="Models\CitationCategory.cs" />
+    <Compile Include="Models\History.cs" />
     <Compile Include="Models\RawCitation.cs" />
-    <Compile Include="Models\StorageModel.cs" />
+    <Compile Include="Models\Storage.cs" />
+    <Compile Include="Models\Volume.cs" />
+    <Compile Include="Models\VolumeReference.cs" />
     <Compile Include="Pdf\PdfService.cs" />
-    <Compile Include="Storage\StorageService.cs" />
+    <Compile Include="FileStorage\StorageService.cs" />
     <Compile Include="InterOp\Data.cs" />
     <Compile Include="InterOp\InterOp.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -5,20 +5,18 @@ using System.Text;
 using System.Threading.Tasks;
 using Dek.Cls;
 
-namespace Dek.Bel.Cls
+namespace Dek.Bel.DB
 {
-    public class Id
+    public struct Id
     {
         public static Id Empty { get; } = new Id(Guid.Empty);
-        Guid Value { get; set; }
+        public static Id Null => Empty;
 
-        public static Id NewId() => new Id();
+        public Guid Value { get; set; } // Defaults to null guid
+
+        public static Id NewId() => new Id { Value = Guid.NewGuid() };
         public static Id NewId(string id) => new Id(id);
         public static Id NewId(Guid guid) => new Id(guid);
-
-        public Id() : this(Guid.NewGuid())
-        {
-        }
 
         public Id(string value) : this(value.ToGuid())
         {
@@ -35,5 +33,16 @@ namespace Dek.Bel.Cls
         }
 
         public bool IsNull => Guid.Empty == Value;
+    }
+
+    public static class IdExtensions
+    {
+        public static Id ToId(this string me)
+        {
+            if (string.IsNullOrWhiteSpace(me))
+                return Id.Null;
+
+            return new Id(me);
+        }
     }
 }

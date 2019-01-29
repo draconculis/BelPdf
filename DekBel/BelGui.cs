@@ -1,6 +1,9 @@
 ﻿using BelManagedLib;
 using Dek.Bel.Categories;
+using Dek.Bel.Cls;
 using Dek.Bel.DB;
+using Dek.Bel.FileStorage;
+using Dek.Bel.Models;
 using Dek.Bel.UserSettings;
 using Dek.Cls;
 using System;
@@ -28,50 +31,62 @@ namespace Dek.Bel
                 Cancel = false,
             };
 
-        //public CitationModel
+        [Import] public ModelsForViewing VM { get; set; }
+        [Import] public ICategoryService CategoryService { get; set; }
+        [Import] public IUserSettingsService UserSettingsService { get; set; }
+        [Import] public IDBService DBService { get; set; }
+        [Import] public CategoryRepo CategoryRepo { get; set; }
+        private StorageService StorageService { get; } = new StorageService();
+        [Import] public HistoryRepo HistoryRepo { get; set; }
 
-        [Import] public ICategoryService m_CategoryService { get; set; }
-        [Import] public IUserSettingsService m_UserSettingsService { get; set; }
-        [Import] public IDBService m_DBService { get; set; }
-        [Import] public CategoryRepo m_CategoryRepo { get; set; }
 
-
-
-        public BelGui(EventData messsage) : this()
+        /// <summary>
+        /// Coming in here means add a new citation. We are called from Sumatra.
+        /// </summary>
+        /// <param name="message"></param>
+        public BelGui(EventData message) : this()
         {
-            richTextBox1.Text = messsage.Text;
-            toolStripStatusLabel_GUID.Text = Guid.NewGuid().ToString();
-            label1_MD5.Text = Guid.NewGuid().ToString();
+            if (DBService == null)
+                Mef.Initialize(this);
 
-            textBox_FileName.Text = Path.GetFileName(messsage.FilePath);
-            //textBox_FileName = Path.GetFileName(messsage.FilePath);
-            label_Page.Text = $"{messsage.StartPage} - {messsage.StopPage}";
+            List<RawCitation> rawCitations = DBService.Select<RawCitation>();
+            DBService.ClearTable<RawCitation>();
+
+            // Get volume and storage
+            History history = HistoryRepo.GetLastOpened(); // Our currently open file in Sumatra
+            VM.CurrentVolume = DBService.SelectById<Volume>(history.VolumeId);
+            VM.CurrentStorage = DBService.SelectById<Storage>(history.StorageId);
+                       
+            // Create new citation
+            VM.CurrentCitation = CitationRepo.CreateNewCitation(rawCitations, message, (string)Properties.Settings.Default["DeselectionMarker"]);
+
+            LoadControls();
         }
 
+        // Test
         public BelGui()
         {
             InitializeComponent();
-            //Meffify();
 
             toolStripTextBox1.Text = (string)Properties.Settings.Default["DeselectionMarker"];
         }
 
-        private void Meffify()
+        /// <summary>
+        /// Load data
+        /// </summary>
+        private void LoadControls()
         {
-            var catalog = new AggregateCatalog();
-            catalog.Catalogs.Add(new AssemblyCatalog(typeof(BelGui).Assembly));
+            // Load data from citation
+            richTextBox1.Text = VM.CurrentCitation.Citation2;
+            richTextBox2.Text = VM.CurrentCitation.Citation3;
+            toolStripStatusLabel_GUID.Text = VM.CurrentCitation.Id.ToString();
+            label1_MD5.Text = Guid.NewGuid().ToString();
 
-            var container = new CompositionContainer(catalog);
+            // Load data from storage
+            label_fileName.Text = Path.GetFileName(VM.Message.FilePath);
+            //textBox_FileName = Path.GetFileName(messsage.FilePath);
+            label_Page.Text = $"{VM.Message.StartPage} - {VM.Message.StopPage}";
 
-            //Fill the imports of this object
-            try
-            {
-                container.ComposeParts(this);
-            }
-            catch (CompositionException compositionException)
-            {
-                MessageBox.Show($"{Environment.NewLine}{compositionException}", "Composition error");
-            }
         }
 
         private void closeToolStripMenuItem1_Click(object sender, EventArgs e)
@@ -165,13 +180,13 @@ namespace Dek.Bel
 
         }
 
-        private void AddCategoryLabel(CategoryModel cat)
+        private void AddCategoryLabel(Category cat)
         {
             // TODO: ADD TO DB
-            Label l = m_CategoryService.CreateCategoryLabelControl(cat.ToString(), false, contextMenuStrip_Category);
+            Label l = CategoryService.CreateCategoryLabelControl(cat.ToString(), false, contextMenuStrip_Category);
             
             if (flowLayoutPanel_Categories.Controls.Count < 1)
-                m_CategoryService.SetMainStyleOnLabel(l);
+                CategoryService.SetMainStyleOnLabel(l);
             flowLayoutPanel_Categories.Controls.Add(l);
             comboBox2.Focus();
         }
@@ -186,8 +201,8 @@ namespace Dek.Bel
         {
             if (((sender as ToolStripMenuItem)?.Owner as ContextMenuStrip)?.SourceControl is Label label)
             {
-                m_CategoryService.ClearMainStyleFromLabels(flowLayoutPanel_Categories.Controls.OfType<Label>());
-                m_CategoryService.SetMainStyleOnLabel(label);
+                CategoryService.ClearMainStyleFromLabels(flowLayoutPanel_Categories.Controls.OfType<Label>());
+                CategoryService.SetMainStyleOnLabel(label);
             }
         }
 
@@ -220,7 +235,7 @@ namespace Dek.Bel
 
         private void categoriesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FormCategory fc = new FormCategory(m_CategoryService);
+            FormCategory fc = new FormCategory(CategoryService);
             fc.ShowDialog();
         }
 
@@ -322,7 +337,7 @@ namespace Dek.Bel
             }
 
             listBox1.Items.Clear();
-            var cats = m_CategoryRepo.SearchCategoriesByNameOrCode(combo.Text);
+            var cats = CategoryRepo.SearchCategoriesByNameOrCode(combo.Text);
             if(cats.Count < 1)
             {
                 listBox1.Visible = false;
@@ -346,7 +361,7 @@ namespace Dek.Bel
 
         private void listBox1_Click(object sender, EventArgs e)
         {
-            if (!(listBox1.SelectedItem is CategoryModel cat))
+            if (!(listBox1.SelectedItem is Category cat))
                 return;
 
             AddCategoryLabel(cat);

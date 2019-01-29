@@ -1,13 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using Dek.Bel.Models;
+using System.Collections.Generic;
 using System.Windows.Forms;
 
 namespace Dek.Bel.Categories
 {
     public interface ICategoryService
     {
-        IEnumerable<CategoryModel> Categories { get; }
-        void Add(CategoryModel cat);
-        void Remove(CategoryModel cat);
+        IEnumerable<Category> Categories { get; }
+        void Add(Category cat);
+        void Remove(Category cat);
 
         Label CreateCategoryLabelControl(string text, bool isMain, ContextMenuStrip menu);
         void ClearMainStyleFromLabels(IEnumerable<Label> labels);

@@ -1,4 +1,4 @@
-﻿using Dek.Bel.Cls;
+﻿using Dek.Bel.DB;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Dek.Bel.Models
 {
-    public class RawCitation
+    public class RawCitation : IModelWithId
     {
         public Id Id { get; set; }
         public string Fragment { get; set; }

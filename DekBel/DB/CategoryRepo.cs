@@ -1,4 +1,4 @@
-﻿using Dek.Bel.Categories;
+﻿using Dek.Bel.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
@@ -14,12 +14,12 @@ namespace Dek.Bel.DB
     {
         [Import] IDBService dBService { get; set; }
 
-        private string TableName => dBService.TableCategoryName;
+        private string TableName => nameof(Category);
         private const string ColCode = "Code";
         private const string ColName = "Name";
         private const string ColDescription = "Description";
 
-        public void AddOrUpdateCategory(CategoryModel cat)
+        public void AddOrUpdateCategory(Category cat)
         {
             bool isUpdate = dBService.ValueExists(TableName, ColCode, cat.Code);
 
@@ -43,15 +43,19 @@ namespace Dek.Bel.DB
             }
         }
 
-        public List<CategoryModel> SearchCategoriesByNameOrCode(string search)
+        public List<Category> SearchCategoriesByNameOrCode(string search)
         {
-            string sql = $"SELECT Code, Name, Description FROM {dBService.TableCategoryName} WHERE Name LIKE '%{search}%' OR Code LIKE '%{search}%'";
-            DataTable table = dBService.Select(sql);
+            string sql = $"SELECT Code, Name, Description FROM {nameof(Category)} WHERE Name LIKE '%{search}%' OR Code LIKE '%{search}%'";
+            DataTable table = dBService.SelectBySql(sql);
 
-            var res = new List<CategoryModel>();
+            var res = new List<Category>();
             foreach (DataRow row in table.Rows)
             {
-                res.Add(new CategoryModel((string)row[0], (string)row[1], (string)row[2]));
+                res.Add(new Category{
+                    Code = (string)row[0],
+                    Name = (string)row[1],
+                    Description = (string)row[2],
+                    });
             }
 
             return res;

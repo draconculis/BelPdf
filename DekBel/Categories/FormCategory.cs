@@ -1,4 +1,5 @@
 ﻿using Dek.Bel.Categories;
+using Dek.Bel.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -14,8 +15,8 @@ namespace Dek.Bel.Categories
     public partial class FormCategory : Form
     {
         public ICategoryService m_CategoryService;
-        private IEnumerable<CategoryModel> m_FilteredCategories => m_CategoryService.Categories.Where(c => Filter(c)).ToList();
-        private Predicate<CategoryModel> Filter;
+        private IEnumerable<Category> m_FilteredCategories => m_CategoryService.Categories.Where(c => Filter(c)).ToList();
+        private Predicate<Category> Filter;
 
         public FormCategory(ICategoryService categoryService)
         {
@@ -112,10 +113,11 @@ namespace Dek.Bel.Categories
 
 
             int row = dataGridView1.SelectedCells[0].RowIndex;
-            var cat = new CategoryModel(
-                dataGridView1.Rows[row].Cells[0].Value as string,
-                dataGridView1.Rows[row].Cells[1].Value as string,
-                dataGridView1.Rows[row].Cells[2].Value as string);
+            var cat = new Category {
+                Code = dataGridView1.Rows[row].Cells[0].Value as string,
+                Name = dataGridView1.Rows[row].Cells[1].Value as string,
+                Description = dataGridView1.Rows[row].Cells[2].Value as string
+            };
 
             FormCategoryEdit f = new FormCategoryEdit(m_CategoryService.Categories, cat);
             if(f.ShowDialog(this) == DialogResult.OK)

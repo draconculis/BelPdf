@@ -1,4 +1,5 @@
 ﻿using Dek.Bel.DB;
+using Dek.Bel.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
@@ -14,8 +15,8 @@ namespace Dek.Bel.Categories
     [Export(typeof(ICategoryService))]
     public class CategoryService : ICategoryService
     {
-        private List<CategoryModel> m_Categories { get; set; }
-        public IEnumerable<CategoryModel> Categories => m_Categories;
+        private List<Category> m_Categories { get; set; }
+        public IEnumerable<Category> Categories => m_Categories;
         private IDBService m_DBService;
 
         private BorderStyle m_DefaultBorderStyle;
@@ -24,7 +25,7 @@ namespace Dek.Bel.Categories
         CategoryService(IDBService dBService)
         {
             m_DefaultBorderStyle = new Label().BorderStyle;
-            m_Categories = new List<CategoryModel>();
+            m_Categories = new List<Category>();
 
             m_DBService = dBService;
 
@@ -39,25 +40,30 @@ namespace Dek.Bel.Categories
         {
             m_Categories.Clear();
             string selectStatement = "SELECT CODE, NAME, DESCRIPTION FROM CATEGORIES";
-            var res = m_DBService.Select(selectStatement);
+            var res = m_DBService.SelectBySql(selectStatement);
             if(res.Rows.Count > 0)
             {
                 foreach(DataRow row in res.Rows)
                 {
-                    var cat = new CategoryModel((string)(row[0]), (string)(row[1]), (string)(row[2]));
+                    var cat = new Category {
+
+                        Code = (string)row[0],
+                        Name = (string)row[1],
+                        Description = (string)row[2],
+                    };
                     m_Categories.Add(cat);
                 }
             }
         }
 
-        public void Add(string name, string code, string desc) => Add(new CategoryModel(name, code, desc));
+        public void Add(string name, string code, string desc) => Add(new Category { Name = name, Code = code, Description = desc });
 
         /// <summary>
         /// Add a new category.
         /// </summary>
         /// <param name="cat"></param>
         /// <exception cref="ArgumentException">Throws arg exception if code not unique</exception>
-        public void Add(CategoryModel cat)
+        public void Add(Category cat)
         {
             if (m_Categories.Any(c => c.Code.Equals(cat.Code, StringComparison.CurrentCultureIgnoreCase)))
                 throw new ArgumentException($"Code {cat.Code} not unique.");
@@ -65,18 +71,18 @@ namespace Dek.Bel.Categories
             m_Categories.Add(cat);
         }
 
-        public void Remove(CategoryModel cat)
+        public void Remove(Category cat)
         {
             m_Categories.Remove(cat);
         }
 
-        public void Update(CategoryModel cat)
+        public void Update(Category cat)
         {
             m_Categories.Remove(cat);
 
         }
 
-        public CategoryModel this[string code]
+        public Category this[string code]
         {
             get => m_Categories.FirstOrDefault(c => c.Code.Equals(code, StringComparison.CurrentCultureIgnoreCase));
         }

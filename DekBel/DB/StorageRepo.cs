@@ -16,76 +16,57 @@ namespace Dek.Bel.DB
         [Import] IDBService dBService { get; set; }
         string SqlSelectFields = $"SELECT `Id`, `Hash`, `SourceFileName`, `SourceFilePath`, `StorageFileName`, `BookId`, `Date`, `Comment`";
 
-        public StorageModel GetStorageByHash(string hash)
+        public Storage GetStorageByHash(string hash)
         {
-            string sql = $"{SqlSelectFields} FROM {dBService.TableStorageName} WHERE Hash = '{hash}'";
+            string sql = $"{SqlSelectFields} FROM {nameof(Storage)} WHERE Hash = '{hash}'";
             return Get(sql);
         }
 
-        public StorageModel GetStorageById(string id)
+        public Storage Get(string sql)
         {
-            string sql = $"{SqlSelectFields} FROM {dBService.TableStorageName} WHERE `Id` = '{id}'";
-            return Get(sql);
-        }
-
-        public StorageModel Get(string sql)
-        {
-            var res = dBService.Select(sql);
+            var res = dBService.SelectBySql(sql);
 
             if (res.Rows.Count == 0)
                 return null;
 
-            StorageModel stoModel = new StorageModel()
+            Models.Storage stoModel = new Models.Storage()
             {
                 Id = new Id(res.Rows[0].ItemArray[0] as string),
                 Hash = (string)(res.Rows[0].ItemArray[1]),
                 FileName = (string)(res.Rows[0].ItemArray[2]),
                 FilePath = (string)(res.Rows[0].ItemArray[3]),
                 StorageName = (string)(res.Rows[0].ItemArray[4]),
-                BookId = new Id(res.Rows[0].ItemArray[5] as string),
+                VolumeId = new Id(res.Rows[0].ItemArray[5] as string),
                 //Date = DateTime.Parse((string)(row.ItemArray[4])),
             };
 
             return stoModel;
         }
 
-        public List<StorageModel> GetMany(string sql)
+        public List<Storage> GetMany(string sql)
         {
-            var res = dBService.Select(sql);
+            var res = dBService.SelectBySql(sql);
 
             if (res.Rows.Count == 0)
                 return null;
 
-            List<StorageModel> models = new List<StorageModel>();
+            List<Models.Storage> models = new List<Models.Storage>();
             foreach (DataRow row in res.Rows)
             {
-                models.Add(new StorageModel()
+                models.Add(new Models.Storage()
                 {
                     Id = new Id(res.Rows[0].ItemArray[0] as string),
                     Hash = (string)(row.ItemArray[1]),
                     FileName = (string)(row.ItemArray[2]),
                     FilePath = (string)(row.ItemArray[3]),
                     StorageName = (string)(row.ItemArray[4]),
-                    BookId = new Id(res.Rows[0].ItemArray[5] as string),
+                    VolumeId = new Id(res.Rows[0].ItemArray[5] as string),
                     //Date = DateTime.Parse((string)(row.ItemArray[6])),
                     Comment = (string)(row.ItemArray[7]),
                 });
             }
 
             return models;
-        }
-
-
-        public string Insert(StorageModel model)
-        {
-            if (model.Id.IsNull)
-                model.Id = new Id();
-
-            dBService.Insert(dBService.TableStorageName,
-                $"`Id`, `Hash`, `SourceFileName`, `SourceFilePath`, `StorageFileName`, `BookId`, `Date`, `Comment`",
-                $"'{model.Id}','{model.Hash}','{model.FileName}','{model.FilePath}','{model.StorageName}','{model.BookId}','{model.Date.ToSaneString()}','{model.Comment}'");
-
-            return model.Id.ToString();
         }
     }
 }

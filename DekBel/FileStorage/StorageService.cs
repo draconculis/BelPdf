@@ -13,37 +13,23 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Dek.Bel.Cls;
+using Dek.Bel.Models;
 
-namespace Dek.Bel.Storage
+namespace Dek.Bel.FileStorage
 {
     // Called & instantiated from interOp
     // Handles files in files storage
     public class StorageService
     {
-        //[Import] public IDBService DBService { get; set; }
+        [Import] public ModelsForViewing VM { get; set; }
         [Import] public StorageRepo m_StorageRepo { get; set; }
+        [Import] public IDBService m_DBService { get; set; }
         [Import] public IUserSettingsService UserSettingsService { get; set; }
 
         public StorageService()
         {
-            Mef.Initialize(this);
-        }
-
-        private void Meffify()
-        {
-            var catalog = new AggregateCatalog();
-            catalog.Catalogs.Add(new AssemblyCatalog(typeof(BelGui).Assembly));
-
-            var container = new CompositionContainer(catalog);
-
-            try
-            {
-                container.ComposeParts(this);
-            }
-            catch (CompositionException compositionException)
-            {
-                MessageBox.Show($"{compositionException}", "Composition error");
-            }
+            if(m_DBService == null)
+                Mef.Initialize(this);
         }
 
         // The meat, entry point from interop
@@ -53,9 +39,19 @@ namespace Dek.Bel.Storage
             string srcHash = CalculateFileMD5(srcPath);
 
             // Do we even exist in db?
-            Models.StorageModel storage = m_StorageRepo.GetStorageByHash(srcHash);
+            Storage storage = m_StorageRepo.GetStorageByHash(srcHash);
             if (storage == null)
                 storage = CreateNewStorageForFile(fileStorageData, srcHash);
+
+            // Save for posterity.
+            var history = new History
+            {
+                Hash = srcHash,
+                OpenDate = DateTime.Now,
+                VolumeId = storage.VolumeId,
+                StorageId = storage.Id,
+            };
+            m_DBService.InsertOrUpdate(history);
 
             var res = new ResultFileStorageData
             {
@@ -72,7 +68,7 @@ namespace Dek.Bel.Storage
         /// <param name="fileStorageData"></param>
         /// <param name="sourceHash"></param>
         /// <returns></returns>
-        public Models.StorageModel CreateNewStorageForFile(RequestFileStorageData fileStorageData, string sourceHash = null)
+        public Storage CreateNewStorageForFile(RequestFileStorageData fileStorageData, string sourceHash = null)
         {
             if (sourceHash.IsNullOrWhiteSpace())
                 sourceHash = CalculateFileMD5(fileStorageData.FilePath);
@@ -83,19 +79,27 @@ namespace Dek.Bel.Storage
 
             File.Copy(fileStorageData.FilePath, stoPath);
 
-            var model = new Models.StorageModel
+            var volume = new Volume
             {
-                Id = new Id(),
+                Id = Id.NewId(),
+                Date = DateTime.Now,
+                Title = stoFileName,
+            };
+
+            var storage = new Storage
+            {
+                Id = Id.NewId(),
                 Hash = sourceHash,
                 FileName = Path.GetFileName(fileStorageData.FilePath),
                 FilePath = fileStorageData.FilePath,
                 StorageName = stoFileName,
-                BookId = Id.Empty,
+                VolumeId = volume.Id,
                 Date = DateTime.Now,
             };
 
-            m_StorageRepo.Insert(model);
-            return model;
+            m_DBService.InsertOrUpdate(volume);
+            m_DBService.InsertOrUpdate(storage);
+            return storage;
         }
 
 
