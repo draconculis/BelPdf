@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Dek.Bel</RootNamespace>
     <AssemblyName>Dek.Bel</AssemblyName>
-    <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
     <NuGetPackageImportStamp>
@@ -34,7 +34,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>logo_Obj_icon.ico</ApplicationIcon>
+    <ApplicationIcon>bel.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="BouncyCastle.Crypto, Version=1.8.1.0, Culture=neutral, PublicKeyToken=0e99375e54769942, processorArchitecture=MSIL">
@@ -100,7 +100,10 @@
     <Compile Include="BelGui.Designer.cs">
       <DependentUpon>BelGui.cs</DependentUpon>
     </Compile>
+    <Compile Include="Services\CitationManipulationService.cs" />
     <Compile Include="Cls\DateTime.cs" />
+    <Compile Include="Cls\RichTextExtensions.cs" />
+    <Compile Include="Services\RichTextService.cs" />
     <Compile Include="DB\HistoryRepo.cs" />
     <Compile Include="DB\Id.cs" />
     <Compile Include="Cls\Mef.cs" />
@@ -111,6 +114,13 @@
     <Compile Include="DB\IndexAttribute.cs" />
     <Compile Include="DB\KeyAttribute.cs" />
     <Compile Include="DB\RefAttribute.cs" />
+    <Compile Include="DB\VolumeRepo.cs" />
+    <Compile Include="Services\Form_ResetCitation.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Services\Form_ResetCitation.Designer.cs">
+      <DependentUpon>Form_ResetCitation.cs</DependentUpon>
+    </Compile>
     <Compile Include="InterOp\CodesEnum.cs" />
     <Compile Include="ModelsForViewing.cs" />
     <Compile Include="Models\Author.cs" />
@@ -118,20 +128,20 @@
     <Compile Include="Models\Book.cs" />
     <Compile Include="Models\BookAuthor.cs" />
     <Compile Include="Models\Category.cs" />
-    <Compile Include="Categories\CategoryService.cs" />
-    <Compile Include="Categories\FormCategoryEdit.cs">
+    <Compile Include="Services\Categories\CategoryService.cs" />
+    <Compile Include="Services\Categories\FormCategoryEdit.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Categories\FormCategoryEdit.Designer.cs">
+    <Compile Include="Services\Categories\FormCategoryEdit.Designer.cs">
       <DependentUpon>FormCategoryEdit.cs</DependentUpon>
     </Compile>
-    <Compile Include="Categories\ICategoryService.cs" />
+    <Compile Include="Services\Categories\ICategoryService.cs" />
     <Compile Include="Cls\StringExtensions.cs" />
     <Compile Include="Cls\TextRange.cs" />
-    <Compile Include="Categories\FormCategory.cs">
+    <Compile Include="Services\Categories\FormCategory.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Categories\FormCategory.Designer.cs">
+    <Compile Include="Services\Categories\FormCategory.Designer.cs">
       <DependentUpon>FormCategory.cs</DependentUpon>
     </Compile>
     <Compile Include="DB\CategoryRepo.cs" />
@@ -142,12 +152,13 @@
     <Compile Include="Models\Citation.cs" />
     <Compile Include="Models\CitationCategory.cs" />
     <Compile Include="Models\History.cs" />
+    <Compile Include="Models\PageRef.cs" />
     <Compile Include="Models\RawCitation.cs" />
     <Compile Include="Models\Storage.cs" />
     <Compile Include="Models\Volume.cs" />
     <Compile Include="Models\VolumeReference.cs" />
-    <Compile Include="Pdf\PdfService.cs" />
-    <Compile Include="FileStorage\StorageService.cs" />
+    <Compile Include="Services\PdfService.cs" />
+    <Compile Include="Services\StorageService.cs" />
     <Compile Include="InterOp\Data.cs" />
     <Compile Include="InterOp\InterOp.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -162,18 +173,21 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="TextData.cs" />
-    <Compile Include="UserSettings\IUserSettingsService.cs" />
-    <Compile Include="UserSettings\UserSettingsService.cs" />
+    <Compile Include="Services\IUserSettingsService.cs" />
+    <Compile Include="Services\UserSettingsService.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="BelGui.resx">
       <DependentUpon>BelGui.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Categories\FormCategoryEdit.resx">
+    <EmbeddedResource Include="Services\Categories\FormCategoryEdit.resx">
       <DependentUpon>FormCategoryEdit.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Categories\FormCategory.resx">
+    <EmbeddedResource Include="Services\Categories\FormCategory.resx">
       <DependentUpon>FormCategory.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Services\Form_ResetCitation.resx">
+      <DependentUpon>Form_ResetCitation.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -181,6 +195,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="bel.ico" />
     <Content Include="logo_Obj_icon.ico" />
     <None Include="app.config" />
     <None Include="Properties\DataSources\BelGui.datasource" />

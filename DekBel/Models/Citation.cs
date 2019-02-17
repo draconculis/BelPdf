@@ -24,6 +24,9 @@ namespace Dek.Bel.Models
         public string Citation2 { get; set; } // Deletions replaced with '…'. Emphasis med ¤ Fet ¤, speciell hilite i citat.
         public string Citation3 { get; set; } // Final edited text.
 
+        public string Exclusion { get; set; } // for Citation2
+        public string Emphasis { get; set; } // for Citation3
+
         public DateTime CreatedDate { get; set; }
         public DateTime EditedDate { get; set; }
         public string Notes { get; set; }

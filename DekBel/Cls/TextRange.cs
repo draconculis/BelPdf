@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace Dek.Cls
 {
@@ -12,7 +13,7 @@ namespace Dek.Cls
         public TextRange(int start, int stop, bool stopAsLength = false)
         {
             if (start < 0 || stop < 0)
-                throw new ArgumentException($"Start: {start}, Stop: {stop}.");
+                throw new ArgumentException($"Index out of range. Start: {start}, Stop: {stop}.");
 
             if (stopAsLength)
                 stop = start + stop - 1;
@@ -31,8 +32,8 @@ namespace Dek.Cls
 
         public int Len => Stop - Start + 1;
 
-        public bool Intersects(TextRange range) => 
-            (range.Start >= Start && range.Start <= Stop) 
+        public bool Intersects(TextRange range) =>
+            (range.Start >= Start && range.Start <= Stop)
             || (range.Stop >= Start && range.Stop <= Stop)
             || (range.Start <= Start) && (range.Stop >= Stop)
             || (range.Start >= Start) && (range.Stop <= Stop);
@@ -69,8 +70,8 @@ namespace Dek.Cls
                 return new List<TextRange> { this };
 
             // Delete all
-            if(excludeRange.Contains(this))
-                return new List<TextRange> ();
+            if (excludeRange.Contains(this))
+                return new List<TextRange>();
 
             // Handle left edge case
             if (excludeRange.Start <= Start)
@@ -107,7 +108,7 @@ namespace Dek.Cls
         public List<TextRange> SubtractSubRanges(List<TextRange> excludeRanges)
         {
             // Assert that no range is outside of this range
-            foreach(var range in excludeRanges)
+            foreach (var range in excludeRanges)
             {
                 if (!Contains(range))
                     throw new ArgumentException("Sub range cannot be outside master range.");
@@ -133,20 +134,21 @@ namespace Dek.Cls
 
             int i = 0, j = 1;
             bool done = false;
-            while(!done)
+            while (!done)
             {
                 var cur = sortedRanges[i];
-                var next = sortedRanges[j++];
+                var next = sortedRanges[j];
 
                 while (cur.Intersects(next))
                 {
                     cur = Super(cur, next);
-                    next = sortedRanges[j++];
-                    if(j == sortedRanges.Count)
+
+                    if (j + 1 == sortedRanges.Count)
                     {
                         done = true;
                         break;
                     }
+                    next = sortedRanges[++j];
                 }
 
                 super.Add(cur);
@@ -156,7 +158,8 @@ namespace Dek.Cls
 
                 if (done || j == sortedRanges.Count)
                 {
-                    super.Add(sortedRanges[i]);
+                    if (!cur.Intersects(sortedRanges[i]))
+                        super.Add(sortedRanges[i]);
                     done = true;
                 }
             }
@@ -164,8 +167,21 @@ namespace Dek.Cls
             return super;
         }
 
+        public static List<TextRange> AddAndMerge(List<TextRange> existingRange, TextRange range)
+        {
+            var newRange = Add(existingRange, range);
+            return MergeConnectedRanges(newRange);
+        }
+
+        public static List<TextRange> Add(List<TextRange> existingRange, TextRange range)
+        {
+            List<TextRange> textRanges = new List<TextRange>(existingRange);
+            textRanges.Add(range);
+            return textRanges;
+        }
+
         /// <summary>
-        /// Creates a super range that ioncludes the two provided ranges.
+        /// Creates a super range that includes the two provided ranges.
         /// Includes any gap between the ranges,
         /// </summary>
         /// <param name="range1"></param>
@@ -179,7 +195,11 @@ namespace Dek.Cls
         }
 
 
-        public bool Equals(TextRange other) => (Start == other.Start && Stop == other.Stop);
+        public override bool Equals(object other) => (Start == ((TextRange)other).Start && Stop == ((TextRange)other).Stop);
+        public bool Equals(TextRange other) => (Start == ((TextRange)other).Start && Stop == ((TextRange)other).Stop);
+
+        public static bool operator ==(TextRange range1, TextRange range2) => range1.Equals(range2);
+        public static bool operator !=(TextRange range1, TextRange range2) => !range1.Equals(range2);
 
         public override string ToString()
         {
@@ -189,9 +209,59 @@ namespace Dek.Cls
 
     public static class TextRangeExtension
     {
-        //public static bool Intersects(this TextRange myself, TextRange other)
-        //{
-        //    return myself.Intersects(other);
-        //}
+        public static List<TextRange> AddAndMerge(this List<TextRange> me, TextRange range)
+        {
+            return TextRange.AddAndMerge(me, range);
+        }
+
+        /// <summary>
+        /// Returns true if any range in list contians the provided range.
+        /// </summary>
+        public static bool ContainsRange(this List<TextRange> me, TextRange range)
+        {
+            foreach (TextRange r in me)
+                if (r.Contains(range))
+                    return true;
+
+            return false;
+        }
+
+        /// <summary>
+        /// Returns true if any range in list contians i.
+        /// </summary>
+        public static bool ContainsInteger(this List<TextRange> me, int i)
+        {
+            return me.ContainsRange(new TextRange(i, i));
+        }
+
+        //
+        public static string ConvertToText(this List<TextRange> me)
+        {
+            if (me == null || me.Count == 0)
+                return string.Empty;
+
+            StringBuilder sb = new StringBuilder();
+            foreach(var range in me)
+            {
+                sb.Append($"{range.Start},{range.Stop};");
+            }
+            return sb.ToString();
+        }
+
+        public static void LoadFromText(this List<TextRange> me, string text)
+        {
+            me = new List<TextRange>();
+            if (string.IsNullOrWhiteSpace(text))
+                return;
+
+            string[] asdjh = text.Split(';');
+            foreach(string s in asdjh)
+            {
+                string[] ns = s.Split(',');
+                TextRange tr = new TextRange(int.Parse(ns[0]), int.Parse(ns[1]));
+                me.Add(tr);
+            }
+        }
+
     }
 }

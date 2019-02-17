@@ -48,6 +48,52 @@ namespace Dek.Cls
             sutRange = new TextRange(0, 4);
         }
 
+        #region Equals --------------------------
+
+        [Test]
+        public void EqualityTests()
+        {
+            var equals = new List<bool>();
+
+            // Given
+            var rangeA = new TextRange(1, 4);
+            var rangeB = new TextRange(1, 4); // equal range
+            var range1 = new TextRange(1, 3); // non equal range
+            var range2 = new TextRange(2, 4); // non equal range
+            var range3 = new TextRange(2, 3); // non equal range
+
+            // When
+#pragma warning disable CS1718 // Comparison made to same variable
+
+            equals.Add(rangeA == rangeA);
+            equals.Add(rangeB == rangeB);
+            equals.Add(rangeB == rangeA);
+            equals.Add(rangeA == rangeB);
+
+            equals.Add(!(rangeA != rangeA));
+            equals.Add(!(rangeB != rangeB));
+            equals.Add(!(rangeB != rangeA));
+            equals.Add(!(rangeA != rangeB));
+
+            equals.Add(!(rangeA == range1));
+            equals.Add(!(rangeA == range2));
+            equals.Add(!(rangeA == range3));
+
+            equals.Add(rangeA != range1);
+            equals.Add(rangeA != range2);
+            equals.Add(rangeA != range3);
+
+#pragma warning restore CS1718 // Comparison made to same variable
+
+
+            // Then
+            foreach(bool equal in equals)
+                Assert.That(equal,  Is.True);
+            
+        }
+
+        #endregion Equals -----------------------
+
         #region Contains ----------------
 
         [Test]
@@ -100,8 +146,6 @@ namespace Dek.Cls
         }
 
         #endregion
-
-
 
         [Test]
         public void Range_14_Intersect_11_and_44_and_vice_versa()

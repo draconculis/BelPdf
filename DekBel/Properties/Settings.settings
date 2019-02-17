@@ -2,7 +2,7 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Dek.Bel.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
-    <Setting Name="Font" Type="System.Drawing.Font" Scope="User">
+    <Setting Name="CitationFont" Type="System.Drawing.Font" Scope="User">
       <Value Profile="(Default)">Times New Roman, 12pt</Value>
     </Setting>
     <Setting Name="DeselectionMarker" Type="System.String" Scope="User">

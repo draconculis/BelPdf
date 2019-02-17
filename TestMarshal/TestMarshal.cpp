@@ -24,7 +24,8 @@ int __cdecl main()
     data.StopPage = 2;
     data.StartGlyph = 3;
     data.StopGlyph = 4;
-    data.SelectionRectsString = (TCHAR*)L"1,2,3,4;";
+    //data.SelectionRectsString = (TCHAR*)L"1,2,3,4;";
+    data.SelectionRects = 0;
     data.Len = 1;
 
     data.Text = (TCHAR*)L"WALLYHO";

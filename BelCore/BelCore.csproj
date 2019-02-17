@@ -1,0 +1,63 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="logo_Obj_icon.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="logo_Obj_icon.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Dto\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="BelGui.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="BelGui.Designer.cs">
+      <DependentUpon>BelGui.cs</DependentUpon>
+    </Compile>
+    <Compile Update="Services\Categories\FormCategory.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Services\Categories\FormCategory.Designer.cs">
+      <DependentUpon>FormCategory.cs</DependentUpon>
+    </Compile>
+    <Compile Update="Services\Categories\FormCategoryEdit.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Services\Categories\FormCategoryEdit.Designer.cs">
+      <DependentUpon>FormCategoryEdit.cs</DependentUpon>
+    </Compile>
+    <Compile Update="Services\Form_ResetCitation.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Services\Form_ResetCitation.Designer.cs">
+      <DependentUpon>Form_ResetCitation.cs</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="BelGui.resx">
+      <DependentUpon>BelGui.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Services\Categories\FormCategory.resx">
+      <DependentUpon>FormCategory.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Services\Categories\FormCategoryEdit.resx">
+      <DependentUpon>FormCategoryEdit.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Services\Form_ResetCitation.resx">
+      <DependentUpon>Form_ResetCitation.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+
+</Project>

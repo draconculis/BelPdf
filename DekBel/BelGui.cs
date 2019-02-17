@@ -1,10 +1,11 @@
 ﻿using BelManagedLib;
-using Dek.Bel.Categories;
+using Dek.Bel.Services;
 using Dek.Bel.Cls;
 using Dek.Bel.DB;
-using Dek.Bel.FileStorage;
+using Dek.Bel.Services;
 using Dek.Bel.Models;
-using Dek.Bel.UserSettings;
+using Dek.Bel.Services;
+using Dek.Bel.Services;
 using Dek.Cls;
 using System;
 using System.Collections.Generic;
@@ -38,6 +39,9 @@ namespace Dek.Bel
         [Import] public CategoryRepo CategoryRepo { get; set; }
         private StorageService StorageService { get; } = new StorageService();
         [Import] public HistoryRepo HistoryRepo { get; set; }
+        [Import] public CitationRepo CitationRepo { get; set; }
+        [Import] public RichTextService RtfService { get; set; }
+        [Import] public CitationManipulationService CitationService{ get; set;}
 
 
         /// <summary>
@@ -58,8 +62,21 @@ namespace Dek.Bel
             VM.CurrentStorage = DBService.SelectById<Storage>(history.StorageId);
                        
             // Create new citation
-            VM.CurrentCitation = CitationRepo.CreateNewCitation(rawCitations, message, (string)Properties.Settings.Default["DeselectionMarker"]);
+            VM.CurrentCitation = CitationRepo.CreateNewCitation(rawCitations, message);
 
+            CitationService.CitationChanged += CitationService_CitationChanged;
+            LoadControls();
+        }
+
+        void LoadCitation()
+        {
+
+        }
+
+
+
+        private void CitationService_CitationChanged(object sender, EventArgs e)
+        {
             LoadControls();
         }
 
@@ -77,9 +94,12 @@ namespace Dek.Bel
         private void LoadControls()
         {
             // Load data from citation
-            richTextBox1.Text = VM.CurrentCitation.Citation2;
-            richTextBox2.Text = VM.CurrentCitation.Citation3;
-            toolStripStatusLabel_GUID.Text = VM.CurrentCitation.Id.ToString();
+            richTextBox1.Rtf = RtfService.CreateRtfWithExlusionsAndEmphasis(VM.CurrentCitation.Citation2, VM.Exclusion, null);
+            richTextBox2.Rtf = RtfService.CreateRtfWithExlusionsAndEmphasis(VM.CurrentCitation.Citation3, null, VM.Emphasis);
+            int maxlen = 50;
+            toolStripStatusLabel_GUID.Text = VM.CurrentCitation.Id.ToString() + " ";
+            toolStripStatusLabel_citationPreview.Font = new Font(richTextBox1.Font.FontFamily, toolStripStatusLabel_GUID.Font.Size);
+            toolStripStatusLabel_citationPreview.Text = VM.CurrentCitation.Citation1.Substring(0, VM.CurrentCitation.Citation1.Length > maxlen ? maxlen : VM.CurrentCitation.Citation1.Length) + $"{(VM.CurrentCitation.Citation1.Length > maxlen ? "…" : "")}";
             label1_MD5.Text = Guid.NewGuid().ToString();
 
             // Load data from storage
@@ -101,7 +121,7 @@ namespace Dek.Bel
 
         private void BelGui_Load(object sender, EventArgs e)
         {
-            Font font = (Font)Properties.Settings.Default["Font"];
+            Font font = UserSettingsService.CitationFont;
 
             richTextBox1.Font = font;
             richTextBox2.Font = font;
@@ -114,7 +134,7 @@ namespace Dek.Bel
             {
                 richTextBox1.Font = fontDialog1.Font;
                 richTextBox2.Font = fontDialog1.Font;
-                Properties.Settings.Default["Font"] = fontDialog1.Font;
+                UserSettingsService.CitationFont = fontDialog1.Font;
             }
         }
 
@@ -125,7 +145,7 @@ namespace Dek.Bel
             Font newFont = new Font(f.FontFamily, f.Size * (1 + FontScaleFactor), f.Style, f.Unit);
             richTextBox1.Font = newFont;
             richTextBox2.Font = newFont;
-            Properties.Settings.Default["Font"] = newFont;
+            UserSettingsService.CitationFont = newFont;
         }
 
         private void toolStripButton4_Click(object sender, EventArgs e)
@@ -135,7 +155,7 @@ namespace Dek.Bel
             Font newFont = new Font(f.FontFamily, size, f.Style, f.Unit);
             richTextBox1.Font = newFont;
             richTextBox2.Font = newFont;
-            Properties.Settings.Default["Font"] = newFont;
+            UserSettingsService.CitationFont = newFont;
         }
 
         private void contextMenuStrip1_Opening(object sender, CancelEventArgs e)
@@ -188,7 +208,7 @@ namespace Dek.Bel
             if (flowLayoutPanel_Categories.Controls.Count < 1)
                 CategoryService.SetMainStyleOnLabel(l);
             flowLayoutPanel_Categories.Controls.Add(l);
-            comboBox2.Focus();
+            textBox_CategorySearch.Focus();
         }
 
         private void removeToolStripMenuItem_Click(object sender, EventArgs e)
@@ -291,7 +311,8 @@ namespace Dek.Bel
 
         }
 
-        // Category combo
+        #region Category logic ------------------------------------------------------
+        // Category
         private void comboBox2_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Return)
@@ -367,9 +388,108 @@ namespace Dek.Bel
             AddCategoryLabel(cat);
 
             listBox1.Visible = false;
-            comboBox2.Text = "";
+            textBox_CategorySearch.Text = "";
         }
 
+        private void textBox_CategorySearch_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        #endregion Category logic ------------------------------------------------------
+
+
+
+        private void copyGUIDToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        // toolstrip
+
+        private void toolStripButton6_Click_1(object sender, EventArgs e)
+        {
+            // Exclude
+            if(richTextBox1.SelectionLength > 0)
+                CitationService.ExcludeSelectedText(richTextBox1.SelectionStart, richTextBox1.SelectionStart + richTextBox1.SelectionLength - 1);
+        }
+
+        private void richTextBox2_Enter(object sender, EventArgs e)
+        {
+            toolStripButton8.Enabled = true;
+        }
+
+        private void richTextBox2_Leave(object sender, EventArgs e)
+        {
+            if (toolStripButton8.Selected)
+                return;
+            toolStripButton8.Enabled = false;
+        }
+
+        private void toolStripButton7_Click(object sender, EventArgs e)
+        {
+            // Begin edit - e.g copy rtf2 to rtf3
+            VM.CurrentCitation.Citation3 = VM.CurrentCitation.Citation2;
+            DBService.InsertOrUpdate(VM.CurrentCitation);
+            LoadControls();
+        }
+
+
+        private void toolStripButton8_Click(object sender, EventArgs e)
+        {
+            CitationService.AddEmphasis(5, 8);
+            richTextBox2.Focus();
+        }
+
+
         // --------------------------
+
+        private void excludeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void emphasisToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void doneToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void showOriginalToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            CitationService.ResetCitation2();
+        }
+
+        private void toolStripButton1_Click_1(object sender, EventArgs e)
+        {
+            CitationService.ResetCitation2();
+        }
+
+        private void LeftToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+           // richTextBox1.
+        }
+
+        private void SplitContainer2_Panel2_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void DeselectToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+
+        // --------------------------
+        /*************************************************
+         
+        ***************************************************/
+
+
     }
 }
