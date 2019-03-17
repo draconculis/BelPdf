@@ -2,10 +2,7 @@
 using Dek.Bel.Services;
 using Dek.Bel.Cls;
 using Dek.Bel.DB;
-using Dek.Bel.Services;
 using Dek.Bel.Models;
-using Dek.Bel.Services;
-using Dek.Bel.Services;
 using Dek.Cls;
 using System;
 using System.Collections.Generic;
@@ -41,6 +38,7 @@ namespace Dek.Bel
         [Import] public HistoryRepo HistoryRepo { get; set; }
         [Import] public CitationRepo CitationRepo { get; set; }
         [Import] public RichTextService RtfService { get; set; }
+        [Import] public PdfService PdfService { get; set; }
         [Import] public CitationManipulationService CitationService{ get; set;}
 
 
@@ -207,6 +205,7 @@ namespace Dek.Bel
             
             if (flowLayoutPanel_Categories.Controls.Count < 1)
                 CategoryService.SetMainStyleOnLabel(l);
+
             flowLayoutPanel_Categories.Controls.Add(l);
             textBox_CategorySearch.Focus();
         }
@@ -233,8 +232,8 @@ namespace Dek.Bel
 
         private void textBox1_CategorySearch_KeyDown(object sender, KeyEventArgs e)
         {
-            //if (string.IsNullOrWhiteSpace(textBox1_CategorySearch.Text))
-            //    return;
+            if (string.IsNullOrWhiteSpace(textBox_CategorySearch.Text))
+                return;
 
             //if (e.KeyCode == Keys.Return)
             //{
@@ -246,10 +245,57 @@ namespace Dek.Bel
 
         private void textBox1_CategorySearch_KeyUp(object sender, KeyEventArgs e)
         {
+            if (!(sender is TextBox textbox))
+                return;
+
             if (e.KeyCode == Keys.Return)
             {
+                listBox1_Click(sender, e);
+
                 e.Handled = true;
                 e.SuppressKeyPress = true;
+                return;
+            }
+
+            if (e.KeyCode == Keys.Down && listBox1.Visible)
+            {
+                if (listBox1.SelectedIndex + 1 == listBox1.Items.Count)
+                    return;
+
+                listBox1.SelectedIndex++;
+
+                return;
+            }
+
+            if (e.KeyCode == Keys.Up && listBox1.Visible)
+            {
+                if (listBox1.SelectedIndex == 0)
+                    return;
+
+                listBox1.SelectedIndex--;
+
+                return;
+            }
+
+            listBox1.Items.Clear();
+            var cats = CategoryRepo.SearchCategoriesByNameOrCode(textbox.Text);
+            if(cats.Count < 1)
+            {
+                listBox1.Visible = false;
+                return;
+            }
+
+            foreach(var c in cats)
+                listBox1.Items.Add(c);
+
+            listBox1.SelectedIndex = 0;
+            if (!listBox1.Visible)
+            {
+                listBox1.SelectedIndex = 0;
+                listBox1.Top = textbox.Top + textbox.Height;
+                listBox1.Left = textbox.Left;
+                listBox1.Width = textbox.Width + button_category.Width;
+                listBox1.Visible = true;
             }
         }
 
@@ -283,6 +329,9 @@ namespace Dek.Bel
 
         private void statusStrip1_Click(object sender, EventArgs e)
         {
+            if (toolStripDropDownButton1.Pressed)
+                return;
+
             splitContainer2.Panel2Collapsed = !splitContainer2.Panel2Collapsed;
         }
 
@@ -325,58 +374,6 @@ namespace Dek.Bel
 
         private void comboBox2_KeyUp(object sender, KeyEventArgs e)
         {
-            if (!(sender is ComboBox combo))
-                return;
-
-            if (e.KeyCode == Keys.Return)
-            {
-                listBox1_Click(sender, e);
-
-                e.Handled = true;
-                e.SuppressKeyPress = true;
-                return;
-            }
-
-            if (e.KeyCode == Keys.Down && listBox1.Visible)
-            {
-                if (listBox1.SelectedIndex + 1 == listBox1.Items.Count)
-                    return;
-
-                listBox1.SelectedIndex++;
-
-                return;
-            }
-
-            if (e.KeyCode == Keys.Up && listBox1.Visible)
-            {
-                if (listBox1.SelectedIndex == 0)
-                    return;
-
-                listBox1.SelectedIndex--;
-
-                return;
-            }
-
-            listBox1.Items.Clear();
-            var cats = CategoryRepo.SearchCategoriesByNameOrCode(combo.Text);
-            if(cats.Count < 1)
-            {
-                listBox1.Visible = false;
-                return;
-            }
-
-            foreach(var c in cats)
-                listBox1.Items.Add(c);
-
-            listBox1.SelectedIndex = 0;
-            if (!listBox1.Visible)
-            {
-                listBox1.SelectedIndex = 0;
-                listBox1.Top = combo.Top + combo.Height;
-                listBox1.Left = combo.Left;
-                listBox1.Width = combo.Width + button_category.Width;
-                listBox1.Visible = true;
-            }
 
         }
 
@@ -423,13 +420,36 @@ namespace Dek.Bel
         {
             if (toolStripButton8.Selected)
                 return;
+
             toolStripButton8.Enabled = false;
         }
 
         private void toolStripButton7_Click(object sender, EventArgs e)
         {
             // Begin edit - e.g copy rtf2 to rtf3
-            VM.CurrentCitation.Citation3 = VM.CurrentCitation.Citation2;
+            string text = VM.CurrentCitation.Citation2;
+            StringBuilder sb = new StringBuilder();
+            bool excluded = false;
+            for (int i = 0; i < text.Length; i++)
+            {
+                if(!VM.Exclusion.ContainsInteger(i) && excluded)
+                {
+                    excluded = false;
+                    sb.Append(" ");
+                    sb.Append(UserSettingsService.DeselectionMarker);
+                    sb.Append(" ");
+                }
+
+                if (VM.Exclusion.ContainsInteger(i))
+                {
+                    excluded = true;
+                    continue;
+                }
+
+                sb.Append(text[i]);
+            }
+
+            VM.CurrentCitation.Citation3 = sb.ToString();
             DBService.InsertOrUpdate(VM.CurrentCitation);
             LoadControls();
         }
@@ -437,7 +457,9 @@ namespace Dek.Bel
 
         private void toolStripButton8_Click(object sender, EventArgs e)
         {
-            CitationService.AddEmphasis(5, 8);
+            if (richTextBox2.SelectionLength > 0)
+                CitationService.AddEmphasis(richTextBox2.SelectionStart, richTextBox2.SelectionStart + richTextBox2.SelectionLength - 1);
+
             richTextBox2.Focus();
         }
 
@@ -482,6 +504,29 @@ namespace Dek.Bel
         private void DeselectToolStripMenuItem_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void RichTextBox1_Leave(object sender, EventArgs e)
+        {
+            if (toolStripButton6.Selected)
+                return;
+
+            toolStripButton6.Enabled = false;
+        }
+
+        private void RichTextBox1_Enter(object sender, EventArgs e)
+        {
+            toolStripButton6.Enabled = true;
+        }
+
+        private void Button1_Click(object sender, EventArgs e)
+        {
+            PdfService.ManipulatePdf(Path.Combine(UserSettingsService.StorageFolder, VM.CurrentStorage.StorageName), VM.CurrentCitation.SelectionRects);
+        }
+
+        private void Button2_Click(object sender, EventArgs e)
+        {
+            PdfService.AddAnnotation(VM.CurrentStorage.StorageName, VM.CurrentCitation.SelectionRects);
         }
 
 

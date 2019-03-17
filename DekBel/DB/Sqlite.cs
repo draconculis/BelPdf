@@ -332,6 +332,27 @@ namespace Dek.Bel.DB
 
         }
 
+        public DataTable SelectBySql<T>(string where) where T : new()
+        {
+            var model = new T();
+
+            if (model == null)
+                return null;
+
+            string tableName = model.GetType().Name;
+
+            string cols = "";
+            foreach (var prop in model.GetType().GetProperties())
+            {
+                string colname = prop.Name;
+                cols += $"{(cols.Length > 0 ? ", " : "")}`{colname}`";
+            }
+
+            string sql = $"SELECT {cols} FROM {tableName} WHERE {where}";
+
+            return SelectBySql(sql);
+        }
+
         public DataTable SelectBySql(string query)
         {
             DataTable dt = new DataTable();

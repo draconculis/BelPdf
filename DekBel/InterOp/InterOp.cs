@@ -73,6 +73,8 @@ namespace BelManagedLib
                     bel.ShowDialog();
                     res = bel.Result;
                     break;
+                case CodesEnum.DEKBELCODE_EDITCITATION:
+                    break;
                 case CodesEnum.DEKBELCODE_STARTAUTOPAGINATION:
                     break;
                 default:

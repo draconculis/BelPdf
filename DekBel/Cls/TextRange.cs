@@ -205,6 +205,14 @@ namespace Dek.Cls
         {
             return $"({Start}, {Stop})";
         }
+
+        public override int GetHashCode()
+        {
+            var hashCode = 402335580;
+            hashCode = hashCode * -1521134295 + Start.GetHashCode();
+            hashCode = hashCode * -1521134295 + Stop.GetHashCode();
+            return hashCode;
+        }
     }
 
     public static class TextRangeExtension

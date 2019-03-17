@@ -100,6 +100,7 @@
     <Compile Include="BelGui.Designer.cs">
       <DependentUpon>BelGui.cs</DependentUpon>
     </Compile>
+    <Compile Include="Cls\ArrayStuff.cs" />
     <Compile Include="Services\CitationManipulationService.cs" />
     <Compile Include="Cls\DateTime.cs" />
     <Compile Include="Cls\RichTextExtensions.cs" />
@@ -172,6 +173,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
+    <Compile Include="Services\TempFileService.cs" />
     <Compile Include="TextData.cs" />
     <Compile Include="Services\IUserSettingsService.cs" />
     <Compile Include="Services\UserSettingsService.cs" />

@@ -37,12 +37,26 @@ namespace Dek.Bel.Services
         public ResultFileStorageData GetStorage(RequestFileStorageData fileStorageData)
         {
             string srcPath = fileStorageData.FilePath;
+            if (!File.Exists(srcPath))
+                return new ResultFileStorageData
+                {
+                    Cancel = true,
+                    StorageFilePath = "",
+                };
+
             string srcHash = CalculateFileMD5(srcPath);
 
             // Do we even exist in db?
             Storage storage = m_StorageRepo.GetStorageByHash(srcHash);
             if (storage == null)
                 storage = CreateNewStorageForFile(fileStorageData, srcHash);
+
+            // Hmm file in store has been removed (this is sooo bad) - recreate it.
+            if (!File.Exists(Path.Combine(UserSettingsService.StorageFolder, storage.StorageName)))
+            {
+                CopyFileToStorage(storage.FilePath, storage.StorageName);
+                // TODO: ALSO RECREATE STUFF IN THE FILE FROM DB!! <============================================ o_O
+            }
 
             // Save for posterity.
             var history = new History
@@ -75,10 +89,10 @@ namespace Dek.Bel.Services
                 sourceHash = CalculateFileMD5(fileStorageData.FilePath);
 
             string stoFolder = UserSettingsService.StorageFolder;
-            string stoFileName = GetUniqueStoName(fileStorageData.FilePath, stoFolder);
+            string stoFileName = GetUniqueStoName(fileStorageData.FilePath);
             string stoPath = Path.Combine(stoFolder, stoFileName);
 
-            File.Copy(fileStorageData.FilePath, stoPath);
+            CopyFileToStorage(fileStorageData.FilePath, stoFileName);
 
             var volume = new Volume
             {
@@ -103,14 +117,21 @@ namespace Dek.Bel.Services
             return storage;
         }
 
+        public void CopyFileToStorage(string origFileName, string storageFileName)
+        {
+            string stoFolder = UserSettingsService.StorageFolder;
+            string stoPath = Path.Combine(stoFolder, storageFileName);
 
+            File.Copy(origFileName, stoPath);
+        }
+        
         /// <summary>
         /// Looks in the storage folder and generates a new unique file name.
         /// </summary>
         /// <param name="fileName"></param>
         /// <param name="fileStorageFolder"></param>
         /// <returns></returns>
-        private string GetUniqueStoName(string fileName, string fileStorageFolder)
+        private string GetUniqueStoName(string fileName)
         {
             string newFileName = GenerateFirstStoName(fileName);
             string stoFolder = UserSettingsService.StorageFolder;

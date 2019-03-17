@@ -14,13 +14,19 @@ namespace Dek.Bel.DB
     public class StorageRepo
     {
         [Import] IDBService dBService { get; set; }
-        string SqlSelectFields = $"SELECT `Id`, `Hash`, `SourceFileName`, `SourceFilePath`, `StorageFileName`, `BookId`, `Date`, `Comment`";
 
         public Storage GetStorageByHash(string hash)
         {
-            string sql = $"{SqlSelectFields} FROM {nameof(Storage)} WHERE Hash = '{hash}'";
-            return Get(sql);
+            string where = $"`{nameof(Storage.Hash)}` = '{hash}'";
+            var res = dBService.Select<Storage>(where);
+
+            if (res.Count == 0)
+                return null;
+
+            return res.First();
         }
+
+
 
         public Storage Get(string sql)
         {

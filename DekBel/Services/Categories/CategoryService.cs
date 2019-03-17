@@ -87,22 +87,69 @@ namespace Dek.Bel.Services
             get => m_Categories.FirstOrDefault(c => c.Code.Equals(code, StringComparison.CurrentCultureIgnoreCase));
         }
 
+        public void SetCategoryOnCitation(Id citationId, Id categoryId, int weight, bool isMain)
+        {
+            CitationCategory cg = new CitationCategory
+            {
+                CategoryId = categoryId,
+                CitationId = citationId,
+                Weight = weight,
+                IsMain = isMain,
+            };
+
+            m_DBService.InsertOrUpdate(cg);
+        }
+
+        public List<CitationCategory> LoadCategoriesForCitation(Id citationId)
+        {
+            //string sql = $"SELECT * FROM {nameof(CitationCategory)}";
+            var res = m_DBService.Select<CitationCategory>();
+            return res;
+        }
+
         /**************************************************************
           Labels 
         */
+
+        Color labelColor = Color.Moccasin;
+        Color labelColorMouseOver = Color.Orange;
         public Label CreateCategoryLabelControl(string text, bool isMain, ContextMenuStrip menu)
         {
             Label l = new Label();
-            Font newFont = new Font("Consolas", 10, FontStyle.Regular);
+            Font newFont = new Font("Times New Roman", 10, FontStyle.Regular);
             l.Font = newFont;
+            l.MouseHover += L_MouseHover;
+            l.MouseEnter += L_MouseEnter;
+            l.MouseLeave += L_MouseLeave;
             l.AutoSize = true;
-            l.BackColor = System.Drawing.Color.AliceBlue;
+            l.BackColor = labelColor;
             l.Text = text;
             l.ContextMenuStrip = menu;
             if (isMain)
                 SetMainStyleOnLabel(l);
 
             return l;
+        }
+
+        private void L_MouseLeave(object sender, EventArgs e)
+        {
+            if (!(sender is Label l))
+                return;
+
+            l.BackColor = labelColor;
+        }
+
+        private void L_MouseEnter(object sender, EventArgs e)
+        {
+            if (!(sender is Label l))
+                return;
+
+            l.BackColor = labelColorMouseOver;
+        }
+
+        private void L_MouseHover(object sender, EventArgs e)
+        {
+            
         }
 
         public void ClearMainStyleFromLabels(IEnumerable<Label> labels)

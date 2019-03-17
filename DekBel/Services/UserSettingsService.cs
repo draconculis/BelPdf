@@ -36,7 +36,7 @@ namespace Dek.Bel.Services
         public Font CitationFont
         {
             get => Get("CitationFont", new Font(FontFamily.GenericSerif, (float)12, FontStyle.Regular));
-            set => Set(StorageFolderSettingName, value);
+            set => Set("CitationFont", value);
         }
 
 
@@ -75,7 +75,7 @@ namespace Dek.Bel.Services
 
         public void EnsureStorageFolderExists()
         {
-            EnsureSettingExists(StorageFolderSettingName, Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\BelPdf")                    ;
+            EnsureSettingExists(StorageFolderSettingName, Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\BelPdf");
 
             string storageFolderPath = (string)Properties.Settings.Default[StorageFolderSettingName];
             if (!Directory.Exists(storageFolderPath))

@@ -10,6 +10,7 @@ namespace Dek.Bel.DB
         bool CreateTable(Type type);
 
         DataTable SelectBySql(string query);
+        DataTable SelectBySql<T>(string where) where T : new(); // Model gives all cols => SELECT *
         List<T> Select<T>(string where = null) where T : new();
         T SelectById<T>(Id id) where T : new();
         bool ValueExists(string table, string column, string value);

@@ -49,19 +49,39 @@ namespace Dek.Bel.DB
             // Categories
             // 
 
-            repo.CreateTable(typeof(Category));
+            if (repo.CreateTable(typeof(Category)))
+            {
+                repo.InsertOrUpdate(new Category
+                {
+                    Id = Id.NewId(),
+                    Code = "CT1",
+                    Name = "Category one",
+                    Description = "First category"
+                });
+                repo.InsertOrUpdate(new Category
+                {
+                    Id = Id.NewId(),
+                    Code = "CT2",
+                    Name = "Category two",
+                    Description = "Second category"
+                });
+                repo.InsertOrUpdate(new Category
+                {
+                    Id = Id.NewId(),
+                    Code = "CT3",
+                    Name = "Category three",
+                    Description = "Third category"
+                });
+            }
+
+            repo.CreateTable(typeof(CitationCategory));
+
 
             // Storage
             //CREATE TABLE "Storage"( `Id` TEXT NOT NULL, `Hash` TEXT NOT NULL, `SourceFileName` TEXT NOT NULL, `SourceFilePath` TEXT NOT NULL, `StorageFileName` TEXT NOT NULL UNIQUE, `Author` TEXT, `Date` TEXT, `Comment` TEXT, PRIMARY KEY(`Id`))
             repo.CreateTable(typeof(Storage));
 
-            // CitationCategory
-
-            repo.CreateTable(typeof(CitationCategory));
-
             repo.CreateTable(typeof(History));
-
-
         }
 
 

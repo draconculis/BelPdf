@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Dek.Bel.Models
 {
-    class CitationCategory : IModel
+    public class CitationCategory : IModel
     {
         [Key]
         public Id CitationId { get; set; }
@@ -15,6 +15,8 @@ namespace Dek.Bel.Models
         [Key]
         public Id CategoryId { get; set; }
 
-        int Weight { get; set; }
+        public int Weight { get; set; }
+
+        public bool IsMain { get; set; }
     }
 }

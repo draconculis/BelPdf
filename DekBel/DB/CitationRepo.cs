@@ -9,6 +9,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace Dek.Bel.DB
 {
@@ -61,17 +62,20 @@ namespace Dek.Bel.DB
         {
             int[] rects = ExtractArrayFromEventData(message.SelectionRects, message.Len * 4);
             string citationText = ComposeCitation(rawCitations, message.Text);
+            RichTextBox rtb = new RichTextBox();
+            rtb.Text = citationText;
             var citation = new Citation
             {
                 Id = Id.NewId(),
                 Citation1 = citationText, // Original, untouched, never changed
-                Citation2 = citationText, // More of the same, this will be editied in texb 1
+                Citation2 = rtb.Text, // More of the same, textb 1
+                Citation3 = "", // More of the same, textb 2
                 CreatedDate = DateTime.Now,
                 GlyphStart = message.StartGlyph,
                 PageStop = message.StopGlyph,
                 PhysicalPageStart = message.StartPage,
                 PhysicalPageStop = message.StopPage,
-                SelectionRects = ConvertArrayToString(rects),
+                SelectionRects = ArrayStuff.ConvertArrayToString(rects),
             };
 
             DBService.InsertOrUpdate(citation);
@@ -82,7 +86,7 @@ namespace Dek.Bel.DB
         internal int[] ExtractArrayFromEventData(IntPtr ptr, int len)
         {
             if (ptr == IntPtr.Zero)
-                return new int[4] { 1, 2, 3, 4 };
+                return new int[0];
 
             IntPtr start = ptr;
             int[] result = new int[len];
@@ -90,15 +94,6 @@ namespace Dek.Bel.DB
             return result;
         }
 
-        public string ConvertArrayToString(int[] rects)
-        {
-            string res = "";
-            int counter = 1;
-            foreach(int i in rects)
-                res += i.ToString() + $"{(counter++ % 4 == 0 ? ";" : ",")}";
-
-            return res;
-        }
 
     }
 }

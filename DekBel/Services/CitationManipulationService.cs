@@ -38,7 +38,11 @@ namespace Dek.Bel.Services
 
             if (resetform.ShowDialog() == DialogResult.Yes)
             {
-                VM.CurrentCitation.Citation2 = VM.CurrentCitation.Citation1;
+                RichTextBox rtb = new RichTextBox();
+                rtb.Text = VM.CurrentCitation.Citation1;
+                VM.CurrentCitation.Citation2 = rtb.Text;
+                VM.Exclusion.Clear();
+                VM.CurrentCitation.Exclusion = null;
                 DBService.InsertOrUpdate(VM.CurrentCitation);
                 FireCitationChanged();
             }
@@ -59,8 +63,10 @@ namespace Dek.Bel.Services
         {
             var range = new TextRange(from, to);
 
-            VM.Emphasis.AddAndMerge(range);
+            VM.Emphasis = VM.Emphasis.AddAndMerge(range);
+            VM.CurrentCitation.Emphasis = VM.Emphasis.ConvertToText();
 
+            DBService.InsertOrUpdate(VM.CurrentCitation);
             FireCitationChanged();
         }
 

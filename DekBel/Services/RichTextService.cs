@@ -54,6 +54,15 @@ namespace Dek.Bel.Services
                     strike = false;
                 }
 
+                if (text[i] == '\n')
+                {
+                    
+                }
+
+                if (text[i] == '\r')
+                {
+                }
+
                 rtfbuilder.Append(text[i]);
             }
 

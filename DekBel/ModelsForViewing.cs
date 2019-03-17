@@ -2,7 +2,6 @@
 using Dek.Bel.Services;
 using Dek.Bel.DB;
 using Dek.Bel.Models;
-using Dek.Bel.Services;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
@@ -24,5 +23,7 @@ namespace Dek.Bel
 
         public List<TextRange> Emphasis { get; set; } = new List<TextRange>();
         public List<TextRange> Exclusion { get; set; } = new List<TextRange>();
+
+        public List<CitationCategory> CurrentCitations { get; set; } = new List<CitationCategory>();
     }
 }
