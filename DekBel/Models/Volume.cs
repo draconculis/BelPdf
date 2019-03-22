@@ -14,7 +14,8 @@ namespace Dek.Bel.Models
         public string Editor { get; set; }
         public string Author { get; set; }
         public string Translator { get; set; }
-        public DateTime Date { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public DateTime PublicationDate { get; set; }
         public string Notes { get; set; }
     }
 }

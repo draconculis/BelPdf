@@ -33,13 +33,11 @@ kapiel (start + slutsida)
 
      */
 
-    public class Book : VolumeReference, IModelWithId
+    public class Book : Reference
     {
-        public Id Id { get; set; }
-
         public string ISBN { get; set; }
         public string Edition { get; set; }
-        public DateTime PublishDate { get; set; }
+        public DateTime PublicationDate { get; set; }
         public string Notes { get; set; }
     }
 }

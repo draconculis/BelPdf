@@ -101,9 +101,23 @@
       <DependentUpon>BelGui.cs</DependentUpon>
     </Compile>
     <Compile Include="Cls\ArrayStuff.cs" />
+    <Compile Include="ModelExtensions\CitationExtension.cs" />
+    <Compile Include="ModelExtensions\ReferenceExtension.cs" />
+    <Compile Include="Models\Page.cs" />
+    <Compile Include="Models\Paragraph.cs" />
+    <Compile Include="Models\Chapter.cs" />
+    <Compile Include="Models\SubChapter.cs" />
+    <Compile Include="Models\Reference.cs" />
+    <Compile Include="Reference\Form_AddReference.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Reference\Form_AddReference.Designer.cs">
+      <DependentUpon>Form_AddReference.cs</DependentUpon>
+    </Compile>
     <Compile Include="Services\CitationManipulationService.cs" />
     <Compile Include="Cls\DateTime.cs" />
     <Compile Include="Cls\RichTextExtensions.cs" />
+    <Compile Include="Services\ReferenceService.cs" />
     <Compile Include="Services\RichTextService.cs" />
     <Compile Include="DB\HistoryRepo.cs" />
     <Compile Include="DB\Id.cs" />
@@ -115,7 +129,7 @@
     <Compile Include="DB\IndexAttribute.cs" />
     <Compile Include="DB\KeyAttribute.cs" />
     <Compile Include="DB\RefAttribute.cs" />
-    <Compile Include="DB\VolumeRepo.cs" />
+    <Compile Include="Services\VolumeService.cs" />
     <Compile Include="Services\Form_ResetCitation.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -149,15 +163,12 @@
     <Compile Include="DB\StorageRepo.cs" />
     <Compile Include="DB\IDBService.cs" />
     <Compile Include="DB\Sqlite.cs" />
-    <Compile Include="Models\Chapter.cs" />
     <Compile Include="Models\Citation.cs" />
     <Compile Include="Models\CitationCategory.cs" />
     <Compile Include="Models\History.cs" />
-    <Compile Include="Models\PageRef.cs" />
     <Compile Include="Models\RawCitation.cs" />
     <Compile Include="Models\Storage.cs" />
     <Compile Include="Models\Volume.cs" />
-    <Compile Include="Models\VolumeReference.cs" />
     <Compile Include="Services\PdfService.cs" />
     <Compile Include="Services\StorageService.cs" />
     <Compile Include="InterOp\Data.cs" />
@@ -182,6 +193,9 @@
     <EmbeddedResource Include="BelGui.resx">
       <DependentUpon>BelGui.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Reference\Form_AddReference.resx">
+      <DependentUpon>Form_AddReference.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Services\Categories\FormCategoryEdit.resx">
       <DependentUpon>FormCategoryEdit.cs</DependentUpon>
     </EmbeddedResource>
@@ -199,6 +213,9 @@
   <ItemGroup>
     <Content Include="bel.ico" />
     <Content Include="logo_Obj_icon.ico" />
+    <Content Include="Resources\bel32.png" />
+    <None Include="Resources\metaopen.png" />
+    <None Include="Resources\metaclose.png" />
     <None Include="app.config" />
     <None Include="Properties\DataSources\BelGui.datasource" />
     <None Include="Properties\DataSources\BelManagedLib.BelManagedClass+BelDelegate.datasource" />

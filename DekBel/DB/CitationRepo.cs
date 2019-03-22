@@ -58,7 +58,7 @@ namespace Dek.Bel.DB
             return text;
         }
 
-        internal Citation CreateNewCitation(List<RawCitation> rawCitations, EventData message)
+        internal Citation CreateNewCitation(List<RawCitation> rawCitations, EventData message, Id volumeId)
         {
             int[] rects = ExtractArrayFromEventData(message.SelectionRects, message.Len * 4);
             string citationText = ComposeCitation(rawCitations, message.Text);
@@ -67,12 +67,13 @@ namespace Dek.Bel.DB
             var citation = new Citation
             {
                 Id = Id.NewId(),
+                VolumeId = volumeId,
                 Citation1 = citationText, // Original, untouched, never changed
                 Citation2 = rtb.Text, // More of the same, textb 1
                 Citation3 = "", // More of the same, textb 2
                 CreatedDate = DateTime.Now,
                 GlyphStart = message.StartGlyph,
-                PageStop = message.StopGlyph,
+                GlyphStop = message.StopGlyph,
                 PhysicalPageStart = message.StartPage,
                 PhysicalPageStop = message.StopPage,
                 SelectionRects = ArrayStuff.ConvertArrayToString(rects),

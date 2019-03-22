@@ -7,7 +7,7 @@ using Dek.Cls;
 
 namespace Dek.Bel.DB
 {
-    public struct Id
+    public struct Id : IEquatable<Id>
     {
         public static Id Empty { get; } = new Id(Guid.Empty);
         public static Id Null => Empty;
@@ -30,6 +30,40 @@ namespace Dek.Bel.DB
         public override string ToString()
         {
             return Value.ToString();
+        }
+
+        public bool Equals(Id other)
+        {
+            return Value == other.Value;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
+            return obj.GetType() == GetType() && Equals((Id)obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return -1937169414 + EqualityComparer<Guid>.Default.GetHashCode(Value);
+        }
+
+        public static bool operator ==(Id a, Id b)
+        {
+            return a.Equals(b);
+        }
+
+        public static bool operator !=(Id a, Id b)
+        {
+            return !a.Equals(b);
         }
 
         public bool IsNull => Guid.Empty == Value;

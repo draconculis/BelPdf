@@ -30,11 +30,12 @@ namespace Dek.Bel
             };
 
         [Import] public ModelsForViewing VM { get; set; }
-        [Import] public ICategoryService CategoryService { get; set; }
+        [Import] public VolumeService m_VolumeService { get; set; }
+        [Import] public ICategoryService m_CategoryService { get; set; }
         [Import] public IUserSettingsService UserSettingsService { get; set; }
         [Import] public IDBService DBService { get; set; }
-        [Import] public CategoryRepo CategoryRepo { get; set; }
-        private StorageService StorageService { get; } = new StorageService();
+        [Import] public CategoryRepo m_CategoryRepo { get; set; }
+        private StorageService m_StorageService { get; } = new StorageService();
         [Import] public HistoryRepo HistoryRepo { get; set; }
         [Import] public CitationRepo CitationRepo { get; set; }
         [Import] public RichTextService RtfService { get; set; }
@@ -56,21 +57,20 @@ namespace Dek.Bel
 
             // Get volume and storage
             History history = HistoryRepo.GetLastOpened(); // Our currently open file in Sumatra
-            VM.CurrentVolume = DBService.SelectById<Volume>(history.VolumeId);
+            //VM.CurrentVolume = DBService.SelectById<Volume>(history.VolumeId);
+            m_VolumeService.LoadVolume(history.VolumeId);
             VM.CurrentStorage = DBService.SelectById<Storage>(history.StorageId);
-                       
+
             // Create new citation
-            VM.CurrentCitation = CitationRepo.CreateNewCitation(rawCitations, message);
+            VM.CurrentCitation = CitationRepo.CreateNewCitation(rawCitations, message, m_VolumeService.CurrentVolume.Id);
+            m_VolumeService.LoadCitations(history.VolumeId);
+            LoadCitations(); // Into status strip citations context menu
 
             CitationService.CitationChanged += CitationService_CitationChanged;
+            m_CategoryService.LoadCategoriesFromDb();
+            comboBox_CategoryWeight.SelectedIndex = 2;
             LoadControls();
         }
-
-        void LoadCitation()
-        {
-
-        }
-
 
 
         private void CitationService_CitationChanged(object sender, EventArgs e)
@@ -87,17 +87,18 @@ namespace Dek.Bel
         }
 
         /// <summary>
-        /// Load data
+        /// Load data into controls
         /// </summary>
         private void LoadControls()
         {
+            // Show which citation is current
+            int maxlen = 50;
+            toolStripDropDownButton_Citation.Text = VM.CurrentCitation.ToString();
+
             // Load data from citation
             richTextBox1.Rtf = RtfService.CreateRtfWithExlusionsAndEmphasis(VM.CurrentCitation.Citation2, VM.Exclusion, null);
             richTextBox2.Rtf = RtfService.CreateRtfWithExlusionsAndEmphasis(VM.CurrentCitation.Citation3, null, VM.Emphasis);
-            int maxlen = 50;
-            toolStripStatusLabel_GUID.Text = VM.CurrentCitation.Id.ToString() + " ";
-            toolStripStatusLabel_citationPreview.Font = new Font(richTextBox1.Font.FontFamily, toolStripStatusLabel_GUID.Font.Size);
-            toolStripStatusLabel_citationPreview.Text = VM.CurrentCitation.Citation1.Substring(0, VM.CurrentCitation.Citation1.Length > maxlen ? maxlen : VM.CurrentCitation.Citation1.Length) + $"{(VM.CurrentCitation.Citation1.Length > maxlen ? "…" : "")}";
+
             label1_MD5.Text = Guid.NewGuid().ToString();
 
             // Load data from storage
@@ -105,7 +106,63 @@ namespace Dek.Bel
             //textBox_FileName = Path.GetFileName(messsage.FilePath);
             label_Page.Text = $"{VM.Message.StartPage} - {VM.Message.StopPage}";
 
+            LoadCategoryControl();
         }
+
+        void LoadCategoryControl()
+        {
+            flowLayoutPanel_Categories.Controls.Clear();
+            var cgs = m_CategoryService.GetCitationCategories(VM.CurrentCitation.Id);
+            var categories = m_CategoryService.Categories;
+
+            foreach (var cg in cgs)
+            {
+                Category cat = categories.SingleOrDefault(x => x.Id == cg.CategoryId);
+                if(cat != null)
+                    AddCategoryLabel(cg, cat);
+            }
+        }
+
+        /// <summary>
+        /// Populate citations into status strip contextMenuStrip_Citations
+        /// </summary>
+        void LoadCitations()
+        {
+            contextMenuStrip_Citations.Items.Clear();
+
+            foreach(var citation in m_VolumeService.Citations)
+            {
+                var item = new ToolStripMenuItem(citation.ToString(), null, CitationsToolStripMenuItem_Click, citation.Id.ToString());
+                contextMenuStrip_Citations.Items.Add(item);
+            }
+        }
+        
+        /// <summary>
+        /// Citations dropdown status strip menu click.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void CitationsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (!(sender is ToolStripMenuItem item))
+                return;
+
+            Citation citation = m_VolumeService.Citations.SingleOrDefault(x => x.Id == Id.NewId(item.Name));
+            if(citation == null)
+            {
+                MessageBox.Show("Error loading citation");
+                return;
+            }
+
+            VM.CurrentCitation = citation;
+            LoadControls();
+        }
+
+        private void SelectCitation(Id citationId)
+        {
+
+        }
+
 
         private void closeToolStripMenuItem1_Click(object sender, EventArgs e)
         {
@@ -198,30 +255,81 @@ namespace Dek.Bel
 
         }
 
-        private void AddCategoryLabel(Category cat)
-        {
-            // TODO: ADD TO DB
-            Label l = CategoryService.CreateCategoryLabelControl(cat.ToString(), false, contextMenuStrip_Category);
-            
-            if (flowLayoutPanel_Categories.Controls.Count < 1)
-                CategoryService.SetMainStyleOnLabel(l);
-
-            flowLayoutPanel_Categories.Controls.Add(l);
-            textBox_CategorySearch.Focus();
-        }
-
         private void removeToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (((sender as ToolStripMenuItem)?.Owner as ContextMenuStrip)?.SourceControl is Label label)
                 flowLayoutPanel_Categories.Controls.Remove(label);
         }
 
+        private void categoriesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FormCategory fc = new FormCategory(m_CategoryService);
+            fc.ShowDialog();
+        }
+
+        private void button_category_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void splitContainer2_SplitterMoved(object sender, SplitterEventArgs e)
+        {
+
+        }
+
+        private void splitContainer2_MouseClick(object sender, MouseEventArgs e)
+        {
+            var split = sender as SplitContainer;
+            
+
+        }
+
+        private void toolStripButton6_Click(object sender, EventArgs e)
+        {
+            splitContainer2.Panel2Collapsed = !splitContainer2.Panel2Collapsed;
+        }
+
+        private void statusStrip1_Click(object sender, EventArgs e)
+        {
+            //if (toolStripDropDownButton1.Pressed)
+            //    return;
+
+        }
+
+        private void label7_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void toolStripButton1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void toolStripSplitButton1_ButtonClick(object sender, EventArgs e)
+        {
+
+        }
+
+        private void textBox2_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        #region Category logic =============================================================================
+
         private void setAsMainCategoryToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            // TODO FIX                             <================================================================================ o_O
             if (((sender as ToolStripMenuItem)?.Owner as ContextMenuStrip)?.SourceControl is Label label)
             {
-                CategoryService.ClearMainStyleFromLabels(flowLayoutPanel_Categories.Controls.OfType<Label>());
-                CategoryService.SetMainStyleOnLabel(label);
+                m_CategoryService.ClearMainStyleFromLabels(flowLayoutPanel_Categories.Controls.OfType<Label>());
+                m_CategoryService.SetMainStyleOnLabel(label);
             }
         }
 
@@ -232,15 +340,15 @@ namespace Dek.Bel
 
         private void textBox1_CategorySearch_KeyDown(object sender, KeyEventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(textBox_CategorySearch.Text))
+            if (e.KeyCode == Keys.Return)
+            {
+                e.Handled = true;
+                e.SuppressKeyPress = true;
                 return;
+            }
 
-            //if (e.KeyCode == Keys.Return)
-            //{
-            //    e.Handled = true;
-            //    e.SuppressKeyPress = true;
-            //    AddCategoryLabel();
-            //}
+            //if (string.IsNullOrWhiteSpace(textBox_CategorySearch.Text))
+            //    return;
         }
 
         private void textBox1_CategorySearch_KeyUp(object sender, KeyEventArgs e)
@@ -278,14 +386,18 @@ namespace Dek.Bel
             }
 
             listBox1.Items.Clear();
-            var cats = CategoryRepo.SearchCategoriesByNameOrCode(textbox.Text);
-            if(cats.Count < 1)
+            var cats = m_CategoryService.Categories
+                .Where(x => 
+                x.Code.ToLower().Contains(textbox.Text.ToLower()) 
+                || x.Name.ToLower().Contains(textbox.Text.ToLower())).ToList();
+
+            if (cats.Count < 1 || textbox.Text.Length < 2)
             {
                 listBox1.Visible = false;
                 return;
             }
 
-            foreach(var c in cats)
+            foreach (var c in cats)
                 listBox1.Items.Add(c);
 
             listBox1.SelectedIndex = 0;
@@ -294,87 +406,9 @@ namespace Dek.Bel
                 listBox1.SelectedIndex = 0;
                 listBox1.Top = textbox.Top + textbox.Height;
                 listBox1.Left = textbox.Left;
-                listBox1.Width = textbox.Width + button_category.Width;
+                listBox1.Width = textbox.Width;
                 listBox1.Visible = true;
             }
-        }
-
-        private void categoriesToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            FormCategory fc = new FormCategory(CategoryService);
-            fc.ShowDialog();
-        }
-
-        private void button_category_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void splitContainer2_SplitterMoved(object sender, SplitterEventArgs e)
-        {
-
-        }
-
-        private void splitContainer2_MouseClick(object sender, MouseEventArgs e)
-        {
-            var split = sender as SplitContainer;
-            
-
-        }
-
-        private void toolStripButton6_Click(object sender, EventArgs e)
-        {
-            splitContainer2.Panel2Collapsed = !splitContainer2.Panel2Collapsed;
-        }
-
-        private void statusStrip1_Click(object sender, EventArgs e)
-        {
-            if (toolStripDropDownButton1.Pressed)
-                return;
-
-            splitContainer2.Panel2Collapsed = !splitContainer2.Panel2Collapsed;
-        }
-
-        private void label7_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void textBox1_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void toolStripButton1_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void toolStripSplitButton1_ButtonClick(object sender, EventArgs e)
-        {
-
-        }
-
-        private void textBox2_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        #region Category logic ------------------------------------------------------
-        // Category
-        private void comboBox2_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Return)
-            {
-                e.Handled = true;
-                e.SuppressKeyPress = true;
-                return;
-            }
-        }
-
-        private void comboBox2_KeyUp(object sender, KeyEventArgs e)
-        {
-
         }
 
         private void listBox1_Click(object sender, EventArgs e)
@@ -382,7 +416,8 @@ namespace Dek.Bel
             if (!(listBox1.SelectedItem is Category cat))
                 return;
 
-            AddCategoryLabel(cat);
+            m_CategoryService.AddCategoryToCitation(VM.CurrentCitation.Id, cat.Id, int.Parse((comboBox_CategoryWeight.SelectedItem as string)??"1"), false);
+            LoadCategoryControl();
 
             listBox1.Visible = false;
             textBox_CategorySearch.Text = "";
@@ -390,12 +425,60 @@ namespace Dek.Bel
 
         private void textBox_CategorySearch_TextChanged(object sender, EventArgs e)
         {
-
         }
 
-        #endregion Category logic ------------------------------------------------------
+        private void AddCategoryLabel(CitationCategory citationCat, Category cat)
+        {
+            Label l = m_CategoryService.CreateCategoryLabelControl(citationCat, cat, contextMenuStrip_Category, toolTip1);
 
+            if (citationCat.IsMain)
+                m_CategoryService.SetMainStyleOnLabel(l);
 
+            flowLayoutPanel_Categories.Controls.Add(l);
+            textBox_CategorySearch.Focus();
+        }
+
+        // Weights
+        private void SetWeight1ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (sender is ToolStripMenuItem item)
+                SetWeight(item, 1);
+        }
+
+        private void SetWeight2ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (sender is ToolStripMenuItem item)
+                SetWeight(item, 2);
+        }
+
+        private void SetWeight3ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (sender is ToolStripMenuItem item)
+                SetWeight(item, 3);
+        }
+
+        private void SetWeight4ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (sender is ToolStripMenuItem item)
+                SetWeight(item, 4);
+        }
+
+        private void SetWeight5ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (sender is ToolStripMenuItem item)
+                SetWeight(item, 5);
+        }
+
+        private void SetWeight(ToolStripMenuItem item, int weight)
+        {
+            if (!(((System.Windows.Forms.ContextMenuStrip)item.GetCurrentParent()).SourceControl.Tag is Category cat))
+                return;
+
+            m_CategoryService.SetWeight(VM.CurrentCitation.Id, cat.Id, weight);
+            LoadCategoryControl();
+        }
+
+        #endregion Category logic ==============================================================
 
         private void copyGUIDToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -528,6 +611,26 @@ namespace Dek.Bel
         {
             PdfService.AddAnnotation(VM.CurrentStorage.StorageName, VM.CurrentCitation.SelectionRects);
         }
+
+        private void Button_category_Click_1(object sender, EventArgs e)
+        {
+
+        }
+
+        private void ToolStripStatusLabel1_Click(object sender, EventArgs e)
+        {
+            splitContainer2.Panel2Collapsed = !splitContainer2.Panel2Collapsed;
+            if (splitContainer2.Panel2Collapsed)
+                toolStripStatusLabel1.Image = global::Dek.Bel.Properties.Resources.metaopen;
+            else
+                toolStripStatusLabel1.Image = global::Dek.Bel.Properties.Resources.metaclose;
+        }
+
+        private void ToolStripDropDownButton_Citation_Click(object sender, EventArgs e)
+        {
+
+        }
+
 
 
         // --------------------------

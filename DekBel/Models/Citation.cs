@@ -10,7 +10,7 @@ namespace Dek.Bel.Models
     public class Citation
     {
         public Id Id { get; set; }
-        public Id StorgageId { get; set; }
+        public Id VolumeId { get; set; }
 
         public int PhysicalPageStart { get; set; }
         public int PhysicalPageStop { get; set; }
@@ -31,5 +31,11 @@ namespace Dek.Bel.Models
         public DateTime EditedDate { get; set; }
         public string Notes { get; set; }
 
+        private const int maxlen = 50;
+
+        public override string ToString()
+        {
+            return Id.ToString().Substring(24) + " - " + Citation1.Substring(0, Citation1.Length > maxlen ? maxlen : Citation1.Length) + $"{(Citation1.Length > maxlen ? "…" : "")}";
+        }
     }
 }

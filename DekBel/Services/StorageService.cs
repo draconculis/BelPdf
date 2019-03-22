@@ -97,7 +97,7 @@ namespace Dek.Bel.Services
             var volume = new Volume
             {
                 Id = Id.NewId(),
-                Date = DateTime.Now,
+                CreatedDate = DateTime.Now,
                 Title = stoFileName,
             };
 

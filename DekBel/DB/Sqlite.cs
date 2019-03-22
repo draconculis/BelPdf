@@ -279,6 +279,12 @@ namespace Dek.Bel.DB
                 case nameof(Id):
                     prop.SetValue(obj, Id.NewId((string)val));
                     break;
+                case nameof(Boolean):
+                case "boolean":
+                case "Bool":
+                case "bool":
+                    prop.SetValue(obj, ((Int64)val != 0));
+                    break;
                 default:
                     prop.SetValue(obj, val);
                     break;

@@ -15,5 +15,6 @@ namespace Dek.Bel.Models
         public DateTime? Born { get; set; }
         public DateTime? Dead { get; set; }
         public string Notes { get; set; }
+
     }
 }

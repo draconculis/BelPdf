@@ -19,7 +19,6 @@ namespace Dek.Bel
         public EventData Message { get; set; }
         public Citation CurrentCitation { get; set; }
         public Storage CurrentStorage { get; set; }
-        public Volume CurrentVolume { get; set; }
 
         public List<TextRange> Emphasis { get; set; } = new List<TextRange>();
         public List<TextRange> Exclusion { get; set; } = new List<TextRange>();

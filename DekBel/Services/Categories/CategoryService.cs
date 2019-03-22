@@ -39,21 +39,7 @@ namespace Dek.Bel.Services
         public void LoadCategoriesFromDb()
         {
             m_Categories.Clear();
-            string selectStatement = "SELECT CODE, NAME, DESCRIPTION FROM CATEGORIES";
-            var res = m_DBService.SelectBySql(selectStatement);
-            if(res.Rows.Count > 0)
-            {
-                foreach(DataRow row in res.Rows)
-                {
-                    var cat = new Category {
-
-                        Code = (string)row[0],
-                        Name = (string)row[1],
-                        Description = (string)row[2],
-                    };
-                    m_Categories.Add(cat);
-                }
-            }
+            m_Categories = m_DBService.Select<Category>();
         }
 
         public void Add(string name, string code, string desc) => Add(new Category { Name = name, Code = code, Description = desc });
@@ -87,7 +73,7 @@ namespace Dek.Bel.Services
             get => m_Categories.FirstOrDefault(c => c.Code.Equals(code, StringComparison.CurrentCultureIgnoreCase));
         }
 
-        public void SetCategoryOnCitation(Id citationId, Id categoryId, int weight, bool isMain)
+        public void AddCategoryToCitation(Id citationId, Id categoryId, int weight, bool isMain)
         {
             CitationCategory cg = new CitationCategory
             {
@@ -100,11 +86,44 @@ namespace Dek.Bel.Services
             m_DBService.InsertOrUpdate(cg);
         }
 
-        public List<CitationCategory> LoadCategoriesForCitation(Id citationId)
+        public void SetMainCategory(Id citationId, Category cat)
         {
-            //string sql = $"SELECT * FROM {nameof(CitationCategory)}";
-            var res = m_DBService.Select<CitationCategory>();
-            return res;
+            var cgs = GetCitationCategories(citationId);
+
+            // There can be only one
+            foreach (var cg in cgs)
+            {
+                cg.IsMain = false;
+                m_DBService.InsertOrUpdate(cg);
+            }
+
+            CitationCategory maincg = m_DBService.Select<CitationCategory>($"`CitationId` = '{citationId}' AND `CategoryId` = '{cat.Id}'").FirstOrDefault();
+            if (maincg == null)
+                maincg = new CitationCategory
+                {
+                    CategoryId = cat.Id,
+                    CitationId = citationId,
+                    Weight = 3,
+                };
+
+            maincg.IsMain = true;
+
+            m_DBService.InsertOrUpdate(maincg);
+        }
+
+        public void SetWeight(Id citationId, Id categoryId, int weight)
+        {
+            var cg = GetCitationCategories(citationId).SingleOrDefault(x => x.CitationId == citationId && x.CategoryId == categoryId);
+            cg.Weight = weight;
+
+            m_DBService.InsertOrUpdate(cg);
+        }
+
+        public List<CitationCategory> GetCitationCategories(Id citationId)
+        {
+            List<CitationCategory> cgs = m_DBService.Select<CitationCategory>($"`CitationId` = '{citationId}'");
+
+            return cgs;
         }
 
         /**************************************************************
@@ -113,7 +132,7 @@ namespace Dek.Bel.Services
 
         Color labelColor = Color.Moccasin;
         Color labelColorMouseOver = Color.Orange;
-        public Label CreateCategoryLabelControl(string text, bool isMain, ContextMenuStrip menu)
+        public Label CreateCategoryLabelControl(CitationCategory citCat, Category cat, ContextMenuStrip menu, ToolTip toolTip)
         {
             Label l = new Label();
             Font newFont = new Font("Times New Roman", 10, FontStyle.Regular);
@@ -123,11 +142,12 @@ namespace Dek.Bel.Services
             l.MouseLeave += L_MouseLeave;
             l.AutoSize = true;
             l.BackColor = labelColor;
-            l.Text = text;
+            l.Text = $"{cat.Code} [{citCat.Weight}]";
             l.ContextMenuStrip = menu;
-            if (isMain)
+            if (citCat.IsMain)
                 SetMainStyleOnLabel(l);
-
+            l.Tag = cat;
+            toolTip.SetToolTip(l, cat.Name);
             return l;
         }
 
