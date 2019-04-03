@@ -13,7 +13,7 @@ namespace Dek.Bel.Services
     {
         public const char BelBold = '☺';
         public const char BelStrike = '☻';
-
+        [Import] IUserSettingsService m_UserSettingsService { get; set; }
 
         public string CreateRtfWithExlusionsAndEmphasis(string text, List<TextRange> exclusion, List<TextRange> emphasis)
         {
@@ -26,6 +26,9 @@ namespace Dek.Bel.Services
             if (text.IsNullOrWhiteSpace())
                 return @"{\rtf1\ansi }";
 
+            bool boldEmphasis = m_UserSettingsService.BoldEmphasis;
+            bool underlineEmphasis = m_UserSettingsService.UnderlineEmphasis;
+
             StringBuilder rtfbuilder = new StringBuilder();
             rtfbuilder.Append(@"{\rtf1\ansi ");
             bool bold = false;
@@ -34,12 +37,19 @@ namespace Dek.Bel.Services
             {
                 if (emphasis.ContainsInteger(i) && !bold)
                 {
-                    rtfbuilder.Append(@"\b ");
+                    if(boldEmphasis)
+                        rtfbuilder.Append(@"\b ");
+                    if(underlineEmphasis)
+                        rtfbuilder.Append(@"\u ");
                     bold = true;
                 }
                 if (!emphasis.ContainsInteger(i) && bold)
                 {
-                    rtfbuilder.Append(@"\b0 ");
+                    if (boldEmphasis)
+                        rtfbuilder.Append(@"\b0 ");
+                    if (underlineEmphasis)
+                        rtfbuilder.Append(@"\u0 ");
+
                     bold = false;
                 }
 

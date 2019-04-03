@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -14,27 +13,29 @@ using System.Windows.Forms;
 namespace Dek.Bel.DB
 {
     [Export]
-    public class CitationRepo
+    public class CitationService
     {
         [Import] IDBService DBService { get; set; }
         [Import] public IUserSettingsService UserSettingsService { get; set; }
         string SqlSelectFields = $"SELECT `Id`, `Fragment`, `PageStart`, `PageStop`, `GlyphStart`, `GlyphStop`, `Rectangles`, `Date`";
 
-        public CitationRepo()
+        public CitationService()
         {
             Mef.Initialize(this);
         }
 
-        public RawCitation AddRawCitations(EventData messsage)
+        public RawCitation AddRawCitations(EventData message)
         {
+            int[] rects = ArrayStuff.ExtractArrayFromIntPtr(message.SelectionRects, message.Len * 4);
+
             RawCitation raw = new RawCitation
             {
                 Id = Id.NewId(),
-                Fragment = messsage.Text,
-                GlyphStart = messsage.StartGlyph,
-                GlyphStop = messsage.StopGlyph,
-                PageStop = messsage.StopPage,
-                PageStart = messsage.StartPage,
+                Fragment = message.Text,
+                GlyphStart = message.StartGlyph,
+                GlyphStop = message.StopGlyph,
+                PageStop = message.StopPage,
+                PageStart = message.StartPage,
                 Date = DateTime.Now,
             };
 
@@ -60,7 +61,7 @@ namespace Dek.Bel.DB
 
         internal Citation CreateNewCitation(List<RawCitation> rawCitations, EventData message, Id volumeId)
         {
-            int[] rects = ExtractArrayFromEventData(message.SelectionRects, message.Len * 4);
+            int[] rects = ArrayStuff.ExtractArrayFromIntPtr(message.SelectionRects, message.Len * 4);
             string citationText = ComposeCitation(rawCitations, message.Text);
             RichTextBox rtb = new RichTextBox();
             rtb.Text = citationText;
@@ -72,6 +73,7 @@ namespace Dek.Bel.DB
                 Citation2 = rtb.Text, // More of the same, textb 1
                 Citation3 = "", // More of the same, textb 2
                 CreatedDate = DateTime.Now,
+                EditedDate = DateTime.Now,
                 GlyphStart = message.StartGlyph,
                 GlyphStop = message.StopGlyph,
                 PhysicalPageStart = message.StartPage,
@@ -83,18 +85,5 @@ namespace Dek.Bel.DB
 
             return citation;
         }
-
-        internal int[] ExtractArrayFromEventData(IntPtr ptr, int len)
-        {
-            if (ptr == IntPtr.Zero)
-                return new int[0];
-
-            IntPtr start = ptr;
-            int[] result = new int[len];
-            Marshal.Copy(start, result, 0, len);
-            return result;
-        }
-
-
     }
 }

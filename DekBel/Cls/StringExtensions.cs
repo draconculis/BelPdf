@@ -50,5 +50,36 @@ namespace Dek.Cls
         {
             return string.IsNullOrWhiteSpace(me);
         }
+
+        public static string RemoveCRLF(this string me)
+        {
+            string ret = me.Replace("\r", "¤¤¤¤").Replace("\n", "¤¤¤¤")
+                .Replace(" ¤¤¤¤ ", " ")
+                .Replace(" ¤¤¤¤", " ")
+                .Replace("¤¤¤¤ ", " ")
+                .Replace("¤¤¤¤", " ");
+
+            return ret;
+        }
+        public static string RemoveDoubleSpace(this string me)
+        {
+            string ret = me
+                .Replace("          ", " ")
+                .Replace("          ", " ")
+                .Replace("          ", " ")
+                .Replace("          ", " ")
+                .Replace("          ", " ")
+                .Replace("         ", " ")
+                .Replace("        ", " ")
+                .Replace("       ", " ")
+                .Replace("      ", " ")
+                .Replace("     ", " ")
+                .Replace("    ", " ")
+                .Replace("   ", " ")
+                .Replace("  ", " ")
+                .Replace(" ", " ");
+
+            return ret;
+        }
     }
 }

@@ -28,11 +28,18 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.button_cancel = new System.Windows.Forms.Button();
             this.button_ok = new System.Windows.Forms.Button();
             this.textBox1 = new System.Windows.Forms.TextBox();
+            this.contextMenuStrip_CopyPaste = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.cutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.copyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.pasteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.cancelToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.label1 = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.contextMenuStrip_CopyPaste.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -63,8 +70,11 @@
             // 
             // textBox1
             // 
-            this.textBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.textBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBox1.ContextMenuStrip = this.contextMenuStrip_CopyPaste;
+            this.textBox1.HideSelection = false;
             this.textBox1.Location = new System.Drawing.Point(7, 32);
             this.textBox1.Margin = new System.Windows.Forms.Padding(4);
             this.textBox1.Name = "textBox1";
@@ -72,14 +82,55 @@
             this.textBox1.TabIndex = 3;
             this.textBox1.TextChanged += new System.EventHandler(this.TextBox1_TextChanged);
             // 
+            // contextMenuStrip_CopyPaste
+            // 
+            this.contextMenuStrip_CopyPaste.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.cutToolStripMenuItem,
+            this.copyToolStripMenuItem,
+            this.pasteToolStripMenuItem,
+            this.cancelToolStripMenuItem});
+            this.contextMenuStrip_CopyPaste.Name = "contextMenuStrip_CopyPaste";
+            this.contextMenuStrip_CopyPaste.Size = new System.Drawing.Size(111, 92);
+            // 
+            // cutToolStripMenuItem
+            // 
+            this.cutToolStripMenuItem.Name = "cutToolStripMenuItem";
+            this.cutToolStripMenuItem.Size = new System.Drawing.Size(110, 22);
+            this.cutToolStripMenuItem.Text = "Cut";
+            this.cutToolStripMenuItem.Click += new System.EventHandler(this.CutToolStripMenuItem_Click);
+            // 
+            // copyToolStripMenuItem
+            // 
+            this.copyToolStripMenuItem.Name = "copyToolStripMenuItem";
+            this.copyToolStripMenuItem.Size = new System.Drawing.Size(110, 22);
+            this.copyToolStripMenuItem.Text = "Copy";
+            this.copyToolStripMenuItem.Click += new System.EventHandler(this.CopyToolStripMenuItem_Click);
+            // 
+            // pasteToolStripMenuItem
+            // 
+            this.pasteToolStripMenuItem.Name = "pasteToolStripMenuItem";
+            this.pasteToolStripMenuItem.Size = new System.Drawing.Size(110, 22);
+            this.pasteToolStripMenuItem.Text = "Paste";
+            this.pasteToolStripMenuItem.Click += new System.EventHandler(this.PasteToolStripMenuItem_Click);
+            // 
+            // cancelToolStripMenuItem
+            // 
+            this.cancelToolStripMenuItem.Name = "cancelToolStripMenuItem";
+            this.cancelToolStripMenuItem.Size = new System.Drawing.Size(110, 22);
+            this.cancelToolStripMenuItem.Text = "Cancel";
+            this.cancelToolStripMenuItem.Click += new System.EventHandler(this.CancelToolStripMenuItem_Click);
+            // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(39, 9);
+            this.label1.Location = new System.Drawing.Point(35, 7);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(35, 19);
             this.label1.TabIndex = 4;
             this.label1.Text = "Abc";
+            this.label1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.Form_AddReference_MouseDown);
+            this.label1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.Form_AddReference_MouseMove);
+            this.label1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.Form_AddReference_MouseUp);
             // 
             // pictureBox1
             // 
@@ -92,6 +143,9 @@
             this.pictureBox1.Size = new System.Drawing.Size(32, 32);
             this.pictureBox1.TabIndex = 5;
             this.pictureBox1.TabStop = false;
+            this.pictureBox1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.Form_AddReference_MouseDown);
+            this.pictureBox1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.Form_AddReference_MouseMove);
+            this.pictureBox1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.Form_AddReference_MouseUp);
             // 
             // Form_AddReference
             // 
@@ -113,6 +167,10 @@
             this.ShowInTaskbar = false;
             this.Text = "BelPdf";
             this.Load += new System.EventHandler(this.Form_AddReference_Load);
+            this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.Form_AddReference_MouseDown);
+            this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.Form_AddReference_MouseMove);
+            this.MouseUp += new System.Windows.Forms.MouseEventHandler(this.Form_AddReference_MouseUp);
+            this.contextMenuStrip_CopyPaste.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -126,5 +184,10 @@
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip_CopyPaste;
+        private System.Windows.Forms.ToolStripMenuItem cutToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem copyToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem pasteToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem cancelToolStripMenuItem;
     }
 }

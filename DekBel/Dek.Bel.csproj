@@ -101,6 +101,13 @@
       <DependentUpon>BelGui.cs</DependentUpon>
     </Compile>
     <Compile Include="Cls\ArrayStuff.cs" />
+    <Compile Include="Cls\IntExtensions.cs" />
+    <Compile Include="FormVolume.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormVolume.Designer.cs">
+      <DependentUpon>FormVolume.cs</DependentUpon>
+    </Compile>
     <Compile Include="ModelExtensions\CitationExtension.cs" />
     <Compile Include="ModelExtensions\ReferenceExtension.cs" />
     <Compile Include="Models\Page.cs" />
@@ -117,12 +124,14 @@
     <Compile Include="Services\CitationManipulationService.cs" />
     <Compile Include="Cls\DateTime.cs" />
     <Compile Include="Cls\RichTextExtensions.cs" />
+    <Compile Include="Services\CitationService.cs" />
+    <Compile Include="Services\IMessageboxService.cs" />
+    <Compile Include="Services\MessageboxService.cs" />
     <Compile Include="Services\ReferenceService.cs" />
     <Compile Include="Services\RichTextService.cs" />
     <Compile Include="DB\HistoryRepo.cs" />
     <Compile Include="DB\Id.cs" />
     <Compile Include="Cls\Mef.cs" />
-    <Compile Include="DB\CitationRepo.cs" />
     <Compile Include="DB\DBCreator.cs" />
     <Compile Include="DB\IDBCreator.cs" />
     <Compile Include="DB\IModel.cs" />
@@ -137,7 +146,7 @@
       <DependentUpon>Form_ResetCitation.cs</DependentUpon>
     </Compile>
     <Compile Include="InterOp\CodesEnum.cs" />
-    <Compile Include="ModelsForViewing.cs" />
+    <Compile Include="Services\ModelsForViewing.cs" />
     <Compile Include="Models\Author.cs" />
     <Compile Include="Models\AuthorType.cs" />
     <Compile Include="Models\Book.cs" />
@@ -192,6 +201,9 @@
   <ItemGroup>
     <EmbeddedResource Include="BelGui.resx">
       <DependentUpon>BelGui.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormVolume.resx">
+      <DependentUpon>FormVolume.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Reference\Form_AddReference.resx">
       <DependentUpon>Form_AddReference.cs</DependentUpon>
@@ -248,4 +260,7 @@
     <Error Condition="!Exists('..\packages\System.Data.SQLite.Core.1.0.109.2\build\net46\System.Data.SQLite.Core.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\System.Data.SQLite.Core.1.0.109.2\build\net46\System.Data.SQLite.Core.targets'))" />
   </Target>
   <Import Project="..\packages\System.Data.SQLite.Core.1.0.109.2\build\net46\System.Data.SQLite.Core.targets" Condition="Exists('..\packages\System.Data.SQLite.Core.1.0.109.2\build\net46\System.Data.SQLite.Core.targets')" />
+  <PropertyGroup>
+    <PreBuildEvent>xcopy /Y /S $(ProjectDir)bin\$(Configuration)\*.* $(SolutionDir)..\dbg</PreBuildEvent>
+  </PropertyGroup>
 </Project>

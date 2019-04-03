@@ -73,7 +73,7 @@ namespace WindowsFormsApp1
 
         private void button5_Click(object sender, EventArgs e)
         {
-            var citationRepo = new CitationRepo();
+            var citationRepo = new CitationService();
             citationRepo.AddRawCitations(
                          new BelManagedLib.EventData
                          {

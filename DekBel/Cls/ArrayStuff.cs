@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Runtime.InteropServices;
 
 namespace Dek.Bel.Cls
 {
@@ -36,6 +37,17 @@ namespace Dek.Bel.Cls
             }
 
             return res.ToArray();
+        }
+
+        public static int[] ExtractArrayFromIntPtr(IntPtr ptr, int len)
+        {
+            if (ptr == IntPtr.Zero)
+                return new int[0];
+
+            IntPtr start = ptr;
+            int[] result = new int[len];
+            Marshal.Copy(start, result, 0, len);
+            return result;
         }
 
     }

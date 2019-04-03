@@ -16,8 +16,6 @@ namespace Dek.Bel.Models
         public int PhysicalPageStop { get; set; }
         public int GlyphStart { get; set; }
         public int GlyphStop { get; set; }
-        public int PageStart { get; set; }
-        public int PageStop { get; set; }
         public string SelectionRects { get; set; }
 
         public string Citation1 { get; set; } // Original text (concatenated with raw citations)

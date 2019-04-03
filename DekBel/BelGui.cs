@@ -33,11 +33,11 @@ namespace Dek.Bel
         [Import] public VolumeService m_VolumeService { get; set; }
         [Import] public ICategoryService m_CategoryService { get; set; }
         [Import] public IUserSettingsService UserSettingsService { get; set; }
-        [Import] public IDBService DBService { get; set; }
+        [Import] public IDBService m_DBService { get; set; }
         [Import] public CategoryRepo m_CategoryRepo { get; set; }
         private StorageService m_StorageService { get; } = new StorageService();
         [Import] public HistoryRepo HistoryRepo { get; set; }
-        [Import] public CitationRepo CitationRepo { get; set; }
+        [Import] public CitationService m_CitationService { get; set; }
         [Import] public RichTextService RtfService { get; set; }
         [Import] public PdfService PdfService { get; set; }
         [Import] public CitationManipulationService CitationService{ get; set;}
@@ -49,20 +49,20 @@ namespace Dek.Bel
         /// <param name="message"></param>
         public BelGui(EventData message) : this()
         {
-            if (DBService == null)
+            if (m_DBService == null)
                 Mef.Initialize(this);
 
-            List<RawCitation> rawCitations = DBService.Select<RawCitation>();
-            DBService.ClearTable<RawCitation>();
+            List<RawCitation> rawCitations = m_DBService.Select<RawCitation>();
+            m_DBService.ClearTable<RawCitation>();
 
             // Get volume and storage
             History history = HistoryRepo.GetLastOpened(); // Our currently open file in Sumatra
             //VM.CurrentVolume = DBService.SelectById<Volume>(history.VolumeId);
             m_VolumeService.LoadVolume(history.VolumeId);
-            VM.CurrentStorage = DBService.SelectById<Storage>(history.StorageId);
+            VM.CurrentStorage = m_DBService.SelectById<Storage>(history.StorageId);
 
             // Create new citation
-            VM.CurrentCitation = CitationRepo.CreateNewCitation(rawCitations, message, m_VolumeService.CurrentVolume.Id);
+            VM.CurrentCitation = m_CitationService.CreateNewCitation(rawCitations, message, m_VolumeService.CurrentVolume.Id);
             m_VolumeService.LoadCitations(history.VolumeId);
             LoadCitations(); // Into status strip citations context menu
 
@@ -92,21 +92,32 @@ namespace Dek.Bel
         private void LoadControls()
         {
             // Show which citation is current
-            int maxlen = 50;
             toolStripDropDownButton_Citation.Text = VM.CurrentCitation.ToString();
 
             // Load data from citation
             richTextBox1.Rtf = RtfService.CreateRtfWithExlusionsAndEmphasis(VM.CurrentCitation.Citation2, VM.Exclusion, null);
             richTextBox2.Rtf = RtfService.CreateRtfWithExlusionsAndEmphasis(VM.CurrentCitation.Citation3, null, VM.Emphasis);
 
-            label1_MD5.Text = Guid.NewGuid().ToString();
+            //label1_MD5.Text = VM.CurrentCitation.Id.ToString();
+
+            label_CitationLength.Text = $"{VM.CurrentCitation.Citation1.Length}";
+            label_CitationCreated.Text = $"{VM.CurrentCitation.CreatedDate.ToSaneStringShort()}";
+            label_CitationEdited.Text = $"{VM.CurrentCitation.EditedDate.ToSaneStringShort()}";
+            textBox_CitationNotes.Text = $"{VM.CurrentCitation.Notes}";
+
+            // Volume data
+            textBox_VolumeTitle.Text = m_VolumeService.CurrentVolume.Title;
+            textBox_VolumeNotes.Text = m_VolumeService.CurrentVolume.Notes;
+            textBox_volumePublicationDate.Text = m_VolumeService.CurrentVolume.PublicationDate.ToSaneStringDateOnly();
+
 
             // Load data from storage
-            label_fileName.Text = Path.GetFileName(VM.Message.FilePath);
-            //textBox_FileName = Path.GetFileName(messsage.FilePath);
-            label_Page.Text = $"{VM.Message.StartPage} - {VM.Message.StopPage}";
+            label_fileName.Text = Path.GetFileName(VM.CurrentStorage.FileName);
+            label_storageName.Text = Path.GetFileName(VM.CurrentStorage.StorageName);
+            label1_MD5.Text = VM.CurrentStorage.Hash;
 
             LoadCategoryControl();
+            LoadReferences();
         }
 
         void LoadCategoryControl()
@@ -121,6 +132,26 @@ namespace Dek.Bel
                 if(cat != null)
                     AddCategoryLabel(cg, cat);
             }
+        }
+
+        void LoadReferences()
+        {
+            // Book
+            textBox_Book.Text = m_VolumeService.GetBook(VM.CurrentCitation.PhysicalPageStart, VM.CurrentCitation.GlyphStart)?.Title ?? "-";
+
+            // Chapter
+
+            // Subchapter
+
+            // Paragraph
+
+            // Page
+            int startPage = m_VolumeService.GetPageNumber(VM.CurrentCitation.PhysicalPageStart, VM.CurrentCitation.GlyphStart);
+            int stopPage = m_VolumeService.GetPageNumber(VM.CurrentCitation.PhysicalPageStop, VM.CurrentCitation.GlyphStop);
+            label_citationStart.Text = $"Page: {startPage} (physical page: {VM.CurrentCitation.PhysicalPageStart}), Character: {VM.CurrentCitation.GlyphStart}";
+            label_CitationStop.Text = $"Page: {stopPage} (physical page: {VM.CurrentCitation.PhysicalPageStop}), Character: {VM.CurrentCitation.GlyphStop}";
+
+
         }
 
         /// <summary>
@@ -505,9 +536,19 @@ namespace Dek.Bel
                 return;
 
             toolStripButton8.Enabled = false;
+
+            VM.CurrentCitation.Citation3 = richTextBox2.Text;
+
         }
 
         private void toolStripButton7_Click(object sender, EventArgs e)
+        {
+        }
+
+        /// <summary>
+        /// Copies rtf 1 -> rtf 2
+        /// </summary>
+        public void BeginEdit()
         {
             // Begin edit - e.g copy rtf2 to rtf3
             string text = VM.CurrentCitation.Citation2;
@@ -515,7 +556,7 @@ namespace Dek.Bel
             bool excluded = false;
             for (int i = 0; i < text.Length; i++)
             {
-                if(!VM.Exclusion.ContainsInteger(i) && excluded)
+                if (!VM.Exclusion.ContainsInteger(i) && excluded)
                 {
                     excluded = false;
                     sb.Append(" ");
@@ -533,10 +574,10 @@ namespace Dek.Bel
             }
 
             VM.CurrentCitation.Citation3 = sb.ToString();
-            DBService.InsertOrUpdate(VM.CurrentCitation);
+            m_DBService.InsertOrUpdate(VM.CurrentCitation);
             LoadControls();
-        }
 
+        }
 
         private void toolStripButton8_Click(object sender, EventArgs e)
         {
@@ -576,7 +617,7 @@ namespace Dek.Bel
 
         private void LeftToolStripMenuItem_Click(object sender, EventArgs e)
         {
-           // richTextBox1.
+           
         }
 
         private void SplitContainer2_Panel2_Paint(object sender, PaintEventArgs e)
@@ -612,11 +653,6 @@ namespace Dek.Bel
             PdfService.AddAnnotation(VM.CurrentStorage.StorageName, VM.CurrentCitation.SelectionRects);
         }
 
-        private void Button_category_Click_1(object sender, EventArgs e)
-        {
-
-        }
-
         private void ToolStripStatusLabel1_Click(object sender, EventArgs e)
         {
             splitContainer2.Panel2Collapsed = !splitContainer2.Panel2Collapsed;
@@ -629,6 +665,86 @@ namespace Dek.Bel
         private void ToolStripDropDownButton_Citation_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void TextBox_Book_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        /// <summary>
+        /// Remove duplicate spaces from rtf box 1 + 2
+        /// </summary>
+        private void AdjustSpacesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            VM.CurrentCitation.Citation2 = VM.CurrentCitation.Citation2.Replace("    ", " ").Replace("   ", " ").Replace("  ", " ").Trim();
+            VM.CurrentCitation.Citation2 = VM.CurrentCitation.Citation2.Replace("  ", " ").Replace("  ", " ").Replace("  ", " ").Trim();
+            VM.CurrentCitation.Citation3 = VM.CurrentCitation.Citation3.Replace("    ", " ").Replace("   ", " ").Replace("  ", " ").Trim();
+            VM.CurrentCitation.Citation3 = VM.CurrentCitation.Citation3.Replace("  ", " ").Replace("  ", " ").Replace("  ", " ").Trim();
+            m_DBService.InsertOrUpdate(VM.CurrentCitation);
+            LoadControls();
+        }
+
+        /// <summary>
+        /// Toolstrip menu item BOLD emphasis
+        /// </summary>
+        private void BoldEmphasisToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (!(sender is ToolStripMenuItem item))
+                return;
+
+            UserSettingsService.BoldEmphasis = item.Checked;
+            LoadControls();
+        }
+
+        /// <summary>
+        /// Toolstrip menu item UNDERLINE emphasis
+        /// </summary>
+        private void UnderlineEmphasisToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (!(sender is ToolStripMenuItem item))
+                return;
+
+            UserSettingsService.UnderlineEmphasis = item.Checked;
+            LoadControls();
+
+        }
+
+        private void TextBox_CitationNotes_Leave(object sender, EventArgs e)
+        {
+            VM.CurrentCitation.Notes = textBox_CitationNotes.Text;
+            m_DBService.InsertOrUpdate(VM.CurrentCitation);
+        }
+
+        /// <summary>
+        /// Update volume data
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void TextBox_VolumeTitle_Leave(object sender, EventArgs e)
+        {
+            m_VolumeService.CurrentVolume.Title = textBox_VolumeTitle.Text;
+            m_VolumeService.CurrentVolume.PublicationDate = textBox_volumePublicationDate.Text.ToSaneDateTime();
+            m_VolumeService.CurrentVolume.Notes = textBox_VolumeNotes.Text;
+            m_DBService.InsertOrUpdate(m_VolumeService.CurrentVolume);
+        }
+
+        private void Button3_Click(object sender, EventArgs e)
+        {
+            FormVolume fm = new FormVolume();
+            fm.ShowDialog();
+        }
+
+
+        private void TextChanged_ValidateTextBoxDate(object sender, EventArgs e)
+        {
+            if (!(sender is TextBox tb))
+                return;
+
+            if (tb.Text.IsValidSaneDateTime())
+                tb.BackColor = textBox_VolumeTitle.BackColor;
+            else
+                tb.BackColor = Color.LightPink;
         }
 
 

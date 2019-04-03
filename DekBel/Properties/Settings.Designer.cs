@@ -58,5 +58,29 @@ namespace Dek.Bel.Properties {
                 this["StorageFolder"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool UnderlineEmphasis {
+            get {
+                return ((bool)(this["UnderlineEmphasis"]));
+            }
+            set {
+                this["UnderlineEmphasis"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool BoldEmphasis {
+            get {
+                return ((bool)(this["BoldEmphasis"]));
+            }
+            set {
+                this["BoldEmphasis"] = value;
+            }
+        }
     }
 }

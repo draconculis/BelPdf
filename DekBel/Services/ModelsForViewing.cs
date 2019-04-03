@@ -10,7 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Dek.Cls;
 
-namespace Dek.Bel
+namespace Dek.Bel.Services
 {
     [Export]
     public class ModelsForViewing

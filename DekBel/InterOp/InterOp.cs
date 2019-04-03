@@ -14,13 +14,23 @@ namespace BelManagedLib
 {
     public class BelManagedClass
     {
-        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         public delegate ResultData BelDelegate(EventData data);
-        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         public delegate ResultFileStorageData BelRequestFileStoragePathDelegate(RequestFileStorageData data);
 
         private BelDelegate _delegate;
         private BelRequestFileStoragePathDelegate _fileStoragedelegate;
+
+        public ResultData Result { get; set; }
+            = new ResultData
+            {
+                Message = "Res",
+                Code = 123,
+                Cancel = false,
+            };
+
+
 
         public BelManagedClass()
         {
@@ -48,20 +58,28 @@ namespace BelManagedLib
             #define DEKBELCODE_ADDANDSHOWCITATION      9300
             #define DEKBELCODE_STARTAUTOPAGINATION     9400
             */
-            ResultData res = null;
 
+            ReferenceService refsvc;
             switch ((CodesEnum)data.Code)
             {
                 case CodesEnum.DEKBELCODE_ADDVOLUMETITLE:
+                    refsvc = new ReferenceService();
+                    string newTitle = refsvc.EditVolumeTitle(data);
+                    Result = new ResultData
+                    {
+                        Code = 0,
+                        Message = $"New title set: {newTitle}.",
+                        Cancel = string.IsNullOrWhiteSpace(newTitle),
+                    };
                     break;
                 case CodesEnum.DEKBELCODE_ADDBOOKTITLE:
                     break;
                 case CodesEnum.DEKBELCODE_ADDCHAPTER:
                     break;
                 case CodesEnum.DEKBELCODE_ADDCITATION:
-                    var citationRepo = new CitationRepo();
+                    var citationRepo = new CitationService();
                     var result = citationRepo.AddRawCitations(data);
-                    res = new ResultData
+                    Result = new ResultData
                     {
                         Code = 0,
                         Message = $"Added raw citation. Id = {result.Id}.",
@@ -71,17 +89,26 @@ namespace BelManagedLib
                 case CodesEnum.DEKBELCODE_ADDANDSHOWCITATION:
                     BelGui bel = new BelGui(data);
                     bel.ShowDialog();
-                    res = bel.Result;
+                    Result = bel.Result;
                     break;
                 case CodesEnum.DEKBELCODE_EDITCITATION:
                     break;
                 case CodesEnum.DEKBELCODE_STARTAUTOPAGINATION:
+                    refsvc = new ReferenceService();
+                    var page = refsvc.AddPage(data);
+                    Result = new ResultData
+                    {
+                        Code = 0,
+                        Message = page == null ? "Page add canceled." : $"Added page reference. Id = {page.Id}.",
+                        Cancel = page == null,
+                    };
+                    refsvc.Dispose();
                     break;
                 default:
                     break;
             }
 
-            return res;
+            return Result;
         }
 
         // Copy to storage and add db entry

@@ -16,6 +16,12 @@ using System.Windows.Forms;
 
 namespace Dek.Bel.DB
 {
+    /// <summary>
+    /// ORM
+    /// - Id is default key value. Other field names or multiple keys can be marked with [Key] attribute in model.
+    /// - EditedDate is automatically updated in model for <see cref="InsertOrUpdate(object)"/>
+    /// </summary>
+
     [Export(typeof(IDBService))]
     public class Sqlite : IDBService, IDisposable
     {
@@ -70,57 +76,6 @@ namespace Dek.Bel.DB
                 foreach (var prop in obj.GetType().GetProperties())
                 {
                     LoadProperty(obj, prop, dt.Rows[i]);
-                    //string name = prop.Name;
-                    //object val = dt.Rows[i][name];
-                    //bool isNullable = Nullable.GetUnderlyingType(prop.GetType()) != null;
-                    //bool isEnum = prop.GetType().IsEnum;
-                    //Type type = prop.PropertyType;
-                    //string typeName = type.Name;
-                    //if (isEnum)
-                    //    typeName = "enum";
-
-                    //switch (typeName)
-                    //{
-                    //    case "int":
-                    //        prop.SetValue(obj, (int)(Int64)val);
-                    //        break;
-                    //    case "uint":
-                    //        prop.SetValue(obj, (uint)(UInt64)val);
-                    //        break;
-                    //    case nameof(Int32):
-                    //        prop.SetValue(obj, (Int32)(Int64)val);
-                    //        break;
-                    //    case nameof(UInt32):
-                    //        prop.SetValue(obj, (UInt32)(UInt64)val);
-                    //        break;
-                    //    case "long":
-                    //        prop.SetValue(obj, (long)(Int64)val);
-                    //        break;
-                    //    case nameof(Int64):
-                    //        prop.SetValue(obj, (Int64)val);
-                    //        break;
-                    //    case "ulong":
-                    //        prop.SetValue(obj, (ulong)(Int64)val);
-                    //        break;
-                    //    case nameof(UInt64):
-                    //        prop.SetValue(obj, (UInt64)(Int64)val);
-                    //        break;
-                    //    case nameof(Decimal):
-                    //        prop.SetValue(obj, (Decimal)val);
-                    //        break;
-                    //    case nameof(DateTime):
-                    //        prop.SetValue(obj, ((string)val).ToSaneDateTime());
-                    //        break;
-                    //    case "enum":
-                    //        prop.SetValue(obj, Enum.Parse(type, ((string)val)));
-                    //        break;
-                    //    case nameof(Id):
-                    //        prop.SetValue(obj, Id.NewId((string)val));
-                    //        break;
-                    //    default:
-                    //        prop.SetValue(obj, val);
-                    //        break;
-                    //}
                 }
                 result.Add(obj);
             }
@@ -684,6 +639,10 @@ namespace Dek.Bel.DB
             {
                 names += (names.Length > 0 ? ", " : "") + $"`{prop.Name}`";
                 values += (values.Length > 0 ? ", " : "") + $"'{prop.GetValue(obj, null)}'";
+
+                // Automatic date update for column EditedDate
+                if (prop.Name == "EditedDate")
+                    prop.SetValue(obj, DateTime.Now);
 
                 object attributes = prop.GetCustomAttributes(typeof(KeyAttribute), true).FirstOrDefault();
                 if (prop.Name.ToLower() == "id" || attributes != null)

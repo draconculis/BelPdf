@@ -33,7 +33,7 @@
     <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CLRSupport>false</CLRSupport>
+    <CLRSupport>true</CLRSupport>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
@@ -79,6 +79,8 @@
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(projectDir)$(Configuration)\</OutDir>
     <IntDir>obj\$(Configuration)\</IntDir>
+    <CustomBuildAfterTargets>
+    </CustomBuildAfterTargets>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -97,7 +99,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
@@ -126,6 +128,19 @@
       <ShowProgress>NotSet</ShowProgress>
       <AssemblyDebug>true</AssemblyDebug>
     </Link>
+    <CustomBuildStep>
+      <Command>
+      </Command>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Message>none</Message>
+    </CustomBuildStep>
+    <PostBuildEvent>
+      <Command>xcopy /Y /R "$(ProjectDir)\$(Configuration)\Dek.Bel.Interop.*" "..\..\Sumatra\dbg\"</Command>
+    </PostBuildEvent>
+    <PostBuildEvent>
+      <Message>Copy to Sumatra</Message>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -172,6 +187,7 @@
       <CompileAsManaged>true</CompileAsManaged>
       <ExceptionHandling>Async</ExceptionHandling>
       <CallingConvention>Cdecl</CallingConvention>
+      <RemoveUnreferencedCodeData>false</RemoveUnreferencedCodeData>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -183,6 +199,9 @@
       </Version>
       <AssemblyDebug>true</AssemblyDebug>
     </Link>
+    <PostBuildEvent>
+      <Command>xcopy /Y /R "$(ProjectDir)\$(Configuration)\Dek.Bel.Interop.*" "..\..\Sumatra\rel\"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>

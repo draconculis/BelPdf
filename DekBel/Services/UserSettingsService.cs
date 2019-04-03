@@ -39,6 +39,17 @@ namespace Dek.Bel.Services
             set => Set("CitationFont", value);
         }
 
+        public bool BoldEmphasis
+        {
+            get => Get("BoldEmphasis", true);
+            set => Set("BoldEmphasis", value);
+        }
+
+        public bool UnderlineEmphasis
+        {
+            get => Get("UnderlineEmphasis", false);
+            set => Set("UnderlineEmphasis", value);
+        }
 
         private T Get<T>(string settingName, T defaultvalue = default(T))
         {

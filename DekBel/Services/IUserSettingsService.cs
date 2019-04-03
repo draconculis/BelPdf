@@ -9,5 +9,7 @@ namespace Dek.Bel.Services
         string DBPath { get; }
         string DeselectionMarker { get; }
         Font CitationFont { get; set; }
+        bool BoldEmphasis { get; set; }
+        bool UnderlineEmphasis { get; set; }
     }
 }

@@ -13,19 +13,30 @@ namespace Dek.Bel.ReferenceGui
     public partial class Form_AddReference : Form
     {
         public string Value { get; set; }
+        private bool mouseIsDown = false;
+        private Point firstPoint;
 
-        public Form_AddReference(string header, string value = null)
+        public Form_AddReference(string header, string value)
         {
-            Label l = new Label();
-            l.Text = value;
-            int w = l.Width;
-
-            if (w > Width)
-                Width = Math.Min(w * 2, 1000);
-
-            label1.Text = header;
+            if (string.IsNullOrWhiteSpace(value))
+                return;
 
             InitializeComponent();
+
+            Size s = TextRenderer.MeasureText(value, textBox1.Font);
+            if(s.Width > 800)
+            {
+                Width = 900;
+                textBox1.ScrollBars = ScrollBars.Vertical;
+                textBox1.Multiline = true;
+                Height *= 2;
+            }
+            else if (s.Width > Width)
+                Width = s.Width + 100;
+
+            label1.Text = header;
+            if (!string.IsNullOrWhiteSpace(value))
+                textBox1.Text = value;
         }
 
         private void TextBox1_TextChanged(object sender, EventArgs e)
@@ -49,6 +60,54 @@ namespace Dek.Bel.ReferenceGui
             Value = textBox1.Text;
             this.DialogResult = DialogResult.OK;
             Close();
+        }
+
+        private void CancelToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.DialogResult = DialogResult.Cancel;
+            Close();
+
+        }
+
+        private void CutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            textBox1.Cut();
+        }
+
+        private void CopyToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            textBox1.Copy();
+        }
+
+        private void PasteToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            textBox1.Paste();
+        }
+
+        private void Form_AddReference_MouseDown(object sender, MouseEventArgs e)
+        {
+            firstPoint = e.Location;
+            mouseIsDown = true;
+        }
+
+        private void Form_AddReference_MouseUp(object sender, MouseEventArgs e)
+        {
+            mouseIsDown = false;
+        }
+
+        private void Form_AddReference_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (mouseIsDown)
+            {
+                // Get the difference between the two points
+                int xDiff = firstPoint.X - e.Location.X;
+                int yDiff = firstPoint.Y - e.Location.Y;
+
+                // Set the new point
+                int x = this.Location.X - xDiff;
+                int y = this.Location.Y - yDiff;
+                this.Location = new Point(x, y);
+            }
         }
     }
 }
