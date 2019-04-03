@@ -61,6 +61,7 @@ namespace Dek.Cls
 
             return ret;
         }
+
         public static string RemoveDoubleSpace(this string me)
         {
             string ret = me
