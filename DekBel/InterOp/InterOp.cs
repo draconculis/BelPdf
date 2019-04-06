@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Dek.Bel.Services;
 using Dek.Bel.DB;
 using Dek.Bel.InterOp;
+using Dek.Bel.Models;
 
 namespace BelManagedLib
 {
@@ -25,8 +26,8 @@ namespace BelManagedLib
         public ResultData Result { get; set; }
             = new ResultData
             {
-                Message = "Res",
-                Code = 123,
+                Message = "Result stub",
+                Code = 0,
                 Cancel = false,
             };
 
@@ -50,31 +51,59 @@ namespace BelManagedLib
 
         public ResultData DoStuff(EventData data)
         {
-            /*
-            #define DEKBELCODE_ADDVOLUMETITLE          9100
-            #define DEKBELCODE_ADDBOOKTITLE            9110
-            #define DEKBELCODE_ADDCHAPTER              9120
-            #define DEKBELCODE_ADDCITATION             9200
-            #define DEKBELCODE_ADDANDSHOWCITATION      9300
-            #define DEKBELCODE_STARTAUTOPAGINATION     9400
-            */
-
             ReferenceService refsvc;
+            string res;
             switch ((CodesEnum)data.Code)
             {
                 case CodesEnum.DEKBELCODE_ADDVOLUMETITLE:
                     refsvc = new ReferenceService();
-                    string newTitle = refsvc.EditVolumeTitle(data);
+                    res = refsvc.EditVolumeTitle(data);
                     Result = new ResultData
                     {
                         Code = 0,
-                        Message = $"New title set: {newTitle}.",
-                        Cancel = string.IsNullOrWhiteSpace(newTitle),
+                        Message = $"New title set: {res}.",
+                        Cancel = string.IsNullOrWhiteSpace(res),
                     };
                     break;
                 case CodesEnum.DEKBELCODE_ADDBOOKTITLE:
+                    refsvc = new ReferenceService();
+                    res = refsvc.AddReference<Book>(data);
+                    Result = new ResultData
+                    {
+                        Code = 0,
+                        Message = $"Added book: {res}.",
+                        Cancel = string.IsNullOrWhiteSpace(res),
+                    };
                     break;
                 case CodesEnum.DEKBELCODE_ADDCHAPTER:
+                    refsvc = new ReferenceService();
+                    res = refsvc.AddReference<Chapter>(data);
+                    Result = new ResultData
+                    {
+                        Code = 0,
+                        Message = $"Added chapter: {res}.",
+                        Cancel = string.IsNullOrWhiteSpace(res),
+                    };
+                    break;
+                case CodesEnum.DEKBELCODE_ADDSUBCHAPTER:
+                    refsvc = new ReferenceService();
+                    res = refsvc.AddReference<SubChapter>(data);
+                    Result = new ResultData
+                    {
+                        Code = 0,
+                        Message = $"Added subchapter: {res}.",
+                        Cancel = string.IsNullOrWhiteSpace(res),
+                    };
+                    break;
+                case CodesEnum.DEKBELCODE_ADDPARAGRAPH:
+                    refsvc = new ReferenceService();
+                    res = refsvc.AddReference<Paragraph>(data);
+                    Result = new ResultData
+                    {
+                        Code = 0,
+                        Message = $"Added paragraph: {res}.",
+                        Cancel = string.IsNullOrWhiteSpace(res),
+                    };
                     break;
                 case CodesEnum.DEKBELCODE_ADDCITATION:
                     var citationRepo = new CitationService();
@@ -87,11 +116,14 @@ namespace BelManagedLib
                     };
                     break;
                 case CodesEnum.DEKBELCODE_ADDANDSHOWCITATION:
-                    BelGui bel = new BelGui(data);
-                    bel.ShowDialog();
-                    Result = bel.Result;
+                    BelGui belAdd = new BelGui(data);
+                    belAdd.ShowDialog();
+                    Result = belAdd.Result;
                     break;
                 case CodesEnum.DEKBELCODE_EDITCITATION:
+                    BelGui belEdit = new BelGui(data);
+                    belEdit.ShowDialog();
+                    Result = belEdit.Result;
                     break;
                 case CodesEnum.DEKBELCODE_STARTAUTOPAGINATION:
                     refsvc = new ReferenceService();

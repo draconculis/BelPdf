@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -107,6 +108,49 @@ namespace Dek.Bel.DB
         }
 
         #endregion References ======================================================================
+
+        /// <summary>
+        /// Return a list with all citations in volume, decorated with references.
+        /// </summary>
+        /// <returns></returns>
+        public List<CitationWithReferences> GetCitationWithReferences()
+        {
+            LoadCitations(CurrentVolume.Id);
+            var rcit = new List<CitationWithReferences>();
+            foreach (var cit in Citations.Select(x => new CitationWithReferences(x)))
+            {
+                cit.Book = GetBook(cit.PhysicalPageStart, cit.GlyphStart);
+                cit.Chapter = GetChapter(cit.PhysicalPageStart, cit.GlyphStart);
+                cit.SubChapter = GetSubChapter(cit.PhysicalPageStart, cit.GlyphStart);
+                cit.Paragraph = GetParagraph(cit.PhysicalPageStart, cit.GlyphStart);
+                rcit.Add(cit);
+            }
+
+            return rcit;
+        }
+    }
+
+    public class CitationWithReferences : Citation
+    {
+        public Book Book { get; set; }
+        public Chapter Chapter { get; set; }
+        public SubChapter SubChapter { get; set; }
+        public Paragraph Paragraph { get; set; }
+
+        public CitationWithReferences(Citation citation)
+        {
+            Type resultType = typeof(CitationWithReferences);
+            PropertyInfo[] properties = typeof(Citation).GetProperties();
+
+            foreach (var property in properties)
+            {
+                var propToSet = resultType.GetProperty(property.Name);
+                if (propToSet.SetMethod != null)
+                {
+                    propToSet.SetValue(this, property.GetValue(citation));
+                }
+            }
+        }
 
     }
 }

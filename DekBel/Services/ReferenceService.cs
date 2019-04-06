@@ -90,16 +90,22 @@ namespace Dek.Bel.Services
             return page;
         }
 
+
+        /// <summary>
+        /// The odd one out, belongs to volume, not ref. But here we go...
+        /// </summary>
+        /// <param name="message"></param>
+        /// <returns></returns>
         internal string EditVolumeTitle(EventData message)
         {
             // Need to call in order to not mess up stack
             var dummy = ArrayStuff.ExtractArrayFromIntPtr(message.SelectionRects, 1);
 
             var volume = m_DBService.SelectById<Volume>(LastHistory.VolumeId);
-            // If no vulume, warn and exit
+            // If no volume, warn and exit
             if(volume == null)
             {
-                m_MessageBoxService.Show($"No volume found for {message.FilePath}. Please add citation first.", "Volume not found");
+                m_MessageBoxService.Show($"No volume found for {message.FilePath}.", "Volume not found");
                 return null;
             }
 
@@ -108,7 +114,8 @@ namespace Dek.Bel.Services
                 title = volume.Title;
 
             var form = new Form_AddReference($"Volume title", title);
-            if (form.ShowDialog() == System.Windows.Forms.DialogResult.Cancel)
+            if (form.ShowDialog() == System.Windows.Forms.DialogResult.Cancel
+                || string.IsNullOrWhiteSpace(form.Value))
                 return null;
 
             string newTitle = form.Value;
@@ -116,6 +123,32 @@ namespace Dek.Bel.Services
             m_DBService.InsertOrUpdate(volume);
             return newTitle;
         }
+
+        public string AddReference<T>(EventData message) where T : Reference, new()
+        {
+            // Need to call in order to not mess up stack
+            var dummy = ArrayStuff.ExtractArrayFromIntPtr(message.SelectionRects, 1);
+
+            var volume = m_DBService.SelectById<Volume>(LastHistory.VolumeId); // Current volume
+
+            var form = new Form_AddReference($"Add {new T().GetType().Name} title", message.Text);
+            if (form.ShowDialog() == System.Windows.Forms.DialogResult.Cancel)
+                return null;
+
+            T reference = new T
+            {
+                Id = Id.NewId(),
+                Title = form.Value,
+                VolumeId = volume.Id,
+                PhysicalPage = message.StartPage,
+                Glyph = message.StartGlyph,
+            };
+
+            m_DBService.InsertOrUpdate(reference);
+
+            return reference.Title;
+        }
+
 
         public void Dispose()
         {

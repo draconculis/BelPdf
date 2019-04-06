@@ -85,5 +85,6 @@ namespace Dek.Bel.DB
 
             return citation;
         }
+
     }
 }
