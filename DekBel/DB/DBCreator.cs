@@ -16,8 +16,7 @@ namespace Dek.Bel.DB
         {
             repo.CreateTable(typeof(Volume));
 
-            // Book
-            // CREATE TABLE "Book" ( `Id` TEXT NOT NULL, `Title` TEXT NOT NULL, `Author` TEXT, `PublishDate` TEXT, `Edition` TEXT, `Editors` TEXT, `EditionPublishDate` TEXT, `ISBN` TEXT, `Comment` TEXT, PRIMARY KEY(`BookId`) )
+            // References
             repo.CreateTable(typeof(Book));
             repo.CreateTable(typeof(Chapter));
             repo.CreateTable(typeof(SubChapter));

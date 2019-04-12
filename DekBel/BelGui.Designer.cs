@@ -122,7 +122,7 @@
             this.splitContainer_Volume = new System.Windows.Forms.SplitContainer();
             this.label2 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.textBox_Paragraph = new System.Windows.Forms.TextBox();
             this.textBox_Book = new System.Windows.Forms.TextBox();
             this.textBox_SubChapter = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
@@ -1049,7 +1049,7 @@
             this.splitContainer_Volume.Panel1.Controls.Add(this.label2);
             this.splitContainer_Volume.Panel1.Controls.Add(this.label8);
             this.splitContainer_Volume.Panel1.Controls.Add(this.textBox_Chapter);
-            this.splitContainer_Volume.Panel1.Controls.Add(this.textBox1);
+            this.splitContainer_Volume.Panel1.Controls.Add(this.textBox_Paragraph);
             this.splitContainer_Volume.Panel1.Controls.Add(this.label1);
             this.splitContainer_Volume.Panel1.Controls.Add(this.textBox_Book);
             this.splitContainer_Volume.Panel1.Controls.Add(this.label3);
@@ -1084,15 +1084,15 @@
             this.label8.Text = "Paragr.";
             this.label8.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // textBox1
+            // textBox_Paragraph
             // 
-            this.textBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.textBox_Paragraph.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox1.Location = new System.Drawing.Point(70, 129);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.ReadOnly = true;
-            this.textBox1.Size = new System.Drawing.Size(419, 23);
-            this.textBox1.TabIndex = 30;
+            this.textBox_Paragraph.Location = new System.Drawing.Point(70, 129);
+            this.textBox_Paragraph.Name = "textBox_Paragraph";
+            this.textBox_Paragraph.ReadOnly = true;
+            this.textBox_Paragraph.Size = new System.Drawing.Size(419, 23);
+            this.textBox_Paragraph.TabIndex = 30;
             // 
             // textBox_Book
             // 
@@ -1377,7 +1377,7 @@
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
         private System.Windows.Forms.TextBox textBox_Book;
         private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox textBox_Paragraph;
         private System.Windows.Forms.SplitContainer splitContainer_Volume;
         private System.Windows.Forms.ToolStripMenuItem adjustSpacesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem boldEmphasisToolStripMenuItem;

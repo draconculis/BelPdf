@@ -140,18 +140,19 @@ namespace Dek.Bel
             textBox_Book.Text = m_VolumeService.GetBook(VM.CurrentCitation.PhysicalPageStart, VM.CurrentCitation.GlyphStart)?.Title ?? "-";
 
             // Chapter
+            textBox_Chapter.Text = m_VolumeService.GetChapter(VM.CurrentCitation.PhysicalPageStart, VM.CurrentCitation.GlyphStart)?.Title ?? "-";
 
             // Subchapter
+            textBox_SubChapter.Text = m_VolumeService.GetSubChapter(VM.CurrentCitation.PhysicalPageStart, VM.CurrentCitation.GlyphStart)?.Title ?? "-";
 
             // Paragraph
+            textBox_Paragraph.Text = m_VolumeService.GetParagraph(VM.CurrentCitation.PhysicalPageStart, VM.CurrentCitation.GlyphStart)?.Title ?? "-";
 
             // Page
             int startPage = m_VolumeService.GetPageNumber(VM.CurrentCitation.PhysicalPageStart, VM.CurrentCitation.GlyphStart);
             int stopPage = m_VolumeService.GetPageNumber(VM.CurrentCitation.PhysicalPageStop, VM.CurrentCitation.GlyphStop);
             label_citationStart.Text = $"Page: {startPage} (physical page: {VM.CurrentCitation.PhysicalPageStart}), Character: {VM.CurrentCitation.GlyphStart}";
             label_CitationStop.Text = $"Page: {stopPage} (physical page: {VM.CurrentCitation.PhysicalPageStop}), Character: {VM.CurrentCitation.GlyphStop}";
-
-
         }
 
         /// <summary>
@@ -650,7 +651,7 @@ namespace Dek.Bel
 
         private void Button2_Click(object sender, EventArgs e)
         {
-            PdfService.AddAnnotation(VM.CurrentStorage.StorageName, VM.CurrentCitation.SelectionRects);
+            //PdfService.AddCitationToPdfDoc(VM.CurrentStorage.StorageName, VM.CurrentCitation.SelectionRects);
         }
 
         private void ToolStripStatusLabel1_Click(object sender, EventArgs e)

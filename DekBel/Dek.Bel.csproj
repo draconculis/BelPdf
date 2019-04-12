@@ -102,6 +102,7 @@
     </Compile>
     <Compile Include="Cls\ArrayStuff.cs" />
     <Compile Include="Cls\IntExtensions.cs" />
+    <Compile Include="Cls\DekRangeDouble.cs" />
     <Compile Include="FormVolume.cs">
       <SubType>Form</SubType>
     </Compile>

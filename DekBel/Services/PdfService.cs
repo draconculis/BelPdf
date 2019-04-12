@@ -17,6 +17,8 @@ using iText.Kernel.Font;
 using iText.Layout;
 using iText.Layout.Element;
 using System.IO;
+using Dek.Cls;
+using iText.Kernel.Geom;
 
 namespace Dek.Bel.Services
 {
@@ -68,9 +70,9 @@ namespace Dek.Bel.Services
 
         }
 
-        public void AddAnnotation(String storageFileName, string rectsString)
+        public void AddCitationToPdfDoc(String storageFileName, CategoryService cat, int weight, string rectsString)
         {
-            string storageFilePath = Path.Combine(m_UserSettingsService.StorageFolder, storageFileName);
+            string storageFilePath = System.IO.Path.Combine(m_UserSettingsService.StorageFolder, storageFileName);
             string tmpFileName = m_TempFileService.GetNewTmpFileName(storageFileName);
             int[] rects = ArrayStuff.ConvertStringToArray(rectsString);
 
@@ -101,6 +103,45 @@ namespace Dek.Bel.Services
             File.Delete(storageFileName);
             File.Move(tmpFileName, storageFileName);
 
+        }
+
+        /// <summary>
+        /// Returns margin x and y coords. Selects the widest margin of the left and the right one.
+        /// </summary>
+        /// <returns></returns>
+        private TextRange GetMargin(PdfDocument doc, int pageNo, string rectsString)
+        {
+            PdfPage page = doc.GetPage(pageNo);
+            Rectangle pagesize = page.GetPageSize();
+            int[] rects = ArrayStuff.ConvertStringToArray(rectsString);
+            var bounds = GetLeftAndRightBounds(rects);
+            int leftSize = (int)(bounds.Start - pagesize.GetX());
+            int rightSize = (int)(pagesize.GetX() + pagesize.GetWidth() - bounds.Stop);
+            return leftSize > rightSize
+                ? new TextRange((int)pagesize.GetX(), (int)pagesize.GetX() + leftSize)
+                : new TextRange(bounds.Stop, rightSize);
+        }
+
+        /// <summary>
+        /// Returns outer containing bounds of rect.
+        /// Textrange used as x-coords
+        /// </summary>
+        /// <param name="rects"></param>
+        /// <returns></returns>
+        private TextRange GetLeftAndRightBounds(int[] rects)
+        {
+            int min = int.MaxValue;
+            int max = int.MinValue;
+            int count = rects.Count() / 4;
+            for (int i = 0 ; i < rects.Count() / 4 ; i++)
+            {
+                if (rects[i] < min)
+                    min = rects[i];
+                if (rects[i] + rects[i + 2] > max)
+                    max = rects[i] + rects[i + 2];
+            }
+
+            return new TextRange(min, max);
         }
     }
 }
