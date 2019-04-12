@@ -15,13 +15,13 @@ namespace Dek.Bel.Services
         public const char BelStrike = '☻';
         [Import] IUserSettingsService m_UserSettingsService { get; set; }
 
-        public string CreateRtfWithExlusionsAndEmphasis(string text, List<TextRange> exclusion, List<TextRange> emphasis)
+        public string CreateRtfWithExlusionsAndEmphasis(string text, List<DekRange> exclusion, List<DekRange> emphasis)
         {
             if (emphasis == null)
-                emphasis = new List<TextRange>();
+                emphasis = new List<DekRange>();
 
             if (exclusion == null)
-                exclusion = new List<TextRange>();
+                exclusion = new List<DekRange>();
 
             if (text.IsNullOrWhiteSpace())
                 return @"{\rtf1\ansi }";

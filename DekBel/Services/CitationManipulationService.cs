@@ -50,7 +50,7 @@ namespace Dek.Bel.Services
 
         public void ExcludeSelectedText(int from, int to)
         {
-            var range = new TextRange(from, to);
+            var range = new DekRange(from, to);
 
             VM.Exclusion = VM.Exclusion.AddAndMerge(range);
             VM.CurrentCitation.Exclusion = VM.Exclusion.ConvertToText();
@@ -61,7 +61,7 @@ namespace Dek.Bel.Services
 
         public void AddEmphasis(int from, int to)
         {
-            var range = new TextRange(from, to);
+            var range = new DekRange(from, to);
 
             VM.Emphasis = VM.Emphasis.AddAndMerge(range);
             VM.CurrentCitation.Emphasis = VM.Emphasis.ConvertToText();

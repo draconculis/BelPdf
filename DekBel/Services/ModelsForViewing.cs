@@ -20,8 +20,8 @@ namespace Dek.Bel.Services
         public Citation CurrentCitation { get; set; }
         public Storage CurrentStorage { get; set; }
 
-        public List<TextRange> Emphasis { get; set; } = new List<TextRange>();
-        public List<TextRange> Exclusion { get; set; } = new List<TextRange>();
+        public List<DekRange> Emphasis { get; set; } = new List<DekRange>();
+        public List<DekRange> Exclusion { get; set; } = new List<DekRange>();
 
         public List<CitationCategory> CurrentCitations { get; set; } = new List<CitationCategory>();
     }

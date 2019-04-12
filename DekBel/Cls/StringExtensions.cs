@@ -26,7 +26,7 @@ namespace Dek.Cls
             return me.Substring(start, stop - start + 1);
         }
 
-        public static string Range(this string me, TextRange range) => me.Range(range.Start, range.Stop);
+        public static string Range(this string me, DekRange range) => me.Range(range.Start, range.Stop);
 
         public static Guid ToGuid(this string me)
         {

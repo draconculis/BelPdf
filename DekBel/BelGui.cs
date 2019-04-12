@@ -257,7 +257,7 @@ namespace Dek.Bel
 
         private void showTextRangeToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            MessageBox.Show($"{new TextRange(richTextBox1.SelectionStart, richTextBox1.SelectionLength, true)}");
+            MessageBox.Show($"{new DekRange(richTextBox1.SelectionStart, richTextBox1.SelectionLength, true)}");
 
         }
 

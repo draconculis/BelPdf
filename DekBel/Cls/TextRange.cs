@@ -5,13 +5,16 @@ using System.Text;
 
 namespace Dek.Cls
 {
-    public class DekRangeDouble : IComparable, IEquatable<DekRangeDouble>
+    public class DekRange : IComparable, IEquatable<DekRange>
     {
-        public double Start { get; }
-        public double Stop { get; }
+        public int Start { get; }
+        public int Stop { get; }
 
-        public DekRangeDouble(double start, double stop, bool stopAsLength = false)
+        public DekRange(int start, int stop, bool stopAsLength = false)
         {
+            if (start < 0 || stop < 0)
+                throw new ArgumentException($"Index out of range. Start: {start}, Stop: {stop}.");
+
             if (stopAsLength)
                 stop = start + stop - 1;
 
@@ -27,18 +30,18 @@ namespace Dek.Cls
             }
         }
 
-        public double Len => Stop - Start + 1;
+        public int Len => Stop - Start + 1;
 
-        public bool Intersects(DekRangeDouble range) =>
+        public bool Intersects(DekRange range) =>
             (range.Start >= Start && range.Start <= Stop)
             || (range.Stop >= Start && range.Stop <= Stop)
             || (range.Start <= Start) && (range.Stop >= Stop)
             || (range.Start >= Start) && (range.Stop <= Stop);
 
 
-        public bool Contains(DekRangeDouble range) => (range.Start >= Start && range.Stop <= Stop);
+        public bool Contains(DekRange range) => (range.Start >= Start && range.Stop <= Stop);
 
-        public bool Contains(double pos) => (pos >= Start && pos <= Stop);
+        public bool Contains(int pos) => (pos >= Start && pos <= Stop);
 
         /// <summary>
         /// Orders by Start
@@ -47,7 +50,7 @@ namespace Dek.Cls
         /// <returns></returns>
         public int CompareTo(object obj)
         {
-            if (obj is DekRangeDouble range)
+            if (obj is DekRange range)
             {
                 return Start == range.Start ? 0 : Start > range.Start ? 1 : -1;
             }
@@ -56,41 +59,41 @@ namespace Dek.Cls
         }
 
         /// <summary>
-        /// Returns a list with 0, 1, or 2 DekRangeDoubles.
+        /// Returns a list with 0, 1, or 2 textRanges.
         /// </summary>
         /// <param name="range"></param>
         /// <returns></returns>
-        public List<DekRangeDouble> Subtract(DekRangeDouble excludeRange)
+        public List<DekRange> Subtract(DekRange excludeRange)
         {
             // Nothing excluded
             if (!Intersects(excludeRange))
-                return new List<DekRangeDouble> { this };
+                return new List<DekRange> { this };
 
             // Delete all
             if (excludeRange.Contains(this))
-                return new List<DekRangeDouble>();
+                return new List<DekRange>();
 
             // Handle left edge case
             if (excludeRange.Start <= Start)
             {
                 // All excluded
                 if (excludeRange.Stop >= Stop)
-                    return new List<DekRangeDouble>();
+                    return new List<DekRange>();
 
-                return new List<DekRangeDouble> { new DekRangeDouble(excludeRange.Stop + 1, Stop) };
+                return new List<DekRange> { new DekRange(excludeRange.Stop + 1, Stop) };
             }
 
             // We know that excluded.Start is in range
             if (excludeRange.Stop >= Stop)
             {
-                return new List<DekRangeDouble> { new DekRangeDouble(Start, excludeRange.Start - 1) };
+                return new List<DekRange> { new DekRange(Start, excludeRange.Start - 1) };
             }
 
             // We now come to the cases where we get 2 return values
             // exclude range is within (Start + 1, Stop -1)
-            var resultSet = new List<DekRangeDouble>();
-            resultSet.Add(new DekRangeDouble(Start, excludeRange.Start - 1));
-            resultSet.Add(new DekRangeDouble(excludeRange.Stop + 1, Stop));
+            var resultSet = new List<DekRange>();
+            resultSet.Add(new DekRange(Start, excludeRange.Start - 1));
+            resultSet.Add(new DekRange(excludeRange.Stop + 1, Stop));
 
             return resultSet;
         }
@@ -102,7 +105,7 @@ namespace Dek.Cls
         /// </summary>
         /// <param name="excludeRanges"></param>
         /// <returns></returns>
-        public List<DekRangeDouble> SubtractSubRanges(List<DekRangeDouble> excludeRanges)
+        public List<DekRange> SubtractSubRanges(List<DekRange> excludeRanges)
         {
             // Assert that no range is outside of this range
             foreach (var range in excludeRanges)
@@ -115,19 +118,19 @@ namespace Dek.Cls
 
 
 
-            return new List<DekRangeDouble>();
+            return new List<DekRange>();
         }
 
-        public static List<DekRangeDouble> MergeConnectedRanges(List<DekRangeDouble> ranges)
+        public static List<DekRange> MergeConnectedRanges(List<DekRange> ranges)
         {
             if (ranges.Count == 0)
-                return new List<DekRangeDouble> { };
+                return new List<DekRange> { };
 
             if (ranges.Count == 1)
-                return new List<DekRangeDouble> { ranges[0] };
+                return new List<DekRange> { ranges[0] };
 
-            var super = new List<DekRangeDouble>();
-            List<DekRangeDouble> sortedRanges = ranges.OrderBy(x => x).ToList();
+            var super = new List<DekRange>();
+            List<DekRange> sortedRanges = ranges.OrderBy(x => x).ToList();
 
             int i = 0, j = 1;
             bool done = false;
@@ -164,17 +167,17 @@ namespace Dek.Cls
             return super;
         }
 
-        public static List<DekRangeDouble> AddAndMerge(List<DekRangeDouble> existingRange, DekRangeDouble range)
+        public static List<DekRange> AddAndMerge(List<DekRange> existingRange, DekRange range)
         {
             var newRange = Add(existingRange, range);
             return MergeConnectedRanges(newRange);
         }
 
-        public static List<DekRangeDouble> Add(List<DekRangeDouble> existingRange, DekRangeDouble range)
+        public static List<DekRange> Add(List<DekRange> existingRange, DekRange range)
         {
-            List<DekRangeDouble> DekRangeDoubles = new List<DekRangeDouble>(existingRange);
-            DekRangeDoubles.Add(range);
-            return DekRangeDoubles;
+            List<DekRange> textRanges = new List<DekRange>(existingRange);
+            textRanges.Add(range);
+            return textRanges;
         }
 
         /// <summary>
@@ -184,19 +187,19 @@ namespace Dek.Cls
         /// <param name="range1"></param>
         /// <param name="range2"></param>
         /// <returns></returns>
-        public static DekRangeDouble Super(DekRangeDouble range1, DekRangeDouble range2)
+        public static DekRange Super(DekRange range1, DekRange range2)
         {
-            double min = range1.Start < range2.Start ? range1.Start : range2.Start;
-            double max = range1.Stop > range2.Stop ? range1.Stop : range2.Stop;
-            return new DekRangeDouble(min, max);
+            int min = range1.Start < range2.Start ? range1.Start : range2.Start;
+            int max = range1.Stop > range2.Stop ? range1.Stop : range2.Stop;
+            return new DekRange(min, max);
         }
 
 
-        public override bool Equals(object other) => (Start == ((DekRangeDouble)other).Start && Stop == ((DekRangeDouble)other).Stop);
-        public bool Equals(DekRangeDouble other) => (Start == ((DekRangeDouble)other).Start && Stop == ((DekRangeDouble)other).Stop);
+        public override bool Equals(object other) => (Start == ((DekRange)other).Start && Stop == ((DekRange)other).Stop);
+        public bool Equals(DekRange other) => (Start == ((DekRange)other).Start && Stop == ((DekRange)other).Stop);
 
-        public static bool operator ==(DekRangeDouble range1, DekRangeDouble range2) => range1.Equals(range2);
-        public static bool operator !=(DekRangeDouble range1, DekRangeDouble range2) => !range1.Equals(range2);
+        public static bool operator ==(DekRange range1, DekRange range2) => range1.Equals(range2);
+        public static bool operator !=(DekRange range1, DekRange range2) => !range1.Equals(range2);
 
         public override string ToString()
         {
@@ -212,19 +215,19 @@ namespace Dek.Cls
         }
     }
 
-    public static class DekRangeDoubleExtension
+    public static class TextRangeExtension
     {
-        public static List<DekRangeDouble> AddAndMerge(this List<DekRangeDouble> me, DekRangeDouble range)
+        public static List<DekRange> AddAndMerge(this List<DekRange> me, DekRange range)
         {
-            return DekRangeDouble.AddAndMerge(me, range);
+            return DekRange.AddAndMerge(me, range);
         }
 
         /// <summary>
         /// Returns true if any range in list contians the provided range.
         /// </summary>
-        public static bool ContainsRange(this List<DekRangeDouble> me, DekRangeDouble range)
+        public static bool ContainsRange(this List<DekRange> me, DekRange range)
         {
-            foreach (DekRangeDouble r in me)
+            foreach (DekRange r in me)
                 if (r.Contains(range))
                     return true;
 
@@ -234,13 +237,13 @@ namespace Dek.Cls
         /// <summary>
         /// Returns true if any range in list contians i.
         /// </summary>
-        public static bool ContainsDouble(this List<DekRangeDouble> me, Double i)
+        public static bool ContainsInteger(this List<DekRange> me, int i)
         {
-            return me.ContainsRange(new DekRangeDouble(i, i));
+            return me.ContainsRange(new DekRange(i, i));
         }
 
         //
-        public static string ConvertToText(this List<DekRangeDouble> me)
+        public static string ConvertToText(this List<DekRange> me)
         {
             if (me == null || me.Count == 0)
                 return string.Empty;
@@ -253,9 +256,9 @@ namespace Dek.Cls
             return sb.ToString();
         }
 
-        public static void LoadFromText(this List<DekRangeDouble> me, string text)
+        public static void LoadFromText(this List<DekRange> me, string text)
         {
-            me = new List<DekRangeDouble>();
+            me = new List<DekRange>();
             if (string.IsNullOrWhiteSpace(text))
                 return;
 
@@ -263,9 +266,10 @@ namespace Dek.Cls
             foreach(string s in asdjh)
             {
                 string[] ns = s.Split(',');
-                DekRangeDouble tr = new DekRangeDouble(int.Parse(ns[0]), int.Parse(ns[1]));
+                DekRange tr = new DekRange(int.Parse(ns[0]), int.Parse(ns[1]));
                 me.Add(tr);
             }
         }
+
     }
 }

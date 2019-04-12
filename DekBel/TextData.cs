@@ -13,11 +13,11 @@ namespace Dek.Bel
         public string Original { get; }
         public string Filtered { get => FilterOriginal(Deselections); }
         public List<string> DeselectedTexts { get => GetDeslectedTexts(Deselections); }
-        public List<TextRange> Deselections { get; private set; }
-        public List<TextRange> InverseDeselections { get => GetInverseDeselection(); }
+        public List<DekRange> Deselections { get; private set; }
+        public List<DekRange> InverseDeselections { get => GetInverseDeselection(); }
         public string Elipsis { get; set; } = "…";
 
-        public void AddDeselection(TextRange textRange)
+        public void AddDeselection(DekRange textRange)
         {
             foreach(var range in Deselections)
             {
@@ -30,7 +30,7 @@ namespace Dek.Bel
             Deselections = Deselections.OrderBy(x => x).ToList();
         }
 
-        private List<string> GetDeslectedTexts(List<TextRange> deselectionRanges)
+        private List<string> GetDeslectedTexts(List<DekRange> deselectionRanges)
         {
             throw new NotImplementedException();
         }
@@ -39,7 +39,7 @@ namespace Dek.Bel
 
         
 
-        private string FilterOriginal(List<TextRange> deselections)
+        private string FilterOriginal(List<DekRange> deselections)
         {
             StringBuilder result = new StringBuilder();
 
@@ -64,18 +64,18 @@ namespace Dek.Bel
          result = 0|34|789
          ranges: (0,0)(3,4)(5,6)
         */
-        private List<TextRange> GetInverseDeselection()
+        private List<DekRange> GetInverseDeselection()
         {
             if (string.IsNullOrEmpty(Original))
-                return new List<TextRange>();
+                return new List<DekRange>();
 
-            TextRange origRange = new TextRange(0, Original.Length - 1);
-            var invertedSelections = new List<TextRange>();
+            DekRange origRange = new DekRange(0, Original.Length - 1);
+            var invertedSelections = new List<DekRange>();
             int pos = 0;
             foreach(var range in Deselections)
             {
                 if (pos < range.Start)
-                    invertedSelections.Add(new TextRange(pos, range.Start - 1));
+                    invertedSelections.Add(new DekRange(pos, range.Start - 1));
 
                 pos = range.Stop + 1;
             }

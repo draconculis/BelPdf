@@ -102,7 +102,7 @@
     </Compile>
     <Compile Include="Cls\ArrayStuff.cs" />
     <Compile Include="Cls\IntExtensions.cs" />
-    <Compile Include="Cls\DekRangeDouble.cs" />
+    <Compile Include="Cls\TextRange.cs" />
     <Compile Include="FormVolume.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -162,7 +162,7 @@
     </Compile>
     <Compile Include="Services\Categories\ICategoryService.cs" />
     <Compile Include="Cls\StringExtensions.cs" />
-    <Compile Include="Cls\TextRange.cs" />
+    <Compile Include="Cls\DekRangeDouble.cs" />
     <Compile Include="Services\Categories\FormCategory.cs">
       <SubType>Form</SubType>
     </Compile>

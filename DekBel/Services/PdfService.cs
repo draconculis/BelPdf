@@ -109,7 +109,7 @@ namespace Dek.Bel.Services
         /// Returns margin x and y coords. Selects the widest margin of the left and the right one.
         /// </summary>
         /// <returns></returns>
-        private TextRange GetMargin(PdfDocument doc, int pageNo, string rectsString)
+        private DekRange GetMargin(PdfDocument doc, int pageNo, string rectsString)
         {
             PdfPage page = doc.GetPage(pageNo);
             Rectangle pagesize = page.GetPageSize();
@@ -118,8 +118,8 @@ namespace Dek.Bel.Services
             int leftSize = (int)(bounds.Start - pagesize.GetX());
             int rightSize = (int)(pagesize.GetX() + pagesize.GetWidth() - bounds.Stop);
             return leftSize > rightSize
-                ? new TextRange((int)pagesize.GetX(), (int)pagesize.GetX() + leftSize)
-                : new TextRange(bounds.Stop, rightSize);
+                ? new DekRange((int)pagesize.GetX(), (int)pagesize.GetX() + leftSize)
+                : new DekRange(bounds.Stop, rightSize);
         }
 
         /// <summary>
@@ -128,7 +128,7 @@ namespace Dek.Bel.Services
         /// </summary>
         /// <param name="rects"></param>
         /// <returns></returns>
-        private TextRange GetLeftAndRightBounds(int[] rects)
+        private DekRange GetLeftAndRightBounds(int[] rects)
         {
             int min = int.MaxValue;
             int max = int.MinValue;
@@ -141,7 +141,7 @@ namespace Dek.Bel.Services
                     max = rects[i] + rects[i + 2];
             }
 
-            return new TextRange(min, max);
+            return new DekRange(min, max);
         }
     }
 }
