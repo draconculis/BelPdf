@@ -17,6 +17,8 @@ namespace Dek.Bel.Services
 
         public string CreateRtfWithExlusionsAndEmphasis(string text, List<DekRange> exclusion, List<DekRange> emphasis)
         {
+            string s = text.Replace("\r", "").Replace("\n", "");
+
             if (emphasis == null)
                 emphasis = new List<DekRange>();
 
@@ -33,7 +35,7 @@ namespace Dek.Bel.Services
             rtfbuilder.Append(@"{\rtf1\ansi ");
             bool bold = false;
             bool strike = false;
-            for(int i = 0; i < text.Length; i++)
+            for(int i = 0; i < s.Length; i++)
             {
                 if (emphasis.ContainsInteger(i) && !bold)
                 {
@@ -64,16 +66,16 @@ namespace Dek.Bel.Services
                     strike = false;
                 }
 
-                if (text[i] == '\n')
+                if (s[i] == '\n')
                 {
                     
                 }
 
-                if (text[i] == '\r')
+                if (s[i] == '\r')
                 {
                 }
 
-                rtfbuilder.Append(text[i]);
+                rtfbuilder.Append(GetRtfUnicodeEscapedChar(s[i]));
             }
 
             rtfbuilder.Append(@" }");
@@ -81,7 +83,26 @@ namespace Dek.Bel.Services
             return ret;
         }
 
+        static string GetRtfUnicodeEscapedChar(char c)
+        {
+                if (c <= 0x7f)
+                    return c.ToString();
+                else
+                    return "\\u" + Convert.ToUInt32(c) + "?";
+        }
 
+        static string GetRtfUnicodeEscapedString(string s)
+        {
+            var sb = new StringBuilder();
+            foreach (var c in s)
+            {
+                if (c <= 0x7f)
+                    sb.Append(c);
+                else
+                    sb.Append("\\u" + Convert.ToUInt32(c) + "?");
+            }
+            return sb.ToString();
+        }
 
     }
 }

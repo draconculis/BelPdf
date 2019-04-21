@@ -103,7 +103,6 @@
             this.setWeight5ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.button2 = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.label11 = new System.Windows.Forms.Label();
@@ -126,7 +125,6 @@
             this.textBox_Book = new System.Windows.Forms.TextBox();
             this.textBox_SubChapter = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
-            this.button3 = new System.Windows.Forms.Button();
             this.label4 = new System.Windows.Forms.Label();
             this.textBox_VolumeNotes = new System.Windows.Forms.TextBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
@@ -137,6 +135,7 @@
             this.label1_MD5 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.toolStripSplitButton2 = new System.Windows.Forms.ToolStripSplitButton();
             this.contextMenuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -170,7 +169,6 @@
             this.showTextRangeToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
             this.contextMenuStrip1.Size = new System.Drawing.Size(161, 70);
-            this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
             // 
             // copyToolStripMenuItem
             // 
@@ -304,8 +302,8 @@
             this.toolStripButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton1.Image")));
             this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButton1.Name = "toolStripButton1";
-            this.toolStripButton1.Size = new System.Drawing.Size(68, 23);
-            this.toolStripButton1.Text = "Show orig.";
+            this.toolStripButton1.Size = new System.Drawing.Size(102, 23);
+            this.toolStripButton1.Text = "Reset to original.";
             this.toolStripButton1.Click += new System.EventHandler(this.toolStripButton1_Click_1);
             // 
             // toolStripSeparator5
@@ -540,11 +538,12 @@
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripDropDownButton1,
             this.toolStripStatusLabel1,
-            this.toolStripDropDownButton_Citation});
+            this.toolStripDropDownButton_Citation,
+            this.toolStripSplitButton2});
             this.statusStrip1.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
-            this.statusStrip1.Location = new System.Drawing.Point(0, 453);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 450);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(1197, 24);
+            this.statusStrip1.Size = new System.Drawing.Size(1197, 27);
             this.statusStrip1.TabIndex = 2;
             this.statusStrip1.Text = "statusStrip1";
             this.statusStrip1.Click += new System.EventHandler(this.statusStrip1_Click);
@@ -561,7 +560,7 @@
             this.toolStripDropDownButton1.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.toolStripDropDownButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripDropDownButton1.Name = "toolStripDropDownButton1";
-            this.toolStripDropDownButton1.Size = new System.Drawing.Size(34, 22);
+            this.toolStripDropDownButton1.Size = new System.Drawing.Size(34, 25);
             this.toolStripDropDownButton1.Text = "toolStripDropDownButton1";
             this.toolStripDropDownButton1.ToolTipText = "Commands";
             this.toolStripDropDownButton1.Click += new System.EventHandler(this.toolStripDropDownButton1_Click);
@@ -572,7 +571,7 @@
             this.exportDBToolStripMenuItem,
             this.closeToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(139, 22);
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.fileToolStripMenuItem.Text = "File";
             // 
             // exportDBToolStripMenuItem
@@ -590,28 +589,28 @@
             // closeToolStripMenuItem1
             // 
             this.closeToolStripMenuItem1.Name = "closeToolStripMenuItem1";
-            this.closeToolStripMenuItem1.Size = new System.Drawing.Size(139, 22);
+            this.closeToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
             this.closeToolStripMenuItem1.Text = "Close";
             this.closeToolStripMenuItem1.Click += new System.EventHandler(this.closeToolStripMenuItem1_Click);
             // 
             // categoriesToolStripMenuItem
             // 
             this.categoriesToolStripMenuItem.Name = "categoriesToolStripMenuItem";
-            this.categoriesToolStripMenuItem.Size = new System.Drawing.Size(139, 22);
+            this.categoriesToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.categoriesToolStripMenuItem.Text = "Categories...";
             this.categoriesToolStripMenuItem.Click += new System.EventHandler(this.categoriesToolStripMenuItem_Click);
             // 
             // authorsToolStripMenuItem
             // 
             this.authorsToolStripMenuItem.Name = "authorsToolStripMenuItem";
-            this.authorsToolStripMenuItem.Size = new System.Drawing.Size(139, 22);
+            this.authorsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.authorsToolStripMenuItem.Text = "Authors...";
             // 
             // toolStripStatusLabel1
             // 
             this.toolStripStatusLabel1.Image = global::Dek.Bel.Properties.Resources.metaclose;
             this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
-            this.toolStripStatusLabel1.Size = new System.Drawing.Size(16, 19);
+            this.toolStripStatusLabel1.Size = new System.Drawing.Size(16, 22);
             this.toolStripStatusLabel1.ToolTipText = "Show / Hide Metadata";
             this.toolStripStatusLabel1.Click += new System.EventHandler(this.ToolStripStatusLabel1_Click);
             // 
@@ -621,9 +620,8 @@
             this.toolStripDropDownButton_Citation.DropDown = this.contextMenuStrip_Citations;
             this.toolStripDropDownButton_Citation.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripDropDownButton_Citation.Name = "toolStripDropDownButton_Citation";
-            this.toolStripDropDownButton_Citation.Size = new System.Drawing.Size(852, 22);
-            this.toolStripDropDownButton_Citation.Text = "1a299a26-9c08-4c8c-9fbb-c8c6a154dc94 - Abc Lorem Ipsum Lorem Ipsum Lorem Ipsum Lo" +
-    "rem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum ";
+            this.toolStripDropDownButton_Citation.Size = new System.Drawing.Size(395, 25);
+            this.toolStripDropDownButton_Citation.Text = "[1a299a26] Abc Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum ";
             this.toolStripDropDownButton_Citation.ToolTipText = "Select citation";
             this.toolStripDropDownButton_Citation.Click += new System.EventHandler(this.ToolStripDropDownButton_Citation_Click);
             // 
@@ -709,7 +707,6 @@
             // 
             // textBox_volumePublicationDate
             // 
-            this.textBox_volumePublicationDate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.textBox_volumePublicationDate.Location = new System.Drawing.Point(70, 33);
             this.textBox_volumePublicationDate.Name = "textBox_volumePublicationDate";
             this.textBox_volumePublicationDate.Size = new System.Drawing.Size(110, 23);
@@ -719,7 +716,6 @@
             // 
             // label6
             // 
-            this.label6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label6.Location = new System.Drawing.Point(13, 36);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(54, 15);
@@ -846,7 +842,6 @@
             // splitContainer2.Panel2
             // 
             this.splitContainer2.Panel2.Controls.Add(this.button2);
-            this.splitContainer2.Panel2.Controls.Add(this.button1);
             this.splitContainer2.Panel2.Controls.Add(this.tabControl1);
             this.splitContainer2.Panel2.Controls.Add(this.groupBox1);
             this.splitContainer2.Panel2.Font = new System.Drawing.Font("Corbel", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -859,23 +854,14 @@
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(925, 209);
+            this.button2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.button2.Location = new System.Drawing.Point(1027, 143);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(75, 23);
+            this.button2.Size = new System.Drawing.Size(161, 23);
             this.button2.TabIndex = 11;
-            this.button2.Text = "Anotts";
+            this.button2.Text = "Write to Pdf";
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.Button2_Click);
-            // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(800, 209);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 10;
-            this.button1.Text = "Draw";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.Button1_Click);
             // 
             // tabControl1
             // 
@@ -1059,7 +1045,6 @@
             // 
             // splitContainer_Volume.Panel2
             // 
-            this.splitContainer_Volume.Panel2.Controls.Add(this.button3);
             this.splitContainer_Volume.Panel2.Controls.Add(this.label4);
             this.splitContainer_Volume.Panel2.Controls.Add(this.textBox_VolumeNotes);
             this.splitContainer_Volume.Size = new System.Drawing.Size(742, 209);
@@ -1124,18 +1109,6 @@
             this.label5.Text = "Sub Ch.";
             this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // button3
-            // 
-            this.button3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.button3.Location = new System.Drawing.Point(3, 180);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(235, 23);
-            this.button3.TabIndex = 32;
-            this.button3.Text = "Edit Volume...";
-            this.button3.UseVisualStyleBackColor = true;
-            this.button3.Click += new System.EventHandler(this.Button3_Click);
-            // 
             // label4
             // 
             this.label4.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
@@ -1156,7 +1129,7 @@
             this.textBox_VolumeNotes.Multiline = true;
             this.textBox_VolumeNotes.Name = "textBox_VolumeNotes";
             this.textBox_VolumeNotes.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBox_VolumeNotes.Size = new System.Drawing.Size(238, 146);
+            this.textBox_VolumeNotes.Size = new System.Drawing.Size(238, 175);
             this.textBox_VolumeNotes.TabIndex = 0;
             this.textBox_VolumeNotes.Leave += new System.EventHandler(this.TextBox_VolumeTitle_Leave);
             // 
@@ -1235,6 +1208,19 @@
             this.label7.TabIndex = 28;
             this.label7.Text = "File MD5";
             this.label7.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // toolStripSplitButton2
+            // 
+            this.toolStripSplitButton2.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.toolStripSplitButton2.DropDownButtonWidth = 0;
+            this.toolStripSplitButton2.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.toolStripSplitButton2.Image = ((System.Drawing.Image)(resources.GetObject("toolStripSplitButton2.Image")));
+            this.toolStripSplitButton2.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripSplitButton2.Name = "toolStripSplitButton2";
+            this.toolStripSplitButton2.Size = new System.Drawing.Size(27, 25);
+            this.toolStripSplitButton2.Text = "...";
+            this.toolStripSplitButton2.ToolTipText = "Citations";
+            this.toolStripSplitButton2.ButtonClick += new System.EventHandler(this.ToolStripSplitButton2_ButtonClick);
             // 
             // BelGui
             // 
@@ -1363,7 +1349,6 @@
         private System.Windows.Forms.ToolStripMenuItem leftToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem rightToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem centerToolStripMenuItem;
-        private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.ToolStripMenuItem setWeight1ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem setWeight2ToolStripMenuItem;
@@ -1392,6 +1377,6 @@
         private System.Windows.Forms.TextBox textBox_CitationNotes;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.TextBox textBox_VolumeNotes;
-        private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.ToolStripSplitButton toolStripSplitButton2;
     }
 }

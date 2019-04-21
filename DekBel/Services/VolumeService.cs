@@ -80,7 +80,9 @@ namespace Dek.Bel.DB
         public int GetPageNumber(int physicalPage, int glyph = 0)
         {
             Page page = GetReference(Pages, physicalPage, glyph);
-            
+            if (page == null)
+                return physicalPage;
+
             if(physicalPage == page.PhysicalPage)
                 return page.PaginationStart + (glyph > page.Glyph ? 1 : 0);
 

@@ -13,7 +13,7 @@ namespace Dek.Bel.Services
 
         void LoadCategoriesFromDb();
         void AddCategoryToCitation(Id citationId, Id categoryId, int weight, bool isMain);
-        void SetMainCategory(Id id, Category cat);
+        void SetMainCategory(CitationCategory citationCategory);
         void SetWeight(Id citationId, Id categoryId, int weight);
         List<CitationCategory> GetCitationCategories(Id citationId);
 

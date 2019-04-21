@@ -115,13 +115,34 @@ namespace BelManagedLib
                         Cancel = false,
                     };
                     break;
+                case CodesEnum.DEKBELCODE_SHOWBEL:
                 case CodesEnum.DEKBELCODE_ADDANDSHOWCITATION:
                     BelGui belAdd = new BelGui(data);
+                    if (belAdd.IsDisposed)
+                    {
+                        Result = new ResultData
+                        {
+                            Cancel = true,
+                            Code = -1,
+                            Message = "Cancel"
+                        };
+                        break;
+                    }
                     belAdd.ShowDialog();
                     Result = belAdd.Result;
                     break;
                 case CodesEnum.DEKBELCODE_EDITCITATION:
                     BelGui belEdit = new BelGui(data);
+                    if (belEdit.IsDisposed)
+                    {
+                        Result = new ResultData
+                        {
+                            Cancel = true,
+                            Code = -1,
+                            Message = "Cancel"
+                        };
+                        break;
+                    }
                     belEdit.ShowDialog();
                     Result = belEdit.Result;
                     break;

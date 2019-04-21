@@ -38,9 +38,7 @@ namespace Dek.Bel.Services
 
             if (resetform.ShowDialog() == DialogResult.Yes)
             {
-                RichTextBox rtb = new RichTextBox();
-                rtb.Text = VM.CurrentCitation.Citation1;
-                VM.CurrentCitation.Citation2 = rtb.Text;
+                VM.CurrentCitation.Citation2 = VM.CurrentCitation.Citation2;
                 VM.Exclusion.Clear();
                 VM.CurrentCitation.Exclusion = null;
                 DBService.InsertOrUpdate(VM.CurrentCitation);
@@ -69,6 +67,31 @@ namespace Dek.Bel.Services
             DBService.InsertOrUpdate(VM.CurrentCitation);
             FireCitationChanged();
         }
+
+        public void BeginEdit()
+        {
+            VM.CurrentCitation.Citation3 = VM.CurrentCitation.Citation2;
+            FireCitationChanged();
+        }
+
+        public string AdjustSpaces(string text)
+        {
+            return text
+                .Trim()
+                .Replace("            ", " ")
+                .Replace("           ", " ")
+                .Replace("          ", " ")
+                .Replace("         ", " ")
+                .Replace("        ", " ")
+                .Replace("       ", " ")
+                .Replace("      ", " ")
+                .Replace("     ", " ")
+                .Replace("    ", " ")
+                .Replace("   ", " ")
+                .Replace("  ", " ")
+                .Trim();
+        }
+
 
         void FireCitationChanged()
         {

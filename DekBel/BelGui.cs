@@ -40,7 +40,7 @@ namespace Dek.Bel
         [Import] public CitationService m_CitationService { get; set; }
         [Import] public RichTextService RtfService { get; set; }
         [Import] public PdfService PdfService { get; set; }
-        [Import] public CitationManipulationService CitationService{ get; set;}
+        [Import] public CitationManipulationService m_CitationManipulationService{ get; set;}
 
 
         /// <summary>
@@ -52,26 +52,80 @@ namespace Dek.Bel
             if (m_DBService == null)
                 Mef.Initialize(this);
 
-            List<RawCitation> rawCitations = m_DBService.Select<RawCitation>();
-            m_DBService.ClearTable<RawCitation>();
+            VM.Message = message;
 
             // Get volume and storage
             History history = HistoryRepo.GetLastOpened(); // Our currently open file in Sumatra
-            //VM.CurrentVolume = DBService.SelectById<Volume>(history.VolumeId);
             m_VolumeService.LoadVolume(history.VolumeId);
             VM.CurrentStorage = m_DBService.SelectById<Storage>(history.StorageId);
 
-            // Create new citation
-            VM.CurrentCitation = m_CitationService.CreateNewCitation(rawCitations, message, m_VolumeService.CurrentVolume.Id);
-            m_VolumeService.LoadCitations(history.VolumeId);
-            LoadCitations(); // Into status strip citations context menu
+            if (message.Code == (int)InterOp.CodesEnum.DEKBELCODE_SHOWBEL)
+            {
+                m_VolumeService.LoadCitations(history.VolumeId);
+                VM.CurrentCitation = m_VolumeService.Citations?.FirstOrDefault();
+                if(VM.CurrentCitation == null)
+                {
+                    MessageBox.Show(null, "There are no citations for the current volume.", "No citations found", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    Close();
+                    return;
+                }
+                LoadCitations();
+            }
+            else if (message.Code == (int)InterOp.CodesEnum.DEKBELCODE_ADDANDSHOWCITATION)
+            {
+                List<RawCitation> rawCitations = m_DBService.Select<RawCitation>();
+                VM.CurrentCitation = m_CitationService.CreateNewCitation(rawCitations, message, m_VolumeService.CurrentVolume.Id);
+                m_VolumeService.LoadCitations(history.VolumeId);
+                LoadCitations(); // Into status strip citations context menu
+            }
+            else if (message.Code == (int)InterOp.CodesEnum.DEKBELCODE_EDITCITATION)
+            {
+                m_VolumeService.LoadCitations(history.VolumeId);
+                string cmd = message.Text;
+                string citationId;
+                if(string.IsNullOrEmpty(cmd))
+                {
+                    MessageBox.Show(null, "Something went wrong trying to edit citation: Text was empty.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    Close();
+                    return;
+                }
+                try
+                {
+                    citationId = cmd.Split(':')[1];
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(null, $"Something went wrong trying to edit citation. {Environment.NewLine}Cmd: {cmd}.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    Close();
+                    return;
+                }
+                VM.CurrentCitation = m_VolumeService.Citations?.SingleOrDefault(x => x.Id.ToString() == citationId);
+                if (VM.CurrentCitation == null)
+                {
+                    MessageBox.Show(null, $"Something went wrong trying to edit citation: Could not load citation {citationId}.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    Close();
+                    return;
+                }
+                LoadCitations();
+            }
 
-            CitationService.CitationChanged += CitationService_CitationChanged;
+            m_DBService.DeleteAll<RawCitation>(); // These need to go now
+
+            m_CitationManipulationService.CitationChanged += CitationService_CitationChanged;
             m_CategoryService.LoadCategoriesFromDb();
             comboBox_CategoryWeight.SelectedIndex = 2;
             LoadControls();
         }
 
+        private void CreateCitation()
+        {
+
+        }
+
+        private void EditCitation()
+        {
+
+        }
 
         private void CitationService_CitationChanged(object sender, EventArgs e)
         {
@@ -245,10 +299,6 @@ namespace Dek.Bel
             UserSettingsService.CitationFont = newFont;
         }
 
-        private void contextMenuStrip1_Opening(object sender, CancelEventArgs e)
-        {
-
-        }
 
         private void copyToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -290,7 +340,11 @@ namespace Dek.Bel
         private void removeToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (((sender as ToolStripMenuItem)?.Owner as ContextMenuStrip)?.SourceControl is Label label)
+            {
+                var cc = (CitationCategory)label.Tag;
+                m_DBService.Delete<CitationCategory>($"`{nameof(CitationCategory.CitationId)}`='{cc.CitationId}' AND `{nameof(CitationCategory.CategoryId)}`='{cc.CategoryId}'");
                 flowLayoutPanel_Categories.Controls.Remove(label);
+            }
         }
 
         private void categoriesToolStripMenuItem_Click(object sender, EventArgs e)
@@ -357,9 +411,9 @@ namespace Dek.Bel
 
         private void setAsMainCategoryToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            // TODO FIX                             <================================================================================ o_O
             if (((sender as ToolStripMenuItem)?.Owner as ContextMenuStrip)?.SourceControl is Label label)
             {
+                m_CategoryService.SetMainCategory(label.Tag as CitationCategory);
                 m_CategoryService.ClearMainStyleFromLabels(flowLayoutPanel_Categories.Controls.OfType<Label>());
                 m_CategoryService.SetMainStyleOnLabel(label);
             }
@@ -448,7 +502,9 @@ namespace Dek.Bel
             if (!(listBox1.SelectedItem is Category cat))
                 return;
 
-            m_CategoryService.AddCategoryToCitation(VM.CurrentCitation.Id, cat.Id, int.Parse((comboBox_CategoryWeight.SelectedItem as string)??"1"), false);
+            bool isMain = flowLayoutPanel_Categories.Controls.Count == 0;
+
+            m_CategoryService.AddCategoryToCitation(VM.CurrentCitation.Id, cat.Id, int.Parse((comboBox_CategoryWeight.SelectedItem as string)??"1"), isMain);
             LoadCategoryControl();
 
             listBox1.Visible = false;
@@ -459,6 +515,7 @@ namespace Dek.Bel
         {
         }
 
+        // Called from load controls
         private void AddCategoryLabel(CitationCategory citationCat, Category cat)
         {
             Label l = m_CategoryService.CreateCategoryLabelControl(citationCat, cat, contextMenuStrip_Category, toolTip1);
@@ -503,10 +560,10 @@ namespace Dek.Bel
 
         private void SetWeight(ToolStripMenuItem item, int weight)
         {
-            if (!(((System.Windows.Forms.ContextMenuStrip)item.GetCurrentParent()).SourceControl.Tag is Category cat))
+            if (!(((System.Windows.Forms.ContextMenuStrip)item.GetCurrentParent()).SourceControl.Tag is CitationCategory citationCategory))
                 return;
 
-            m_CategoryService.SetWeight(VM.CurrentCitation.Id, cat.Id, weight);
+            m_CategoryService.SetWeight(VM.CurrentCitation.Id, citationCategory.CategoryId, weight);
             LoadCategoryControl();
         }
 
@@ -523,7 +580,7 @@ namespace Dek.Bel
         {
             // Exclude
             if(richTextBox1.SelectionLength > 0)
-                CitationService.ExcludeSelectedText(richTextBox1.SelectionStart, richTextBox1.SelectionStart + richTextBox1.SelectionLength - 1);
+                m_CitationManipulationService.ExcludeSelectedText(richTextBox1.SelectionStart, richTextBox1.SelectionStart + richTextBox1.SelectionLength - 1);
         }
 
         private void richTextBox2_Enter(object sender, EventArgs e)
@@ -544,6 +601,7 @@ namespace Dek.Bel
 
         private void toolStripButton7_Click(object sender, EventArgs e)
         {
+            m_CitationManipulationService.BeginEdit();
         }
 
         /// <summary>
@@ -583,7 +641,7 @@ namespace Dek.Bel
         private void toolStripButton8_Click(object sender, EventArgs e)
         {
             if (richTextBox2.SelectionLength > 0)
-                CitationService.AddEmphasis(richTextBox2.SelectionStart, richTextBox2.SelectionStart + richTextBox2.SelectionLength - 1);
+                m_CitationManipulationService.AddEmphasis(richTextBox2.SelectionStart, richTextBox2.SelectionStart + richTextBox2.SelectionLength - 1);
 
             richTextBox2.Focus();
         }
@@ -608,12 +666,12 @@ namespace Dek.Bel
 
         private void showOriginalToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            CitationService.ResetCitation2();
+            m_CitationManipulationService.ResetCitation2();
         }
 
         private void toolStripButton1_Click_1(object sender, EventArgs e)
         {
-            CitationService.ResetCitation2();
+            m_CitationManipulationService.ResetCitation2();
         }
 
         private void LeftToolStripMenuItem_Click(object sender, EventArgs e)
@@ -651,7 +709,11 @@ namespace Dek.Bel
 
         private void Button2_Click(object sender, EventArgs e)
         {
-            //PdfService.AddCitationToPdfDoc(VM.CurrentStorage.StorageName, VM.CurrentCitation.SelectionRects);
+            var mainCitCat = m_CategoryService.GetCitationCategories(VM.CurrentCitation.Id).Where(x => x.IsMain).SingleOrDefault();
+            var mainCategory = (mainCitCat != null) 
+                ? m_CategoryService.Categories.Where(x => x.Id == mainCitCat.CategoryId).SingleOrDefault()
+                : null;
+            PdfService.AddCitationToPdfDoc(VM.CurrentStorage.StorageName, VM.CurrentCitation.PhysicalPageStart, mainCategory, mainCitCat, VM.CurrentCitation.SelectionRects);
         }
 
         private void ToolStripStatusLabel1_Click(object sender, EventArgs e)
@@ -678,10 +740,8 @@ namespace Dek.Bel
         /// </summary>
         private void AdjustSpacesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            VM.CurrentCitation.Citation2 = VM.CurrentCitation.Citation2.Replace("    ", " ").Replace("   ", " ").Replace("  ", " ").Trim();
-            VM.CurrentCitation.Citation2 = VM.CurrentCitation.Citation2.Replace("  ", " ").Replace("  ", " ").Replace("  ", " ").Trim();
-            VM.CurrentCitation.Citation3 = VM.CurrentCitation.Citation3.Replace("    ", " ").Replace("   ", " ").Replace("  ", " ").Trim();
-            VM.CurrentCitation.Citation3 = VM.CurrentCitation.Citation3.Replace("  ", " ").Replace("  ", " ").Replace("  ", " ").Trim();
+            VM.CurrentCitation.Citation2 = m_CitationManipulationService.AdjustSpaces(VM.CurrentCitation.Citation2);
+            VM.CurrentCitation.Citation3 = m_CitationManipulationService.AdjustSpaces(VM.CurrentCitation.Citation3);
             m_DBService.InsertOrUpdate(VM.CurrentCitation);
             LoadControls();
         }
@@ -746,6 +806,23 @@ namespace Dek.Bel
                 tb.BackColor = textBox_VolumeTitle.BackColor;
             else
                 tb.BackColor = Color.LightPink;
+        }
+
+        private void ToolStripStatusLabel2_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void ToolStripSplitButton2_ButtonClick(object sender, EventArgs e)
+        {
+            FormVolume fm = new FormVolume();
+
+            if(fm.ShowDialog() == DialogResult.OK)
+            {
+                VM.CurrentCitation = fm.SelectedCitation ?? VM.CurrentCitation;
+                LoadControls();
+            }
+
         }
 
 

@@ -8,6 +8,7 @@ namespace Dek.Bel.InterOp
 {
     public enum CodesEnum
     {
+        DEKBELCODE_SHOWBEL = 9000,
         DEKBELCODE_ADDVOLUMETITLE = 9100,
         DEKBELCODE_ADDBOOKTITLE = 9110,
         DEKBELCODE_ADDCHAPTER = 9120,

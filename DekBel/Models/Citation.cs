@@ -33,7 +33,7 @@ namespace Dek.Bel.Models
 
         public override string ToString()
         {
-            return Id.ToString().Substring(24) + " - " + Citation1.Substring(0, Citation1.Length > maxlen ? maxlen : Citation1.Length) + $"{(Citation1.Length > maxlen ? "…" : "")}";
+            return $"[{Id.ToString().Substring(0, 8)}]" + " " + Citation1.Substring(0, Citation1.Length > maxlen ? maxlen : Citation1.Length) + $"{(Citation1.Length > maxlen ? "…" : "")}";
         }
     }
 }

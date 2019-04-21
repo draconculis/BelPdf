@@ -8,6 +8,7 @@ namespace BelManagedLib
     public struct EventData
     {
         public int Code { get; set; }
+        public int CurrentPage { get; set; }
         public int StartPage { get; set; }
         public int StopPage { get; set; }
         public int StartGlyph { get; set; }

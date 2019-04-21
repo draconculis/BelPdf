@@ -11,6 +11,11 @@ namespace Dek.Bel.Services
     [Export(typeof(IMessageboxService))]
     public class MessageboxService : IMessageboxService
     {
+        public static void ShowMessage(string message, string header)
+        {
+            MessageBox.Show(message, header);
+        }
+
         public void Show(string message, string header)
         {
             MessageBox.Show(message, header);

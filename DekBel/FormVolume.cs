@@ -170,6 +170,7 @@ namespace Dek.Bel
         private void Button_selectAndClose_Click(object sender, EventArgs e)
         {
             this.DialogResult = DialogResult.OK;
+            SelectedCitation = listBox_CitationsWithReferences.SelectedItem as Citation;
             Close();
         }
 

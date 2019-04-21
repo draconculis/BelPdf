@@ -15,7 +15,7 @@ namespace Dek.Bel.Services
     [Export(typeof(ICategoryService))]
     public class CategoryService : ICategoryService
     {
-        private List<Category> m_Categories { get; set; }
+        private List<Category> m_Categories;
         public IEnumerable<Category> Categories => m_Categories;
         private IDBService m_DBService;
 
@@ -74,7 +74,7 @@ namespace Dek.Bel.Services
         }
 
         public void AddCategoryToCitation(Id citationId, Id categoryId, int weight, bool isMain)
-        {
+        {   
             CitationCategory cg = new CitationCategory
             {
                 CategoryId = categoryId,
@@ -86,9 +86,36 @@ namespace Dek.Bel.Services
             m_DBService.InsertOrUpdate(cg);
         }
 
-        public void SetMainCategory(Id citationId, Category cat)
+        //public void SetMainCategory(Id citationId, Id categoryId)
+        //{
+        //    var cgs = GetCitationCategories(citationId);
+
+        //    // There can be only one
+        //    foreach (var cg in cgs)
+        //    {
+        //        cg.IsMain = false;
+        //        m_DBService.InsertOrUpdate(cg);
+        //    }
+
+        //    CitationCategory maincg = m_DBService.Select<CitationCategory>($"`CitationId` = '{citationId}' AND `CategoryId` = '{cat.Id}'").FirstOrDefault();
+        //    if (maincg == null)
+        //        maincg = new CitationCategory
+        //        {
+        //            CategoryId = categoryId,
+        //            CitationId = citationId,
+        //            Weight = 3,
+        //        };
+
+        //    maincg.IsMain = true;
+
+        //    m_DBService.InsertOrUpdate(maincg);
+        //}
+
+        public void SetMainCategory(CitationCategory citationCategory)
         {
-            var cgs = GetCitationCategories(citationId);
+            var cgs = GetCitationCategories(citationCategory.CitationId);
+            if (cgs == null || cgs.Count < 1)
+                return;
 
             // There can be only one
             foreach (var cg in cgs)
@@ -97,18 +124,8 @@ namespace Dek.Bel.Services
                 m_DBService.InsertOrUpdate(cg);
             }
 
-            CitationCategory maincg = m_DBService.Select<CitationCategory>($"`CitationId` = '{citationId}' AND `CategoryId` = '{cat.Id}'").FirstOrDefault();
-            if (maincg == null)
-                maincg = new CitationCategory
-                {
-                    CategoryId = cat.Id,
-                    CitationId = citationId,
-                    Weight = 3,
-                };
-
-            maincg.IsMain = true;
-
-            m_DBService.InsertOrUpdate(maincg);
+            citationCategory.IsMain = true;
+            m_DBService.InsertOrUpdate(citationCategory);
         }
 
         public void SetWeight(Id citationId, Id categoryId, int weight)
@@ -146,7 +163,7 @@ namespace Dek.Bel.Services
             l.ContextMenuStrip = menu;
             if (citCat.IsMain)
                 SetMainStyleOnLabel(l);
-            l.Tag = cat;
+            l.Tag = citCat;
             toolTip.SetToolTip(l, cat.Name);
             return l;
         }

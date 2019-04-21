@@ -17,7 +17,9 @@ namespace Dek.Bel.DB
         void Insert(string tablename, string columns, string values);
         void Update(string tablename, string where, string columnsValues);
         void InsertOrUpdate(object obj);
-        void ClearTable<T>() where T : new();
-        void ClearTable(object model);
+        void DeleteAll<T>() where T : new();
+        void DeleteAll(object model);
+        void Delete<T>(string where) where T : new();
+        void Delete(object model, string where);
     }
 }

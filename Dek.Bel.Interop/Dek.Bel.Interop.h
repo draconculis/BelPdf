@@ -13,6 +13,7 @@
 // data structure for the callback functions
 struct EventData {
     int Code;
+    int CurrentPage;
     int StartPage;
     int StopPage;
     int StartGlyph;

@@ -238,7 +238,10 @@ namespace Dek.Bel.DB
                 case "boolean":
                 case "Bool":
                 case "bool":
-                    prop.SetValue(obj, ((Int64)val != 0));
+                    if (val is string)
+                        prop.SetValue(obj, ((string)val).ToLower() == "true");
+                    else
+                        prop.SetValue(obj, ((Int64)val != 0));
                     break;
                 default:
                     prop.SetValue(obj, val);
@@ -593,6 +596,55 @@ namespace Dek.Bel.DB
             ExecuteNonQuery(createindexstatement);
         }
 
+        public void InsertOrUpdate(object obj)
+        {
+            // TODO: Handle Enum
+
+            if (obj == null)
+                return;
+
+            string names = "", values = "", updateValues = "", updateWhereValues = "";
+            //List<string> ids = new List<string>(), keys = new List<string>();
+            bool keyFound = false;
+            foreach (var prop in obj.GetType().GetProperties())
+            {
+                object val;
+                if (prop.PropertyType == typeof(bool))
+                    val = (bool)prop.GetValue(obj) ? 1 : 0;
+                else
+                    val = prop.GetValue(obj);
+
+                names += (names.Length > 0 ? ", " : "") + $"`{prop.Name}`";
+                values += (values.Length > 0 ? ", " : "") + $"'{val}'";
+
+                // Automatic date update for column EditedDate
+                if (prop.Name == "EditedDate")
+                    prop.SetValue(obj, DateTime.Now);
+
+                object attributes = prop.GetCustomAttributes(typeof(KeyAttribute), true).FirstOrDefault();
+                if (prop.Name.ToLower() == "id" || attributes != null)
+                {
+                    keyFound = true;
+                    //ids.Add(prop.Name);
+                    //keys.Add(prop.GetValue(obj, null).ToString());
+                    updateWhereValues += (updateWhereValues.Length > 0 ? " AND " : "") + $"`{prop.Name}` = '{val}'";
+                }
+                else // Don't add keys to update string
+                {
+                    updateValues += (updateValues.Length > 0 ? ", " : "") + $"`{prop.Name}` = '{val}'";
+                }
+            }
+
+            string tableName = obj.GetType().Name;
+            if (IdExists(obj))
+            {
+                Update(tableName, updateValues, updateWhereValues);
+            }
+            else
+            {
+                Insert(tableName, names, values);
+            }
+        }
 
         public void Insert(string tablename, string columns, string values)
         {
@@ -624,52 +676,6 @@ namespace Dek.Bel.DB
 
         }
 
-
-        public void InsertOrUpdate(object obj)
-        {
-            // TODO: Handle Enum
-
-            if (obj == null)
-                return;
-
-            string names = "", values = "", updateValues = "", updateWhereValues = "";
-            //List<string> ids = new List<string>(), keys = new List<string>();
-            bool keyFound = false;
-            foreach (var prop in obj.GetType().GetProperties())
-            {
-                names += (names.Length > 0 ? ", " : "") + $"`{prop.Name}`";
-                values += (values.Length > 0 ? ", " : "") + $"'{prop.GetValue(obj, null)}'";
-
-                // Automatic date update for column EditedDate
-                if (prop.Name == "EditedDate")
-                    prop.SetValue(obj, DateTime.Now);
-
-                object attributes = prop.GetCustomAttributes(typeof(KeyAttribute), true).FirstOrDefault();
-                if (prop.Name.ToLower() == "id" || attributes != null)
-                {
-                    keyFound = true;
-                    //ids.Add(prop.Name);
-                    //keys.Add(prop.GetValue(obj, null).ToString());
-                    updateWhereValues += (updateWhereValues.Length > 0 ? " AND " : "") + $"`{prop.Name}` = '{prop.GetValue(obj, null)}'";
-                }
-                else
-                {
-                    // Don't add keys to update string
-                    updateValues += (updateValues.Length > 0 ? ", " : "") + $"`{prop.Name}` = '{prop.GetValue(obj, null)}'";
-                }
-            }
-
-            string tableName = obj.GetType().Name;
-            if (IdExists(obj))
-            {
-                Update(tableName, updateValues, updateWhereValues);
-            }
-            else
-            {
-                Insert(tableName, names, values);
-            }
-        }
-
         public void Update(string tablename, string columnValues, string where)
         {
             try
@@ -695,7 +701,6 @@ namespace Dek.Bel.DB
             {
                 m_dbConnection.Close();
             }
-
         }
 
         public bool IdExists(object obj)
@@ -738,12 +743,12 @@ namespace Dek.Bel.DB
             return true;
         }
 
-        public void ClearTable<T>() where T : new()
+        public void DeleteAll<T>() where T : new()
         {
-            ClearTable(new T());
+            DeleteAll(new T());
         }
 
-        public void ClearTable(object model)
+        public void DeleteAll(object model)
         {
             if (model == null)
                 return;
@@ -756,6 +761,41 @@ namespace Dek.Bel.DB
 
                     m_dbConnection.Open();
                     command.CommandText = $"DELETE FROM '{tableName}'";
+                    command.ExecuteNonQuery();
+                }
+            }
+            catch (SQLiteException sqlex)
+            {
+                MessageBox.Show(sqlex.ToString(), "Sql exception");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString(), "Exception");
+            }
+            finally
+            {
+                m_dbConnection.Close();
+            }
+        }
+
+        public void Delete<T>(string where) where T : new()
+        {
+            Delete(new T(), where);
+        }
+
+        public void Delete(object model, string where)
+        {
+            if (model == null || string.IsNullOrWhiteSpace(where))
+                return;
+
+            try
+            {
+                using (SQLiteCommand command = m_dbConnection.CreateCommand())
+                {
+                    string tableName = model.GetType().Name;
+
+                    m_dbConnection.Open();
+                    command.CommandText = $"DELETE FROM '{tableName}' WHERE {where}";
                     command.ExecuteNonQuery();
                 }
             }

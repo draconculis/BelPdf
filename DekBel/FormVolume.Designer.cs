@@ -55,43 +55,46 @@
             this.textBox_title.Location = new System.Drawing.Point(3, 3);
             this.textBox_title.Multiline = true;
             this.textBox_title.Name = "textBox_title";
-            this.textBox_title.Size = new System.Drawing.Size(909, 42);
+            this.textBox_title.Size = new System.Drawing.Size(1032, 42);
             this.textBox_title.TabIndex = 0;
             this.textBox_title.Leave += new System.EventHandler(this.TextBox_title_Leave);
             // 
             // listBox_books
             // 
-            this.listBox_books.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
+            this.listBox_books.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.listBox_books.FormattingEnabled = true;
             this.listBox_books.ItemHeight = 15;
             this.listBox_books.Location = new System.Drawing.Point(3, 33);
             this.listBox_books.Name = "listBox_books";
-            this.listBox_books.Size = new System.Drawing.Size(221, 124);
+            this.listBox_books.Size = new System.Drawing.Size(252, 124);
             this.listBox_books.TabIndex = 0;
             this.listBox_books.SelectedIndexChanged += new System.EventHandler(this.ListBox_SelectedIndexChanged);
             // 
             // listBox_chapters
             // 
-            this.listBox_chapters.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
+            this.listBox_chapters.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.listBox_chapters.FormattingEnabled = true;
             this.listBox_chapters.ItemHeight = 15;
-            this.listBox_chapters.Location = new System.Drawing.Point(230, 33);
+            this.listBox_chapters.Location = new System.Drawing.Point(261, 33);
             this.listBox_chapters.Name = "listBox_chapters";
-            this.listBox_chapters.Size = new System.Drawing.Size(221, 124);
+            this.listBox_chapters.Size = new System.Drawing.Size(252, 124);
             this.listBox_chapters.TabIndex = 1;
             this.listBox_chapters.SelectedIndexChanged += new System.EventHandler(this.ListBox_SelectedIndexChanged);
             // 
             // listBox_subchapters
             // 
-            this.listBox_subchapters.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
+            this.listBox_subchapters.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.listBox_subchapters.FormattingEnabled = true;
             this.listBox_subchapters.ItemHeight = 15;
-            this.listBox_subchapters.Location = new System.Drawing.Point(457, 33);
+            this.listBox_subchapters.Location = new System.Drawing.Point(519, 33);
             this.listBox_subchapters.Name = "listBox_subchapters";
-            this.listBox_subchapters.Size = new System.Drawing.Size(221, 124);
+            this.listBox_subchapters.Size = new System.Drawing.Size(252, 124);
             this.listBox_subchapters.TabIndex = 1;
             this.listBox_subchapters.SelectedIndexChanged += new System.EventHandler(this.ListBox_SelectedIndexChanged);
             // 
@@ -102,9 +105,9 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.listBox_paragraphs.FormattingEnabled = true;
             this.listBox_paragraphs.ItemHeight = 15;
-            this.listBox_paragraphs.Location = new System.Drawing.Point(684, 33);
+            this.listBox_paragraphs.Location = new System.Drawing.Point(777, 33);
             this.listBox_paragraphs.Name = "listBox_paragraphs";
-            this.listBox_paragraphs.Size = new System.Drawing.Size(222, 124);
+            this.listBox_paragraphs.Size = new System.Drawing.Size(252, 124);
             this.listBox_paragraphs.TabIndex = 1;
             this.listBox_paragraphs.SelectedIndexChanged += new System.EventHandler(this.ListBox_SelectedIndexChanged);
             // 
@@ -112,7 +115,7 @@
             // 
             this.button_close.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.button_close.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.button_close.Location = new System.Drawing.Point(731, 360);
+            this.button_close.Location = new System.Drawing.Point(854, 350);
             this.button_close.Name = "button_close";
             this.button_close.Size = new System.Drawing.Size(177, 27);
             this.button_close.TabIndex = 3;
@@ -123,7 +126,7 @@
             // button_selectAndClose
             // 
             this.button_selectAndClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button_selectAndClose.Location = new System.Drawing.Point(548, 360);
+            this.button_selectAndClose.Location = new System.Drawing.Point(671, 350);
             this.button_selectAndClose.Name = "button_selectAndClose";
             this.button_selectAndClose.Size = new System.Drawing.Size(177, 27);
             this.button_selectAndClose.TabIndex = 4;
@@ -156,7 +159,7 @@
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(909, 303);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(1032, 293);
             this.tableLayoutPanel1.TabIndex = 5;
             // 
             // listBox_CitationsWithReferences
@@ -167,9 +170,9 @@
             this.tableLayoutPanel1.SetColumnSpan(this.listBox_CitationsWithReferences, 4);
             this.listBox_CitationsWithReferences.FormattingEnabled = true;
             this.listBox_CitationsWithReferences.ItemHeight = 15;
-            this.listBox_CitationsWithReferences.Location = new System.Drawing.Point(3, 169);
+            this.listBox_CitationsWithReferences.Location = new System.Drawing.Point(3, 164);
             this.listBox_CitationsWithReferences.Name = "listBox_CitationsWithReferences";
-            this.listBox_CitationsWithReferences.Size = new System.Drawing.Size(903, 124);
+            this.listBox_CitationsWithReferences.Size = new System.Drawing.Size(1026, 124);
             this.listBox_CitationsWithReferences.TabIndex = 9;
             // 
             // label4
@@ -178,9 +181,9 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.label4.Font = new System.Drawing.Font("Corbel", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(684, 0);
+            this.label4.Location = new System.Drawing.Point(777, 0);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(222, 30);
+            this.label4.Size = new System.Drawing.Size(252, 30);
             this.label4.TabIndex = 8;
             this.label4.Text = "Paragraphs";
             this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -191,9 +194,9 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.label3.Font = new System.Drawing.Font("Corbel", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(457, 0);
+            this.label3.Location = new System.Drawing.Point(519, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(221, 30);
+            this.label3.Size = new System.Drawing.Size(252, 30);
             this.label3.TabIndex = 7;
             this.label3.Text = "Subchapters";
             this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -206,7 +209,7 @@
             this.label1.Font = new System.Drawing.Font("Corbel", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.Location = new System.Drawing.Point(3, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(221, 30);
+            this.label1.Size = new System.Drawing.Size(252, 30);
             this.label1.TabIndex = 2;
             this.label1.Text = "Books";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -217,9 +220,9 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.label2.Font = new System.Drawing.Font("Corbel", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(230, 0);
+            this.label2.Location = new System.Drawing.Point(261, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(221, 30);
+            this.label2.Size = new System.Drawing.Size(252, 30);
             this.label2.TabIndex = 6;
             this.label2.Text = "Chapters";
             this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -234,7 +237,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.button_close;
-            this.ClientSize = new System.Drawing.Size(915, 390);
+            this.ClientSize = new System.Drawing.Size(1038, 380);
             this.Controls.Add(this.tableLayoutPanel1);
             this.Controls.Add(this.button_selectAndClose);
             this.Controls.Add(this.button_close);
