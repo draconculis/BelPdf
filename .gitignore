@@ -25,6 +25,38 @@ bld/
 [Oo]bj/
 [Ll]og/
 
+#Sumatra
+dbg/
+dbg64/
+dbg64_unix/
+rel/
+rel64/
+rel64_unix/
+relPrefast/
+relPrefast64/
+*.suo
+*.aps
+*.opensdf
+*.sdf
+*.vspx
+*pyc
+*.vcxproj.user
+*.cov
+*.db
+*.opendb
+builds/
+mupdf/generated/
+bin/cmapdump.exe
+bin/pigz.exe
+drmemlogs/
+build-log.txt
+analyze-output.txt
+analyze-errors.html
+CoverageReport*
+LastCoverageResults.log
+out/
+linux_dbg64/
+
 # Visual Studio 2015/2017 cache/options directory
 .vs/
 # Uncomment if you have tasks that create the project's static files in wwwroot
