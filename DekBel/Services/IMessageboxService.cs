@@ -2,6 +2,6 @@
 {
     public interface IMessageboxService
     {
-        void Show(string message, string header);
+        void Show(string message, string header = "Message");
     }
 }

@@ -136,7 +136,7 @@ namespace Dek.Bel
         public BelGui()
         {
             InitializeComponent();
-
+            this.Text = $"Bel {AssemblyStuff.AssemblyVersion}";
             toolStripTextBox1.Text = (string)Properties.Settings.Default["DeselectionMarker"];
         }
 
@@ -242,11 +242,6 @@ namespace Dek.Bel
 
             VM.CurrentCitation = citation;
             LoadControls();
-        }
-
-        private void SelectCitation(Id citationId)
-        {
-
         }
 
 

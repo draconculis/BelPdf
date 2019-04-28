@@ -1,5 +1,4 @@
 ﻿using Dek.Bel.Cls;
-using Dek.Bel.Models;
 using Dek.Bel.Services;
 using System;
 using System.Collections.Generic;
@@ -8,24 +7,21 @@ using System.Data;
 using System.Data.SQLite;
 using System.IO;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace Dek.Bel.DB
 {
     /// <summary>
     /// ORM
-    /// - Id is default key value. Other field names or multiple keys can be marked with [Key] attribute in model.
-    /// - EditedDate is automatically updated in model for <see cref="InsertOrUpdate(object)"/>
+    /// - "Id" is default key value. Other field names or multiple keys can be marked with [Key] attribute in model.
+    /// - "EditedDate" is automatically updated in model for <see cref="InsertOrUpdate(object)"/>
     /// </summary>
 
     [Export(typeof(IDBService))]
     public class Sqlite : IDBService, IDisposable
     {
         private readonly IUserSettingsService m_UserSettingsService;
+        private readonly IMessageboxService m_MessageboxService;
         SQLiteConnection m_dbConnection;
 
         // Table names
@@ -43,9 +39,10 @@ namespace Dek.Bel.DB
         private const string ColDescription = "Description";
 
         [ImportingConstructor]
-        public Sqlite(IUserSettingsService userSettingsService, IDBCreator creator)
+        public Sqlite(IUserSettingsService userSettingsService, IMessageboxService messageboxService, IDBCreator creator)
         {
             m_UserSettingsService = userSettingsService;
+            m_MessageboxService = messageboxService;
             InitLocal(creator);
         }
 
@@ -419,18 +416,18 @@ namespace Dek.Bel.DB
                         command.CommandText = $"CREATE TABLE `{tablename}` ({columnDesc}, PRIMARY KEY({primaryKey})) ";
                     }
 
-                    MessageBox.Show(command.CommandText);
+                    m_MessageboxService.Show(command.CommandText);
                     command.ExecuteNonQuery();
                 }
             }
             catch (SQLiteException sqlex)
             {
-                MessageBox.Show(sqlex.ToString(), "Sql exception");
+                m_MessageboxService.Show(sqlex.ToString(), "Sql exception");
 
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.ToString(), "Exception");
+                m_MessageboxService.Show(ex.ToString(), "Exception");
 
             }
             finally
@@ -463,11 +460,11 @@ namespace Dek.Bel.DB
             }
             catch (SQLiteException sqlex)
             {
-                MessageBox.Show(sqlex.ToString(), "Sql exception");
+                m_MessageboxService.Show(sqlex.ToString(), "Sql exception");
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.ToString(), "Exception");
+                m_MessageboxService.Show(ex.ToString(), "Exception");
             }
             finally
             {
@@ -654,20 +651,20 @@ namespace Dek.Bel.DB
                 {
                     m_dbConnection.Open();
                     command.CommandText = $"INSERT INTO {tablename} ({columns}) VALUES ({values})";
-                    MessageBox.Show(command.CommandText);
+                    m_MessageboxService.Show(command.CommandText);
                     command.ExecuteNonQuery();
                 }
             }
             catch (SQLiteException sqlex)
             {
                 Console.WriteLine($"{sqlex}");
-                MessageBox.Show($"{sqlex}");
+                m_MessageboxService.Show($"{sqlex}");
 
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"{ex}");
-                MessageBox.Show($"{ex}");
+                m_MessageboxService.Show($"{ex}");
             }
             finally
             {
@@ -729,11 +726,11 @@ namespace Dek.Bel.DB
             }
             catch (SQLiteException sqlex)
             {
-                MessageBox.Show($"{sqlex}");
+                m_MessageboxService.Show($"{sqlex}");
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"{ex}");
+                m_MessageboxService.Show($"{ex}");
             }
             finally
             {
@@ -766,11 +763,11 @@ namespace Dek.Bel.DB
             }
             catch (SQLiteException sqlex)
             {
-                MessageBox.Show(sqlex.ToString(), "Sql exception");
+                m_MessageboxService.Show(sqlex.ToString(), "Sql exception");
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.ToString(), "Exception");
+                m_MessageboxService.Show(ex.ToString(), "Exception");
             }
             finally
             {
@@ -801,11 +798,11 @@ namespace Dek.Bel.DB
             }
             catch (SQLiteException sqlex)
             {
-                MessageBox.Show(sqlex.ToString(), "Sql exception");
+                m_MessageboxService.Show(sqlex.ToString(), "Sql exception");
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.ToString(), "Exception");
+                m_MessageboxService.Show(ex.ToString(), "Exception");
             }
             finally
             {

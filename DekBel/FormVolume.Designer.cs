@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormVolume));
             this.textBox_title = new System.Windows.Forms.TextBox();
             this.listBox_books = new System.Windows.Forms.ListBox();
@@ -43,9 +42,7 @@
             this.label3 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            this.textDataBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.tableLayoutPanel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.textDataBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
             // textBox_title
@@ -227,10 +224,6 @@
             this.label2.Text = "Chapters";
             this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // textDataBindingSource
-            // 
-            this.textDataBindingSource.DataSource = typeof(Dek.Bel.TextData);
-            // 
             // FormVolume
             // 
             this.AcceptButton = this.button_selectAndClose;
@@ -248,7 +241,6 @@
             this.Text = "Volume";
             this.Load += new System.EventHandler(this.FormVolume_Load);
             this.tableLayoutPanel1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.textDataBindingSource)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -269,6 +261,5 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.BindingSource textDataBindingSource;
     }
 }

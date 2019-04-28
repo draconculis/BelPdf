@@ -71,6 +71,7 @@ namespace Dek.Bel.Services
         public void BeginEdit()
         {
             VM.CurrentCitation.Citation3 = VM.CurrentCitation.Citation2;
+            DBService.InsertOrUpdate(VM.CurrentCitation);
             FireCitationChanged();
         }
 

@@ -89,32 +89,58 @@ namespace Dek.Bel.Services
             string tmpFileName = m_TempFileService.GetNewTmpFileName(storageFileName);
 
             PdfDocument pdfDoc = new PdfDocument(new PdfReader(storageFilePath), new PdfWriter(tmpFileName));
-            PdfCanvas canvas1 = new PdfCanvas(
-                pdfDoc.GetPage(physicalPage).NewContentStreamBefore(),
-                pdfDoc.GetPage(physicalPage).GetResources(), pdfDoc);
-            PdfCanvas canvas2 = new PdfCanvas(
-                pdfDoc.GetPage(physicalPage).NewContentStreamAfter(),
-                pdfDoc.GetPage(physicalPage).GetResources(), pdfDoc);
 
-            Rectangle pageSize = pdfDoc.GetPage(physicalPage).GetPageSize();
-            int pageHeight = (int)pageSize.GetHeight();
-            int pageWidth = (int)pageSize.GetWidth();
-
-            //canvas.SaveState();
-
-            Color color1 = new DeviceRgb(0.5f, 1.0f, 1.0f);
-            Color color2 = new DeviceRgb(1.0f, 0.4f, 0.4f);
-            canvas1.SetFillColor(color1);
-            canvas2.SetFillColor(color2);
-            int[] rects = ArrayStuff.ConvertStringToArray(rectsString);
-            for (int i = 0; i < rects.Length; i += 4)
+            int currentPage = physicalPage;
+            int currentRect = 0;
+            bool notDone = true;
+            do
             {
-                canvas1.Rectangle(rects[i], pageHeight - rects[i + 1] - rects[i + 3], rects[i + 2], rects[i + 3]);
-                canvas1.Fill();
-                canvas2.Rectangle(rects[i], pageHeight - rects[i + 1] - rects[i + 3], rects[i + 2], 1);
-                canvas2.Fill();
-            }
+                PdfCanvas canvas1 = new PdfCanvas(
+                    pdfDoc.GetPage(currentPage).NewContentStreamBefore(),
+                    pdfDoc.GetPage(currentPage).GetResources(), pdfDoc);
+                PdfCanvas canvas2 = new PdfCanvas(
+                    pdfDoc.GetPage(currentPage).NewContentStreamAfter(),
+                    pdfDoc.GetPage(currentPage).GetResources(), pdfDoc);
 
+                Rectangle pageSize = pdfDoc.GetPage(physicalPage).GetPageSize();
+                int pageHeight = (int)pageSize.GetHeight();
+                int pageWidth = (int)pageSize.GetWidth();
+
+                //canvas.SaveState();
+
+                Color color1 = new DeviceRgb(0.5f, 1.0f, 1.0f);
+                Color color2 = new DeviceRgb(1.0f, 0.4f, 0.4f);
+                canvas1.SetFillColor(color1);
+                canvas2.SetFillColor(color2);
+                int[] rects = ArrayStuff.ConvertStringToArray(rectsString);
+
+                do //(int i = 0; i < rects.Length; i += 4)
+                {
+                    // Below text highlight
+                    canvas1.Rectangle(rects[currentRect], pageHeight - rects[currentRect + 1] - rects[currentRect + 3], rects[currentRect + 2], rects[currentRect + 3]);
+                    canvas1.Fill();
+                    // Above text underline
+                    canvas2.Rectangle(rects[currentRect], pageHeight - rects[currentRect + 1] - rects[currentRect + 3], rects[currentRect + 2], 1);
+                    canvas2.Fill();
+
+                    if(currentRect + 5 > rects.Length)
+                    {
+                        notDone = false;
+                        break;
+                    }
+
+                    // Detect page break
+                    int lastY = pageHeight - rects[currentRect + 1] - rects[currentRect + 3];
+                    currentRect += 4;
+                    int newY = pageHeight - rects[currentRect + 1] - rects[currentRect + 3];
+                    if (lastY < newY)
+                    {
+                        currentPage++;
+                        break;
+                    }
+
+                } while (true);
+            } while (notDone);
             //canvas.RestoreState();
 
             // Add annotation
@@ -170,7 +196,8 @@ namespace Dek.Bel.Services
                 .SetFixedPosition(boxLeft, pageHeight - yCoord - boxHeight, boxWidth) // NB that height is variable
                 //.SetBorder(new SolidBorder(0.5f))
                 .SetFont(font)
-                .SetFontSize(9);
+                .SetFontSize(9)
+                .SetPageNumber(physicalPage);
             Document doc = new Document(pdfDoc);
             doc.Add(paragraph1);
 

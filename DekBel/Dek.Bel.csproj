@@ -15,6 +15,20 @@
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
     <TargetFrameworkProfile />
+    <ShouldCreateLogs>True</ShouldCreateLogs>
+    <AdvancedSettingsExpanded>True</AdvancedSettingsExpanded>
+    <UpdateAssemblyVersion>True</UpdateAssemblyVersion>
+    <UpdateAssemblyFileVersion>True</UpdateAssemblyFileVersion>
+    <UpdateAssemblyInfoVersion>True</UpdateAssemblyInfoVersion>
+    <AssemblyVersionSettings>IncrementOnDemand.IncrementOnDemand.IncrementWithResetOnIncrease.None</AssemblyVersionSettings>
+    <UpdatePackageVersion>False</UpdatePackageVersion>
+    <AssemblyInfoVersionType>SettingsVersion</AssemblyInfoVersionType>
+    <InheritWinAppVersionFrom>None</InheritWinAppVersionFrom>
+    <AssemblyInfoFilePath>Properties\AssemblyVersion.cs</AssemblyInfoFilePath>
+    <PrimaryVersionType>AssemblyVersionAttribute</PrimaryVersionType>
+    <AssemblyVersion>0.3.14</AssemblyVersion>
+    <AssemblyFileVersionSettings>IncrementOnDemand.IncrementOnDemand.IncrementWithResetOnIncrease.None</AssemblyFileVersionSettings>
+    <AssemblyInfoVersionSettings>IncrementOnDemand.IncrementOnDemand.IncrementWithResetOnIncrease.None</AssemblyInfoVersionSettings>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -101,8 +115,10 @@
       <DependentUpon>BelGui.cs</DependentUpon>
     </Compile>
     <Compile Include="Cls\ArrayStuff.cs" />
+    <Compile Include="Cls\AssemblyStuff.cs" />
     <Compile Include="Cls\IntExtensions.cs" />
     <Compile Include="Cls\TextRange.cs" />
+    <Compile Include="Constants\Constants.cs" />
     <Compile Include="FormVolume.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -116,6 +132,7 @@
     <Compile Include="Models\Chapter.cs" />
     <Compile Include="Models\SubChapter.cs" />
     <Compile Include="Models\Reference.cs" />
+    <Compile Include="Properties\AssemblyVersion.cs" />
     <Compile Include="Reference\Form_AddReference.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -267,6 +284,7 @@
   </PropertyGroup>
   <PropertyGroup>
     <PostBuildEvent>echo Copying to Sumatra
-xcopy /Y /S $(ProjectDir)bin\$(Configuration)\*.* $(SolutionDir)..\dbg</PostBuildEvent>
+xcopy /Y /S $(ProjectDir)bin\Debug\*.* $(SolutionDir)..\dbg
+xcopy /Y /S $(ProjectDir)bin\Release\*.* $(SolutionDir)..\rel</PostBuildEvent>
   </PropertyGroup>
 </Project>
