@@ -1,5 +1,6 @@
 ﻿using Dek.Bel.DB;
 using Dek.Bel.Models;
+using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 
@@ -8,10 +9,12 @@ namespace Dek.Bel.Services
     public interface ICategoryService
     {
         IEnumerable<Category> Categories { get; }
-        void Add(Category cat);
+        event EventHandler<CategoryEventArgs> CategoryUpdated;
+
+        Category Add(Category cat);
         void Remove(Category cat);
 
-        void LoadCategoriesFromDb();
+        List<Category> LoadCategoriesFromDb();
         void AddCategoryToCitation(Id citationId, Id categoryId, int weight, bool isMain);
         void SetMainCategory(CitationCategory citationCategory);
         void SetWeight(Id citationId, Id categoryId, int weight);

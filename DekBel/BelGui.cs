@@ -821,6 +821,26 @@ namespace Dek.Bel
         }
 
 
+        // Citation2 - Remove line endings in selected text 
+        private void RemoveLineEndingsToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            // Exclude
+            if (richTextBox1.SelectionLength > 0)
+                m_CitationManipulationService.RemoveLinebreakInCitation2(richTextBox1.SelectionStart, richTextBox1.SelectionStart + richTextBox1.SelectionLength - 1);
+            else
+                m_CitationManipulationService.RemoveLinebreakInCitation2(0, richTextBox1.Text.Length - 1);
+        }
+
+
+        // Pops up Edit Raw Citation window
+        private void EditRawCitationToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            RawCitationEditor rced = new RawCitationEditor(VM, UserSettingsService.CitationFont);
+            rced.Show();
+            LoadControls();
+        }
+
+
 
         // --------------------------
         /*************************************************

@@ -15,8 +15,7 @@ namespace Dek.Bel.Services
     [Export(typeof(ICategoryService))]
     public class CategoryService : ICategoryService
     {
-        private List<Category> m_Categories;
-        public IEnumerable<Category> Categories => m_Categories;
+        public IEnumerable<Category> Categories => m_DBService.Select<Category>();
         private IDBService m_DBService;
 
         private BorderStyle m_DefaultBorderStyle;
@@ -25,52 +24,71 @@ namespace Dek.Bel.Services
         CategoryService(IDBService dBService)
         {
             m_DefaultBorderStyle = new Label().BorderStyle;
-            m_Categories = new List<Category>();
 
             m_DBService = dBService;
+        }
 
-            LoadCategoriesFromDb();
+        private EventHandler<CategoryEventArgs> CategoryUpdatedEventHandler;
+        public event EventHandler<CategoryEventArgs> CategoryUpdated
+        {
+            add { CategoryUpdatedEventHandler += value; }
+            remove { CategoryUpdatedEventHandler -= value; }
+        }
+
+        private void FireCategoryUpdated(Category cat = null)
+        {
+            CategoryUpdatedEventHandler?.Invoke(this, new CategoryEventArgs {Category = cat});
         }
 
         /**************************************************************
           Categories
         */
 
-        public void LoadCategoriesFromDb()
+        public List<Category> LoadCategoriesFromDb()
         {
-            m_Categories.Clear();
-            m_Categories = m_DBService.Select<Category>();
+            return m_DBService.Select<Category>();
         }
 
         public void Add(string name, string code, string desc) => Add(new Category { Name = name, Code = code, Description = desc });
 
         /// <summary>
-        /// Add a new category.
+        /// Add a new category. If Id not provided, generate new. Returns cat (with new Id).
         /// </summary>
         /// <param name="cat"></param>
         /// <exception cref="ArgumentException">Throws arg exception if code not unique</exception>
-        public void Add(Category cat)
+        public Category Add(Category cat)
         {
-            if (m_Categories.Any(c => c.Code.Equals(cat.Code, StringComparison.CurrentCultureIgnoreCase)))
+            if (cat.Id == Id.Null)
+                cat.Id = Id.NewId();
+
+            if (Categories.Any(c => c.Code.Equals(cat.Code, StringComparison.CurrentCultureIgnoreCase)))
                 throw new ArgumentException($"Code {cat.Code} not unique.");
 
-            m_Categories.Add(cat);
+            m_DBService.InsertOrUpdate(cat);
+
+            FireCategoryUpdated(cat);
+
+            return cat;
         }
+
 
         public void Remove(Category cat)
         {
-            m_Categories.Remove(cat);
-        }
+            List<CitationCategory> referencedCitations = m_DBService.Select<CitationCategory>($"`CategoryId`='{cat.Id}'");
+            if (referencedCitations.Any())
+            {
+                List<Id> ids = referencedCitations.Select(x => x.CitationId).ToList();
+                string idString = string.Join(";", ids.Select(x => x.ToString()).ToArray());
+                throw new Exception("The following citations refgerence this category: " + idString);
+            }
 
-        public void Update(Category cat)
-        {
-            m_Categories.Remove(cat);
-
+            m_DBService.Delete(cat);
+            FireCategoryUpdated(cat);
         }
 
         public Category this[string code]
         {
-            get => m_Categories.FirstOrDefault(c => c.Code.Equals(code, StringComparison.CurrentCultureIgnoreCase));
+            get => Categories.FirstOrDefault(c => c.Code.Equals(code, StringComparison.CurrentCultureIgnoreCase));
         }
 
         public void AddCategoryToCitation(Id citationId, Id categoryId, int weight, bool isMain)

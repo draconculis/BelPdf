@@ -61,7 +61,7 @@
             // 
             this.button_done.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.button_done.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.button_done.Location = new System.Drawing.Point(443, 352);
+            this.button_done.Location = new System.Drawing.Point(443, 361);
             this.button_done.Name = "button_done";
             this.button_done.Size = new System.Drawing.Size(97, 26);
             this.button_done.TabIndex = 30;
@@ -94,7 +94,7 @@
             // button_add
             // 
             this.button_add.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.button_add.Location = new System.Drawing.Point(3, 352);
+            this.button_add.Location = new System.Drawing.Point(3, 361);
             this.button_add.Name = "button_add";
             this.button_add.Size = new System.Drawing.Size(97, 27);
             this.button_add.TabIndex = 240;
@@ -105,12 +105,13 @@
             // button_delete
             // 
             this.button_delete.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.button_delete.Location = new System.Drawing.Point(209, 352);
+            this.button_delete.Location = new System.Drawing.Point(209, 361);
             this.button_delete.Name = "button_delete";
             this.button_delete.Size = new System.Drawing.Size(97, 27);
             this.button_delete.TabIndex = 190;
             this.button_delete.Text = "Delete";
             this.button_delete.UseVisualStyleBackColor = true;
+            this.button_delete.Click += new System.EventHandler(this.Button_delete_Click);
             // 
             // timer1
             // 
@@ -120,7 +121,7 @@
             // button_update
             // 
             this.button_update.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.button_update.Location = new System.Drawing.Point(106, 352);
+            this.button_update.Location = new System.Drawing.Point(106, 361);
             this.button_update.Name = "button_update";
             this.button_update.Size = new System.Drawing.Size(97, 27);
             this.button_update.TabIndex = 230;
@@ -168,7 +169,7 @@
             this.dataGridView1.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             this.dataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
             this.dataGridView1.ShowRowErrors = false;
-            this.dataGridView1.Size = new System.Drawing.Size(538, 321);
+            this.dataGridView1.Size = new System.Drawing.Size(538, 326);
             this.dataGridView1.TabIndex = 301;
             this.dataGridView1.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick);
             this.dataGridView1.Resize += new System.EventHandler(this.dataGridView1_Resize);
@@ -190,7 +191,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.button_done;
-            this.ClientSize = new System.Drawing.Size(544, 398);
+            this.ClientSize = new System.Drawing.Size(544, 403);
             this.ControlBox = false;
             this.Controls.Add(this.label_count);
             this.Controls.Add(this.dataGridView1);

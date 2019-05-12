@@ -25,6 +25,14 @@ namespace Dek.Bel.Services
             Filter = (c) => true;
             dataGridView1.DataSource = m_FilteredCategories;
             UpdateCount();
+            m_CategoryService.CategoryUpdated 
+            
+        }
+
+        public void OnCategoryUpdated()
+        {
+            dataGridView1.DataSource = null;
+            dataGridView1.DataSource = m_FilteredCategories;
         }
 
         private void FormCategory_Load(object sender, EventArgs e)
@@ -38,22 +46,6 @@ namespace Dek.Bel.Services
         {
             label_count.Text = $"{m_FilteredCategories.Count()} / {m_CategoryService.Categories.Count().ToString()}";
         }
-
-        //void LoadListView()
-        //{
-        //    listView1.Items.Clear();
-
-        //    string filter = textBox_search.Text.Trim().ToLower();
-        //    foreach(var cat in m_CategoryService.Categories)
-        //    {
-        //        if (!string.IsNullOrWhiteSpace(filter) && 
-        //            !(cat.Code.ToLower().Contains(filter) || cat.Name.ToLower().Contains(filter) || cat.Description.ToLower().Contains(filter)))
-        //            continue;
-
-        //        var lvi = new ListViewItem(new[] { cat.Code, cat.Name, cat.Description });
-        //        listView1.Items.Add(lvi);
-        //    }
-        //}
 
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
@@ -111,7 +103,6 @@ namespace Dek.Bel.Services
             if (dataGridView1.SelectedCells.Count < 1)
                 return;
 
-
             int row = dataGridView1.SelectedCells[0].RowIndex;
             var cat = new Category {
                 Code = dataGridView1.Rows[row].Cells[0].Value as string,
@@ -124,6 +115,8 @@ namespace Dek.Bel.Services
             {
                 m_CategoryService.Remove(cat);
                 m_CategoryService.Add(f.Category);
+                dataGridView1.DataSource = null;
+                dataGridView1.DataSource = m_FilteredCategories;
             }
         }
 
@@ -133,6 +126,29 @@ namespace Dek.Bel.Services
             if (f.ShowDialog(this) == DialogResult.OK)
             {
                 m_CategoryService.Add(f.Category);
+            }
+        }
+
+        private void Button_delete_Click(object sender, EventArgs e)
+        {
+            if (dataGridView1.SelectedCells.Count < 1)
+                return;
+
+            int row = dataGridView1.SelectedCells[0].RowIndex;
+            var cat = new Category
+            {
+                Code = dataGridView1.Rows[row].Cells[0].Value as string,
+                Name = dataGridView1.Rows[row].Cells[1].Value as string,
+                Description = dataGridView1.Rows[row].Cells[2].Value as string
+            };
+
+            FormCategoryEdit f = new FormCategoryEdit(m_CategoryService.Categories, cat);
+            if (f.ShowDialog(this) == DialogResult.OK)
+            {
+                m_CategoryService.Remove(cat);
+                m_CategoryService.Add(f.Category);
+                dataGridView1.DataSource = null;
+                dataGridView1.DataSource = m_FilteredCategories;
             }
 
         }

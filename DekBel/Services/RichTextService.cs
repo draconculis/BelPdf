@@ -17,7 +17,7 @@ namespace Dek.Bel.Services
 
         public string CreateRtfWithExlusionsAndEmphasis(string text, List<DekRange> exclusion, List<DekRange> emphasis)
         {
-            string s = text.Replace("\r", "").Replace("\n", "");
+            string s = text.Replace("\r\n", "\r").Replace("\n", "\r");//.Replace("\r\n", " ").Replace("\n", " ").Replace("\r", "");
 
             if (emphasis == null)
                 emphasis = new List<DekRange>();
@@ -66,20 +66,13 @@ namespace Dek.Bel.Services
                     strike = false;
                 }
 
-                if (s[i] == '\n')
-                {
-                    
-                }
-
-                if (s[i] == '\r')
-                {
-                }
-
                 rtfbuilder.Append(GetRtfUnicodeEscapedChar(s[i]));
+                //rtfbuilder.Append(s[i]);
             }
 
             rtfbuilder.Append(@" }");
             var ret = rtfbuilder.ToString();
+            ret = ret.Replace("\r", @"\line ");
             return ret;
         }
 

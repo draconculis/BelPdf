@@ -780,6 +780,28 @@ namespace Dek.Bel.DB
             Delete(new T(), where);
         }
 
+        public void Delete<T>(T obj) where T : new()
+        {
+            if (obj == null)
+                return;
+
+            string whereKeyValues = "";
+            bool keyFound = false;
+            foreach (var prop in obj.GetType().GetProperties())
+            {
+                object attributes = prop.GetCustomAttributes(typeof(KeyAttribute), true).FirstOrDefault();
+                if (prop.Name.ToLower() == "id" || attributes != null)
+                {
+                    whereKeyValues += (whereKeyValues.Length > 0 ? " AND " : "") + $"`{prop.Name}` = '{prop.GetValue(obj, null)}'";
+                }
+            }
+
+            if (!keyFound)
+                return;
+
+            Delete(obj, whereKeyValues);
+        }
+
         public void Delete(object model, string where)
         {
             if (model == null || string.IsNullOrWhiteSpace(where))

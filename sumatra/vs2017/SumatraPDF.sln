@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28218.60
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28729.10
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SumatraPDF-no-MUPDF", "SumatraPDF-no-MUPDF.vcxproj", "{8F5D3594-FBBE-12A2-842C-5954F08C4961}"
 EndProject
@@ -109,6 +109,8 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Dek.Bel.Interop", "..\..\Dek.Bel.Interop\Dek.Bel.Interop.vcxproj", "{60898BF8-90CF-49B1-B865-0D4E3C577399}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dek.Bel", "..\..\DekBel\Dek.Bel.csproj", "{97CF51E4-6AC7-4144-841F-7F78835727D2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dek.Bel.Wpf", "..\..\Dek.Bel.Wpf\Dek.Bel.Wpf.csproj", "{1AF28D92-4A1A-4ACE-82E6-5BE410E69379}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -712,8 +714,29 @@ Global
 		{97CF51E4-6AC7-4144-841F-7F78835727D2}.ReleasePrefast|Win32.Build.0 = Release|Any CPU
 		{97CF51E4-6AC7-4144-841F-7F78835727D2}.ReleasePrefast|x64.ActiveCfg = Release|Any CPU
 		{97CF51E4-6AC7-4144-841F-7F78835727D2}.ReleasePrefast|x64.Build.0 = Release|Any CPU
+		{1AF28D92-4A1A-4ACE-82E6-5BE410E69379}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1AF28D92-4A1A-4ACE-82E6-5BE410E69379}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1AF28D92-4A1A-4ACE-82E6-5BE410E69379}.Debug|Win32.ActiveCfg = Debug|Any CPU
+		{1AF28D92-4A1A-4ACE-82E6-5BE410E69379}.Debug|Win32.Build.0 = Debug|Any CPU
+		{1AF28D92-4A1A-4ACE-82E6-5BE410E69379}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{1AF28D92-4A1A-4ACE-82E6-5BE410E69379}.Debug|x64.Build.0 = Debug|Any CPU
+		{1AF28D92-4A1A-4ACE-82E6-5BE410E69379}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1AF28D92-4A1A-4ACE-82E6-5BE410E69379}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1AF28D92-4A1A-4ACE-82E6-5BE410E69379}.Release|Win32.ActiveCfg = Release|Any CPU
+		{1AF28D92-4A1A-4ACE-82E6-5BE410E69379}.Release|Win32.Build.0 = Release|Any CPU
+		{1AF28D92-4A1A-4ACE-82E6-5BE410E69379}.Release|x64.ActiveCfg = Release|Any CPU
+		{1AF28D92-4A1A-4ACE-82E6-5BE410E69379}.Release|x64.Build.0 = Release|Any CPU
+		{1AF28D92-4A1A-4ACE-82E6-5BE410E69379}.ReleasePrefast|Any CPU.ActiveCfg = Release|Any CPU
+		{1AF28D92-4A1A-4ACE-82E6-5BE410E69379}.ReleasePrefast|Any CPU.Build.0 = Release|Any CPU
+		{1AF28D92-4A1A-4ACE-82E6-5BE410E69379}.ReleasePrefast|Win32.ActiveCfg = Release|Any CPU
+		{1AF28D92-4A1A-4ACE-82E6-5BE410E69379}.ReleasePrefast|Win32.Build.0 = Release|Any CPU
+		{1AF28D92-4A1A-4ACE-82E6-5BE410E69379}.ReleasePrefast|x64.ActiveCfg = Release|Any CPU
+		{1AF28D92-4A1A-4ACE-82E6-5BE410E69379}.ReleasePrefast|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3F7FA515-9137-4A33-A134-2A2A50987AD6}
 	EndGlobalSection
 EndGlobal

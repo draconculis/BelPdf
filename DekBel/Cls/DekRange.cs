@@ -215,7 +215,7 @@ namespace Dek.Cls
         }
     }
 
-    public static class TextRangeExtension
+    public static class DekRangeExtension
     {
         public static List<DekRange> AddAndMerge(this List<DekRange> me, DekRange range)
         {
@@ -262,7 +262,7 @@ namespace Dek.Cls
             if (string.IsNullOrWhiteSpace(text))
                 return;
 
-            string[] asdjh = text.Split(';');
+            string[] asdjh = text.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
             foreach(string s in asdjh)
             {
                 string[] ns = s.Split(',');

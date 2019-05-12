@@ -66,7 +66,8 @@
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(336, 47);
             this.label1.TabIndex = 2;
-            this.label1.Text = "Reset will clear all editing and reset the citation to the original text.";
+            this.label1.Text = "Reset will clear all editing and reset the citation to the original raw citation " +
+    "text.";
             // 
             // richTextBox1
             // 

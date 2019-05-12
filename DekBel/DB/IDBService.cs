@@ -19,6 +19,7 @@ namespace Dek.Bel.DB
         void InsertOrUpdate(object obj);
         void DeleteAll<T>() where T : new();
         void DeleteAll(object model);
+        void Delete<T>(T obj) where T : new();
         void Delete<T>(string where) where T : new();
         void Delete(object model, string where);
     }
