@@ -11,10 +11,10 @@ namespace Dek.Bel.Services
         IEnumerable<Category> Categories { get; }
         event EventHandler<CategoryEventArgs> CategoryUpdated;
 
-        Category Add(Category cat);
+        Category InsertOrUpdate(Category cat);
+        void InsertOrUpdate(string code, string name, string desc);
         void Remove(Category cat);
 
-        List<Category> LoadCategoriesFromDb();
         void AddCategoryToCitation(Id citationId, Id categoryId, int weight, bool isMain);
         void SetMainCategory(CitationCategory citationCategory);
         void SetWeight(Id citationId, Id categoryId, int weight);

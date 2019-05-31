@@ -19,12 +19,54 @@ namespace Dek.Bel.Cls
             return res;
         }
 
-        public static int[] ConvertStringToArray(string str)
+        // Format #pageA!a1,b1,c1,d1;a2,b2,c2,d2;
+        public static string ConvertPageAndArrayToString(int page, int[] rects)
+        {
+            string res = $"#{page}!";
+            int counter = 1;
+            foreach (int i in rects)
+                res += i.ToString() + $"{(counter++ % 4 == 0 ? ";" : ",")}";
+
+            return res;
+        }
+
+        // Format #pageA!a1,b1,c1,d1;a2,b2,c2,d2;
+        public static string ConvertPageAndArrayToString(List<(int page, int[] rects)> pageRects)
+        {
+            StringBuilder sb = new StringBuilder();
+            foreach (var pageRect in pageRects)
+            {
+                sb.Append(ConvertPageAndArrayToString(pageRect.page, pageRect.rects));
+            }
+            return sb.ToString();
+        }
+
+        // Format #pageA!a1,b1,c1,d1;a2,b2,c2,d2;#pageB!a1,b1,c1,d1;
+        public static List<(int page, int[] rects)> ConvertStringToPagesAndArrays(string str)
+        {
+            if (String.IsNullOrWhiteSpace(str))
+                return new List<(int page, int[] rects)> { (0, new int[0]) };
+
+            List<string> rectSets = str.Split(new string[] { "#" }, StringSplitOptions.RemoveEmptyEntries).ToList();
+            List<(int page, int[] rects)> res = new List<(int page, int[] rects)>();
+            foreach (string rectSet in rectSets)
+            {
+                string[] split = rectSet.Split('!');
+
+                int page = int.Parse(split[0]);
+
+                res.Add((page, ConvertStringToArray(split[1])));
+            }
+
+            return res;
+        }
+
+        private static int[] ConvertStringToArray(string str)
         {
             if (String.IsNullOrWhiteSpace(str))
                 return new int[0];
 
-            string[] rects = str.Split(';');
+            string[] rects = str.Split(new[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
             List<int> res = new List<int>();
             foreach (var r in rects)
             {

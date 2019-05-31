@@ -47,7 +47,7 @@ namespace Dek.Bel.DB
 
         public void LoadCitations(Id id)
         {
-            Citations = m_DBService.Select<Citation>($"`VolumeId`='{id}'").OrderBy(x => x.PhysicalPageStart).ThenBy(y => y.GlyphStart).ToList();
+            Citations = m_DBService.Select<Citation>($"`VolumeId`='{id}'").AsParallel().OrderBy(x => x.PhysicalPageStart).ThenBy(y => y.GlyphStart).ToList();
         }
 
         #region References =========================================================================

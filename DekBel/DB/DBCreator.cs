@@ -52,6 +52,14 @@ namespace Dek.Bel.DB
 
             if (repo.CreateTable(typeof(Category)))
             {
+                // Uncategorized
+                repo.InsertOrUpdate(new Category
+                {
+                    Id = Id.Empty,
+                    Code = "None",
+                    Name = "Uncategorized",
+                    Description = "No category selected"
+                });
                 repo.InsertOrUpdate(new Category
                 {
                     Id = Id.NewId(),

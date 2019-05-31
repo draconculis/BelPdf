@@ -38,6 +38,7 @@ namespace Dek.Bel.DB
                 PageStop = message.StopPage,
                 PageStart = message.StartPage,
                 Date = DateTime.Now,
+                Rectangles = ArrayStuff.ConvertPageAndArrayToString(message.StartPage, rects),
             };
 
             DBService.InsertOrUpdate(raw);
@@ -58,38 +59,40 @@ namespace Dek.Bel.DB
             return text;
         }
 
-        private int[] ComposeRectangles(List<RawCitation> rawCitations, int[] rects)
+        private List<(int page, int[] rects)>  ComposeRectangles(List<RawCitation> rawCitations, (int page, int[] rects) mainPageRect)
         {
-            List<int> r = new List<int>(rects);
+            var res = new List<(int page, int[] rects)>();
+            res.Add(mainPageRect);
             foreach (var raw in rawCitations)
             {
-                r.AddRange(ArrayStuff.ConvertStringToArray(raw.Rectangles));
+                res.AddRange(ArrayStuff.ConvertStringToPagesAndArrays(raw.Rectangles));
             }
 
-            return r.ToArray();
+            return res;
         }
 
         internal Citation CreateNewCitation(List<RawCitation> rawCitations, EventData message, Id volumeId)
         {
-            int[] citationRects = ArrayStuff.ExtractArrayFromIntPtr(message.SelectionRects, message.Len * 4);
+            (int page, int[] rects) citationPageRects = (message.StartPage, ArrayStuff.ExtractArrayFromIntPtr(message.SelectionRects, message.Len * 4));
             string citationText = ComposeCitation(rawCitations, message.Text);
-            int[] rects = ComposeRectangles(rawCitations, citationRects);
-            RichTextBox rtb = new RichTextBox();
-            rtb.Text = citationText;
+            List<(int page, int[] rects)> pageRects = ComposeRectangles(rawCitations, citationPageRects);
+
+            (int pageStart, int pageStop, int glyphStart, int glyphStop) boundaries = GetBoundaries(rawCitations, message);
+
             var citation = new Citation
             {
                 Id = Id.NewId(),
                 VolumeId = volumeId,
-                Citation1 = citationText, // Original, always untouched, never changed
+                Citation1 = citationText, // Original, never changed (unless it contains stupid greek encoding from hell)
                 Citation2 = citationText, // More of the same, textb 1
                 Citation3 = "", // More of the same, textb 2
                 CreatedDate = DateTime.Now,
                 EditedDate = DateTime.Now,
-                GlyphStart = message.StartGlyph,
-                GlyphStop = message.StopGlyph,
-                PhysicalPageStart = message.StartPage,
-                PhysicalPageStop = message.StopPage,
-                SelectionRects = ArrayStuff.ConvertArrayToString(rects),
+                GlyphStart = boundaries.glyphStart,
+                GlyphStop = boundaries.glyphStop,
+                PhysicalPageStart = boundaries.pageStart,
+                PhysicalPageStop = boundaries.pageStop,
+                SelectionRects = ArrayStuff.ConvertPageAndArrayToString(pageRects),
             };
 
             DBService.InsertOrUpdate(citation);
@@ -97,5 +100,34 @@ namespace Dek.Bel.DB
             return citation;
         }
 
+        /// <summary>
+        /// Get minimum / maximum for page and glyph
+        /// </summary>
+        /// <param name="rawCitations"></param>
+        /// <param name="message"></param>
+        /// <returns></returns>
+        private (int pageStart, int pageStop, int glyphStart, int glyphStop) GetBoundaries(List<RawCitation> rawCitations, EventData message)
+        {
+            int startPage = message.StartPage;
+            int stopPage = message.StopPage;
+            int startGlyph = message.StartGlyph;
+            int stopGlyph = message.StopGlyph;
+            foreach (var rawCitation in rawCitations)
+            {
+                if (rawCitation.PageStart < startPage)
+                    startPage = rawCitation.PageStart;
+
+                if (rawCitation.PageStop > stopPage)
+                    stopPage = rawCitation.PageStop;
+
+                if (rawCitation.GlyphStart < startGlyph)
+                    startGlyph = rawCitation.GlyphStart;
+
+                if (rawCitation.GlyphStop > stopGlyph)
+                    stopGlyph = rawCitation.GlyphStop;
+            }
+
+            return (startPage, stopPage, startGlyph, stopGlyph);
+        }
     }
 }

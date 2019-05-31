@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Dek.Bel.DB;
 
 namespace Dek.Bel.Services
 {
@@ -25,20 +26,26 @@ namespace Dek.Bel.Services
             Filter = (c) => true;
             dataGridView1.DataSource = m_FilteredCategories;
             UpdateCount();
-            m_CategoryService.CategoryUpdated 
+            m_CategoryService.CategoryUpdated += OnCategoryUpdated;
             
         }
 
-        public void OnCategoryUpdated()
+        public void OnCategoryUpdated(object sender, CategoryEventArgs args)
         {
             dataGridView1.DataSource = null;
             dataGridView1.DataSource = m_FilteredCategories;
+            AdjustColumns();
         }
 
         private void FormCategory_Load(object sender, EventArgs e)
         {
-            int previouswidth = dataGridView1.Columns[0].Width + dataGridView1.Columns[1].Width;
-            dataGridView1.Columns[2].Width = dataGridView1.Width - previouswidth;
+            AdjustColumns();
+        }
+
+        private void AdjustColumns()
+        {
+            int previouswidth = dataGridView1.Columns[0].Width + dataGridView1.Columns[1].Width + dataGridView1.Columns[2].Width;
+            dataGridView1.Columns[3].Width = dataGridView1.Width - previouswidth;
 
         }
 
@@ -94,10 +101,10 @@ namespace Dek.Bel.Services
 
         private void dataGridView1_Resize(object sender, EventArgs e)
         {
-            int previouswidth = dataGridView1.Columns[0].Width + dataGridView1.Columns[1].Width;
-            dataGridView1.Columns[2].Width = dataGridView1.Width - previouswidth;
+            AdjustColumns();
         }
 
+        // Edit
         private void button_update_Click(object sender, EventArgs e)
         {
             if (dataGridView1.SelectedCells.Count < 1)
@@ -105,18 +112,18 @@ namespace Dek.Bel.Services
 
             int row = dataGridView1.SelectedCells[0].RowIndex;
             var cat = new Category {
-                Code = dataGridView1.Rows[row].Cells[0].Value as string,
-                Name = dataGridView1.Rows[row].Cells[1].Value as string,
-                Description = dataGridView1.Rows[row].Cells[2].Value as string
+                Code = dataGridView1.Rows[row].Cells[1].Value as string,
+                Name = dataGridView1.Rows[row].Cells[2].Value as string,
+                Description = dataGridView1.Rows[row].Cells[3].Value as string
             };
 
             FormCategoryEdit f = new FormCategoryEdit(m_CategoryService.Categories, cat);
             if(f.ShowDialog(this) == DialogResult.OK)
             {
-                m_CategoryService.Remove(cat);
-                m_CategoryService.Add(f.Category);
+                m_CategoryService.InsertOrUpdate(f.Category);
                 dataGridView1.DataSource = null;
                 dataGridView1.DataSource = m_FilteredCategories;
+                AdjustColumns();
             }
         }
 
@@ -125,7 +132,8 @@ namespace Dek.Bel.Services
             FormCategoryEdit f = new FormCategoryEdit(m_CategoryService.Categories);
             if (f.ShowDialog(this) == DialogResult.OK)
             {
-                m_CategoryService.Add(f.Category);
+                m_CategoryService.InsertOrUpdate(f.Category);
+                AdjustColumns();
             }
         }
 
@@ -137,18 +145,26 @@ namespace Dek.Bel.Services
             int row = dataGridView1.SelectedCells[0].RowIndex;
             var cat = new Category
             {
-                Code = dataGridView1.Rows[row].Cells[0].Value as string,
-                Name = dataGridView1.Rows[row].Cells[1].Value as string,
-                Description = dataGridView1.Rows[row].Cells[2].Value as string
+                Id = Id.NewId(dataGridView1.Rows[row].Cells[0].Value as string),
+                Code = dataGridView1.Rows[row].Cells[1].Value as string,
+                Name = dataGridView1.Rows[row].Cells[2].Value as string,
+                Description = dataGridView1.Rows[row].Cells[3].Value as string
             };
 
-            FormCategoryEdit f = new FormCategoryEdit(m_CategoryService.Categories, cat);
-            if (f.ShowDialog(this) == DialogResult.OK)
+            if (MessageBox.Show($"Delete this category {cat}?", "Delete Category?", MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
-                m_CategoryService.Remove(cat);
-                m_CategoryService.Add(f.Category);
-                dataGridView1.DataSource = null;
-                dataGridView1.DataSource = m_FilteredCategories;
+                try
+                {
+                    m_CategoryService.Remove(cat);
+                    dataGridView1.DataSource = null;
+                    dataGridView1.DataSource = m_FilteredCategories;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Could not remove category!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+
+                AdjustColumns();
             }
 
         }

@@ -44,25 +44,22 @@ namespace Dek.Bel.Services
           Categories
         */
 
-        public List<Category> LoadCategoriesFromDb()
-        {
-            return m_DBService.Select<Category>();
-        }
-
-        public void Add(string name, string code, string desc) => Add(new Category { Name = name, Code = code, Description = desc });
+        public void InsertOrUpdate(string code, string name, string desc) => InsertOrUpdate(new Category { Name = name, Code = code, Description = desc });
 
         /// <summary>
         /// Add a new category. If Id not provided, generate new. Returns cat (with new Id).
         /// </summary>
         /// <param name="cat"></param>
         /// <exception cref="ArgumentException">Throws arg exception if code not unique</exception>
-        public Category Add(Category cat)
+        public Category InsertOrUpdate(Category cat)
         {
-            if (cat.Id == Id.Null)
-                cat.Id = Id.NewId();
+            Category existingCat = Categories.FirstOrDefault(x => x.Code == cat.Code);
 
-            if (Categories.Any(c => c.Code.Equals(cat.Code, StringComparison.CurrentCultureIgnoreCase)))
-                throw new ArgumentException($"Code {cat.Code} not unique.");
+            if (cat.Id == Id.Null)
+                cat.Id =  
+                    (existingCat?.Id != null)
+                    ? cat.Id = existingCat.Id
+                    : cat.Id = Id.NewId();
 
             m_DBService.InsertOrUpdate(cat);
 
@@ -77,9 +74,9 @@ namespace Dek.Bel.Services
             List<CitationCategory> referencedCitations = m_DBService.Select<CitationCategory>($"`CategoryId`='{cat.Id}'");
             if (referencedCitations.Any())
             {
-                List<Id> ids = referencedCitations.Select(x => x.CitationId).ToList();
-                string idString = string.Join(";", ids.Select(x => x.ToString()).ToArray());
-                throw new Exception("The following citations refgerence this category: " + idString);
+                List<Id> ids = referencedCitations.Select(x => x.CitationId).OrderBy(x => x).ToList();
+                string idString = string.Join($"{Environment.NewLine}", ids.Select(x => x.ToString()).ToArray());
+                throw new Exception($"The following {referencedCitations.Count} citations reference this category: " + idString);
             }
 
             m_DBService.Delete(cat);

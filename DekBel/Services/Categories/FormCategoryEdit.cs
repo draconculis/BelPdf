@@ -12,12 +12,14 @@ namespace Dek.Bel.Services
         public Category Category { get; private set; }
         IEnumerable<Category> Categories;
 
+
         // Update
         public FormCategoryEdit(IEnumerable<Category> categories, Category cat)
         {
             Categories = categories;
             InitializeComponent();
             textBoxCode.ReadOnly = true;
+            textBoxCode.BackColor = Color.LightGray;
 
             textBoxCode.Text = cat.Code;
             textBoxName.Text = cat.Name;

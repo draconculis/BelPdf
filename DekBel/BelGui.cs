@@ -29,6 +29,7 @@ namespace Dek.Bel
                 Cancel = false,
             };
 
+        [Import] public IMessageboxService m_MessageboxService { get; set; }
         [Import] public ModelsForViewing VM { get; set; }
         [Import] public VolumeService m_VolumeService { get; set; }
         [Import] public ICategoryService m_CategoryService { get; set; }
@@ -112,7 +113,6 @@ namespace Dek.Bel
             m_DBService.DeleteAll<RawCitation>(); // These need to go now
 
             m_CitationManipulationService.CitationChanged += CitationService_CitationChanged;
-            m_CategoryService.LoadCategoriesFromDb();
             comboBox_CategoryWeight.SelectedIndex = 2;
             LoadControls();
         }
@@ -585,13 +585,13 @@ namespace Dek.Bel
 
         private void richTextBox2_Leave(object sender, EventArgs e)
         {
+            VM.CurrentCitation.Citation3 = richTextBox2.Text;
+            m_DBService.InsertOrUpdate(VM.CurrentCitation);
+
             if (toolStripButton8.Selected)
                 return;
 
             toolStripButton8.Enabled = false;
-
-            VM.CurrentCitation.Citation3 = richTextBox2.Text;
-
         }
 
         private void toolStripButton7_Click(object sender, EventArgs e)
@@ -699,12 +699,26 @@ namespace Dek.Bel
 
         private void Button1_Click(object sender, EventArgs e)
         {
-            PdfService.ManipulatePdf(Path.Combine(UserSettingsService.StorageFolder, VM.CurrentStorage.StorageName), VM.CurrentCitation.SelectionRects);
+            //PdfService.ManipulatePdf(Path.Combine(UserSettingsService.StorageFolder, VM.CurrentStorage.StorageName), VM.CurrentCitation.SelectionRects);
         }
 
         private void Button2_Click(object sender, EventArgs e)
         {
             var mainCitCat = m_CategoryService.GetCitationCategories(VM.CurrentCitation.Id).Where(x => x.IsMain).SingleOrDefault();
+            if (mainCitCat == null)
+            {
+                if (m_MessageboxService.ShowYesNo("Create uncategorized citation?", "Category not set") == DialogResult.No)
+                    return;
+
+                mainCitCat = new CitationCategory
+                {
+                    CategoryId = Id.Empty,
+                    IsMain = false,
+                    CitationId = VM.CurrentCitation.Id,
+                    Weight = 0,
+                };
+                m_DBService.InsertOrUpdate(mainCitCat);
+            }
             var mainCategory = (mainCitCat != null) 
                 ? m_CategoryService.Categories.Where(x => x.Id == mainCitCat.CategoryId).SingleOrDefault()
                 : null;

@@ -26,7 +26,7 @@
     <InheritWinAppVersionFrom>None</InheritWinAppVersionFrom>
     <AssemblyInfoFilePath>Properties\AssemblyVersion.cs</AssemblyInfoFilePath>
     <PrimaryVersionType>AssemblyVersionAttribute</PrimaryVersionType>
-    <AssemblyVersion>0.3.49</AssemblyVersion>
+    <AssemblyVersion>0.3.139</AssemblyVersion>
     <AssemblyFileVersionSettings>IncrementOnDemand.IncrementOnDemand.IncrementWithResetOnIncrease.None</AssemblyFileVersionSettings>
     <AssemblyInfoVersionSettings>IncrementOnDemand.IncrementOnDemand.IncrementWithResetOnIncrease.None</AssemblyInfoVersionSettings>
   </PropertyGroup>
