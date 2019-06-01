@@ -35,20 +35,37 @@ namespace Dek.Bel.Services
 
         public Font CitationFont
         {
-            get => Get("CitationFont", new Font(FontFamily.GenericSerif, (float)12, FontStyle.Regular));
-            set => Set("CitationFont", value);
+            get => Get(nameof(CitationFont), new Font(FontFamily.GenericSerif, (float)12, FontStyle.Regular));
+            set => Set(nameof(CitationFont), value);
         }
 
         public bool BoldEmphasis
         {
-            get => Get("BoldEmphasis", true);
-            set => Set("BoldEmphasis", value);
+            get => Get(nameof(BoldEmphasis), true);
+            set => Set(nameof(BoldEmphasis), value);
         }
 
         public bool UnderlineEmphasis
         {
-            get => Get("UnderlineEmphasis", false);
-            set => Set("UnderlineEmphasis", value);
+            get => Get(nameof(UnderlineEmphasis), false);
+            set => Set(nameof(UnderlineEmphasis), value);
+        }
+
+        public Color PdfHighLightColor
+        {
+            get => Get(nameof(PdfHighLightColor), Color.AliceBlue);
+            set => Set(nameof(PdfHighLightColor), value);
+        }
+
+        public Color PdfUnderlineColor
+        {
+            get => Get(nameof(PdfUnderlineColor), Color.DarkRed);
+            set => Set(nameof(PdfUnderlineColor), value);
+        }
+        public bool ShowDebugMessages
+        {
+            get => Get(nameof(ShowDebugMessages), false);
+            set => Set(nameof(ShowDebugMessages), value);
         }
 
         private T Get<T>(string settingName, T defaultvalue = default(T))
@@ -59,6 +76,7 @@ namespace Dek.Bel.Services
 
         private void Set<T>(string settingName, T setting)
         {
+            EnsureSettingExists(settingName, default(T));
             Properties.Settings.Default[settingName] = setting;
         }
 
@@ -71,7 +89,7 @@ namespace Dek.Bel.Services
         /// <summary>
         /// Ensure setting exists. Ensure storage folder and db folder exists.
         /// </summary>
-        public void EnsureSettingExists(string setting, object defaultValue)
+        private void EnsureSettingExists(string setting, object defaultValue)
         {
             if (Properties.Settings.Default[setting] is string text)
                 if (string.IsNullOrWhiteSpace(text))

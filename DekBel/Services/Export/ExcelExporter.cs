@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Dek.Bel.Services
+namespace Dek.Bel.Services.Export
 {
     [Export(typeof(IExporter))]
     public class CsvExporter : IExporter

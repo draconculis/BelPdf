@@ -74,13 +74,13 @@ namespace Dek.Bel.Services
 
             } while (!valid);
 
-
+            m_DBService.Delete<Page>($"`PhysicalPage`={message.StartPage}");// There can be only one (per page)
             Page page = new Page
             {
                 Id = Id.NewId(),
                 VolumeId = LastHistory.VolumeId,
                 PhysicalPage = message.StartPage,
-                Glyph = message.StartGlyph,
+                Glyph = -1,
                 Title = message.Text,
                 PaginationStart = decodedPage
             };

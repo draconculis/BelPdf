@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Dek.Bel.Models
 {
-    public class Citation
+    public class Citation : IComparable<Citation>
     {
         public Id Id { get; set; }
         public Id VolumeId { get; set; }
@@ -34,6 +34,14 @@ namespace Dek.Bel.Models
         public override string ToString()
         {
             return $"[{Id.ToString().Substring(0, 8)}]" + " " + Citation1.Substring(0, Citation1.Length > maxlen ? maxlen : Citation1.Length) + $"{(Citation1.Length > maxlen ? "…" : "")}";
+        }
+
+        public int CompareTo(Citation other)
+        {
+            if (PhysicalPageStart == other.PhysicalPageStart)
+                return GlyphStart.CompareTo(other.GlyphStart);
+
+            return PhysicalPageStart.CompareTo(other.PhysicalPageStart);
         }
     }
 }

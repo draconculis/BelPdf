@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Dek.Bel.Services
+namespace Dek.Bel.Services.Export
 {
     public interface IExporter
     {

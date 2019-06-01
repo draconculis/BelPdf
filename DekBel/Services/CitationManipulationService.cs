@@ -18,8 +18,8 @@ namespace Dek.Bel.Services
     public class CitationManipulationService
     {
         [Import] public ModelsForViewing VM { get; set; }
-        [Import] public IDBService DBService { get; set; }
-        [Import] public IUserSettingsService UserSettingsService { get; set; }
+        [Import] public IDBService m_DBService { get; set; }
+        [Import] public IUserSettingsService m_UserSettingsService { get; set; }
 
         EventHandler CitationChangedEventHandler;
 
@@ -34,14 +34,14 @@ namespace Dek.Bel.Services
         /// </summary>
         public void ResetCitation2()
         {
-            var resetform = new Form_ResetCitation(VM.CurrentCitation.Citation1, UserSettingsService.CitationFont);
+            var resetform = new Form_ResetCitation(VM.CurrentCitation.Citation1, m_UserSettingsService.CitationFont);
 
             if (resetform.ShowDialog() == DialogResult.Yes)
             {
                 VM.CurrentCitation.Citation2 = VM.CurrentCitation.Citation1;
                 VM.Exclusion.Clear();
                 VM.CurrentCitation.Exclusion = null;
-                DBService.InsertOrUpdate(VM.CurrentCitation);
+                m_DBService.InsertOrUpdate(VM.CurrentCitation);
 
                 FireCitationChanged();
             }
@@ -54,7 +54,7 @@ namespace Dek.Bel.Services
             VM.Exclusion = VM.Exclusion.AddAndMerge(range);
             VM.CurrentCitation.Exclusion = VM.Exclusion.ConvertToText();
 
-            DBService.InsertOrUpdate(VM.CurrentCitation);
+            m_DBService.InsertOrUpdate(VM.CurrentCitation);
             FireCitationChanged();
         }
 
@@ -65,7 +65,7 @@ namespace Dek.Bel.Services
             VM.Emphasis = VM.Emphasis.AddAndMerge(range);
             VM.CurrentCitation.Emphasis = VM.Emphasis.ConvertToText();
 
-            DBService.InsertOrUpdate(VM.CurrentCitation);
+            m_DBService.InsertOrUpdate(VM.CurrentCitation);
             FireCitationChanged();
         }
 
@@ -97,7 +97,7 @@ namespace Dek.Bel.Services
 
             //VM.CurrentCitation.Citation2 = sb.ToString().Replace("\r", "\r\n");
 
-            DBService.InsertOrUpdate(VM.CurrentCitation);
+            m_DBService.InsertOrUpdate(VM.CurrentCitation);
             FireCitationChanged();
         }
 
@@ -132,8 +132,44 @@ namespace Dek.Bel.Services
 
         public void BeginEdit()
         {
-            VM.CurrentCitation.Citation3 = VM.CurrentCitation.Citation2;
-            DBService.InsertOrUpdate(VM.CurrentCitation);
+            StringBuilder sb = new StringBuilder();
+            bool inExclusion = false;
+            List<DekRange> ex = VM.Exclusion;
+            char lastChar = '#'; // Remember last char
+            string s = VM.CurrentCitation.Citation2.Replace("\r\n", "\r").Replace("\n", "\r");
+            int len = s.Length;
+            for (int i = 0; i < len; i++)
+            {
+                char c = s[i];
+                if (ex.ContainsInteger(i))
+                {
+                    if(!inExclusion)
+                    {
+                        inExclusion = true;
+                        //if (lastChar != ' ')
+                        //    sb.Append(' ');
+                        sb.Append(m_UserSettingsService.DeselectionMarker);
+                    }
+                    continue;
+                }
+                else
+                {
+                    if (inExclusion)
+                    {
+                        inExclusion = false;
+                        
+                        //if (lastChar != ' ' && !" ,.;:".Contains(c))
+                        //    sb.Append(' ');
+                    }
+                }
+
+                sb.Append(c);
+                lastChar = c;
+            }
+
+            VM.CurrentCitation.Citation3 = sb.ToString().Replace("\r", "\r\n"); ;
+
+            m_DBService.InsertOrUpdate(VM.CurrentCitation);
             FireCitationChanged();
         }
 

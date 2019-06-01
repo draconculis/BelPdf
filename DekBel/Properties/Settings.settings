@@ -6,7 +6,7 @@
       <Value Profile="(Default)">Times New Roman, 12pt</Value>
     </Setting>
     <Setting Name="DeselectionMarker" Type="System.String" Scope="User">
-      <Value Profile="(Default)">…</Value>
+      <Value Profile="(Default)">[…]</Value>
     </Setting>
     <Setting Name="StorageFolder" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
@@ -16,6 +16,15 @@
     </Setting>
     <Setting Name="BoldEmphasis" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="PdfUnderlineColor" Type="System.Drawing.Color" Scope="User">
+      <Value Profile="(Default)">192, 0, 0</Value>
+    </Setting>
+    <Setting Name="PdfHighLightColor" Type="System.Drawing.Color" Scope="User">
+      <Value Profile="(Default)">128, 255, 255</Value>
+    </Setting>
+    <Setting Name="ShowDebugMessages" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
     </Setting>
   </Settings>
 </SettingsFile>

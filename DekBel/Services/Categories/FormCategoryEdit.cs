@@ -12,7 +12,6 @@ namespace Dek.Bel.Services
         public Category Category { get; private set; }
         IEnumerable<Category> Categories;
 
-
         // Update
         public FormCategoryEdit(IEnumerable<Category> categories, Category cat)
         {
@@ -32,6 +31,8 @@ namespace Dek.Bel.Services
             Categories = categories;
             InitializeComponent();
         }
+
+        public bool IsUpdate => textBoxCode.ReadOnly;
 
         private FormCategoryEdit() { }
 
@@ -60,7 +61,7 @@ namespace Dek.Bel.Services
 
         private void textBoxCode_TextChanged(object sender, EventArgs e)
         {
-            if ((!textBoxCode.ReadOnly) && Categories.Any(c => c.Code.ToLower() == textBoxCode.Text.Trim().ToLower()))
+            if (!IsUpdate && Categories.Any(c => c.Code.ToLower() == textBoxCode.Text.Trim().ToLower()))
             {
                 buttonOK.Enabled = false;
                 textBoxCode.BackColor = Color.Pink;
@@ -70,14 +71,14 @@ namespace Dek.Bel.Services
             }
 
             IsOKEnabled();
-            textBoxCode.BackColor = textBoxDesc.BackColor;
+            textBoxCode.BackColor = IsUpdate ? Color.LightGray : textBoxDesc.BackColor;
             label_warn.Visible = false;
 
         }
 
         private void textBoxName_TextChanged(object sender, EventArgs e)
         {
-            if ((!textBoxCode.ReadOnly) && Categories.Any(c => c.Name.ToLower() == textBoxName.Text.Trim().ToLower()))
+            if (!IsUpdate && Categories.Any(c => c.Name.ToLower() == textBoxName.Text.Trim().ToLower()))
             {
                 buttonOK.Enabled = false;
                 textBoxName.BackColor = Color.Pink;
@@ -87,13 +88,16 @@ namespace Dek.Bel.Services
             }
 
             IsOKEnabled();
-            textBoxName.BackColor = textBoxDesc.BackColor;
+            textBoxName.BackColor = IsUpdate ? Color.LightGray : textBoxDesc.BackColor;
             label_warn.Visible = false;
         }
 
         void IsOKEnabled()
         {
-            buttonOK.Enabled = !(string.IsNullOrWhiteSpace(textBoxName.Text) || string.IsNullOrWhiteSpace(textBoxCode.Text));
+            buttonOK.Enabled = 
+                !string.IsNullOrWhiteSpace(textBoxName.Text) 
+                && !string.IsNullOrWhiteSpace(textBoxCode.Text)
+                && !label_warn.Visible;
         }
     }
 }

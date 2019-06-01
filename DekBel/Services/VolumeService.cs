@@ -6,6 +6,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using static Dek.Bel.Models.Reference;
 
 namespace Dek.Bel.DB
 {
@@ -38,16 +39,18 @@ namespace Dek.Bel.DB
         public void LoadVolume(Id id)
         {
             CurrentVolume = m_DBService.SelectById<Volume>(id);
-            Books = m_DBService.Select<Book>($"`VolumeId`='{id}'").OrderBy(x => x.PhysicalPage).ThenBy(y => y.Glyph).ToList();
-            Chapters = m_DBService.Select<Chapter>($"`VolumeId`='{id}'").OrderBy(x => x.PhysicalPage).ThenBy(y => y.Glyph).ToList();
-            SubChapters = m_DBService.Select<SubChapter>($"`VolumeId`='{id}'").OrderBy(x => x.PhysicalPage).ThenBy(y => y.Glyph).ToList();
-            Paragraphs = m_DBService.Select<Paragraph>($"`VolumeId`='{id}'").OrderBy(x => x.PhysicalPage).ThenBy(y => y.Glyph).ToList();
-            Pages = m_DBService.Select<Page>($"`VolumeId`='{id}'").OrderBy(x => x.PhysicalPage).ThenBy(y => y.Glyph).ToList();
+            //Books = m_DBService.Select<Book>($"`VolumeId`='{id}'").OrderBy(x => x.PhysicalPage).ThenBy(y => y.Glyph).ToList();
+            Books = m_DBService.Select<Book>($"`VolumeId`='{id}'").OrderBy(x => x).ToList();
+            Chapters = m_DBService.Select<Chapter>($"`VolumeId`='{id}'").OrderBy(x => x).ToList();
+            SubChapters = m_DBService.Select<SubChapter>($"`VolumeId`='{id}'").OrderBy(x => x).ToList();
+            Paragraphs = m_DBService.Select<Paragraph>($"`VolumeId`='{id}'").OrderBy(x => x).ToList();
+            Pages = m_DBService.Select<Page>($"`VolumeId`='{id}'").OrderBy(x => x.PhysicalPage).ToList();
         }
 
         public void LoadCitations(Id id)
         {
-            Citations = m_DBService.Select<Citation>($"`VolumeId`='{id}'").AsParallel().OrderBy(x => x.PhysicalPageStart).ThenBy(y => y.GlyphStart).ToList();
+            var citations = m_DBService.Select<Citation>($"`VolumeId`='{id}'");
+            Citations = citations.AsParallel().OrderBy(x => x.PhysicalPageStart).ThenBy(y => y.GlyphStart).ToList();
         }
 
         #region References =========================================================================
@@ -77,29 +80,75 @@ namespace Dek.Bel.DB
             return GetReference(Pages, physicalPage, glyph);
         }
 
-        public int GetPageNumber(int physicalPage, int glyph = 0)
+        public int GetPageNumber(int physicalPage)
         {
-            Page page = GetReference(Pages, physicalPage, glyph);
+            return GetPageNumber(Pages, physicalPage);
+        }
+
+        public int GetPageNumber(List<Page> pages, int physicalPage)
+        {
+            Page page = GetReference(pages, physicalPage, 1);
             if (page == null)
                 return physicalPage;
 
-            if(physicalPage == page.PhysicalPage)
-                return page.PaginationStart + (glyph > page.Glyph ? 1 : 0);
+            if (physicalPage == page.PhysicalPage)
+                return page.PaginationStart;// + (glyph > page.Glyph ? 1 : 0);
 
             int offset = physicalPage - page.PhysicalPage;
-            return page.PaginationStart + offset;
+            return (offset > 0) ? page.PaginationStart + offset : physicalPage; // Only return for values after first pagination ref
         }
 
-        private T GetReference<T>(List<T> references, int physicalPage, int glyph) where T : Reference
+        public static int GetPageNumberForVolume(Id volumeId, List<Page> pages, int physicalPage)
+        {
+            Page page = GetReferenceForVolume(volumeId, pages, physicalPage, 1);
+            if (page == null)
+                return physicalPage;
+
+            if (physicalPage == page.PhysicalPage)
+                return page.PaginationStart;// + (glyph > page.Glyph ? 1 : 0);
+
+            int offset = physicalPage - page.PhysicalPage;
+            return (offset > 0) ? page.PaginationStart + offset : physicalPage; // Only return for values after first pagination ref
+        }
+
+        public T GetReference<T>(List<T> references, int physicalPage, int glyph) where T : Reference
         {
             if (references == null || references.Count == 0)
                 return null;
 
-            var lastref = references.First();
+            List<T> orderedReferences = references.OrderBy(x => x).ToList();
+
+            var lastref = orderedReferences.First();
             int idx = 1;
-            while (idx < references.Count)
+            while (idx < orderedReferences.Count)
             {
-                var cur = references[idx++];
+                var cur = orderedReferences[idx++];
+                if (cur.PhysicalPage > physicalPage || (cur.PhysicalPage == physicalPage && cur.Glyph > glyph))
+                    break;
+
+                lastref = cur;
+            }
+
+            return lastref;
+        }
+
+        public static T GetReferenceForVolume<T>(Id volumeId, List<T> references, int physicalPage, int glyph) where T : Reference
+        {
+            if (references == null || references.Count == 0)
+                return null;
+
+            List<T> orderedReferences = references
+                .Where(v => v.VolumeId == volumeId)
+                .OrderBy(x => x).ToList();
+
+            if (orderedReferences  == null || orderedReferences.Count == 0)
+                return null;
+
+            var lastref = orderedReferences.FirstOrDefault();
+            int idx = 1;
+            while (idx < orderedReferences.Count)
+            {
+                var cur = orderedReferences[idx++];
                 if (cur.PhysicalPage > physicalPage || (cur.PhysicalPage == physicalPage && cur.Glyph > glyph))
                     break;
 

@@ -16,6 +16,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Dek.Bel.Services.Report;
 
 namespace Dek.Bel
 {
@@ -33,7 +34,7 @@ namespace Dek.Bel
         [Import] public ModelsForViewing VM { get; set; }
         [Import] public VolumeService m_VolumeService { get; set; }
         [Import] public ICategoryService m_CategoryService { get; set; }
-        [Import] public IUserSettingsService UserSettingsService { get; set; }
+        [Import] public IUserSettingsService m_UserSettingsService { get; set; }
         [Import] public IDBService m_DBService { get; set; }
         [Import] public CategoryRepo m_CategoryRepo { get; set; }
         private StorageService m_StorageService { get; } = new StorageService();
@@ -172,16 +173,24 @@ namespace Dek.Bel
 
             LoadCategoryControl();
             LoadReferences();
+
+            // Set pdf colors
+            label_PdfHighlightColor.BackColor = m_UserSettingsService.PdfHighLightColor;
+            label_PdfUnderLineColor.ForeColor = m_UserSettingsService.PdfUnderlineColor;
+
         }
 
         void LoadCategoryControl()
         {
             flowLayoutPanel_Categories.Controls.Clear();
-            var cgs = m_CategoryService.GetCitationCategories(VM.CurrentCitation.Id);
+            var cgs = m_CategoryService.CitationCategories(VM.CurrentCitation.Id);
             var categories = m_CategoryService.Categories;
 
             foreach (var cg in cgs)
             {
+                if (cg.CategoryId.IsNull)
+                    continue;
+
                 Category cat = categories.SingleOrDefault(x => x.Id == cg.CategoryId);
                 if(cat != null)
                     AddCategoryLabel(cg, cat);
@@ -203,8 +212,8 @@ namespace Dek.Bel
             textBox_Paragraph.Text = m_VolumeService.GetParagraph(VM.CurrentCitation.PhysicalPageStart, VM.CurrentCitation.GlyphStart)?.Title ?? "-";
 
             // Page
-            int startPage = m_VolumeService.GetPageNumber(VM.CurrentCitation.PhysicalPageStart, VM.CurrentCitation.GlyphStart);
-            int stopPage = m_VolumeService.GetPageNumber(VM.CurrentCitation.PhysicalPageStop, VM.CurrentCitation.GlyphStop);
+            int startPage = m_VolumeService.GetPageNumber(VM.CurrentCitation.PhysicalPageStart);
+            int stopPage = m_VolumeService.GetPageNumber(VM.CurrentCitation.PhysicalPageStop);
             label_citationStart.Text = $"Page: {startPage} (physical page: {VM.CurrentCitation.PhysicalPageStart}), Character: {VM.CurrentCitation.GlyphStart}";
             label_CitationStop.Text = $"Page: {stopPage} (physical page: {VM.CurrentCitation.PhysicalPageStop}), Character: {VM.CurrentCitation.GlyphStop}";
         }
@@ -257,7 +266,7 @@ namespace Dek.Bel
 
         private void BelGui_Load(object sender, EventArgs e)
         {
-            Font font = UserSettingsService.CitationFont;
+            Font font = m_UserSettingsService.CitationFont;
 
             richTextBox1.Font = font;
             richTextBox2.Font = font;
@@ -270,7 +279,7 @@ namespace Dek.Bel
             {
                 richTextBox1.Font = fontDialog1.Font;
                 richTextBox2.Font = fontDialog1.Font;
-                UserSettingsService.CitationFont = fontDialog1.Font;
+                m_UserSettingsService.CitationFont = fontDialog1.Font;
             }
         }
 
@@ -281,7 +290,7 @@ namespace Dek.Bel
             Font newFont = new Font(f.FontFamily, f.Size * (1 + FontScaleFactor), f.Style, f.Unit);
             richTextBox1.Font = newFont;
             richTextBox2.Font = newFont;
-            UserSettingsService.CitationFont = newFont;
+            m_UserSettingsService.CitationFont = newFont;
         }
 
         private void toolStripButton4_Click(object sender, EventArgs e)
@@ -291,7 +300,7 @@ namespace Dek.Bel
             Font newFont = new Font(f.FontFamily, size, f.Style, f.Unit);
             richTextBox1.Font = newFont;
             richTextBox2.Font = newFont;
-            UserSettingsService.CitationFont = newFont;
+            m_UserSettingsService.CitationFont = newFont;
         }
 
 
@@ -467,10 +476,14 @@ namespace Dek.Bel
             }
 
             listBox1.Items.Clear();
+            var citCats = m_CategoryService.CitationCategories(VM.CurrentCitation.Id);
             var cats = m_CategoryService.Categories
                 .Where(x => 
                 x.Code.ToLower().Contains(textbox.Text.ToLower()) 
-                || x.Name.ToLower().Contains(textbox.Text.ToLower())).ToList();
+                || x.Name.ToLower().Contains(textbox.Text.ToLower()))
+                .Where(c => c.Id != Id.Null)
+                .Where(d => !citCats.Any(f => f.CategoryId == d.Id))
+                .ToList();
 
             if (cats.Count < 1 || textbox.Text.Length < 2)
             {
@@ -492,12 +505,20 @@ namespace Dek.Bel
             }
         }
 
+
+        // Add category
         private void listBox1_Click(object sender, EventArgs e)
         {
             if (!(listBox1.SelectedItem is Category cat))
                 return;
 
-            bool isMain = flowLayoutPanel_Categories.Controls.Count == 0;
+            bool hasNullCategory = m_CategoryService.CitationCategories(VM.CurrentCitation.Id).Any(x => x.CitationId == Id.Null);
+            bool hasMainCategory = m_CategoryService.CitationCategories(VM.CurrentCitation.Id).Any(x => x.IsMain);
+
+            //bool hasNullCategory = flowLayoutPanel_Categories.Controls.Count == 1
+            //    && ((CitationCategory)((Label)flowLayoutPanel_Categories.Controls[0]).Tag).CategoryId == Id.Null;
+
+            bool isMain = (flowLayoutPanel_Categories.Controls.Count == 0) || hasNullCategory || !hasMainCategory;
 
             m_CategoryService.AddCategoryToCitation(VM.CurrentCitation.Id, cat.Id, int.Parse((comboBox_CategoryWeight.SelectedItem as string)??"1"), isMain);
             LoadCategoryControl();
@@ -596,42 +617,46 @@ namespace Dek.Bel
 
         private void toolStripButton7_Click(object sender, EventArgs e)
         {
+            if (VM.CurrentCitation.Citation3.Length > 0)
+                if (m_MessageboxService.ShowYesNo("Edited citation will be overwritten. Continue?", "Citation not empty") == DialogResult.No)
+                    return;
+
             m_CitationManipulationService.BeginEdit();
         }
 
         /// <summary>
         /// Copies rtf 1 -> rtf 2
         /// </summary>
-        public void BeginEdit()
-        {
-            // Begin edit - e.g copy rtf2 to rtf3
-            string text = VM.CurrentCitation.Citation2;
-            StringBuilder sb = new StringBuilder();
-            bool excluded = false;
-            for (int i = 0; i < text.Length; i++)
-            {
-                if (!VM.Exclusion.ContainsInteger(i) && excluded)
-                {
-                    excluded = false;
-                    sb.Append(" ");
-                    sb.Append(UserSettingsService.DeselectionMarker);
-                    sb.Append(" ");
-                }
+        //public void BeginEdit()
+        //{
+        //    // Begin edit - e.g copy rtf2 to rtf3
+        //    string text = VM.CurrentCitation.Citation2;
+        //    StringBuilder sb = new StringBuilder();
+        //    bool excluded = false;
+        //    for (int i = 0; i < text.Length; i++)
+        //    {
+        //        if (!VM.Exclusion.ContainsInteger(i) && excluded)
+        //        {
+        //            excluded = false;
+        //            sb.Append(" ");
+        //            sb.Append(m_UserSettingsService.DeselectionMarker);
+        //            sb.Append(" ");
+        //        }
 
-                if (VM.Exclusion.ContainsInteger(i))
-                {
-                    excluded = true;
-                    continue;
-                }
+        //        if (VM.Exclusion.ContainsInteger(i))
+        //        {
+        //            excluded = true;
+        //            continue;
+        //        }
 
-                sb.Append(text[i]);
-            }
+        //        sb.Append(text[i]);
+        //    }
 
-            VM.CurrentCitation.Citation3 = sb.ToString();
-            m_DBService.InsertOrUpdate(VM.CurrentCitation);
-            LoadControls();
+        //    VM.CurrentCitation.Citation3 = sb.ToString();
+        //    m_DBService.InsertOrUpdate(VM.CurrentCitation);
+        //    LoadControls();
 
-        }
+        //}
 
         private void toolStripButton8_Click(object sender, EventArgs e)
         {
@@ -702,26 +727,19 @@ namespace Dek.Bel
             //PdfService.ManipulatePdf(Path.Combine(UserSettingsService.StorageFolder, VM.CurrentStorage.StorageName), VM.CurrentCitation.SelectionRects);
         }
 
+
+        // Write Pdf
         private void Button2_Click(object sender, EventArgs e)
         {
-            var mainCitCat = m_CategoryService.GetCitationCategories(VM.CurrentCitation.Id).Where(x => x.IsMain).SingleOrDefault();
-            if (mainCitCat == null)
-            {
-                if (m_MessageboxService.ShowYesNo("Create uncategorized citation?", "Category not set") == DialogResult.No)
-                    return;
+            var mainCitCat = m_CategoryService.GetMainCitationCategory(VM.CurrentCitation.Id);
+            var mainCategory = m_CategoryService.GetMainCategory(VM.CurrentCitation.Id);
 
-                mainCitCat = new CitationCategory
-                {
-                    CategoryId = Id.Empty,
-                    IsMain = false,
-                    CitationId = VM.CurrentCitation.Id,
-                    Weight = 0,
-                };
-                m_DBService.InsertOrUpdate(mainCitCat);
+            if (mainCategory.Id == Id.Null)
+            {
+                if (m_MessageboxService.ShowYesNo("Write uncategorized citation to pdf?", "Main category not set") == DialogResult.No)
+                    return;
             }
-            var mainCategory = (mainCitCat != null) 
-                ? m_CategoryService.Categories.Where(x => x.Id == mainCitCat.CategoryId).SingleOrDefault()
-                : null;
+            
             PdfService.AddCitationToPdfDoc(VM.CurrentStorage.StorageName, VM.CurrentCitation.PhysicalPageStart, mainCategory, mainCitCat, VM.CurrentCitation.SelectionRects);
         }
 
@@ -763,7 +781,7 @@ namespace Dek.Bel
             if (!(sender is ToolStripMenuItem item))
                 return;
 
-            UserSettingsService.BoldEmphasis = item.Checked;
+            m_UserSettingsService.BoldEmphasis = item.Checked;
             LoadControls();
         }
 
@@ -775,7 +793,7 @@ namespace Dek.Bel
             if (!(sender is ToolStripMenuItem item))
                 return;
 
-            UserSettingsService.UnderlineEmphasis = item.Checked;
+            m_UserSettingsService.UnderlineEmphasis = item.Checked;
             LoadControls();
 
         }
@@ -849,9 +867,35 @@ namespace Dek.Bel
         // Pops up Edit Raw Citation window
         private void EditRawCitationToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            RawCitationEditor rced = new RawCitationEditor(VM, UserSettingsService.CitationFont);
+            RawCitationEditor rced = new RawCitationEditor(VM, m_UserSettingsService.CitationFont);
             rced.Show();
             LoadControls();
+        }
+
+
+
+        private void Label_PdfHighlightColor_Click(object sender, EventArgs e)
+        {
+            colorDialog1.Color = m_UserSettingsService.PdfHighLightColor;
+            colorDialog1.ShowDialog();
+            m_UserSettingsService.PdfHighLightColor = colorDialog1.Color;
+            label_PdfHighlightColor.BackColor = m_UserSettingsService.PdfHighLightColor;
+        }
+
+        private void Label_PdfUnderLineColor_Click(object sender, EventArgs e)
+        {
+            colorDialog1.Color = m_UserSettingsService.PdfUnderlineColor;
+            colorDialog1.ShowDialog();
+            m_UserSettingsService.PdfUnderlineColor= colorDialog1.Color;
+            label_PdfUnderLineColor.ForeColor = m_UserSettingsService.PdfUnderlineColor;
+        }
+
+
+        // Generate report
+        private void ToolStripMenuItem_Report_Click(object sender, EventArgs e)
+        {
+            Form_Report fr = new Form_Report();
+            fr.Show();
         }
 
 

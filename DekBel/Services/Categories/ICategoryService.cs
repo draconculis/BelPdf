@@ -8,22 +8,27 @@ namespace Dek.Bel.Services
 {
     public interface ICategoryService
     {
-        IEnumerable<Category> Categories { get; }
+        // When set of categories change
         event EventHandler<CategoryEventArgs> CategoryUpdated;
 
+        IEnumerable<Category> Categories { get; }
+        List<CitationCategory> CitationCategories(Id citationId);
+
         Category InsertOrUpdate(Category cat);
-        void InsertOrUpdate(string code, string name, string desc);
+        Category InsertOrUpdate(string code, string name, string desc);
         void Remove(Category cat);
 
         void AddCategoryToCitation(Id citationId, Id categoryId, int weight, bool isMain);
         void SetMainCategory(CitationCategory citationCategory);
+        Category GetMainCategory(string citationId);
+        Category GetMainCategory(Id citationId);
+        CitationCategory GetMainCitationCategory(string citationId);
+        CitationCategory GetMainCitationCategory(Id citationId);
         void SetWeight(Id citationId, Id categoryId, int weight);
-        List<CitationCategory> GetCitationCategories(Id citationId);
 
         Label CreateCategoryLabelControl(CitationCategory citCat, Category cat, ContextMenuStrip menu, ToolTip toolTip);
         void ClearMainStyleFromLabels(IEnumerable<Label> labels);
         void SetMainStyleOnLabel(Label label);
         void ClearMainStyleOnLabel(Label label);
-        
     }
 }

@@ -94,6 +94,14 @@ namespace Dek.Bel.Services
             if (!pageRects.Any())
                 return;
 
+            //Color color_highLight = new DeviceRgb(0.5f, 1.0f, 1.0f);
+            //Color color_underLine = new DeviceRgb(1.0f, 0.4f, 0.4f);
+            System.Drawing.Color c;
+            c = m_UserSettingsService.PdfHighLightColor;
+            Color color_highLight = new DeviceRgb(n(c.R), n(c.G), n(c.B));
+            c = m_UserSettingsService.PdfHighLightColor;
+            Color color_underLine = new DeviceRgb(n(c.R), n(c.G), n(c.B));
+
             foreach (var pageRect in pageRects)
             {
                 //int currentPage = pageRects.First().page;
@@ -115,10 +123,8 @@ namespace Dek.Bel.Services
 
                     //canvas.SaveState();
 
-                    Color color1 = new DeviceRgb(0.5f, 1.0f, 1.0f);
-                    Color color2 = new DeviceRgb(1.0f, 0.4f, 0.4f);
-                    canvas1.SetFillColor(color1);
-                    canvas2.SetFillColor(color2);
+                    canvas1.SetFillColor(color_highLight);
+                    canvas2.SetFillColor(color_underLine);
 
                     do //(int i = 0; i < rects.Length; i += 4)
                     {
@@ -292,6 +298,15 @@ namespace Dek.Bel.Services
             return new DekRange(min, max);
         }
 
+        /// <summary>
+        /// Normalize byte to float
+        /// </summary>
+        /// <param name="b"></param>
+        /// <returns></returns>
+        private float n(byte b)
+        {
+            return (b == 0) ? 0f : (float)b / 255;
+        }
 
         /*
          

@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(RawCitationEditor));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.label1 = new System.Windows.Forms.Label();
             this.textBox1 = new System.Windows.Forms.TextBox();
@@ -126,7 +127,7 @@
             this.textBox2.Multiline = true;
             this.textBox2.Name = "textBox2";
             this.textBox2.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textBox2.Size = new System.Drawing.Size(926, 245);
+            this.textBox2.Size = new System.Drawing.Size(926, 244);
             this.textBox2.TabIndex = 1;
             this.textBox2.TextChanged += new System.EventHandler(this.TextBox2_TextChanged);
             // 
@@ -143,21 +144,21 @@
             // fixGreekToolStripMenuItem
             // 
             this.fixGreekToolStripMenuItem.Name = "fixGreekToolStripMenuItem";
-            this.fixGreekToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.fixGreekToolStripMenuItem.Size = new System.Drawing.Size(121, 22);
             this.fixGreekToolStripMenuItem.Text = "Fix Greek";
             this.fixGreekToolStripMenuItem.Click += new System.EventHandler(this.FixGreekToolStripMenuItem_Click);
             // 
             // undoToolStripMenuItem
             // 
             this.undoToolStripMenuItem.Name = "undoToolStripMenuItem";
-            this.undoToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.undoToolStripMenuItem.Size = new System.Drawing.Size(121, 22);
             this.undoToolStripMenuItem.Text = "Undo";
             this.undoToolStripMenuItem.Click += new System.EventHandler(this.UndoToolStripMenuItem_Click);
             // 
             // copyToolStripMenuItem
             // 
             this.copyToolStripMenuItem.Name = "copyToolStripMenuItem";
-            this.copyToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.copyToolStripMenuItem.Size = new System.Drawing.Size(121, 22);
             this.copyToolStripMenuItem.Text = "Copy";
             // 
             // button_Close
@@ -191,6 +192,7 @@
             this.Controls.Add(this.button_Close);
             this.Controls.Add(this.splitContainer1);
             this.Font = new System.Drawing.Font("Corbel", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "RawCitationEditor";
             this.Text = "RawCitationEditor";
             this.splitContainer1.Panel1.ResumeLayout(false);

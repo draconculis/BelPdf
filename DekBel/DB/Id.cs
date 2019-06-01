@@ -7,7 +7,7 @@ using Dek.Cls;
 
 namespace Dek.Bel.DB
 {
-    public struct Id : IEquatable<Id>
+    public struct Id : IEquatable<Id>, IComparable
     {
         public static Id Empty { get; } = new Id(Guid.Empty);
         public static Id Null => Empty;
@@ -54,6 +54,11 @@ namespace Dek.Bel.DB
         public override int GetHashCode()
         {
             return -1937169414 + EqualityComparer<Guid>.Default.GetHashCode(Value);
+        }
+
+        public int CompareTo(object obj)
+        {
+            return Value.ToString().CompareTo(((Id)obj).ToString());
         }
 
         public static bool operator ==(Id a, Id b)

@@ -37,7 +37,7 @@ namespace Dek.Bel.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("…")]
+        [global::System.Configuration.DefaultSettingValueAttribute("[…]")]
         public string DeselectionMarker {
             get {
                 return ((string)(this["DeselectionMarker"]));
@@ -80,6 +80,42 @@ namespace Dek.Bel.Properties {
             }
             set {
                 this["BoldEmphasis"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("192, 0, 0")]
+        public global::System.Drawing.Color PdfUnderlineColor {
+            get {
+                return ((global::System.Drawing.Color)(this["PdfUnderlineColor"]));
+            }
+            set {
+                this["PdfUnderlineColor"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("128, 255, 255")]
+        public global::System.Drawing.Color PdfHighLightColor {
+            get {
+                return ((global::System.Drawing.Color)(this["PdfHighLightColor"]));
+            }
+            set {
+                this["PdfHighLightColor"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool ShowDebugMessages {
+            get {
+                return ((bool)(this["ShowDebugMessages"]));
+            }
+            set {
+                this["ShowDebugMessages"] = value;
             }
         }
     }

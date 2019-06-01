@@ -416,7 +416,7 @@ namespace Dek.Bel.DB
                         command.CommandText = $"CREATE TABLE `{tablename}` ({columnDesc}, PRIMARY KEY({primaryKey})) ";
                     }
 
-                    m_MessageboxService.Show(command.CommandText);
+                    m_MessageboxService.Debug(command.CommandText);
                     command.ExecuteNonQuery();
                 }
             }
@@ -651,20 +651,20 @@ namespace Dek.Bel.DB
                 {
                     m_dbConnection.Open();
                     command.CommandText = $"INSERT INTO {tablename} ({columns}) VALUES ({values})";
-                    m_MessageboxService.Show(command.CommandText);
+                    m_MessageboxService.Debug(command.CommandText);
                     command.ExecuteNonQuery();
                 }
             }
             catch (SQLiteException sqlex)
             {
                 Console.WriteLine($"{sqlex}");
-                m_MessageboxService.Show($"{sqlex}");
+                m_MessageboxService.Debug($"{sqlex}");
 
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"{ex}");
-                m_MessageboxService.Show($"{ex}");
+                m_MessageboxService.Debug($"{ex}");
             }
             finally
             {
@@ -726,11 +726,11 @@ namespace Dek.Bel.DB
             }
             catch (SQLiteException sqlex)
             {
-                m_MessageboxService.Show($"{sqlex}");
+                m_MessageboxService.Debug($"{sqlex}");
             }
             catch (Exception ex)
             {
-                m_MessageboxService.Show($"{ex}");
+                m_MessageboxService.Debug($"{ex}");
             }
             finally
             {

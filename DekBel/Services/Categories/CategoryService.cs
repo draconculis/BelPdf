@@ -6,8 +6,6 @@ using System.ComponentModel.Composition;
 using System.Data;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Dek.Bel.Services
@@ -44,7 +42,7 @@ namespace Dek.Bel.Services
           Categories
         */
 
-        public void InsertOrUpdate(string code, string name, string desc) => InsertOrUpdate(new Category { Name = name, Code = code, Description = desc });
+        public Category InsertOrUpdate(string code, string name, string desc) => InsertOrUpdate(new Category { Name = name, Code = code, Description = desc });
 
         /// <summary>
         /// Add a new category. If Id not provided, generate new. Returns cat (with new Id).
@@ -99,6 +97,9 @@ namespace Dek.Bel.Services
             };
 
             m_DBService.InsertOrUpdate(cg);
+
+            if(categoryId != Id.Null)
+                RemoveUncategorizedForCitation(citationId);
         }
 
         //public void SetMainCategory(Id citationId, Id categoryId)
@@ -128,7 +129,7 @@ namespace Dek.Bel.Services
 
         public void SetMainCategory(CitationCategory citationCategory)
         {
-            var cgs = GetCitationCategories(citationCategory.CitationId);
+            var cgs = CitationCategories(citationCategory.CitationId);
             if (cgs == null || cgs.Count < 1)
                 return;
 
@@ -141,26 +142,76 @@ namespace Dek.Bel.Services
 
             citationCategory.IsMain = true;
             m_DBService.InsertOrUpdate(citationCategory);
+
+            // We have now set a main category. If this category != Uncategorized, remove refs to Uncategorized
+            RemoveUncategorizedForCitation(citationCategory.CitationId);
+        }
+
+        /// <summary>
+        /// Please note - will return uncategorized if not found, never null
+        /// </summary>
+        public Category GetMainCategory(string citationId) => GetMainCategory(new Id(citationId));
+        public Category GetMainCategory(Id citationId)
+        {
+            CitationCategory mainCitCat = GetMainCitationCategory(citationId);
+            return Categories.Single(x => x.Id == mainCitCat.CategoryId);
+        }
+
+        /// <summary>
+        /// Please note - will return uncategorized if not found, never null
+        /// </summary>
+        public CitationCategory GetMainCitationCategory(string citationId) => GetMainCitationCategory(new Id(citationId));
+        public CitationCategory GetMainCitationCategory(Id citationId)
+        {
+            var cgs = CitationCategories(citationId);
+            var mainCitCat = cgs.SingleOrDefault(x => x.IsMain);
+            if (mainCitCat == null)
+            {
+                mainCitCat = new CitationCategory
+                {
+                    CategoryId = Id.Empty,
+                    IsMain = true,
+                    CitationId = citationId,
+                    Weight = 0,
+                };
+                m_DBService.InsertOrUpdate(mainCitCat);
+            }
+            return mainCitCat;
         }
 
         public void SetWeight(Id citationId, Id categoryId, int weight)
         {
-            var cg = GetCitationCategories(citationId).SingleOrDefault(x => x.CitationId == citationId && x.CategoryId == categoryId);
+            var cg = CitationCategories(citationId).SingleOrDefault(x => x.CitationId == citationId && x.CategoryId == categoryId);
             cg.Weight = weight;
 
             m_DBService.InsertOrUpdate(cg);
         }
 
-        public List<CitationCategory> GetCitationCategories(Id citationId)
-        {
-            List<CitationCategory> cgs = m_DBService.Select<CitationCategory>($"`CitationId` = '{citationId}'");
+        public List<CitationCategory> CitationCategories(Id citationId) => 
+            m_DBService.Select<CitationCategory>($"`CitationId` = '{citationId}'");
 
-            return cgs;
+
+        //public void ClearNullCategoriesFromCitation(Id citationId)
+        //{
+        //    var citCats = CitationCategories(citationId).Where(x => x.CitationId == citationId && x.CategoryId == Id.Null);
+        //    foreach(CitationCategory citCat in citCats)
+        //    {
+        //        m_DBService.Delete(citCat);
+        //    }
+        //}
+
+        private void RemoveUncategorizedForCitation(Id citationId)
+        {
+            if (CitationCategories(citationId).Any(x => x.CategoryId == Id.Null))
+                m_DBService.Delete<CitationCategory>($"`CitationId`='{citationId}' and `CategoryId`='{Id.Null}'");
         }
+
 
         /**************************************************************
           Labels 
-        */
+        ***************************************************************/
+
+        #region Labels
 
         Color labelColor = Color.Moccasin;
         Color labelColorMouseOver = Color.Orange;
@@ -179,7 +230,7 @@ namespace Dek.Bel.Services
             if (citCat.IsMain)
                 SetMainStyleOnLabel(l);
             l.Tag = citCat;
-            toolTip.SetToolTip(l, cat.Name);
+            toolTip.SetToolTip(l, cat.Name + Environment.NewLine + cat.Description);
             return l;
         }
 
@@ -221,5 +272,7 @@ namespace Dek.Bel.Services
         {
             label.BorderStyle = m_DefaultBorderStyle;
         }
+
+        #endregion Labels
     }
 }

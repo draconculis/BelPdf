@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using OfficeOpenXml; // EPPlus
 
-namespace Dek.Bel.Services
+namespace Dek.Bel.Services.Export
 {
     [Export(typeof(IExporter))]
     public class ExcelExporter : IExporter

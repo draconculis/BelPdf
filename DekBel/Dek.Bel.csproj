@@ -26,7 +26,7 @@
     <InheritWinAppVersionFrom>None</InheritWinAppVersionFrom>
     <AssemblyInfoFilePath>Properties\AssemblyVersion.cs</AssemblyInfoFilePath>
     <PrimaryVersionType>AssemblyVersionAttribute</PrimaryVersionType>
-    <AssemblyVersion>0.3.139</AssemblyVersion>
+    <AssemblyVersion>0.3.188</AssemblyVersion>
     <AssemblyFileVersionSettings>IncrementOnDemand.IncrementOnDemand.IncrementWithResetOnIncrease.None</AssemblyFileVersionSettings>
     <AssemblyInfoVersionSettings>IncrementOnDemand.IncrementOnDemand.IncrementWithResetOnIncrease.None</AssemblyInfoVersionSettings>
   </PropertyGroup>
@@ -150,10 +150,10 @@
     <Compile Include="Models\SubChapter.cs" />
     <Compile Include="Models\Reference.cs" />
     <Compile Include="Properties\AssemblyVersion.cs" />
-    <Compile Include="Reference\Form_AddReference.cs">
+    <Compile Include="Services\Reference\Form_AddReference.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Reference\Form_AddReference.Designer.cs">
+    <Compile Include="Services\Reference\Form_AddReference.Designer.cs">
       <DependentUpon>Form_AddReference.cs</DependentUpon>
     </Compile>
     <Compile Include="Services\Categories\CategoryEventArgs.cs" />
@@ -161,10 +161,10 @@
     <Compile Include="Cls\DateTime.cs" />
     <Compile Include="Cls\RichTextExtensions.cs" />
     <Compile Include="Services\CitationService.cs" />
-    <Compile Include="Services\CsvExporter.cs" />
-    <Compile Include="Services\ExcelExporter.cs" />
-    <Compile Include="Services\ExporterProvider.cs" />
-    <Compile Include="Services\IExporter.cs" />
+    <Compile Include="Services\Export\CsvExporter.cs" />
+    <Compile Include="Services\Export\ExcelExporter.cs" />
+    <Compile Include="Services\Export\ExporterProvider.cs" />
+    <Compile Include="Services\Export\IExporter.cs" />
     <Compile Include="Services\IMessageboxService.cs" />
     <Compile Include="Services\MessageboxService.cs" />
     <Compile Include="Form_RawCitationEditor.cs">
@@ -174,7 +174,15 @@
       <DependentUpon>Form_RawCitationEditor.cs</DependentUpon>
     </Compile>
     <Compile Include="Services\ReferenceService.cs" />
-    <Compile Include="Services\Report.cs" />
+    <Compile Include="Services\Report\Form_Report.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Services\Report\Form_Report.Designer.cs">
+      <DependentUpon>Form_Report.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Services\Report\Models\ReportModel.cs" />
+    <Compile Include="Services\Report\ReportDataCache.cs" />
+    <Compile Include="Services\Report\ReportService.cs" />
     <Compile Include="Services\RichTextService.cs" />
     <Compile Include="DB\HistoryRepo.cs" />
     <Compile Include="DB\Id.cs" />
@@ -256,7 +264,7 @@
     <EmbeddedResource Include="FormVolume.resx">
       <DependentUpon>FormVolume.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Reference\Form_AddReference.resx">
+    <EmbeddedResource Include="Services\Reference\Form_AddReference.resx">
       <DependentUpon>Form_AddReference.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Services\Categories\FormCategoryEdit.resx">
@@ -274,6 +282,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Form_RawCitationEditor.resx">
       <DependentUpon>Form_RawCitationEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Services\Report\Form_Report.resx">
+      <DependentUpon>Form_Report.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
@@ -303,11 +314,7 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Dto\" />
-    <Folder Include="Services\ReportingModels\" />
-    <Folder Include="Wpf\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

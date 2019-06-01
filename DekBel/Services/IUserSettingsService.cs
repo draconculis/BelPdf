@@ -4,6 +4,7 @@ namespace Dek.Bel.Services
 {
     public interface IUserSettingsService
     {
+        bool ShowDebugMessages { get; set; }
         string StorageFolder { get; set; }
         string DBName { get; }
         string DBPath { get; }
@@ -11,5 +12,7 @@ namespace Dek.Bel.Services
         Font CitationFont { get; set; }
         bool BoldEmphasis { get; set; }
         bool UnderlineEmphasis { get; set; }
+        Color PdfHighLightColor { get; set; }
+        Color PdfUnderlineColor { get; set; }
     }
 }
