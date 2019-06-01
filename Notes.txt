@@ -1,0 +1,5 @@
+pdfDoc.GetPage(33).GetAnnotations().First().SetName(new PdfString("Hello"))
+pdfDoc.GetPage(33).GetAnnotations().First(x => x.GetName().ToString() == "Hello")
+
+PdfName.Link.Equals(annotation.GetAsName(PdfName.Subtype))
+

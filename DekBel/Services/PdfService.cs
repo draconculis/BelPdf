@@ -32,7 +32,9 @@ namespace Dek.Bel.Services
     [Export]
     public class PdfService
     {
+
         [Import] public IUserSettingsService m_UserSettingsService { get; set; }
+        [Import] public ICategoryService m_CategoryService { get; set; }
         [Import] public IMessageboxService m_MessageboxService { get; set; }
         [Import] public TempFileService m_TempFileService { get; set; }
 
@@ -78,6 +80,11 @@ namespace Dek.Bel.Services
 
         }
 
+
+        /*
+         pdfDoc.GetPage(33).GetAnnotations().First().SetName(new PdfString("Hello"))
+         pdfDoc.GetPage(33).GetAnnotations().First(x => x.GetName().ToString() == "Hello")
+        */
         public void AddCitationToPdfDoc(String storageFileName, int physicalPage, Category cat, CitationCategory citCat, string rectsString)
         {
             if (citCat == null)
@@ -87,77 +94,86 @@ namespace Dek.Bel.Services
                 citCat.CategoryId = Id.Empty;
 
             string storageFilePath = System.IO.Path.Combine(m_UserSettingsService.StorageFolder, storageFileName);
-            string tmpFileName = m_TempFileService.GetNewTmpFileName(storageFileName);
 
-            PdfDocument pdfDoc = new PdfDocument(new PdfReader(storageFilePath), new PdfWriter(tmpFileName));
             List<(int page, int[] rects)> pageRects = ArrayStuff.ConvertStringToPagesAndArrays(rectsString);
-            if (!pageRects.Any())
-                return;
 
-            //Color color_highLight = new DeviceRgb(0.5f, 1.0f, 1.0f);
-            //Color color_underLine = new DeviceRgb(1.0f, 0.4f, 0.4f);
-            System.Drawing.Color c;
-            c = m_UserSettingsService.PdfHighLightColor;
-            Color color_highLight = new DeviceRgb(n(c.R), n(c.G), n(c.B));
-            c = m_UserSettingsService.PdfHighLightColor;
-            Color color_underLine = new DeviceRgb(n(c.R), n(c.G), n(c.B));
+            // Remove existing annot
+            int firstPageNo = GetFirstPageFromPageRects(pageRects);
+            bool annotExists = RemoveAnnotation(storageFileName, firstPageNo, citCat.CitationId.ToString());
 
-            foreach (var pageRect in pageRects)
+            string tmpFileName = m_TempFileService.GetNewTmpFileName(storageFileName);
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(storageFilePath), new PdfWriter(tmpFileName));
+
+            //PdfAnnotation existingAnnot = pdfDoc.GetPage(firstPageNo).GetAnnotations().FirstOrDefault(x => x.GetName()?.ToString() == $"belpdf:{citCat.CitationId}");
+            //bool annotExists = existingAnnot != null;
+            //if (annotExists)
+            //    RemoveAnnotation(pdfDoc, citCat.CitationId.ToString());
+
+            if (!annotExists && pageRects.Any())
             {
-                //int currentPage = pageRects.First().page;
-                int currentPage = pageRect.page;
-                int currentRect = 0;
-                bool notDone = true;
-                do
+                System.Drawing.Color c;
+                c = m_UserSettingsService.PdfHighLightColor;
+                Color color_highLight = new DeviceRgb(n(c.R), n(c.G), n(c.B));
+                c = m_UserSettingsService.PdfHighLightColor;
+                Color color_underLine = new DeviceRgb(n(c.R), n(c.G), n(c.B));
+
+                foreach (var pageRect in pageRects)
                 {
-                    PdfCanvas canvas1 = new PdfCanvas(
-                        pdfDoc.GetPage(currentPage).NewContentStreamBefore(),
-                        pdfDoc.GetPage(currentPage).GetResources(), pdfDoc);
-                    PdfCanvas canvas2 = new PdfCanvas(
-                        pdfDoc.GetPage(currentPage).NewContentStreamAfter(),
-                        pdfDoc.GetPage(currentPage).GetResources(), pdfDoc);
-
-                    Rectangle pageSize = pdfDoc.GetPage(physicalPage).GetPageSize();
-                    int pageHeight = (int)pageSize.GetHeight();
-                    int pageWidth = (int)pageSize.GetWidth();
-
-                    //canvas.SaveState();
-
-                    canvas1.SetFillColor(color_highLight);
-                    canvas2.SetFillColor(color_underLine);
-
-                    do //(int i = 0; i < rects.Length; i += 4)
+                    //int currentPage = pageRects.First().page;
+                    int currentPage = pageRect.page;
+                    int currentRect = 0;
+                    bool notDone = true;
+                    do
                     {
-                        // Below text highlight
-                        canvas1.Rectangle(pageRect.rects[currentRect], pageHeight - pageRect.rects[currentRect + 1] - pageRect.rects[currentRect + 3], pageRect.rects[currentRect + 2], pageRect.rects[currentRect + 3]);
-                        canvas1.Fill();
-                        // Above text underline
-                        canvas2.Rectangle(pageRect.rects[currentRect], pageHeight - pageRect.rects[currentRect + 1] - pageRect.rects[currentRect + 3], pageRect.rects[currentRect + 2], 1);
-                        canvas2.Fill();
+                        PdfCanvas canvas1 = new PdfCanvas(
+                            pdfDoc.GetPage(currentPage).NewContentStreamBefore(),
+                            pdfDoc.GetPage(currentPage).GetResources(), pdfDoc);
+                        PdfCanvas canvas2 = new PdfCanvas(
+                            pdfDoc.GetPage(currentPage).NewContentStreamAfter(),
+                            pdfDoc.GetPage(currentPage).GetResources(), pdfDoc);
 
-                        if (currentRect + 5 > pageRect.rects.Length)
+                        Rectangle pageSize = pdfDoc.GetPage(physicalPage).GetPageSize();
+                        int pageHeight = (int)pageSize.GetHeight();
+                        int pageWidth = (int)pageSize.GetWidth();
+
+                        //canvas.SaveState();
+
+                        canvas1.SetFillColor(color_highLight);
+                        canvas2.SetFillColor(color_underLine);
+
+                        do //(int i = 0; i < rects.Length; i += 4)
                         {
-                            notDone = false;
-                            break;
-                        }
+                            // Below text highlight
+                            canvas1.Rectangle(pageRect.rects[currentRect], pageHeight - pageRect.rects[currentRect + 1] - pageRect.rects[currentRect + 3], pageRect.rects[currentRect + 2], pageRect.rects[currentRect + 3]);
+                            canvas1.Fill();
+                            // Above text underline
+                            canvas2.Rectangle(pageRect.rects[currentRect], pageHeight - pageRect.rects[currentRect + 1] - pageRect.rects[currentRect + 3], pageRect.rects[currentRect + 2], 1);
+                            canvas2.Fill();
 
-                        // Detect page break
-                        int lastY = pageHeight - pageRect.rects[currentRect + 1] - pageRect.rects[currentRect + 3];
-                        currentRect += 4;
-                        int newY = pageHeight - pageRect.rects[currentRect + 1] - pageRect.rects[currentRect + 3];
-                        if (lastY < newY)
-                        {
-                            currentPage++;
-                            break;
-                        }
+                            if (currentRect + 5 > pageRect.rects.Length)
+                            {
+                                notDone = false;
+                                break;
+                            }
 
-                    } while (true);
-                } while (notDone);
+                            // Detect page break
+                            int lastY = pageHeight - pageRect.rects[currentRect + 1] - pageRect.rects[currentRect + 3];
+                            currentRect += 4;
+                            int newY = pageHeight - pageRect.rects[currentRect + 1] - pageRect.rects[currentRect + 3];
+                            if (lastY < newY)
+                            {
+                                currentPage++;
+                                break;
+                            }
+
+                        } while (true);
+                    } while (notDone);
+                }
             }
             //canvas.RestoreState();
 
             // Add annotation
-            AddMarginCategoryTextAnnotation(pdfDoc, physicalPage, citCat.CitationId.ToString(), cat.Code + $" [{citCat.Weight}]", rectsString);
+            AddMarginCategoryTextAnnotation(pdfDoc, null, physicalPage, citCat.CitationId.ToString(), cat.Code + $" [{citCat.Weight}]", rectsString);
 
             pdfDoc.Close();
 
@@ -166,8 +182,97 @@ namespace Dek.Bel.Services
 
         }
 
-        public void AddMarginCategoryTextAnnotation(PdfDocument pdfDoc, int physicalPage, string id, string text, string pageRectsString)
+        public void RecreateTheWholeThing(ModelsForViewing vm, VolumeService volumeService)
         {
+            string origFileName = vm.CurrentStorage.FilePath;
+            string storageFilePath = System.IO.Path.Combine(m_UserSettingsService.StorageFolder, vm.CurrentStorage.StorageName);
+            File.Delete(storageFilePath);
+
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(origFileName), new PdfWriter(storageFilePath));
+
+            foreach (Citation cit in volumeService.Citations)
+            {
+                var cat = m_CategoryService.GetMainCategory(cit.Id);
+                var citCat = m_CategoryService.GetMainCitationCategory(cit.Id);
+
+                if (cat == null)
+                    citCat.CategoryId = Id.Empty;
+
+                List<(int page, int[] rects)> pageRects = ArrayStuff.ConvertStringToPagesAndArrays(cit.SelectionRects);
+                int firstPageNo = GetFirstPageFromPageRects(pageRects);
+
+                if (pageRects.Any())
+                {
+                    System.Drawing.Color c;
+                    c = m_UserSettingsService.PdfHighLightColor;
+                    Color color_highLight = new DeviceRgb(n(c.R), n(c.G), n(c.B));
+                    c = m_UserSettingsService.PdfHighLightColor;
+                    Color color_underLine = new DeviceRgb(n(c.R), n(c.G), n(c.B));
+
+                    foreach (var pageRect in pageRects)
+                    {
+                        //int currentPage = pageRects.First().page;
+                        int currentPage = pageRect.page;
+                        int currentRect = 0;
+                        bool notDone = true;
+                        do
+                        {
+                            PdfCanvas canvas1 = new PdfCanvas(
+                                pdfDoc.GetPage(currentPage).NewContentStreamBefore(),
+                                pdfDoc.GetPage(currentPage).GetResources(), pdfDoc);
+                            PdfCanvas canvas2 = new PdfCanvas(
+                                pdfDoc.GetPage(currentPage).NewContentStreamAfter(),
+                                pdfDoc.GetPage(currentPage).GetResources(), pdfDoc);
+
+                            Rectangle pageSize = pdfDoc.GetPage(firstPageNo).GetPageSize();
+                            int pageHeight = (int)pageSize.GetHeight();
+                            int pageWidth = (int)pageSize.GetWidth();
+
+                            //canvas.SaveState();
+
+                            canvas1.SetFillColor(color_highLight);
+                            canvas2.SetFillColor(color_underLine);
+
+                            do //(int i = 0; i < rects.Length; i += 4)
+                            {
+                                // Below text highlight
+                                canvas1.Rectangle(pageRect.rects[currentRect], pageHeight - pageRect.rects[currentRect + 1] - pageRect.rects[currentRect + 3], pageRect.rects[currentRect + 2], pageRect.rects[currentRect + 3]);
+                                canvas1.Fill();
+                                // Above text underline
+                                canvas2.Rectangle(pageRect.rects[currentRect], pageHeight - pageRect.rects[currentRect + 1] - pageRect.rects[currentRect + 3], pageRect.rects[currentRect + 2], 1);
+                                canvas2.Fill();
+
+                                if (currentRect + 5 > pageRect.rects.Length)
+                                {
+                                    notDone = false;
+                                    break;
+                                }
+
+                                // Detect page break
+                                int lastY = pageHeight - pageRect.rects[currentRect + 1] - pageRect.rects[currentRect + 3];
+                                currentRect += 4;
+                                int newY = pageHeight - pageRect.rects[currentRect + 1] - pageRect.rects[currentRect + 3];
+                                if (lastY < newY)
+                                {
+                                    currentPage++;
+                                    break;
+                                }
+
+                            } while (true);
+                        } while (notDone);
+                    }
+                }
+
+                // Add annotation
+                AddMarginCategoryTextAnnotation(pdfDoc, null, firstPageNo, cit.Id.ToString(), cat.Code + $" [{citCat.Weight}]", cit.SelectionRects);
+            }
+            pdfDoc.Close();
+        }
+
+        public void AddMarginCategoryTextAnnotation(PdfDocument pdfDoc, PdfAnnotation existingAnnot, int physicalPage, string id, string text, string pageRectsString)
+        {
+            bool annotExists = existingAnnot != null;
+
             int boxWidth = 56;
             int boxHeight = 13;
             int boxLeft = 11;
@@ -185,7 +290,7 @@ namespace Dek.Bel.Services
             pdfDoc.GetFirstPage().SetPageLabel(PageLabelNumberingStyle.DECIMAL_ARABIC_NUMERALS, null);
 
             //DekRange margin = GetMargin(pdfDoc, physicalPage, rectsString);
-            PdfPage page = pdfDoc.GetPage(physicalPage);
+
             //PdfCanvas pdfCanvas = new PdfCanvas(pdfDoc, physicalPage);
             //Canvas canvas = new Canvas(pdfCanvas, pdfDoc, rect);
             //Canvas canvas = new Canvas(pdfCanvas, pdfDoc, rect);
@@ -204,9 +309,10 @@ namespace Dek.Bel.Services
             //paragraph.SetFont(font).SetFontSize(9);
 
             //canvas.Add(paragraph);
-
+            Link link = new Link(text, action);
+            link.GetLinkAnnotation().SetName(new PdfString($"belpdf:{id}"));
             var paragraph1 = new iText.Layout.Element.Paragraph()
-                .Add(new Link(text, action))
+                .Add(link)
                 .SetStrokeColor(ColorConstants.BLACK)
                 .SetFontColor(ColorConstants.BLACK)
                 .SetFixedPosition(boxLeft, pageHeight - yCoord - boxHeight, boxWidth) // NB that height is variable
@@ -221,6 +327,41 @@ namespace Dek.Bel.Services
             //canvas.Stroke();
 
             //PdfAnnotation ann = new PdfTextAnnotation(rect);
+        }
+
+        private bool RemoveAnnotation(string storageFileName, int physicalPage, string citationId)
+        {
+            string storageFilePath = System.IO.Path.Combine(m_UserSettingsService.StorageFolder, storageFileName);
+            string tmpFileName = m_TempFileService.GetNewTmpFileName(storageFileName);
+
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(storageFilePath), new PdfWriter(tmpFileName));
+            PdfPage pdfPage = pdfDoc.GetPage(physicalPage);
+            List<PdfAnnotation> annots = pdfPage.GetAnnotations().ToList();
+
+            if (annots == null || annots.Count == 0)
+            {
+                pdfDoc.Close();
+                return false;
+            }
+            else
+            {
+                foreach (PdfAnnotation annot in annots)
+                {
+                    if (annot is PdfLinkAnnotation linkAnnotation)
+                    {
+                        if(linkAnnotation.GetName()?.ToString() == $"belpdf:{citationId}")
+                            pdfPage.RemoveAnnotation(annot);
+                    }
+                }
+            }
+
+            pdfDoc.Close();
+
+            File.Delete(storageFilePath);
+            File.Move(tmpFileName, storageFilePath);
+            File.Delete(tmpFileName);
+
+            return true;
         }
 
         /// <summary>
@@ -253,6 +394,16 @@ namespace Dek.Bel.Services
             }
 
             return (min, max);
+        }
+
+        private int GetFirstPageFromPageRects(List<(int page, int[] rects)> pageRects)
+        {
+            int minPageNo = int.MaxValue;
+            foreach (int pageNo in pageRects.Select(x => x.page))
+                if (pageNo < minPageNo)
+                    minPageNo = pageNo;
+
+            return minPageNo;
         }
 
         /// <summary>

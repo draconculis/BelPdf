@@ -145,6 +145,7 @@
             this.label7 = new System.Windows.Forms.Label();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
+            this.button1 = new System.Windows.Forms.Button();
             this.contextMenuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -591,7 +592,7 @@
             this.exportDBToolStripMenuItem,
             this.closeToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(168, 22);
             this.fileToolStripMenuItem.Text = "File";
             // 
             // exportDBToolStripMenuItem
@@ -609,34 +610,34 @@
             // categoriesToolStripMenuItem
             // 
             this.categoriesToolStripMenuItem.Name = "categoriesToolStripMenuItem";
-            this.categoriesToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.categoriesToolStripMenuItem.Size = new System.Drawing.Size(168, 22);
             this.categoriesToolStripMenuItem.Text = "Categories...";
             this.categoriesToolStripMenuItem.Click += new System.EventHandler(this.categoriesToolStripMenuItem_Click);
             // 
             // authorsToolStripMenuItem
             // 
             this.authorsToolStripMenuItem.Name = "authorsToolStripMenuItem";
-            this.authorsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.authorsToolStripMenuItem.Size = new System.Drawing.Size(168, 22);
             this.authorsToolStripMenuItem.Text = "Authors...";
             // 
             // editRawCitationToolStripMenuItem
             // 
             this.editRawCitationToolStripMenuItem.Name = "editRawCitationToolStripMenuItem";
-            this.editRawCitationToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.editRawCitationToolStripMenuItem.Size = new System.Drawing.Size(168, 22);
             this.editRawCitationToolStripMenuItem.Text = "Edit raw citation...";
             this.editRawCitationToolStripMenuItem.Click += new System.EventHandler(this.EditRawCitationToolStripMenuItem_Click);
             // 
             // closeToolStripMenuItem1
             // 
             this.closeToolStripMenuItem1.Name = "closeToolStripMenuItem1";
-            this.closeToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
+            this.closeToolStripMenuItem1.Size = new System.Drawing.Size(168, 22);
             this.closeToolStripMenuItem1.Text = "Close";
             this.closeToolStripMenuItem1.Click += new System.EventHandler(this.closeToolStripMenuItem1_Click);
             // 
             // toolStripMenuItem_Report
             // 
             this.toolStripMenuItem_Report.Name = "toolStripMenuItem_Report";
-            this.toolStripMenuItem_Report.Size = new System.Drawing.Size(180, 22);
+            this.toolStripMenuItem_Report.Size = new System.Drawing.Size(168, 22);
             this.toolStripMenuItem_Report.Text = "Report...";
             this.toolStripMenuItem_Report.Click += new System.EventHandler(this.ToolStripMenuItem_Report_Click);
             // 
@@ -662,6 +663,7 @@
             // contextMenuStrip_Citations
             // 
             this.contextMenuStrip_Citations.Name = "contextMenuStrip_Citations";
+            this.contextMenuStrip_Citations.OwnerItem = this.toolStripDropDownButton_Citation;
             this.contextMenuStrip_Citations.RenderMode = System.Windows.Forms.ToolStripRenderMode.Professional;
             this.contextMenuStrip_Citations.Size = new System.Drawing.Size(61, 4);
             // 
@@ -901,6 +903,7 @@
             // groupBox_Pdf
             // 
             this.groupBox_Pdf.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox_Pdf.Controls.Add(this.button1);
             this.groupBox_Pdf.Controls.Add(this.label18);
             this.groupBox_Pdf.Controls.Add(this.label12);
             this.groupBox_Pdf.Controls.Add(this.label_PdfUnderLineColor);
@@ -1314,6 +1317,17 @@
             this.label7.Text = "File MD5";
             this.label7.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
+            // button1
+            // 
+            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.button1.Location = new System.Drawing.Point(269, 28);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(161, 23);
+            this.button1.TabIndex = 16;
+            this.button1.Text = "Rewrite Pdf";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.Button1_Click_1);
+            // 
             // BelGui
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 16F);
@@ -1481,5 +1495,6 @@
         private System.Windows.Forms.Label label_PdfHighlightColor;
         private System.Windows.Forms.ColorDialog colorDialog1;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem_Report;
+        private System.Windows.Forms.Button button1;
     }
 }

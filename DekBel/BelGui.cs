@@ -898,6 +898,11 @@ namespace Dek.Bel
             fr.Show();
         }
 
+        private void Button1_Click_1(object sender, EventArgs e)
+        {
+            PdfService.RecreateTheWholeThing(VM, m_VolumeService);
+        }
+
 
 
         // --------------------------
