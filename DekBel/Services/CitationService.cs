@@ -93,6 +93,7 @@ namespace Dek.Bel.DB
                 PhysicalPageStart = boundaries.pageStart,
                 PhysicalPageStop = boundaries.pageStop,
                 SelectionRects = ArrayStuff.ConvertPageAndArrayToString(pageRects),
+                CitationColors = ColorStuff.ConvertColorsToString(UserSettingsService.PdfHighLightColor, UserSettingsService.PdfUnderlineColor),
             };
 
             DBService.InsertOrUpdate(citation);

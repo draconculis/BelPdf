@@ -107,11 +107,11 @@
             this.setWeight5ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.groupBox_Pdf = new System.Windows.Forms.GroupBox();
+            this.button1 = new System.Windows.Forms.Button();
             this.label18 = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
             this.label_PdfUnderLineColor = new System.Windows.Forms.Label();
             this.label_PdfHighlightColor = new System.Windows.Forms.Label();
-            this.button2 = new System.Windows.Forms.Button();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.label11 = new System.Windows.Forms.Label();
@@ -145,7 +145,6 @@
             this.label7 = new System.Windows.Forms.Label();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
-            this.button1 = new System.Windows.Forms.Button();
             this.contextMenuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -908,13 +907,23 @@
             this.groupBox_Pdf.Controls.Add(this.label12);
             this.groupBox_Pdf.Controls.Add(this.label_PdfUnderLineColor);
             this.groupBox_Pdf.Controls.Add(this.label_PdfHighlightColor);
-            this.groupBox_Pdf.Controls.Add(this.button2);
             this.groupBox_Pdf.Location = new System.Drawing.Point(751, 145);
             this.groupBox_Pdf.Name = "groupBox_Pdf";
             this.groupBox_Pdf.Size = new System.Drawing.Size(437, 86);
             this.groupBox_Pdf.TabIndex = 12;
             this.groupBox_Pdf.TabStop = false;
             this.groupBox_Pdf.Text = "Pdf";
+            // 
+            // button1
+            // 
+            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.button1.Location = new System.Drawing.Point(269, 57);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(161, 23);
+            this.button1.TabIndex = 16;
+            this.button1.Text = "Rewrite Pdf";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.Button1_Click_1);
             // 
             // label18
             // 
@@ -939,6 +948,7 @@
             this.label_PdfUnderLineColor.BackColor = System.Drawing.Color.White;
             this.label_PdfUnderLineColor.Cursor = System.Windows.Forms.Cursors.Hand;
             this.label_PdfUnderLineColor.Font = new System.Drawing.Font("Times New Roman", 12F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label_PdfUnderLineColor.ForeColor = System.Drawing.Color.DarkRed;
             this.label_PdfUnderLineColor.Location = new System.Drawing.Point(71, 36);
             this.label_PdfUnderLineColor.Name = "label_PdfUnderLineColor";
             this.label_PdfUnderLineColor.Size = new System.Drawing.Size(40, 21);
@@ -949,7 +959,7 @@
             // 
             // label_PdfHighlightColor
             // 
-            this.label_PdfHighlightColor.BackColor = System.Drawing.Color.White;
+            this.label_PdfHighlightColor.BackColor = System.Drawing.Color.PaleTurquoise;
             this.label_PdfHighlightColor.Cursor = System.Windows.Forms.Cursors.Hand;
             this.label_PdfHighlightColor.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label_PdfHighlightColor.Location = new System.Drawing.Point(71, 16);
@@ -959,17 +969,6 @@
             this.label_PdfHighlightColor.Text = "A";
             this.label_PdfHighlightColor.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             this.label_PdfHighlightColor.Click += new System.EventHandler(this.Label_PdfHighlightColor_Click);
-            // 
-            // button2
-            // 
-            this.button2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button2.Location = new System.Drawing.Point(269, 57);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(161, 23);
-            this.button2.TabIndex = 11;
-            this.button2.Text = "Write to Pdf";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.Button2_Click);
             // 
             // tabControl1
             // 
@@ -1317,17 +1316,6 @@
             this.label7.Text = "File MD5";
             this.label7.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // button1
-            // 
-            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button1.Location = new System.Drawing.Point(269, 28);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(161, 23);
-            this.button1.TabIndex = 16;
-            this.button1.Text = "Rewrite Pdf";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.Button1_Click_1);
-            // 
             // BelGui
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 16F);
@@ -1457,7 +1445,6 @@
         private System.Windows.Forms.ToolStripMenuItem leftToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem rightToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem centerToolStripMenuItem;
-        private System.Windows.Forms.Button button2;
         private System.Windows.Forms.ToolStripMenuItem setWeight1ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem setWeight2ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem setWeight3ToolStripMenuItem;

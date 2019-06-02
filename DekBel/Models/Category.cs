@@ -16,6 +16,8 @@ namespace Dek.Bel.Models
 
         private string FullName => $"{Code} - {Name}";
 
+        public string CategoryColor { get; set; } // Highlight + underline color arrays (incl alpha)
+
         public override string ToString() => FullName;
     }
 }

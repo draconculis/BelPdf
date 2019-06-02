@@ -186,7 +186,8 @@ namespace Dek.Bel.Services
         {
             string origFileName = vm.CurrentStorage.FilePath;
             string storageFilePath = System.IO.Path.Combine(m_UserSettingsService.StorageFolder, vm.CurrentStorage.StorageName);
-            File.Delete(storageFilePath);
+            string tmpFileName = m_TempFileService.GetNewTmpFileName(vm.CurrentStorage.StorageName);
+            File.Move(storageFilePath, tmpFileName);
 
             PdfDocument pdfDoc = new PdfDocument(new PdfReader(origFileName), new PdfWriter(storageFilePath));
 
@@ -203,11 +204,17 @@ namespace Dek.Bel.Services
 
                 if (pageRects.Any())
                 {
-                    System.Drawing.Color c;
-                    c = m_UserSettingsService.PdfHighLightColor;
-                    Color color_highLight = new DeviceRgb(n(c.R), n(c.G), n(c.B));
-                    c = m_UserSettingsService.PdfHighLightColor;
-                    Color color_underLine = new DeviceRgb(n(c.R), n(c.G), n(c.B));
+                    System.Drawing.Color ch, cu;
+                    var colors = ColorStuff.ConvertStringToColors(cit.CitationColors);
+                    ch = (colors.Length == 2)
+                        ? colors[0]
+                        : m_UserSettingsService.PdfHighLightColor;
+                    cu = (colors.Length == 2)
+                        ? colors[1]
+                        : m_UserSettingsService.PdfUnderlineColor;
+
+                    Color color_highLight = new DeviceRgb(n(ch.R), n(ch.G), n(ch.B));
+                    Color color_underLine = new DeviceRgb(n(cu.R), n(cu.G), n(cu.B));
 
                     foreach (var pageRect in pageRects)
                     {
@@ -267,6 +274,8 @@ namespace Dek.Bel.Services
                 AddMarginCategoryTextAnnotation(pdfDoc, null, firstPageNo, cit.Id.ToString(), cat.Code + $" [{citCat.Weight}]", cit.SelectionRects);
             }
             pdfDoc.Close();
+
+            File.Delete(tmpFileName);
         }
 
         public void AddMarginCategoryTextAnnotation(PdfDocument pdfDoc, PdfAnnotation existingAnnot, int physicalPage, string id, string text, string pageRectsString)

@@ -175,8 +175,17 @@ namespace Dek.Bel
             LoadReferences();
 
             // Set pdf colors
-            label_PdfHighlightColor.BackColor = m_UserSettingsService.PdfHighLightColor;
-            label_PdfUnderLineColor.ForeColor = m_UserSettingsService.PdfUnderlineColor;
+            System.Drawing.Color ch, cu;
+            var colors = ColorStuff.ConvertStringToColors(VM.CurrentCitation.CitationColors);
+            ch = (colors.Length == 2)
+                ? colors[0]
+                : m_UserSettingsService.PdfHighLightColor;
+            cu = (colors.Length == 2)
+                ? colors[1]
+                : m_UserSettingsService.PdfUnderlineColor;
+
+            label_PdfHighlightColor.BackColor = ch;
+            label_PdfUnderLineColor.ForeColor = cu;
 
         }
 
@@ -880,6 +889,9 @@ namespace Dek.Bel
             colorDialog1.ShowDialog();
             m_UserSettingsService.PdfHighLightColor = colorDialog1.Color;
             label_PdfHighlightColor.BackColor = m_UserSettingsService.PdfHighLightColor;
+
+            VM.CurrentCitation.CitationColors = ColorStuff.ConvertColorsToString(label_PdfHighlightColor.BackColor, label_PdfUnderLineColor.ForeColor);
+            m_DBService.InsertOrUpdate(VM.CurrentCitation);
         }
 
         private void Label_PdfUnderLineColor_Click(object sender, EventArgs e)
@@ -888,6 +900,9 @@ namespace Dek.Bel
             colorDialog1.ShowDialog();
             m_UserSettingsService.PdfUnderlineColor= colorDialog1.Color;
             label_PdfUnderLineColor.ForeColor = m_UserSettingsService.PdfUnderlineColor;
+
+            VM.CurrentCitation.CitationColors = ColorStuff.ConvertColorsToString(label_PdfHighlightColor.BackColor, label_PdfUnderLineColor.ForeColor);
+            m_DBService.InsertOrUpdate(VM.CurrentCitation);
         }
 
 

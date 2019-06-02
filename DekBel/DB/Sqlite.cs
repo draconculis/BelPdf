@@ -241,7 +241,10 @@ namespace Dek.Bel.DB
                         prop.SetValue(obj, ((Int64)val != 0));
                     break;
                 default:
-                    prop.SetValue(obj, val);
+                    if(val is System.DBNull)
+                        prop.SetValue(obj, null);
+                    else
+                        prop.SetValue(obj, val);
                     break;
             }
         }

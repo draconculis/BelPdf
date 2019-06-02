@@ -10,14 +10,19 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Dek.Bel.DB;
+using Dek.Bel.Cls;
 
 namespace Dek.Bel.Services
 {
     public partial class FormCategory : Form
     {
         public ICategoryService m_CategoryService;
-        private IEnumerable<Category> m_FilteredCategories => m_CategoryService.Categories.Where(c => Filter(c)).ToList();
+        private IEnumerable<Category> m_FilteredCategories => m_CategoryService.Categories
+            .Where(c => Filter(c))
+            .Where(h => HideUncategorized(h))
+            .ToList();
         private Predicate<Category> Filter;
+        private Predicate<Category> HideUncategorized = x => x.Id != Id.Null;
 
         public FormCategory(ICategoryService categoryService)
         {
@@ -44,7 +49,7 @@ namespace Dek.Bel.Services
 
         private void AdjustColumns()
         {
-            int previouswidth = dataGridView1.Columns[0].Width + dataGridView1.Columns[1].Width + dataGridView1.Columns[2].Width;
+            int previouswidth = dataGridView1.Columns[0].Width + dataGridView1.Columns[1].Width + dataGridView1.Columns[2].Width + dataGridView1.Columns[4].Width;
             dataGridView1.Columns[3].Width = dataGridView1.Width - previouswidth;
 
         }
@@ -167,6 +172,23 @@ namespace Dek.Bel.Services
                 AdjustColumns();
             }
 
+        }
+
+        private void DataGridView1_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        {
+            dataGridView1.Columns[4].Width = 25;
+            foreach (DataGridViewRow Myrow in dataGridView1.Rows)
+            {
+                var colors = ColorStuff.ConvertStringToColors((string)Myrow.Cells[4].Value);
+                if (colors.Any())
+                {
+                    Myrow.Cells[4].Style.BackColor = colors[0];
+                }
+                else
+                {
+                    Myrow.Cells[4].Style.BackColor = Color.Red;
+                }
+            }
         }
     }
 }

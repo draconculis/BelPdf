@@ -13,7 +13,7 @@ namespace Dek.Bel.Services
     [Export(typeof(IUserSettingsService))]
     public class UserSettingsService : IUserSettingsService
     {
-        private const string dbSubFolderPath = "data_alpha2";
+        private const string dbSubFolderPath = "data_alpha3";
         public string DBName { get; } = "BelPdf.sqlite";
         public string DBPath => Path.Combine(StorageFolder, dbSubFolderPath + "\\" + DBName);
         public string DeselectionMarker => (string)Properties.Settings.Default.DeselectionMarker ?? "…";

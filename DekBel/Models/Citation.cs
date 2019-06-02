@@ -25,6 +25,8 @@ namespace Dek.Bel.Models
         public string Exclusion { get; set; } // for Citation2
         public string Emphasis { get; set; } // for Citation3
 
+        public string CitationColors { get; set; } // Highlight + underline color arrays (incl alpha)
+
         public DateTime CreatedDate { get; set; }
         public DateTime EditedDate { get; set; }
         public string Notes { get; set; }
