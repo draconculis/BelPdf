@@ -24,5 +24,16 @@ namespace Dek.Bel.Services
         public List<DekRange> Exclusion { get; set; } = new List<DekRange>();
 
         public List<CitationCategory> CurrentCitations { get; set; } = new List<CitationCategory>();
+
+        internal void InitCitationData()
+        {
+            if (Exclusion == null)
+                Exclusion = new List<DekRange>();
+            if (Emphasis == null)
+                Emphasis = new List<DekRange>();
+            Exclusion.LoadFromText(CurrentCitation.Exclusion);
+            Emphasis.LoadFromText(CurrentCitation.Emphasis);
+
+        }
     }
 }

@@ -56,10 +56,44 @@ namespace Dek.Bel.Cls
 
                 int page = int.Parse(split[0]);
 
-                res.Add((page, ConvertStringToArray(split[1])));
+                int[] rectsInPage = ConvertStringToArray(split[1]);
+
+                List<(int page, int[] rects)> pageRects = SplitRectsPerPage(page, rectsInPage);
+
+                res.AddRange(pageRects);
             }
 
             return res;
+        }
+
+        // This takes a rect and splits it into several pages, by when a rect crosses over to next page.
+        // Detected by y coord suddenly becoming smaller than previous y coord.
+        public static List<(int page, int[] rects)> SplitRectsPerPage(int firstPage, int[] rects)
+        {
+            int curPage = firstPage;
+            List<(int page, int[] rects)> pageRects = new List<(int page, int[] rects)>();
+            int oldYCoord = int.MinValue / 2;
+            List<int> agga = new List<int>();
+            for (int i = 0; i < rects.Length / 4; i++)
+            {
+                int yCoord = rects[i * 4 + 1];
+                int rowHeight = rects[i * 4 + 3];
+                if (yCoord - oldYCoord > -(rowHeight / 2))
+                {
+                    agga.AddRange(new List<int> { rects[i * 4 + 0], rects[i * 4 + 1], rects[i * 4 + 2], rects[i * 4 + 3] });
+                }
+                else
+                {
+                    pageRects.Add((curPage++, agga.ToArray()));
+                    agga.Clear();
+                    agga.AddRange(new List<int> { rects[i * 4 + 0], rects[i * 4 + 1], rects[i * 4 + 2], rects[i * 4 + 3] });
+                }
+                oldYCoord = yCoord;
+            }
+
+            // Finish up
+            pageRects.Add((curPage, agga.ToArray()));
+            return pageRects;
         }
 
         private static int[] ConvertStringToArray(string str)

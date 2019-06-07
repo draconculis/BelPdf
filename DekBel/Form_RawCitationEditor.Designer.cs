@@ -68,8 +68,8 @@
             this.splitContainer1.Panel2.Controls.Add(this.button_Reset);
             this.splitContainer1.Panel2.Controls.Add(this.label2);
             this.splitContainer1.Panel2.Controls.Add(this.textBox2);
-            this.splitContainer1.Size = new System.Drawing.Size(933, 465);
-            this.splitContainer1.SplitterDistance = 173;
+            this.splitContainer1.Size = new System.Drawing.Size(933, 340);
+            this.splitContainer1.SplitterDistance = 157;
             this.splitContainer1.SplitterWidth = 5;
             this.splitContainer1.TabIndex = 0;
             // 
@@ -93,7 +93,7 @@
             this.textBox1.Name = "textBox1";
             this.textBox1.ReadOnly = true;
             this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textBox1.Size = new System.Drawing.Size(926, 142);
+            this.textBox1.Size = new System.Drawing.Size(926, 126);
             this.textBox1.TabIndex = 0;
             // 
             // button_Reset
@@ -101,7 +101,7 @@
             this.button_Reset.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.button_Reset.Location = new System.Drawing.Point(758, 8);
             this.button_Reset.Name = "button_Reset";
-            this.button_Reset.Size = new System.Drawing.Size(171, 27);
+            this.button_Reset.Size = new System.Drawing.Size(171, 24);
             this.button_Reset.TabIndex = 3;
             this.button_Reset.Text = "Reset";
             this.button_Reset.UseVisualStyleBackColor = true;
@@ -127,7 +127,7 @@
             this.textBox2.Multiline = true;
             this.textBox2.Name = "textBox2";
             this.textBox2.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textBox2.Size = new System.Drawing.Size(926, 244);
+            this.textBox2.Size = new System.Drawing.Size(926, 134);
             this.textBox2.TabIndex = 1;
             this.textBox2.TextChanged += new System.EventHandler(this.TextBox2_TextChanged);
             // 
@@ -160,13 +160,14 @@
             this.copyToolStripMenuItem.Name = "copyToolStripMenuItem";
             this.copyToolStripMenuItem.Size = new System.Drawing.Size(121, 22);
             this.copyToolStripMenuItem.Text = "Copy";
+            this.copyToolStripMenuItem.Click += new System.EventHandler(this.CopyToolStripMenuItem_Click);
             // 
             // button_Close
             // 
             this.button_Close.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button_Close.Location = new System.Drawing.Point(724, 473);
+            this.button_Close.Location = new System.Drawing.Point(724, 347);
             this.button_Close.Name = "button_Close";
-            this.button_Close.Size = new System.Drawing.Size(201, 40);
+            this.button_Close.Size = new System.Drawing.Size(201, 28);
             this.button_Close.TabIndex = 1;
             this.button_Close.Text = "Close";
             this.button_Close.UseVisualStyleBackColor = true;
@@ -175,9 +176,9 @@
             // button_Save
             // 
             this.button_Save.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button_Save.Location = new System.Drawing.Point(521, 473);
+            this.button_Save.Location = new System.Drawing.Point(521, 347);
             this.button_Save.Name = "button_Save";
-            this.button_Save.Size = new System.Drawing.Size(196, 40);
+            this.button_Save.Size = new System.Drawing.Size(196, 28);
             this.button_Save.TabIndex = 2;
             this.button_Save.Text = "Save raw citation";
             this.button_Save.UseVisualStyleBackColor = true;
@@ -187,7 +188,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(933, 519);
+            this.ClientSize = new System.Drawing.Size(933, 379);
             this.Controls.Add(this.button_Save);
             this.Controls.Add(this.button_Close);
             this.Controls.Add(this.splitContainer1);

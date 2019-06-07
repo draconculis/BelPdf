@@ -26,7 +26,7 @@
     <InheritWinAppVersionFrom>None</InheritWinAppVersionFrom>
     <AssemblyInfoFilePath>Properties\AssemblyVersion.cs</AssemblyInfoFilePath>
     <PrimaryVersionType>AssemblyVersionAttribute</PrimaryVersionType>
-    <AssemblyVersion>0.3.211</AssemblyVersion>
+    <AssemblyVersion>0.3.238</AssemblyVersion>
     <AssemblyFileVersionSettings>IncrementOnDemand.IncrementOnDemand.IncrementWithResetOnIncrease.None</AssemblyFileVersionSettings>
     <AssemblyInfoVersionSettings>IncrementOnDemand.IncrementOnDemand.IncrementWithResetOnIncrease.None</AssemblyInfoVersionSettings>
   </PropertyGroup>
@@ -123,6 +123,7 @@
     <Compile Include="Cls\ArrayStuff.cs" />
     <Compile Include="Cls\AssemblyStuff.cs" />
     <Compile Include="Cls\ColorStuff.cs" />
+    <Compile Include="Cls\DekRangeExtension.cs" />
     <Compile Include="Cls\IntExtensions.cs" />
     <Compile Include="Cls\DekRange.cs" />
     <Compile Include="Constants\Constants.cs" />
@@ -315,7 +316,9 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Documentation\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

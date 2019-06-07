@@ -53,6 +53,32 @@ namespace Dek.Bel.DB
             Citations = citations.AsParallel().OrderBy(x => x.PhysicalPageStart).ThenBy(y => y.GlyphStart).ToList();
         }
 
+        public void LoadCitations()
+        {
+            LoadCitations(CurrentVolume.Id);
+        }
+
+        /// <summary>
+        /// Save citation to db and updates loaded citations
+        /// </summary>
+        public void SaveAndReloadCitation(Citation citation)
+        {
+            m_DBService.InsertOrUpdate(citation);
+
+            ReloadCitation(citation);
+        }
+
+        public void ReloadCitation(Citation citation)
+        {
+            var existingCitation = Citations.SingleOrDefault(x => x.Id == citation.Id);
+            if (existingCitation != null)
+            {
+                Citations.Remove(existingCitation);
+            }
+
+            Citations.Add(citation);
+        }
+
         #region References =========================================================================
 
         public Book GetBook(int physicalPage, int glyph = 0)
@@ -111,12 +137,26 @@ namespace Dek.Bel.DB
             return (offset > 0) ? page.PaginationStart + offset : physicalPage; // Only return for values after first pagination ref
         }
 
+
+        /// <summary>
+        /// Returns reference page / glyph belongs to.
+        /// Returns null if 
+        /// 1) no reference exists, 
+        /// 2) if page / glyph points before any reference.
+        /// </summary>
+        /// <returns>Null or reference</returns>
         public T GetReference<T>(List<T> references, int physicalPage, int glyph) where T : Reference
         {
             if (references == null || references.Count == 0)
                 return null;
 
             List<T> orderedReferences = references.OrderBy(x => x).ToList();
+
+            // If pointing before first reference, return null
+            if (physicalPage < orderedReferences.First().PhysicalPage 
+                || (orderedReferences.First().PhysicalPage == physicalPage && glyph < orderedReferences.First().Glyph))
+                return null;
+
 
             var lastref = orderedReferences.First();
             int idx = 1;

@@ -51,7 +51,15 @@ namespace Dek.Bel.Services
         {
             var range = new DekRange(from, to);
 
-            VM.Exclusion = VM.Exclusion.AddAndMerge(range);
+            if (VM.Exclusion.ContainsInteger(from))
+            {
+                VM.Exclusion = VM.Exclusion.SubtractRange(range);
+            }
+            else
+            {
+                VM.Exclusion = VM.Exclusion.AddAndMerge(range);
+            }
+
             VM.CurrentCitation.Exclusion = VM.Exclusion.ConvertToText();
 
             m_DBService.InsertOrUpdate(VM.CurrentCitation);
@@ -62,7 +70,15 @@ namespace Dek.Bel.Services
         {
             var range = new DekRange(from, to);
 
-            VM.Emphasis = VM.Emphasis.AddAndMerge(range);
+            if (VM.Emphasis.ContainsInteger(from))
+            {
+                VM.Emphasis = VM.Emphasis.SubtractRange(range);
+            }
+            else
+            {
+                VM.Emphasis = VM.Emphasis.AddAndMerge(range);
+            }
+
             VM.CurrentCitation.Emphasis = VM.Emphasis.ConvertToText();
 
             m_DBService.InsertOrUpdate(VM.CurrentCitation);
@@ -76,13 +92,7 @@ namespace Dek.Bel.Services
         /// <param name="to"></param>
         public void RemoveLinebreakInCitation2(int from, int to)
         {
-            //string s = VM.CurrentCitation.Citation2.Replace("\r\n", "\r");
             string s = VM.CurrentCitation.Citation2;
-
-            //int lastIndex = Math.Max(to, VM.CurrentCitation.Citation2.Length - 1);
-            //string s1 = VM.CurrentCitation.Citation2.Substring(0, from - 1);
-            //string s2 = VM.CurrentCitation.Citation2.Substring(from, to);
-            //string s3 = VM.CurrentCitation.Citation2.Substring(to == lastIndex ? to : to + 1);
 
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < s.Length; i++)
@@ -101,6 +111,28 @@ namespace Dek.Bel.Services
             FireCitationChanged();
         }
 
+        public void AdjustSpacesInCitation2(int from, int to)
+        {
+            string s = VM.CurrentCitation.Citation2;
+
+            StringBuilder sb = new StringBuilder();
+            char lastChar = '-';
+            for (int i = 0; i < s.Length; i++)
+            {
+                if (i >= from && i <= to && char.IsWhiteSpace(s[i]) && char.IsWhiteSpace(lastChar))
+                {
+                    AdjustExclusionRemoveOneCharAt(i);
+                    continue;
+                }
+                sb.Append(s[i]);
+                lastChar = s[i];
+            }
+
+            //VM.CurrentCitation.Citation2 = sb.ToString().Replace("\r", "\r\n");
+
+            m_DBService.InsertOrUpdate(VM.CurrentCitation);
+            FireCitationChanged();
+        }
 
         /// <summary>
         /// Adjusts exclusion when removiung a char
@@ -128,7 +160,6 @@ namespace Dek.Bel.Services
 
             VM.CurrentCitation.Exclusion = newRanges.ConvertToText();
         }
-
 
         public void BeginEdit()
         {
@@ -168,29 +199,11 @@ namespace Dek.Bel.Services
             }
 
             VM.CurrentCitation.Citation3 = sb.ToString().Replace("\r", "\r\n"); ;
+            VM.CurrentCitation.Emphasis = string.Empty;
 
             m_DBService.InsertOrUpdate(VM.CurrentCitation);
             FireCitationChanged();
         }
-
-        public string AdjustSpaces(string text)
-        {
-            return text
-                .Trim()
-                .Replace("            ", " ")
-                .Replace("           ", " ")
-                .Replace("          ", " ")
-                .Replace("         ", " ")
-                .Replace("        ", " ")
-                .Replace("       ", " ")
-                .Replace("      ", " ")
-                .Replace("     ", " ")
-                .Replace("    ", " ")
-                .Replace("   ", " ")
-                .Replace("  ", " ")
-                .Trim();
-        }
-
 
         void FireCitationChanged()
         {

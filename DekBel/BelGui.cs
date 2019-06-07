@@ -113,9 +113,8 @@ namespace Dek.Bel
 
             m_DBService.DeleteAll<RawCitation>(); // These need to go now
 
-            m_CitationManipulationService.CitationChanged += CitationService_CitationChanged;
+            m_CitationManipulationService.CitationChanged += OnCitationChanged;
             comboBox_CategoryWeight.SelectedIndex = 2;
-            LoadControls();
         }
 
         private void CreateCitation()
@@ -128,8 +127,9 @@ namespace Dek.Bel
 
         }
 
-        private void CitationService_CitationChanged(object sender, EventArgs e)
+        private void OnCitationChanged(object sender, EventArgs e)
         {
+            m_VolumeService.ReloadCitation(VM.CurrentCitation); // Need to update its list of all citations when current citatation changed
             LoadControls();
         }
 
@@ -150,6 +150,7 @@ namespace Dek.Bel
             toolStripDropDownButton_Citation.Text = VM.CurrentCitation.ToString();
 
             // Load data from citation
+            VM.InitCitationData();
             richTextBox1.Rtf = RtfService.CreateRtfWithExlusionsAndEmphasis(VM.CurrentCitation.Citation2, VM.Exclusion, null);
             richTextBox2.Rtf = RtfService.CreateRtfWithExlusionsAndEmphasis(VM.CurrentCitation.Citation3, null, VM.Emphasis);
 
@@ -187,6 +188,7 @@ namespace Dek.Bel
             label_PdfHighlightColor.BackColor = ch;
             label_PdfUnderLineColor.ForeColor = cu;
 
+            checkBox_AutoWritePdfOnClose.Checked = m_UserSettingsService.AutoWritePdfOnClose;
         }
 
         void LoadCategoryControl()
@@ -263,11 +265,6 @@ namespace Dek.Bel
         }
 
 
-        private void closeToolStripMenuItem1_Click(object sender, EventArgs e)
-        {
-            Close();
-        }
-
         private void toolStripDropDownButton1_Click(object sender, EventArgs e)
         {
 
@@ -279,6 +276,8 @@ namespace Dek.Bel
 
             richTextBox1.Font = font;
             richTextBox2.Font = font;
+
+            LoadControls();
         }
 
         private void toolStripButton2_Click(object sender, EventArgs e)
@@ -358,12 +357,6 @@ namespace Dek.Bel
                 m_DBService.Delete<CitationCategory>($"`{nameof(CitationCategory.CitationId)}`='{cc.CitationId}' AND `{nameof(CitationCategory.CategoryId)}`='{cc.CategoryId}'");
                 flowLayoutPanel_Categories.Controls.Remove(label);
             }
-        }
-
-        private void categoriesToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            FormCategory fc = new FormCategory(m_CategoryService);
-            fc.ShowDialog();
         }
 
         private void button_category_Click(object sender, EventArgs e)
@@ -601,13 +594,6 @@ namespace Dek.Bel
 
         // toolstrip
 
-        private void toolStripButton6_Click_1(object sender, EventArgs e)
-        {
-            // Exclude
-            if(richTextBox1.SelectionLength > 0)
-                m_CitationManipulationService.ExcludeSelectedText(richTextBox1.SelectionStart, richTextBox1.SelectionStart + richTextBox1.SelectionLength - 1);
-        }
-
         private void richTextBox2_Enter(object sender, EventArgs e)
         {
             toolStripButton8.Enabled = true;
@@ -616,7 +602,7 @@ namespace Dek.Bel
         private void richTextBox2_Leave(object sender, EventArgs e)
         {
             VM.CurrentCitation.Citation3 = richTextBox2.Text;
-            m_DBService.InsertOrUpdate(VM.CurrentCitation);
+            m_VolumeService.SaveAndReloadCitation(VM.CurrentCitation);
 
             if (toolStripButton8.Selected)
                 return;
@@ -624,6 +610,15 @@ namespace Dek.Bel
             toolStripButton8.Enabled = false;
         }
 
+        /// Exclusion
+        private void toolStripButton6_Click_1(object sender, EventArgs e)
+        {
+            // Exclude
+            if (richTextBox1.SelectionLength > 0)
+                m_CitationManipulationService.ExcludeSelectedText(richTextBox1.SelectionStart, richTextBox1.SelectionStart + richTextBox1.SelectionLength - 1);
+        }
+
+        /// Begin edit
         private void toolStripButton7_Click(object sender, EventArgs e)
         {
             if (VM.CurrentCitation.Citation3.Length > 0)
@@ -633,40 +628,7 @@ namespace Dek.Bel
             m_CitationManipulationService.BeginEdit();
         }
 
-        /// <summary>
-        /// Copies rtf 1 -> rtf 2
-        /// </summary>
-        //public void BeginEdit()
-        //{
-        //    // Begin edit - e.g copy rtf2 to rtf3
-        //    string text = VM.CurrentCitation.Citation2;
-        //    StringBuilder sb = new StringBuilder();
-        //    bool excluded = false;
-        //    for (int i = 0; i < text.Length; i++)
-        //    {
-        //        if (!VM.Exclusion.ContainsInteger(i) && excluded)
-        //        {
-        //            excluded = false;
-        //            sb.Append(" ");
-        //            sb.Append(m_UserSettingsService.DeselectionMarker);
-        //            sb.Append(" ");
-        //        }
-
-        //        if (VM.Exclusion.ContainsInteger(i))
-        //        {
-        //            excluded = true;
-        //            continue;
-        //        }
-
-        //        sb.Append(text[i]);
-        //    }
-
-        //    VM.CurrentCitation.Citation3 = sb.ToString();
-        //    m_DBService.InsertOrUpdate(VM.CurrentCitation);
-        //    LoadControls();
-
-        //}
-
+        /// Emphasis
         private void toolStripButton8_Click(object sender, EventArgs e)
         {
             if (richTextBox2.SelectionLength > 0)
@@ -678,19 +640,15 @@ namespace Dek.Bel
 
         // --------------------------
 
+        // ContextMenuStrip  Rtb 1 ==============================================
         private void excludeToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
-        }
-
-        private void emphasisToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-
+            toolStripButton6_Click_1(sender, e);
         }
 
         private void doneToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
+            toolStripButton7_Click(sender, e);
         }
 
         private void showOriginalToolStripMenuItem_Click(object sender, EventArgs e)
@@ -698,8 +656,57 @@ namespace Dek.Bel
             m_CitationManipulationService.ResetCitation2();
         }
 
+
+        private void CopyToolStripMenuItem3_Click(object sender, EventArgs e)
+        {
+            richTextBox1.Copy();
+        }
+
+        // Citation2 - Remove line endings in selected text 
+        private void RemoveLineEndingsToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            // Exclude
+            if (richTextBox1.SelectionLength > 0)
+                m_CitationManipulationService.RemoveLinebreakInCitation2(richTextBox1.SelectionStart, richTextBox1.SelectionStart + richTextBox1.SelectionLength - 1);
+            else
+                m_CitationManipulationService.RemoveLinebreakInCitation2(0, richTextBox1.Text.Length - 1);
+        }
+
+
+
+        // End contextMenuStrip Rtb 1 ==============================================
+
+
+        // ContextMenuStrip Rtb 2 ==============================================
+
+        private void EmphasisToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            toolStripButton8_Click(sender, e);
+        }
+
+        private void CutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            richTextBox2.Cut();
+        }
+
+        private void CopyToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            richTextBox2.Copy();
+        }
+
+        private void PasteToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            richTextBox2.Paste();
+        }
+
+        // End ContextMenuStrip Rtb 2  ==============================================
+
+
         private void toolStripButton1_Click_1(object sender, EventArgs e)
         {
+            //if (MessageBox.Show($"This will reset the citation in the first box with the original citation text.{Environment.NewLine}Continue and loose exclusions?", "Reset citation to original?", MessageBoxButtons.YesNo) == DialogResult.No)
+            //    return;
+
             m_CitationManipulationService.ResetCitation2();
         }
 
@@ -776,10 +783,11 @@ namespace Dek.Bel
         /// </summary>
         private void AdjustSpacesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            VM.CurrentCitation.Citation2 = m_CitationManipulationService.AdjustSpaces(VM.CurrentCitation.Citation2);
-            VM.CurrentCitation.Citation3 = m_CitationManipulationService.AdjustSpaces(VM.CurrentCitation.Citation3);
-            m_DBService.InsertOrUpdate(VM.CurrentCitation);
-            LoadControls();
+            // Exclude
+            if (richTextBox1.SelectionLength > 0)
+                m_CitationManipulationService.AdjustSpacesInCitation2(richTextBox1.SelectionStart, richTextBox1.SelectionStart + richTextBox1.SelectionLength - 1);
+            else
+                m_CitationManipulationService.AdjustSpacesInCitation2(0, richTextBox1.Text.Length - 1);
         }
 
         /// <summary>
@@ -810,7 +818,7 @@ namespace Dek.Bel
         private void TextBox_CitationNotes_Leave(object sender, EventArgs e)
         {
             VM.CurrentCitation.Notes = textBox_CitationNotes.Text;
-            m_DBService.InsertOrUpdate(VM.CurrentCitation);
+            m_VolumeService.SaveAndReloadCitation(VM.CurrentCitation);
         }
 
         /// <summary>
@@ -849,37 +857,7 @@ namespace Dek.Bel
 
         }
 
-        private void ToolStripSplitButton2_ButtonClick(object sender, EventArgs e)
-        {
-            FormVolume fm = new FormVolume();
 
-            if(fm.ShowDialog() == DialogResult.OK)
-            {
-                VM.CurrentCitation = fm.SelectedCitation ?? VM.CurrentCitation;
-                LoadControls();
-            }
-
-        }
-
-
-        // Citation2 - Remove line endings in selected text 
-        private void RemoveLineEndingsToolStripMenuItem1_Click(object sender, EventArgs e)
-        {
-            // Exclude
-            if (richTextBox1.SelectionLength > 0)
-                m_CitationManipulationService.RemoveLinebreakInCitation2(richTextBox1.SelectionStart, richTextBox1.SelectionStart + richTextBox1.SelectionLength - 1);
-            else
-                m_CitationManipulationService.RemoveLinebreakInCitation2(0, richTextBox1.Text.Length - 1);
-        }
-
-
-        // Pops up Edit Raw Citation window
-        private void EditRawCitationToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            RawCitationEditor rced = new RawCitationEditor(VM, m_UserSettingsService.CitationFont);
-            rced.Show();
-            LoadControls();
-        }
 
 
 
@@ -891,7 +869,7 @@ namespace Dek.Bel
             label_PdfHighlightColor.BackColor = m_UserSettingsService.PdfHighLightColor;
 
             VM.CurrentCitation.CitationColors = ColorStuff.ConvertColorsToString(label_PdfHighlightColor.BackColor, label_PdfUnderLineColor.ForeColor);
-            m_DBService.InsertOrUpdate(VM.CurrentCitation);
+            m_VolumeService.SaveAndReloadCitation(VM.CurrentCitation);
         }
 
         private void Label_PdfUnderLineColor_Click(object sender, EventArgs e)
@@ -902,9 +880,48 @@ namespace Dek.Bel
             label_PdfUnderLineColor.ForeColor = m_UserSettingsService.PdfUnderlineColor;
 
             VM.CurrentCitation.CitationColors = ColorStuff.ConvertColorsToString(label_PdfHighlightColor.BackColor, label_PdfUnderLineColor.ForeColor);
-            m_DBService.InsertOrUpdate(VM.CurrentCitation);
+            m_VolumeService.SaveAndReloadCitation(VM.CurrentCitation);
         }
 
+
+        private void Button1_Click_1(object sender, EventArgs e)
+        {
+            PdfService.RecreateTheWholeThing(VM, m_VolumeService);
+        }
+
+        private void RemoveLineEndingsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            RemoveLineEndingsToolStripMenuItem1_Click(sender, e);
+        }
+
+        // Hamburger ==============================================================================
+        #region Hamburger =========================================================================
+
+        private void AuthorsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void categoriesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FormCategory fc = new FormCategory(m_CategoryService);
+            fc.ShowDialog();
+        }
+
+        private void closeToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
+
+        // Pops up Edit Raw Citation window
+        private void EditRawCitationToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            RawCitationEditor rced = new RawCitationEditor(VM, m_UserSettingsService.CitationFont);
+            rced.Show();
+            LoadControls();
+
+            MessageBox.Show("To use the edited raw citation, press 'Reset to original'.", "Raw citation edited.");
+        }
 
         // Generate report
         private void ToolStripMenuItem_Report_Click(object sender, EventArgs e)
@@ -913,11 +930,37 @@ namespace Dek.Bel
             fr.Show();
         }
 
-        private void Button1_Click_1(object sender, EventArgs e)
+
+
+        #endregion Hamburger ======================================================================
+        // end Hamburger ==========================================================================
+
+
+        // Main toolstrip =========================================================================
+
+        // Elipsis - show Volume outline
+        private void ToolStripSplitButton2_ButtonClick(object sender, EventArgs e)
         {
-            PdfService.RecreateTheWholeThing(VM, m_VolumeService);
+            FormVolume fm = new FormVolume();
+
+            if (fm.ShowDialog() == DialogResult.OK)
+            {
+                VM.CurrentCitation = fm.SelectedCitation ?? VM.CurrentCitation;
+                LoadControls();
+            }
+
         }
 
+        private void BelGui_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (checkBox_AutoWritePdfOnClose.Checked)
+                PdfService.RecreateTheWholeThing(VM, m_VolumeService);
+        }
+
+        private void CheckBox_AutoWritePdfOnClose_CheckedChanged(object sender, EventArgs e)
+        {
+            m_UserSettingsService.AutoWritePdfOnClose = checkBox_AutoWritePdfOnClose.Checked;
+        }
 
 
         // --------------------------

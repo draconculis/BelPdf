@@ -14,5 +14,6 @@ namespace Dek.Bel.Services
         bool UnderlineEmphasis { get; set; }
         Color PdfHighLightColor { get; set; }
         Color PdfUnderlineColor { get; set; }
+        bool AutoWritePdfOnClose { get; set; }
     }
 }

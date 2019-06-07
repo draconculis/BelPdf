@@ -235,7 +235,7 @@ static MenuDef menuDefContext[] = {
     { _TRN("B&el..."),                      DEKBELCODE_SHOWBEL,                MF_REQ_DISK_ACCESS | MF_REQ_ALLOW_COPY },
     { _TRN("&New Citation..."),             DEKBELCODE_ADDANDSHOWCITATION,     MF_REQ_DISK_ACCESS | MF_REQ_ALLOW_COPY },
     { _TRN("Add to next Ci&tation"),        DEKBELCODE_ADDCITATION,            MF_REQ_DISK_ACCESS | MF_REQ_ALLOW_COPY },
-    { _TRN("Edit Citation..."),             DEKBELCODE_EDITCITATION,           MF_REQ_DISK_ACCESS },
+    /*{ _TRN("Edit Citation..."),             DEKBELCODE_EDITCITATION,           MF_REQ_DISK_ACCESS },*/
     { SEP_ITEM,                             0,                          MF_REQ_ALLOW_COPY },
     { _TRN("Set volume title"),             DEKBELCODE_ADDVOLUMETITLE,         MF_REQ_DISK_ACCESS | MF_REQ_ALLOW_COPY },
     { _TRN("Add book title"),               DEKBELCODE_ADDBOOKTITLE,           MF_REQ_DISK_ACCESS | MF_REQ_ALLOW_COPY },

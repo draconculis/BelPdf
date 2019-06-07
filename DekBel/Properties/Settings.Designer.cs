@@ -118,5 +118,17 @@ namespace Dek.Bel.Properties {
                 this["ShowDebugMessages"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool AutoWritePdfOnClose {
+            get {
+                return ((bool)(this["AutoWritePdfOnClose"]));
+            }
+            set {
+                this["AutoWritePdfOnClose"] = value;
+            }
+        }
     }
 }
