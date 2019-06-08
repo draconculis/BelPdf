@@ -26,7 +26,7 @@
     <InheritWinAppVersionFrom>None</InheritWinAppVersionFrom>
     <AssemblyInfoFilePath>Properties\AssemblyVersion.cs</AssemblyInfoFilePath>
     <PrimaryVersionType>AssemblyVersionAttribute</PrimaryVersionType>
-    <AssemblyVersion>0.3.239</AssemblyVersion>
+    <AssemblyVersion>0.3.255</AssemblyVersion>
     <AssemblyFileVersionSettings>IncrementOnDemand.IncrementOnDemand.IncrementWithResetOnIncrease.None</AssemblyFileVersionSettings>
     <AssemblyInfoVersionSettings>IncrementOnDemand.IncrementOnDemand.IncrementWithResetOnIncrease.None</AssemblyInfoVersionSettings>
   </PropertyGroup>
@@ -166,10 +166,11 @@
     <Compile Include="Cls\DateTime.cs" />
     <Compile Include="Cls\RichTextExtensions.cs" />
     <Compile Include="Services\CitationService.cs" />
-    <Compile Include="Services\Export\CsvExporter.cs" />
-    <Compile Include="Services\Export\ExcelExporter.cs" />
-    <Compile Include="Services\Export\ExporterProvider.cs" />
-    <Compile Include="Services\Export\IExporter.cs" />
+    <Compile Include="Services\Report\Export\CsvExporter.cs" />
+    <Compile Include="Services\Report\Export\ExcelExporter.cs" />
+    <Compile Include="Services\Report\Export\HtmlExporter.cs" />
+    <Compile Include="Services\Report\Export\ExporterProvider.cs" />
+    <Compile Include="Services\Report\Export\IExporter.cs" />
     <Compile Include="Services\IMessageboxService.cs" />
     <Compile Include="Services\MessageboxService.cs" />
     <Compile Include="Form_RawCitationEditor.cs">
@@ -184,6 +185,12 @@
     </Compile>
     <Compile Include="Services\Report\Form_Report.Designer.cs">
       <DependentUpon>Form_Report.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Services\Report\Form_ReportColumns.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Services\Report\Form_ReportColumns.Designer.cs">
+      <DependentUpon>Form_ReportColumns.cs</DependentUpon>
     </Compile>
     <Compile Include="Services\Report\Models\ReportModel.cs" />
     <Compile Include="Services\Report\ReportDataCache.cs" />
@@ -290,6 +297,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Services\Report\Form_Report.resx">
       <DependentUpon>Form_Report.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Services\Report\Form_ReportColumns.resx">
+      <DependentUpon>Form_ReportColumns.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

@@ -7,12 +7,12 @@ using System.Text;
 using System.Threading.Tasks;
 using OfficeOpenXml; // EPPlus
 
-namespace Dek.Bel.Services.Export
+namespace Dek.Bel.Services.Report.Export
 {
     [Export(typeof(IExporter))]
-    public class ExcelExporter : IExporter
+    public class HtmlExporter : IExporter
     {
-        public string Name => "Excel";
+        public string Name => "Html";
 
         public Stream Export()
         {

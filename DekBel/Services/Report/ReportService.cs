@@ -18,7 +18,16 @@ namespace Dek.Bel.Services
         [Import] public VolumeService m_VolumeService { get; set; }
 
         public List<ReportModel> Report { get; private set; } = new List<ReportModel>();
+        public IEnumerable<ReportModel> Filtered => Report.Where(x => Filter(x));
 
+        public Predicate<ReportModel> Filter { get; set; } = x => true;
+
+
+        /*
+         
+             BindingList<Person> filtered = new BindingList<Person>(personas.Where(
+                                 p => p.Apellido.Contains("App1")).ToList());
+grid.DataSource = filtered;*/
         [ImportingConstructor]
         ReportService()
         {
@@ -32,13 +41,13 @@ namespace Dek.Bel.Services
             Cache.LoadCache(forceReload);
             /*TIME*/ long t1 = t.ElapsedMilliseconds;
 
-            List<Citation> orderedCitations = new List<Citation>();
-            List<Citation> citations = m_DBService.Select<Citation>();
+            IEnumerable<Citation> orderedCitations = new List<Citation>();
+            IEnumerable<Citation> citations = m_DBService.Select<Citation>();
             orderedCitations = citations
                 .OrderBy(x => x.VolumeId)
                 .ThenBy(y => y.PhysicalPageStart)
-                .ThenBy(y => y.GlyphStart)
-                .ToList();
+                .ThenBy(y => y.GlyphStart);
+
             /*TIME*/ long t2 = t.ElapsedMilliseconds;
 
             int counter = 1;

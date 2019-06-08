@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Dek.Bel.Services.Export.Models
+namespace Dek.Bel.Services.Report.Export.Models
 {
     [Export]
     public class ExporterProvider
