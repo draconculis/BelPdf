@@ -66,7 +66,8 @@ namespace Dek.Bel.Services
                     Chapter = VolumeService.GetReferenceForVolume(volume.Id, Cache.Chapters, c.PhysicalPageStart, c.GlyphStart)?.Title ?? "",
                     SubChapter = VolumeService.GetReferenceForVolume(volume.Id, Cache.SubChapters, c.PhysicalPageStart, c.GlyphStart)?.Title ?? "",
                     Paragraph = VolumeService.GetReferenceForVolume(volume.Id, Cache.Paragraphs, c.PhysicalPageStart, c.GlyphStart)?.Title ?? "",
-                    Category = mainCategory.ToString(),
+                    MainCategory = mainCategory.ToString(),
+                    Weight = mainCitCat.Weight,
                 };
 
                 Report.Add(m);

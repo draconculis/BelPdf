@@ -26,7 +26,7 @@
     <InheritWinAppVersionFrom>None</InheritWinAppVersionFrom>
     <AssemblyInfoFilePath>Properties\AssemblyVersion.cs</AssemblyInfoFilePath>
     <PrimaryVersionType>AssemblyVersionAttribute</PrimaryVersionType>
-    <AssemblyVersion>0.3.238</AssemblyVersion>
+    <AssemblyVersion>0.3.239</AssemblyVersion>
     <AssemblyFileVersionSettings>IncrementOnDemand.IncrementOnDemand.IncrementWithResetOnIncrease.None</AssemblyFileVersionSettings>
     <AssemblyInfoVersionSettings>IncrementOnDemand.IncrementOnDemand.IncrementWithResetOnIncrease.None</AssemblyInfoVersionSettings>
   </PropertyGroup>
@@ -141,6 +141,8 @@
     </Compile>
     <Compile Include="ModelExtensions\CitationExtension.cs" />
     <Compile Include="ModelExtensions\ReferenceExtension.cs" />
+    <Compile Include="Models\SeriesAuthor.cs" />
+    <Compile Include="Models\VolumeAuthor.cs" />
     <Compile Include="Models\MetaDbModel.cs" />
     <Compile Include="DB\MetaModel.cs" />
     <Compile Include="Models\DataSet.cs" />
@@ -151,6 +153,7 @@
     <Compile Include="Models\Series.cs" />
     <Compile Include="Models\SubChapter.cs" />
     <Compile Include="Models\Reference.cs" />
+    <Compile Include="Models\VolumeSeries.cs" />
     <Compile Include="Properties\AssemblyVersion.cs" />
     <Compile Include="Services\Reference\Form_AddReference.cs">
       <SubType>Form</SubType>

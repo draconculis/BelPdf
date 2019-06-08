@@ -15,6 +15,8 @@ namespace Dek.Bel.DB
         public void Create(IDBService repo)
         {
             repo.CreateTable(typeof(Volume));
+            repo.CreateTable(typeof(Series));
+            repo.CreateTable(typeof(VolumeSeries));
 
             // References
             repo.CreateTable(typeof(Book));
@@ -25,6 +27,9 @@ namespace Dek.Bel.DB
 
             repo.CreateTable(typeof(Author));
             repo.CreateTable(typeof(BookAuthor));
+            repo.CreateTable(typeof(SeriesAuthor));
+            repo.CreateTable(typeof(VolumeAuthor));
+
 
             // Citation
             // CREATE TABLE `Citation` ( `Id` TEXT NOT NULL, `Citation1` TEXT NOT NULL, `Citation2` TEXT NOT NULL, `CreatedDate` TEXT NOT NULL, `EditedDate` TEXT NOT NULL, PRIMARY KEY(`CitationId`) )

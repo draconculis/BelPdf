@@ -2,12 +2,13 @@
 
 namespace Dek.Bel.Models
 {
-    public class BookAuthor
+    public class SeriesAuthor
     {
         [Key]
-        public Id BookId { get; set; }
+        public Id SeriesId { get; set; }
         [Key]
         public Id AuthorId { get; set; }
+
         public AuthorType AuthorType { get; set; }
 
         public string Notes { get; set; }

@@ -27,6 +27,7 @@ namespace Dek.Bel.Services
         public string SubChapter { get; set; }
         public string Paragraph { get; set; }
 
-        public string Category { get; set; }
+        public string MainCategory { get; set; }
+        public int Weight { get; set; }
     }
 }
