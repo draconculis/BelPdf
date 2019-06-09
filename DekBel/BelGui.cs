@@ -6,17 +6,14 @@ using Dek.Bel.Models;
 using Dek.Cls;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.ComponentModel.Composition;
-using System.ComponentModel.Composition.Hosting;
 using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using Dek.Bel.Services.Report;
+using System.Text.RegularExpressions;
 
 namespace Dek.Bel
 {
@@ -115,6 +112,23 @@ namespace Dek.Bel
 
             m_CitationManipulationService.CitationChanged += OnCitationChanged;
             comboBox_CategoryWeight.SelectedIndex = 2;
+        }
+
+        private void BelGui_Load(object sender, EventArgs e)
+        {
+            Font font = m_UserSettingsService.CitationFont;
+
+            richTextBox1.Font = font;
+            richTextBox2.Font = font;
+
+            LoadControls();
+
+            splitContainer2.Focus();
+            splitContainer2.Panel2.Focus();
+            groupBox1.Focus();
+
+            ActiveControl = textBox_CategorySearch;
+            textBox_CategorySearch.Focus();
         }
 
         private void CreateCitation()
@@ -270,15 +284,6 @@ namespace Dek.Bel
 
         }
 
-        private void BelGui_Load(object sender, EventArgs e)
-        {
-            Font font = m_UserSettingsService.CitationFont;
-
-            richTextBox1.Font = font;
-            richTextBox2.Font = font;
-
-            LoadControls();
-        }
 
         private void toolStripButton2_Click(object sender, EventArgs e)
         {
@@ -414,6 +419,9 @@ namespace Dek.Bel
         }
 
         #region Category logic =============================================================================
+        // *************************************************************************************************
+        static string CategoryAddText = "Add";
+        static string CategoryCreateText = "Create";
 
         private void setAsMainCategoryToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -450,7 +458,15 @@ namespace Dek.Bel
 
             if (e.KeyCode == Keys.Return)
             {
-                listBox1_Click(sender, e);
+                if (button_CategoryAddCreate.Text == CategoryCreateText)
+                {
+                    Button_CategoryAddCreate_Click(sender, e);
+                }
+                else
+                {
+                    if(listBox1.Visible)
+                        listBox1_Click(sender, e);
+                }
 
                 e.Handled = true;
                 e.SuppressKeyPress = true;
@@ -479,32 +495,51 @@ namespace Dek.Bel
 
             listBox1.Items.Clear();
             var citCats = m_CategoryService.CitationCategories(VM.CurrentCitation.Id);
-            var cats = m_CategoryService.Categories
-                .Where(x => 
-                x.Code.ToLower().Contains(textbox.Text.ToLower()) 
-                || x.Name.ToLower().Contains(textbox.Text.ToLower()))
-                .Where(c => c.Id != Id.Null)
-                .Where(d => !citCats.Any(f => f.CategoryId == d.Id))
-                .ToList();
+            //var cats = m_CategoryService.Categories
+            //    .Where(x =>
+            //    x.Code.ToLower().Contains(textbox.Text.ToLower())
+            //    || x.Name.ToLower().Contains(textbox.Text.ToLower()))
+            //    .Where(c => c.Id != Id.Null)
+            //    .Where(d => !citCats.Any(f => f.CategoryId == d.Id))
+            //    .ToList();
 
-            if (cats.Count < 1 || textbox.Text.Length < 2)
+            if(textbox.Text.TrimStart().IndexOf(" ") > 1)
             {
+                button_CategoryAddCreate.Text = CategoryCreateText;
                 listBox1.Visible = false;
-                return;
             }
-
-            foreach (var c in cats)
-                listBox1.Items.Add(c);
-
-            listBox1.SelectedIndex = 0;
-            if (!listBox1.Visible)
+            else
             {
+                button_CategoryAddCreate.Text = CategoryAddText;
+
+                var cats = m_CategoryService.Categories
+                    .Where(x =>
+                        x.Code.ToLower().Contains(textbox.Text.ToLower())
+                       || x.Name.ToLower().Contains(textbox.Text.ToLower()))
+                    .Where(c => c.Id != Id.Null)
+                    .Where(d => !citCats.Any(f => f.CategoryId == d.Id))
+                    .ToList();
+
+                if (cats.Count < 1 || textbox.Text.Length < 2)
+                {
+                    listBox1.Visible = false;
+                    return;
+                }
+
+                foreach (var c in cats)
+                    listBox1.Items.Add(c);
+
                 listBox1.SelectedIndex = 0;
-                listBox1.Top = textbox.Top + textbox.Height;
-                listBox1.Left = textbox.Left;
-                listBox1.Width = textbox.Width;
-                listBox1.Visible = true;
+                if (!listBox1.Visible)
+                {
+                    listBox1.SelectedIndex = 0;
+                    listBox1.Top = textbox.Top + textbox.Height;
+                    listBox1.Left = textbox.Left;
+                    listBox1.Width = textbox.Width;
+                    listBox1.Visible = true;
+                }
             }
+
         }
 
 
@@ -522,12 +557,65 @@ namespace Dek.Bel
 
             bool isMain = (flowLayoutPanel_Categories.Controls.Count == 0) || hasNullCategory || !hasMainCategory;
 
-            m_CategoryService.AddCategoryToCitation(VM.CurrentCitation.Id, cat.Id, int.Parse((comboBox_CategoryWeight.SelectedItem as string)??"1"), isMain);
-            LoadCategoryControl();
+            //m_CategoryService.AddCategoryToCitation(VM.CurrentCitation.Id, cat.Id, int.Parse((comboBox_CategoryWeight.SelectedItem as string)??"1"), isMain);
+            //LoadCategoryControl();
+
+            textBox_CategorySearch.Text = cat.ToString();
 
             listBox1.Visible = false;
-            textBox_CategorySearch.Text = "";
+            //textBox_CategorySearch.Text = "";
         }
+
+        private void Button_CategoryAddCreate_Click(object sender, EventArgs e)
+        {
+            if (button_CategoryAddCreate.Text == CategoryAddText)
+            {
+                if (!(listBox1.SelectedItem is Category cat))
+                    return;
+
+                bool hasNullCategory = m_CategoryService.CitationCategories(VM.CurrentCitation.Id).Any(x => x.CitationId == Id.Null);
+                bool hasMainCategory = m_CategoryService.CitationCategories(VM.CurrentCitation.Id).Any(x => x.IsMain);
+
+                bool isMain = (flowLayoutPanel_Categories.Controls.Count == 0) || hasNullCategory || !hasMainCategory;
+
+                m_CategoryService.AddCategoryToCitation(VM.CurrentCitation.Id, cat.Id, int.Parse((comboBox_CategoryWeight.SelectedItem as string) ?? "1"), isMain);
+                LoadCategoryControl();
+
+                textBox_CategorySearch.Text = "";
+            }
+            else
+            {
+                string s = textBox_CategorySearch.Text.Trim().Replace("-", " ").Replace("   ", " ").Replace("  ", " ").Replace("  ", " ").Replace("  ", " ").Replace("  ", " ");
+                if (string.IsNullOrWhiteSpace(s))
+                    return;
+
+                Regex regex = new Regex(@"^\w+ +\w+$");
+                if(!regex.IsMatch(s))
+                {
+                    MessageBox.Show($"To create new category, please use the following format:{Environment.NewLine}Code Name", "Invalid format");
+                    textBox_CategorySearch.Focus();
+                    return;
+                }
+
+                string[] parts = s.Split(' ');
+
+                // Create new category
+                Category newCategory = m_CategoryService.CreateNewCategory(parts[0], parts[1]);
+
+                bool hasNullCategory = m_CategoryService.CitationCategories(VM.CurrentCitation.Id).Any(x => x.CitationId == Id.Null);
+                bool hasMainCategory = m_CategoryService.CitationCategories(VM.CurrentCitation.Id).Any(x => x.IsMain);
+
+                bool isMain = (flowLayoutPanel_Categories.Controls.Count == 0) || hasNullCategory || !hasMainCategory;
+
+                m_CategoryService.AddCategoryToCitation(VM.CurrentCitation.Id, newCategory.Id, int.Parse((comboBox_CategoryWeight.SelectedItem as string) ?? "1"), isMain);
+                LoadCategoryControl();
+
+                textBox_CategorySearch.Text = "";
+            }
+        }
+
+        
+
 
         private void textBox_CategorySearch_TextChanged(object sender, EventArgs e)
         {
@@ -585,7 +673,8 @@ namespace Dek.Bel
             LoadCategoryControl();
         }
 
-        #endregion Category logic ==============================================================
+        // *************************************************************************************************
+        #endregion Category logic ==========================================================================
 
         private void copyGUIDToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -961,6 +1050,13 @@ namespace Dek.Bel
         {
             m_UserSettingsService.AutoWritePdfOnClose = checkBox_AutoWritePdfOnClose.Checked;
         }
+
+        private void Button2_Click_1(object sender, EventArgs e)
+        {
+            FormCategory fc = new FormCategory(m_CategoryService);
+            fc.ShowDialog();
+        }
+
 
 
         // --------------------------

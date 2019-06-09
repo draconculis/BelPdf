@@ -1,5 +1,7 @@
 ﻿using Dek.Bel.Cls;
+using Dek.Cls;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.IO;
 using System.Text;
@@ -31,6 +33,9 @@ namespace Dek.Bel.Services.Report
             var source = new BindingSource();
             source.DataSource = m_ReportService.Filtered;
             dataGridView1.DataSource = source;
+
+            // Hide some columns per default
+            dataGridView1.Columns[nameof(ReportModel.Emphasis)].Visible = false;
 
             label_time.Text = $"Took: {milliseconds / 1000.0} seconds";
         }
@@ -98,11 +103,18 @@ namespace Dek.Bel.Services.Report
 
         private void Button5_Click(object sender, EventArgs e)
         {
+            string title = $"Bel Report {DateTime.Now.ToSaneStringShort()}";
+            string fileName = $"Bel_Report_{DateTime.Now.ToCompactStringShort()}.html";
+
             StringBuilder sb = new StringBuilder();
 
-            sb.Append($"<html><head><title></title></head><body>");
+            sb.Append($"<html><head><title>{title}</title>");
+            AppendReportTableStyle(sb);
+            sb.Append("</head><body>");
+            // Page title
+            sb.Append($"<h1>{title}</h1>");
             sb.Append(Environment.NewLine);
-            sb.Append("<table>");
+            sb.Append("<table id=\"report\">");
             // Headers
             sb.Append("<tr>");
             sb.Append(Environment.NewLine);
@@ -123,7 +135,14 @@ namespace Dek.Bel.Services.Report
                 foreach (DataGridViewColumn col in dataGridView1.Columns)
                 {
                     sb.Append("<td>");
-                    sb.Append(row.Cells[col.HeaderText].Value as string);
+
+                    if (col.HeaderText == nameof(ReportModel.Citation))
+                    {
+                        HandleCitation3(sb, row.Cells[col.HeaderText].Value.ToString(), row.Cells[nameof(ReportModel.Emphasis)].Value.ToString());
+                    }
+                    else
+                        sb.Append(row.Cells[col.HeaderText].Value.ToString());
+
                     sb.Append("</td>" + Environment.NewLine);
                 }
                 sb.Append("</tr>");
@@ -133,10 +152,89 @@ namespace Dek.Bel.Services.Report
 
             sb.Append("</table></body></html>");
 
-            string filePath = Path.Combine(m_UserSettingsService.StorageFolder, "\\report.html");
+            string filePath = Path.Combine(m_UserSettingsService.StorageFolder, fileName);
             File.WriteAllText(filePath, sb.ToString());
 
             System.Diagnostics.Process.Start(filePath);
+        }
+
+        private void HandleCitation3(StringBuilder sb, string text, string emphasisString)
+        {
+            if (text.IsNullOrWhiteSpace())
+                return;
+
+            string s = text.Replace("\r\n", "\r").Replace("\n", "\r");
+
+            List<DekRange> emphasis = new List<DekRange>();
+            emphasis.LoadFromText(emphasisString);
+
+            if (emphasis == null)
+                emphasis = new List<DekRange>();
+
+            bool boldEmphasis = m_UserSettingsService.BoldEmphasis;
+            bool underlineEmphasis = m_UserSettingsService.UnderlineEmphasis;
+
+            StringBuilder htmlStringBuilder = new StringBuilder();
+            //rtfbuilder.Append(@"{\rtf1\ansi ");
+            bool inEmphasis = false;
+            for (int i = 0; i < s.Length; i++)
+            {
+                if (emphasis.ContainsInteger(i) && !inEmphasis)
+                {
+                    if (boldEmphasis)
+                        htmlStringBuilder.Append("<b>");
+                    if (underlineEmphasis)
+                        htmlStringBuilder.Append("<i>");
+                    inEmphasis = true;
+                }
+                if (!emphasis.ContainsInteger(i) && inEmphasis)
+                {
+                    if (underlineEmphasis)
+                        htmlStringBuilder.Append("</i>");
+                    if (boldEmphasis)
+                        htmlStringBuilder.Append("</b>");
+
+                    inEmphasis = false;
+                }
+
+                htmlStringBuilder.Append(s[i]);
+            }
+
+            var ret = htmlStringBuilder.ToString();
+            ret = ret.Replace("\r", "\r\n");
+
+            sb.Append(ret);
+        }
+
+        private void AppendReportTableStyle(StringBuilder sb)
+        {
+            sb.Append(
+                @"<style>
+                    #report {
+                    font-family: ""Trebuchet MS"", Arial, Helvetica, sans-serif;
+                    border-collapse: collapse;
+                    width: 200%;
+                }
+
+                #report td, #report th {
+                    border: 1px solid #ddd;
+                    padding: 8px;
+                    vertical-align: top;
+                }
+
+                #report tr:nth-child(even){background-color: #f2f2f2;}
+
+                #report tr:hover {background-color: #ffe;}
+
+                #report th {
+                    padding-top: 12px;
+                    padding-bottom: 12px;
+                    text-align: left;
+                    background-color: #99ffcc;
+                    color: Black;
+                }
+                </style>"
+                );
         }
     }
 }

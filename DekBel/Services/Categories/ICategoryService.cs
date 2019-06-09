@@ -14,6 +14,7 @@ namespace Dek.Bel.Services
         IEnumerable<Category> Categories { get; }
         List<CitationCategory> CitationCategories(Id citationId);
 
+        Category CreateNewCategory(string code, string name, string description = null);
         Category InsertOrUpdate(Category cat);
         Category InsertOrUpdate(string code, string name, string desc);
         void Remove(Category cat);

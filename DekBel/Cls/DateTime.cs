@@ -9,11 +9,30 @@ namespace Dek.Bel.Cls
 {
     public static class DateTimeExtensions
     {
+        private static readonly string compactPattern = "yyyyMMddHHmmssfff";
+        private static readonly string compactPatternShort = "yyyyMMddHHmmss";
+
         private static readonly string sanePattern = "yyyy-MM-dd HH:mm:ss.fff";
         private static readonly string sanePatternShort = "yyyy-MM-dd HH:mm:ss";
         private static readonly string sanePatternShorter = "yyyy-MM-dd HH:mm";
         private static readonly string saneIsoPattern = "yyyy-MM-dd\\THH:mm:ss.fff";
         private static readonly string saneIsoPatternShort = "yyyy-MM-dd\\THH:mm:ss";
+
+        public static string ToCompactString(this DateTime me, string nullString = "")
+        {
+            if (me.Year == DateTime.MinValue.Year)
+                return nullString;
+
+            return me.ToString(compactPattern);
+        }
+
+        public static string ToCompactStringShort(this DateTime me, string nullString = "")
+        {
+            if (me.Year == DateTime.MinValue.Year)
+                return nullString;
+
+            return me.ToString(compactPatternShort);
+        }
 
         public static string ToSaneString(this DateTime me, string nullString = "")
         {
@@ -22,6 +41,7 @@ namespace Dek.Bel.Cls
 
             return me.ToString(sanePattern);
         }
+
         public static string ToSaneStringShort(this DateTime me, string nullString = "")
         {
             if (me.Year == DateTime.MinValue.Year)

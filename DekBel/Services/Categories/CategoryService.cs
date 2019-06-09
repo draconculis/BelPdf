@@ -54,11 +54,37 @@ namespace Dek.Bel.Services
             Category existingCat = Categories.FirstOrDefault(x => x.Code == cat.Code);
 
             if (cat.Id == Id.Null)
-                cat.Id =  
+                cat.Id =
                     (existingCat?.Id != null)
                     ? cat.Id = existingCat.Id
                     : cat.Id = Id.NewId();
 
+            m_DBService.InsertOrUpdate(cat);
+
+            FireCategoryUpdated(cat);
+
+            return cat;
+        }
+
+        /// <summary>
+        /// Add a new category. Returns null if category with code already exists.
+        /// </summary>
+        /// <param name="cat"></param>
+        /// <exception cref="ArgumentException">Throws arg exception if code not unique</exception>
+        public Category CreateNewCategory(string code, string name, string description = null)
+        {
+            Category existingCat = Categories.FirstOrDefault(x => x.Code == code);
+            if (existingCat != null)
+                return null;
+
+            Category cat = new Category
+            {
+                Id = Id.NewId(),
+                Code = code,
+                Name = name,
+                Description = description,
+            };
+            
             m_DBService.InsertOrUpdate(cat);
 
             FireCategoryUpdated(cat);

@@ -4,12 +4,9 @@ namespace Dek.Bel.Models
 {
     public class VolumeSeries
     {
-        public class Series
-        {
-            public Id SeriesId { get; set; }
-            public Id VolumeId { get; set; }
-
-        }
-
+        [Key]
+        public Id SeriesId { get; set; }
+        [Key]
+        public Id VolumeId { get; set; }
     }
 }

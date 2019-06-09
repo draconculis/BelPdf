@@ -77,6 +77,9 @@ grid.DataSource = filtered;*/
                     Paragraph = VolumeService.GetReferenceForVolume(volume.Id, Cache.Paragraphs, c.PhysicalPageStart, c.GlyphStart)?.Title ?? "",
                     MainCategory = mainCategory.ToString(),
                     Weight = mainCitCat.Weight,
+
+                    // Hidden
+                    Emphasis = c.Emphasis,
                 };
 
                 Report.Add(m);

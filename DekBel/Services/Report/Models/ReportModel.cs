@@ -29,5 +29,8 @@ namespace Dek.Bel.Services
 
         public string MainCategory { get; set; }
         public int Weight { get; set; }
+
+        // Hidden
+        public string Emphasis { get; set; }
     }
 }
