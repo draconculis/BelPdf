@@ -120,6 +120,9 @@ namespace Dek.Bel.Services.Report
             sb.Append(Environment.NewLine);
             foreach (DataGridViewColumn col in dataGridView1.Columns)
             {
+                if (!col.Visible)
+                    continue;
+
                 sb.Append("<th>");
                 sb.Append(col.HeaderText);
                 sb.Append("</th>" + Environment.NewLine);
@@ -134,6 +137,9 @@ namespace Dek.Bel.Services.Report
 
                 foreach (DataGridViewColumn col in dataGridView1.Columns)
                 {
+                    if (!col.Visible)
+                        continue;
+
                     sb.Append("<td>");
 
                     if (col.HeaderText == nameof(ReportModel.Citation))
@@ -152,7 +158,11 @@ namespace Dek.Bel.Services.Report
 
             sb.Append("</table></body></html>");
 
-            string filePath = Path.Combine(m_UserSettingsService.StorageFolder, fileName);
+            string reportPath = Path.Combine(m_UserSettingsService.StorageFolder, "Reports");
+            if (!Directory.Exists(reportPath))
+                Directory.CreateDirectory(reportPath);
+
+            string filePath = Path.Combine(reportPath, fileName);
             File.WriteAllText(filePath, sb.ToString());
 
             System.Diagnostics.Process.Start(filePath);
