@@ -585,6 +585,9 @@ namespace Dek.Bel
             }
             else
             {
+                if (textBox_CategorySearch.Focused)
+                    return;
+
                 string s = textBox_CategorySearch.Text.Trim().Replace("-", " ").Replace("   ", " ").Replace("  ", " ").Replace("  ", " ").Replace("  ", " ").Replace("  ", " ");
                 if (string.IsNullOrWhiteSpace(s))
                     return;
@@ -601,6 +604,12 @@ namespace Dek.Bel
 
                 // Create new category
                 Category newCategory = m_CategoryService.CreateNewCategory(parts[0], parts[1]);
+                if(newCategory == null)
+                {
+                    MessageBox.Show($"New category cannot be added, category with code '{parts[0]}' already exists.", "Category exists");
+                    textBox_CategorySearch.Focus();
+                    return;
+                }
 
                 bool hasNullCategory = m_CategoryService.CitationCategories(VM.CurrentCitation.Id).Any(x => x.CitationId == Id.Null);
                 bool hasMainCategory = m_CategoryService.CitationCategories(VM.CurrentCitation.Id).Any(x => x.IsMain);
