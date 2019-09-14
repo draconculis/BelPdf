@@ -29,5 +29,32 @@
     <Setting Name="AutoWritePdfOnClose" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
+    <Setting Name="PdfMarginBoxColor" Type="System.Drawing.Color" Scope="User">
+      <Value Profile="(Default)">128, 255, 255</Value>
+    </Setting>
+    <Setting Name="PdfMarginBoxWidth" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">56</Value>
+    </Setting>
+    <Setting Name="PdfMarginBoxHeight" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">13</Value>
+    </Setting>
+    <Setting Name="PdfmarginBoxBorder" Type="System.Single" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="PdfMarginBoxMargin" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">11</Value>
+    </Setting>
+    <Setting Name="PdfMarginBoxVisualMode" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Normal</Value>
+    </Setting>
+    <Setting Name="PdfMarginBoxRightMargin" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="PdfMarginBoxFont" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Times-Roman</Value>
+    </Setting>
+    <Setting Name="PdfMarginBoxFontSize" Type="System.Single" Scope="User">
+      <Value Profile="(Default)">9</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

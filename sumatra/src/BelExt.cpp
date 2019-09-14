@@ -107,7 +107,7 @@ void DoBel(WindowInfo* winIn, int code) {
         else
             data.Text = L"\0";
 
-        data.FilePath = (TCHAR*)win->currentTab->GetOrigFilePath(); // Original file path
+        data.FilePath = (TCHAR*)win->currentTab->GetOrigFilePath(); // Return original path if filePath points to BelPdf storage
 
         if (isTextSelection) {
             data.SelectionRects = new int[4 * (dm->textSelection->result.len)];
@@ -143,6 +143,8 @@ void DoBel(WindowInfo* winIn, int code) {
 void BelHandleResult(ResultData* result) {
     if (result->Cancel)
         return;
+
+
 }
 
 // ****************************************************************/

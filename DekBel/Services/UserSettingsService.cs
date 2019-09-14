@@ -13,7 +13,7 @@ namespace Dek.Bel.Services
     [Export(typeof(IUserSettingsService))]
     public class UserSettingsService : IUserSettingsService
     {
-        private const string dbSubFolderPath = "data_alpha4";
+        private const string dbSubFolderPath = "data_alpha6";
         public string DBName { get; } = "BelPdf.sqlite";
         public string DBPath => Path.Combine(StorageFolder, dbSubFolderPath + "\\" + DBName);
         public string DeselectionMarker => (string)Properties.Settings.Default.DeselectionMarker ?? "…";
@@ -62,6 +62,65 @@ namespace Dek.Bel.Services
             get => Get(nameof(PdfUnderlineColor), Color.DarkRed);
             set => Set(nameof(PdfUnderlineColor), value);
         }
+
+        #region PdfMarginBox ==================================================
+
+        public Color PdfMarginBoxColor
+        {
+            get => Get(nameof(PdfMarginBoxColor), Color.AliceBlue);
+            set => Set(nameof(PdfMarginBoxColor), value);
+        }
+
+        public int PdfMarginBoxWidth
+        {
+            get => Get(nameof(PdfMarginBoxWidth), 56);
+            set => Set(nameof(PdfMarginBoxWidth), value);
+        }
+
+        public int PdfMarginBoxHeight
+        {
+            get => Get(nameof(PdfMarginBoxHeight), 13);
+            set => Set(nameof(PdfMarginBoxHeight), value);
+        }
+
+        public int PdfMarginBoxMargin
+        {
+            get => Get(nameof(PdfMarginBoxMargin), 11);
+            set => Set(nameof(PdfMarginBoxMargin), value);
+        }
+
+        public float PdfMarginBoxBorder
+        {
+            get => Get(nameof(PdfMarginBoxBorder), 0f);
+            set => Set(nameof(PdfMarginBoxBorder), value);
+        }
+
+        public string PdfMarginBoxVisualMode
+        {
+            get => Get(nameof(PdfMarginBoxVisualMode), Constants.MarginBoxVisualMode.Normal);
+            set => Set(nameof(PdfMarginBoxVisualMode), value);
+        }
+
+        public bool PdfMarginBoxRightMargin
+        {
+            get => Get(nameof(PdfMarginBoxRightMargin), false);
+            set => Set(nameof(PdfMarginBoxRightMargin), value);
+        }
+
+        public string PdfMarginBoxFont
+        {
+            get => Get(nameof(PdfMarginBoxFont), Constants.PdfFont.TIMES_ROMAN);
+            set => Set(nameof(PdfMarginBoxFont), value);
+        }
+
+        public float PdfMarginBoxFontSize
+        {
+            get => Get(nameof(PdfMarginBoxFontSize), 9f);
+            set => Set(nameof(PdfMarginBoxFontSize), value);
+        }
+
+        #endregion PdfMarginBox ===============================================
+
         public bool ShowDebugMessages
         {
             get => Get(nameof(ShowDebugMessages), false);
@@ -73,7 +132,6 @@ namespace Dek.Bel.Services
             get => Get(nameof(AutoWritePdfOnClose), false);
             set => Set(nameof(AutoWritePdfOnClose), value);
         }
-        
 
         private T Get<T>(string settingName, T defaultvalue = default(T))
         {

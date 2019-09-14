@@ -127,6 +127,7 @@
     <Compile Include="Cls\IntExtensions.cs" />
     <Compile Include="Cls\DekRange.cs" />
     <Compile Include="Constants\Constants.cs" />
+    <Compile Include="Constants\ConstantsHelper.cs" />
     <Compile Include="Form_AllCitations.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -139,6 +140,7 @@
     <Compile Include="FormVolume.Designer.cs">
       <DependentUpon>FormVolume.cs</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\PdfMarginBoxSettings.cs" />
     <Compile Include="ModelExtensions\CitationExtension.cs" />
     <Compile Include="ModelExtensions\ReferenceExtension.cs" />
     <Compile Include="Models\SeriesAuthor.cs" />

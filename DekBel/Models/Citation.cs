@@ -26,6 +26,8 @@ namespace Dek.Bel.Models
         public string Emphasis { get; set; } // for Citation3
 
         public string CitationColors { get; set; } // Highlight + underline color arrays (incl alpha)
+        public string MarginBoxSettings { get; set; } // Size, font, left/right
+        public string ExtraSettings { get; set; } // For the future
 
         public DateTime CreatedDate { get; set; }
         public DateTime EditedDate { get; set; }

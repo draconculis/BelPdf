@@ -76,7 +76,7 @@ grid.DataSource = filtered;*/
                     SubChapter = VolumeService.GetReferenceForVolume(volume.Id, Cache.SubChapters, c.PhysicalPageStart, c.GlyphStart)?.Title ?? "",
                     Paragraph = VolumeService.GetReferenceForVolume(volume.Id, Cache.Paragraphs, c.PhysicalPageStart, c.GlyphStart)?.Title ?? "",
                     MainCategory = mainCategory.ToString(),
-                    Weight = mainCitCat.Weight,
+                    Weight = mainCitCat?.Weight ?? 0,
 
                     // Hidden
                     Emphasis = c.Emphasis,

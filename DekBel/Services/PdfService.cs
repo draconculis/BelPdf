@@ -26,6 +26,7 @@ using iText.Kernel.Pdf.Action;
 using iText.Layout.Borders;
 using iText.Kernel.Pdf.Colorspace;
 using Dek.Bel.DB;
+using Dek.Bel.Helpers;
 
 namespace Dek.Bel.Services
 {
@@ -173,7 +174,7 @@ namespace Dek.Bel.Services
             //canvas.RestoreState();
 
             // Add annotation
-            AddMarginCategoryTextAnnotation(pdfDoc, null, physicalPage, citCat.CitationId.ToString(), cat.Code + $" [{citCat.Weight}]", rectsString);
+            //AddMarginCategoryTextAnnotation(pdfDoc, null, physicalPage, citCat.CitationId.ToString(), cat.Code + $" [{citCat.Weight}]", rectsString, null, );
 
             pdfDoc.Close();
 
@@ -187,7 +188,7 @@ namespace Dek.Bel.Services
             string origFileName = vm.CurrentStorage.FilePath;
             string storageFilePath = System.IO.Path.Combine(m_UserSettingsService.StorageFolder, vm.CurrentStorage.StorageName);
             string tmpFileName = m_TempFileService.GetNewTmpFileName(vm.CurrentStorage.StorageName);
-            File.Move(storageFilePath, tmpFileName);
+            File.Copy(storageFilePath, tmpFileName, true);
 
             PdfDocument pdfDoc = new PdfDocument(new PdfReader(origFileName), new PdfWriter(storageFilePath));
 
@@ -202,19 +203,25 @@ namespace Dek.Bel.Services
                 List<(int page, int[] rects)> pageRects = ArrayStuff.ConvertStringToPagesAndArrays(cit.SelectionRects);
                 int firstPageNo = GetFirstPageFromPageRects(pageRects);
 
+                Color color_highLight, color_underLine, color_margin = new DeviceRgb(n(255), n(255), n(255)); ;
+
                 if (pageRects.Any())
                 {
-                    System.Drawing.Color ch, cu;
+                    System.Drawing.Color ch, cu, cm;
                     var colors = ColorStuff.ConvertStringToColors(cit.CitationColors);
-                    ch = (colors.Length == 2)
+                    ch = (colors.Length >= 1)
                         ? colors[0]
                         : m_UserSettingsService.PdfHighLightColor;
-                    cu = (colors.Length == 2)
+                    cu = (colors.Length >= 2)
                         ? colors[1]
                         : m_UserSettingsService.PdfUnderlineColor;
+                    cm = (colors.Length >= 3)
+                        ? colors[2]
+                        : m_UserSettingsService.PdfMarginBoxColor;
 
-                    Color color_highLight = new DeviceRgb(n(ch.R), n(ch.G), n(ch.B));
-                    Color color_underLine = new DeviceRgb(n(cu.R), n(cu.G), n(cu.B));
+                    color_highLight = new DeviceRgb(n(ch.R), n(ch.G), n(ch.B));
+                    color_underLine = new DeviceRgb(n(cu.R), n(cu.G), n(cu.B));
+                    color_margin = new DeviceRgb(n(cm.R), n(cm.G), n(cm.B));
 
                     foreach (var pageRect in pageRects)
                     {
@@ -271,20 +278,100 @@ namespace Dek.Bel.Services
                 }
 
                 // Add annotation
-                AddMarginCategoryTextAnnotation(pdfDoc, null, firstPageNo, cit.Id.ToString(), cat.Code + $" [{citCat.Weight}]", cit.SelectionRects);
+                AddMarginBox(pdfDoc, null, firstPageNo, cit.Id.ToString(), cat.Code + $" [{citCat.Weight}]", cit.SelectionRects, 
+                    color_margin,
+                    cit.MarginBoxSettings);
             }
             pdfDoc.Close();
 
             File.Delete(tmpFileName);
         }
 
-        public void AddMarginCategoryTextAnnotation(PdfDocument pdfDoc, PdfAnnotation existingAnnot, int physicalPage, string id, string text, string pageRectsString)
+
+        public void AddMarginBox(
+            PdfDocument pdfDoc,
+            PdfAnnotation existingAnnot,
+            int physicalPage,
+            string id,
+            string text,
+            string pageRectsString,
+            Color marginColor,
+            string pdfMarginBoxSettings
+            )
+        {
+            PdfMarginBoxSettings settings = new PdfMarginBoxSettings(pdfMarginBoxSettings);
+
+            switch (settings.DisplayMode)
+            {
+
+                case "Compact":
+                    AddMarginBox(
+                        pdfDoc,
+                        existingAnnot,
+                        physicalPage,
+                        id,
+                        text,
+                        pageRectsString,
+                        marginColor,
+                        settings.Width,
+                        settings.Height,
+                        settings.Margin,
+                        settings.BorderThickness,
+                        settings.Font,
+                        settings.FontSize,
+                        settings.RightMargin,
+                        settings.DisplayMode);
+                    break;
+                default: // Normal
+                    AddMarginBox(
+                        pdfDoc,
+                        existingAnnot,
+                        physicalPage,
+                        id,
+                        text,
+                        pageRectsString,
+                        marginColor,
+                        settings.Width,
+                        settings.Height,
+                        settings.Margin,
+                        settings.BorderThickness,
+                        settings.Font,
+                        settings.FontSize,
+                        settings.RightMargin,
+                        settings.DisplayMode);
+                break;
+            }
+                
+        }
+
+        public void AddMarginBox(
+            PdfDocument pdfDoc, 
+            PdfAnnotation existingAnnot, 
+            int physicalPage, 
+            string id, 
+            string text, 
+            string pageRectsString,
+            Color marginColor,
+            int width,
+            int height,
+            int margin,
+            float borderThickness,
+            string font,
+            float fontSize,
+            bool rightMargin,
+            string visualMode)
         {
             bool annotExists = existingAnnot != null;
 
-            int boxWidth = 56;
-            int boxHeight = 13;
-            int boxLeft = 11;
+            // Compact = minimize width - by multiline!
+            int noOfLines = 1;
+            if (visualMode == Constants.MarginBoxVisualMode.Compact)
+            {
+                text = text.Replace("      ", " ").Replace("     ", " ").Replace("    ", " ").Replace("   ", " ").Replace("  ", " ");
+                noOfLines = text.Split(' ').Count();
+                text = text.Replace(" ", Environment.NewLine);
+            }
+
             //int[] rects = ArrayStuff.ConvertStringToPagesAndArrays(rectsString)[0].rects;
             //int yCoord = rects[1];
 
@@ -295,8 +382,30 @@ namespace Dek.Bel.Services
             int pageWidth = (int)pageSize.GetWidth();
             //Rectangle rect = new Rectangle(boxLeft, pageHeight - yCoord - boxHeight, boxWidth, boxHeight);
 
-            // Page number labels
-            pdfDoc.GetFirstPage().SetPageLabel(PageLabelNumberingStyle.DECIMAL_ARABIC_NUMERALS, null);
+            int boxWidth = width;
+            int boxHeight = height * noOfLines; // Vague attempt at getting position correct when using compact multiline
+            int boxLeft = rightMargin ?
+                pageWidth - (margin + boxWidth)
+                : margin;
+            int boxBottom = pageHeight - yCoord - boxHeight;
+
+            if (visualMode == Constants.MarginBoxVisualMode.Minimal)
+            {
+                if (rightMargin)
+                {
+                    boxLeft = pageWidth - height - margin;
+                    boxBottom += height;
+                }
+                else
+                {
+                    boxLeft += height;
+                    boxBottom += (height - width);
+                }
+                
+            }
+
+                // Page number labels
+                pdfDoc.GetFirstPage().SetPageLabel(PageLabelNumberingStyle.DECIMAL_ARABIC_NUMERALS, null);
 
             //DekRange margin = GetMargin(pdfDoc, physicalPage, rectsString);
 
@@ -309,14 +418,14 @@ namespace Dek.Bel.Services
             PdfAction action = PdfAction.CreateLaunch(spec);
 
             //
-            PdfFont font = PdfFontFactory.CreateFont(iText.IO.Font.Constants.StandardFonts.TIMES_ROMAN);
+            //PdfFont pdfFont = PdfFontFactory.CreateFont(iText.IO.Font.Constants.StandardFonts.TIMES_ROMAN);
+            PdfFont pdfFont = PdfFontFactory.CreateFont(font);
 
             // Paragraph
             //var paragraph = new iText.Layout.Element.Paragraph(new Link(text, action));
             //paragraph.SetBorder(new SolidBorder(1));
 
             //paragraph.SetFont(font).SetFontSize(9);
-
             //canvas.Add(paragraph);
             Link link = new Link(text, action);
             link.GetLinkAnnotation().SetName(new PdfString($"belpdf:{id}"));
@@ -324,11 +433,22 @@ namespace Dek.Bel.Services
                 .Add(link)
                 .SetStrokeColor(ColorConstants.BLACK)
                 .SetFontColor(ColorConstants.BLACK)
-                .SetFixedPosition(boxLeft, pageHeight - yCoord - boxHeight, boxWidth) // NB that height is variable
-                //.SetBorder(new SolidBorder(0.5f))
-                .SetFont(font)
-                .SetFontSize(9)
+                //.SetBackgroundColor(marginColor)
+                .SetFixedPosition(boxLeft, boxBottom, boxWidth) // NB that height is variable
+                .SetFont(pdfFont)
+                .SetFontSize(fontSize)
                 .SetPageNumber(physicalPage);
+
+            var mc = marginColor.GetColorValue();
+            if((mc[0] != 255) && (mc[1] != 255) && (mc[2] != 255))
+                paragraph1.SetBackgroundColor(marginColor);
+
+            if (borderThickness > 0f)
+                paragraph1.SetBorder(new SolidBorder(borderThickness));
+
+            if (visualMode == Constants.MarginBoxVisualMode.Minimal)
+                paragraph1.SetRotationAngle((rightMargin ? -Math.PI / 2 : Math.PI / 2));
+
             Document doc = new Document(pdfDoc);
             doc.Add(paragraph1);
 

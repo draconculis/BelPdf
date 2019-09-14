@@ -12,7 +12,7 @@ namespace Dek.Bel.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.2.0.0")]
     internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -128,6 +128,114 @@ namespace Dek.Bel.Properties {
             }
             set {
                 this["AutoWritePdfOnClose"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("128, 255, 255")]
+        public global::System.Drawing.Color PdfMarginBoxColor {
+            get {
+                return ((global::System.Drawing.Color)(this["PdfMarginBoxColor"]));
+            }
+            set {
+                this["PdfMarginBoxColor"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("56")]
+        public int PdfMarginBoxWidth {
+            get {
+                return ((int)(this["PdfMarginBoxWidth"]));
+            }
+            set {
+                this["PdfMarginBoxWidth"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("13")]
+        public int PdfMarginBoxHeight {
+            get {
+                return ((int)(this["PdfMarginBoxHeight"]));
+            }
+            set {
+                this["PdfMarginBoxHeight"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public float PdfmarginBoxBorder {
+            get {
+                return ((float)(this["PdfmarginBoxBorder"]));
+            }
+            set {
+                this["PdfmarginBoxBorder"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("11")]
+        public int PdfMarginBoxMargin {
+            get {
+                return ((int)(this["PdfMarginBoxMargin"]));
+            }
+            set {
+                this["PdfMarginBoxMargin"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Normal")]
+        public string PdfMarginBoxVisualMode {
+            get {
+                return ((string)(this["PdfMarginBoxVisualMode"]));
+            }
+            set {
+                this["PdfMarginBoxVisualMode"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool PdfMarginBoxRightMargin {
+            get {
+                return ((bool)(this["PdfMarginBoxRightMargin"]));
+            }
+            set {
+                this["PdfMarginBoxRightMargin"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Times-Roman")]
+        public string PdfMarginBoxFont {
+            get {
+                return ((string)(this["PdfMarginBoxFont"]));
+            }
+            set {
+                this["PdfMarginBoxFont"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("9")]
+        public float PdfMarginBoxFontSize {
+            get {
+                return ((float)(this["PdfMarginBoxFontSize"]));
+            }
+            set {
+                this["PdfMarginBoxFontSize"] = value;
             }
         }
     }

@@ -119,6 +119,9 @@
     <TargetName>BelSumatraPDF</TargetName>
     <TargetExt>.exe</TargetExt>
     <GenerateManifest>false</GenerateManifest>
+    <PreBuildEventUseInBuild>false</PreBuildEventUseInBuild>
+    <PreLinkEventUseInBuild>false</PreLinkEventUseInBuild>
+    <PostBuildEventUseInBuild>false</PostBuildEventUseInBuild>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>true</LinkIncremental>

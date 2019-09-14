@@ -14,9 +14,9 @@ namespace Dek.Bel.Cls
             return $"{color.R},{color.G},{color.B},{color.A};";
         }
 
-        public static string ConvertColorsToString(Color color1, Color color2)
+        public static string ConvertColorsToString(Color color1, Color color2, Color color3)
         {
-            return ConvertColorToString(color1) + ConvertColorToString(color2);
+            return ConvertColorToString(color1) + ConvertColorToString(color2) + ConvertColorToString(color3);
         }
 
         public static string ConvertColorsToString(IEnumerable<Color> colors)

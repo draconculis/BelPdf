@@ -27,7 +27,7 @@ struct EventData {
 struct ResultData {
     int Code;
     bool Cancel;
-    TCHAR* Message;
+	TCHAR* Message;
 };
 
 struct RequestFileStorageData {

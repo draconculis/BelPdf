@@ -14,6 +14,7 @@ using System.Linq;
 using System.Windows.Forms;
 using Dek.Bel.Services.Report;
 using System.Text.RegularExpressions;
+using Dek.Bel.Helpers;
 
 namespace Dek.Bel
 {
@@ -121,6 +122,12 @@ namespace Dek.Bel
             richTextBox1.Font = font;
             richTextBox2.Font = font;
 
+            // Init margin box dropdowns
+            PdfMarginBoxSettings.LoadAComboBoxWithPdfFonts(comboBox_PdfBoxFont);
+            SetComboBoxSelectedIndex(comboBox_PdfBoxFont, Constants.PdfFont.TIMES_ROMAN);
+            PdfMarginBoxSettings.LoadAComboBoxWithDisplayModes(comboBox_PdfMarginBoxDisplayMode);
+            SetComboBoxSelectedIndex(comboBox_PdfBoxFont, Constants.MarginBoxVisualMode.Normal);
+
             LoadControls();
 
             splitContainer2.Focus();
@@ -188,21 +195,26 @@ namespace Dek.Bel
 
             LoadCategoryControl();
             LoadReferences();
+            LoadPdfMarginBoxControls();
 
             // Set pdf colors
-            System.Drawing.Color ch, cu;
-            var colors = ColorStuff.ConvertStringToColors(VM.CurrentCitation.CitationColors);
-            ch = (colors.Length == 2)
+            System.Drawing.Color ch, cu, cm;
+            Color[] colors = ColorStuff.ConvertStringToColors(VM.CurrentCitation.CitationColors);
+            ch = (colors.Length >= 1)
                 ? colors[0]
                 : m_UserSettingsService.PdfHighLightColor;
-            cu = (colors.Length == 2)
+            cu = (colors.Length >= 2)
                 ? colors[1]
                 : m_UserSettingsService.PdfUnderlineColor;
+            cm = (colors.Length >= 3)
+                ? colors[2]
+                : m_UserSettingsService.PdfMarginBoxColor;
 
             label_PdfHighlightColor.BackColor = ch;
             label_PdfUnderLineColor.ForeColor = cu;
+            label_PdfMarginBoxColor.BackColor = cm;
 
-            checkBox_AutoWritePdfOnClose.Checked = m_UserSettingsService.AutoWritePdfOnClose;
+            toolStripButton_AutoUpdate.Checked = m_UserSettingsService.AutoWritePdfOnClose;
         }
 
         void LoadCategoryControl()
@@ -220,6 +232,21 @@ namespace Dek.Bel
                 if(cat != null)
                     AddCategoryLabel(cg, cat);
             }
+        }
+
+        void LoadPdfMarginBoxControls()
+        {
+            string settingsStr = VM.CurrentCitation.MarginBoxSettings;
+            PdfMarginBoxSettings settings = new PdfMarginBoxSettings(settingsStr);
+
+            SetComboBoxSelectedIndex(comboBox_PdfBoxFont, settings.Font);
+            SetComboBoxSelectedIndex(comboBox_PdfMarginBoxDisplayMode, settings.DisplayMode);
+
+            checkBox_right.Checked = settings.RightMargin;
+            numericUpDown_FontSize.Value = (decimal)settings.FontSize;
+            numericUpDown_borderThickness.Value = (decimal)settings.BorderThickness;
+            numericUpDown_PdfBoxMargin.Value = (decimal)settings.Margin;
+            numericUpDown_pdfMarginBoxWidth.Value = (decimal)settings.Width;
         }
 
         void LoadReferences()
@@ -913,6 +940,17 @@ namespace Dek.Bel
 
         }
 
+        private void ToolStripButton_updatePdf_Click(object sender, EventArgs e)
+        {
+            PdfService.RecreateTheWholeThing(VM, m_VolumeService);
+        }
+
+        private void ToolStripButton_AutoUpdate_CheckedChanged(object sender, EventArgs e)
+        {
+            m_UserSettingsService.AutoWritePdfOnClose = toolStripButton_AutoUpdate.Checked;
+        }
+
+
         private void TextBox_CitationNotes_Leave(object sender, EventArgs e)
         {
             VM.CurrentCitation.Notes = textBox_CitationNotes.Text;
@@ -958,6 +996,7 @@ namespace Dek.Bel
 
 
 
+        #region Colors ===========================================================
 
         private void Label_PdfHighlightColor_Click(object sender, EventArgs e)
         {
@@ -966,21 +1005,155 @@ namespace Dek.Bel
             m_UserSettingsService.PdfHighLightColor = colorDialog1.Color;
             label_PdfHighlightColor.BackColor = m_UserSettingsService.PdfHighLightColor;
 
-            VM.CurrentCitation.CitationColors = ColorStuff.ConvertColorsToString(label_PdfHighlightColor.BackColor, label_PdfUnderLineColor.ForeColor);
-            m_VolumeService.SaveAndReloadCitation(VM.CurrentCitation);
+            SaveColors();
         }
 
         private void Label_PdfUnderLineColor_Click(object sender, EventArgs e)
         {
             colorDialog1.Color = m_UserSettingsService.PdfUnderlineColor;
             colorDialog1.ShowDialog();
-            m_UserSettingsService.PdfUnderlineColor= colorDialog1.Color;
+            m_UserSettingsService.PdfUnderlineColor = colorDialog1.Color;
             label_PdfUnderLineColor.ForeColor = m_UserSettingsService.PdfUnderlineColor;
 
-            VM.CurrentCitation.CitationColors = ColorStuff.ConvertColorsToString(label_PdfHighlightColor.BackColor, label_PdfUnderLineColor.ForeColor);
+            SaveColors();
+        }
+
+        private void Label_PdfMarginColor_Click(object sender, EventArgs e)
+        {
+            colorDialog1.Color = m_UserSettingsService.PdfMarginBoxColor;
+            colorDialog1.ShowDialog();
+            m_UserSettingsService.PdfMarginBoxColor = colorDialog1.Color;
+            label_PdfMarginBoxColor.BackColor = m_UserSettingsService.PdfMarginBoxColor;
+
+            SaveColors();
+        }
+
+        private void SaveColors()
+        {
+            VM.CurrentCitation.CitationColors =
+                ColorStuff.ConvertColorsToString(label_PdfHighlightColor.BackColor, label_PdfUnderLineColor.ForeColor, label_PdfMarginBoxColor.BackColor);
             m_VolumeService.SaveAndReloadCitation(VM.CurrentCitation);
         }
 
+        #endregion Colors =========================================================
+
+        #region Pdf Margin Box Settings ===========================================
+
+        private void NumericUpDown_borderThickness_ValueChanged(object sender, EventArgs e)
+        {
+            float val;
+            try
+            {
+                val = (float)numericUpDown_borderThickness.Value;
+            }
+            catch
+            {
+                return;
+            }
+
+            m_UserSettingsService.PdfMarginBoxBorder = val;
+            SaveMarginBoxSettingsToCitation();
+        }
+
+        private void SaveMarginBoxSettingsToCitation()
+        {
+            VM.CurrentCitation.MarginBoxSettings = new PdfMarginBoxSettings(
+                m_UserSettingsService.PdfMarginBoxWidth,
+                m_UserSettingsService.PdfMarginBoxHeight,
+                m_UserSettingsService.PdfMarginBoxMargin,
+                m_UserSettingsService.PdfMarginBoxBorder,
+                m_UserSettingsService.PdfMarginBoxFont,
+                m_UserSettingsService.PdfMarginBoxFontSize,
+                m_UserSettingsService.PdfMarginBoxRightMargin,
+                m_UserSettingsService.PdfMarginBoxVisualMode
+                ).ToString();
+
+            m_VolumeService.SaveAndReloadCitation(VM.CurrentCitation);
+        }
+
+        private void ComboBox_PdfBoxFont_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            m_UserSettingsService.PdfMarginBoxFont = comboBox_PdfBoxFont.SelectedItem.ToString();
+            SaveMarginBoxSettingsToCitation();
+        }
+
+        private void TextBox_pdfMarginBoxFontSize_TextChanged(object sender, EventArgs e)
+        {
+            float fontSize = m_UserSettingsService.PdfMarginBoxFontSize;
+            try
+            {
+                m_UserSettingsService.PdfMarginBoxFontSize = (float)numericUpDown_FontSize.Value;
+            }
+            catch
+            {
+
+            }
+
+            SaveMarginBoxSettingsToCitation();
+        }
+
+        private void ComboBox_PdfMarginBoxDisplayMode_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            m_UserSettingsService.PdfMarginBoxVisualMode = comboBox_PdfMarginBoxDisplayMode.SelectedItem.ToString();
+            SaveMarginBoxSettingsToCitation();
+        }
+
+        private void CheckBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            m_UserSettingsService.PdfMarginBoxRightMargin = checkBox_right.Checked;
+            SaveMarginBoxSettingsToCitation();
+        }
+
+        private void NumericUpDown_PdfBoxMargin_ValueChanged(object sender, EventArgs e)
+        {
+            int val;
+            try
+            {
+                val = (int)numericUpDown_PdfBoxMargin.Value;
+            }
+            catch
+            {
+                return;
+            }
+
+            m_UserSettingsService.PdfMarginBoxMargin = val;
+            SaveMarginBoxSettingsToCitation();
+        }
+
+        private void NumericUpDown_FontSize_ValueChanged(object sender, EventArgs e)
+        {
+            float val;
+            try
+            {
+                val = (float)numericUpDown_FontSize.Value;
+            }
+            catch
+            {
+                return;
+            }
+
+            m_UserSettingsService.PdfMarginBoxFontSize = val;
+            SaveMarginBoxSettingsToCitation();
+        }
+
+        private void NumericUpDown_pdfMarginBoxWidth_ValueChanged(object sender, EventArgs e)
+        {
+            int val;
+            try
+            {
+                val = (int)numericUpDown_pdfMarginBoxWidth.Value;
+            }
+            catch
+            {
+                return;
+            }
+
+            m_UserSettingsService.PdfMarginBoxWidth = val;
+            SaveMarginBoxSettingsToCitation();
+        }
+
+
+        #endregion Pdf Margin Box Settings ========================================
 
         private void Button1_Click_1(object sender, EventArgs e)
         {
@@ -991,6 +1164,22 @@ namespace Dek.Bel
         {
             RemoveLineEndingsToolStripMenuItem1_Click(sender, e);
         }
+
+        private void SetComboBoxSelectedIndex(ComboBox theComboBox, string text)
+        {
+            int idx = 0;
+            foreach(string item in theComboBox.Items)
+            {
+                if(item.Equals(text, StringComparison.OrdinalIgnoreCase))
+                {
+                    theComboBox.SelectedIndex = idx;
+                    return;
+                }
+                idx++;
+            }
+        }
+
+
 
         // Hamburger ==============================================================================
         #region Hamburger =========================================================================
@@ -1051,13 +1240,8 @@ namespace Dek.Bel
 
         private void BelGui_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (checkBox_AutoWritePdfOnClose.Checked)
+            if (m_UserSettingsService.AutoWritePdfOnClose)
                 PdfService.RecreateTheWholeThing(VM, m_VolumeService);
-        }
-
-        private void CheckBox_AutoWritePdfOnClose_CheckedChanged(object sender, EventArgs e)
-        {
-            m_UserSettingsService.AutoWritePdfOnClose = checkBox_AutoWritePdfOnClose.Checked;
         }
 
         private void Button2_Click_1(object sender, EventArgs e)

@@ -21,6 +21,8 @@ namespace Dek.Bel.Services
 
         public string OriginalCitation { get; set; } // Citation1
         public string Citation { get; set; } // Citation3
+        public string CitationAndSource => Citation + Environment.NewLine + 
+            $" - <author>, {Book}, Chapter: {Chapter}";
 
         public string Book { get; set; }
         public string Chapter { get; set; }

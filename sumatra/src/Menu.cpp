@@ -19,14 +19,9 @@
 #include "Theme.h"
 #include "GlobalPrefs.h"
 #include "Colors.h"
-// <<<<<<< HEAD
-
 #include "TextSelection.h"
-
-// =======
 #include "ProgressUpdateUI.h"
 #include "Notifications.h"
-// >>>>>>> master
 #include "SumatraPDF.h"
 #include "WindowInfo.h"
 #include "TabInfo.h"
