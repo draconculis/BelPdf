@@ -7,7 +7,6 @@ using System.ComponentModel.Composition;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Colors;
@@ -27,170 +26,29 @@ using iText.Layout.Borders;
 using iText.Kernel.Pdf.Colorspace;
 using Dek.Bel.DB;
 using Dek.Bel.Helpers;
+using System.Threading;
 
 namespace Dek.Bel.Services
 {
-    [Export]
-    public class PdfService
+    [Export(typeof(IPdfService))]
+    public class PdfService : IPdfService
     {
 
         [Import] public IUserSettingsService m_UserSettingsService { get; set; }
         [Import] public ICategoryService m_CategoryService { get; set; }
         [Import] public IMessageboxService m_MessageboxService { get; set; }
         [Import] public TempFileService m_TempFileService { get; set; }
-
-        public void Test(EventData data)
-        {
-            PdfDocument pdfDoc = new PdfDocument(new PdfReader(data.FilePath), new PdfWriter(data.FilePath));
-
-
-
-
-            pdfDoc.Close();
-        }
-
-        public void ManipulatePdf(String storageFileName, string rectsString)
-        {
-            //storageFileName = @"C:\Users\stimo\Documents\BelPdf\1_Refining_the_Definitions_of_Amulet_Phy.bel.1_A.pdf";
-            //string tmpFileName = @"C:\Users\stimo\Documents\BelPdf\1_Refining_the_Definitions_of_Amulet_Phy.bel.1_B.pdf";
-            //List<(int page, int[] rects)> pageRects = ArrayStuff.ConvertStringToPagesAndArrays(rectsString);
-
-            //PdfDocument pdfDoc = new PdfDocument(new PdfReader(storageFileName), new PdfWriter(tmpFileName));
-            //PdfCanvas canvas = new PdfCanvas(
-            //    pdfDoc.GetFirstPage().NewContentStreamBefore(),
-            //    pdfDoc.GetFirstPage().GetResources(), pdfDoc);
-
-            //canvas.SaveState();
-
-            //canvas.SetFillColor(ColorConstants.CYAN);
-            //int canvasHeight = (int)pdfDoc.GetPage(1).GetPageSize().GetHeight();
-            //int canvasWidth = (int)pdfDoc.GetPage(1).GetPageSize().GetWidth();
-
-            //for (int i = 0; i < rects.Length; i += 4)
-            //{
-            //    canvas.Rectangle(rects[i], canvasHeight - rects[i + 1] - rects[i + 3], rects[i + 2], rects[i + 3]);
-            //}
-
-            ////canvas.Rectangle(36, 786, 66, 16);
-
-            //canvas.Fill();
-
-            //canvas.RestoreState();
-
-            //pdfDoc.Close();
-
-        }
-
-
-        /*
-         pdfDoc.GetPage(33).GetAnnotations().First().SetName(new PdfString("Hello"))
-         pdfDoc.GetPage(33).GetAnnotations().First(x => x.GetName().ToString() == "Hello")
-        */
-        public void AddCitationToPdfDoc(String storageFileName, int physicalPage, Category cat, CitationCategory citCat, string rectsString)
-        {
-            if (citCat == null)
-                return;
-
-            if (cat == null)
-                citCat.CategoryId = Id.Empty;
-
-            string storageFilePath = System.IO.Path.Combine(m_UserSettingsService.StorageFolder, storageFileName);
-
-            List<(int page, int[] rects)> pageRects = ArrayStuff.ConvertStringToPagesAndArrays(rectsString);
-
-            // Remove existing annot
-            int firstPageNo = GetFirstPageFromPageRects(pageRects);
-            bool annotExists = RemoveAnnotation(storageFileName, firstPageNo, citCat.CitationId.ToString());
-
-            string tmpFileName = m_TempFileService.GetNewTmpFileName(storageFileName);
-            PdfDocument pdfDoc = new PdfDocument(new PdfReader(storageFilePath), new PdfWriter(tmpFileName));
-
-            //PdfAnnotation existingAnnot = pdfDoc.GetPage(firstPageNo).GetAnnotations().FirstOrDefault(x => x.GetName()?.ToString() == $"belpdf:{citCat.CitationId}");
-            //bool annotExists = existingAnnot != null;
-            //if (annotExists)
-            //    RemoveAnnotation(pdfDoc, citCat.CitationId.ToString());
-
-            if (!annotExists && pageRects.Any())
-            {
-                System.Drawing.Color c;
-                c = m_UserSettingsService.PdfHighLightColor;
-                Color color_highLight = new DeviceRgb(n(c.R), n(c.G), n(c.B));
-                c = m_UserSettingsService.PdfHighLightColor;
-                Color color_underLine = new DeviceRgb(n(c.R), n(c.G), n(c.B));
-
-                foreach (var pageRect in pageRects)
-                {
-                    //int currentPage = pageRects.First().page;
-                    int currentPage = pageRect.page;
-                    int currentRect = 0;
-                    bool notDone = true;
-                    do
-                    {
-                        PdfCanvas canvas1 = new PdfCanvas(
-                            pdfDoc.GetPage(currentPage).NewContentStreamBefore(),
-                            pdfDoc.GetPage(currentPage).GetResources(), pdfDoc);
-                        PdfCanvas canvas2 = new PdfCanvas(
-                            pdfDoc.GetPage(currentPage).NewContentStreamAfter(),
-                            pdfDoc.GetPage(currentPage).GetResources(), pdfDoc);
-
-                        Rectangle pageSize = pdfDoc.GetPage(physicalPage).GetPageSize();
-                        int pageHeight = (int)pageSize.GetHeight();
-                        int pageWidth = (int)pageSize.GetWidth();
-
-                        //canvas.SaveState();
-
-                        canvas1.SetFillColor(color_highLight);
-                        canvas2.SetFillColor(color_underLine);
-
-                        do //(int i = 0; i < rects.Length; i += 4)
-                        {
-                            // Below text highlight
-                            canvas1.Rectangle(pageRect.rects[currentRect], pageHeight - pageRect.rects[currentRect + 1] - pageRect.rects[currentRect + 3], pageRect.rects[currentRect + 2], pageRect.rects[currentRect + 3]);
-                            canvas1.Fill();
-                            // Above text underline
-                            canvas2.Rectangle(pageRect.rects[currentRect], pageHeight - pageRect.rects[currentRect + 1] - pageRect.rects[currentRect + 3], pageRect.rects[currentRect + 2], 1);
-                            canvas2.Fill();
-
-                            if (currentRect + 5 > pageRect.rects.Length)
-                            {
-                                notDone = false;
-                                break;
-                            }
-
-                            // Detect page break
-                            int lastY = pageHeight - pageRect.rects[currentRect + 1] - pageRect.rects[currentRect + 3];
-                            currentRect += 4;
-                            int newY = pageHeight - pageRect.rects[currentRect + 1] - pageRect.rects[currentRect + 3];
-                            if (lastY < newY)
-                            {
-                                currentPage++;
-                                break;
-                            }
-
-                        } while (true);
-                    } while (notDone);
-                }
-            }
-            //canvas.RestoreState();
-
-            // Add annotation
-            //AddMarginCategoryTextAnnotation(pdfDoc, null, physicalPage, citCat.CitationId.ToString(), cat.Code + $" [{citCat.Weight}]", rectsString, null, );
-
-            pdfDoc.Close();
-
-            File.Delete(storageFilePath);
-            File.Move(tmpFileName, storageFilePath);
-
-        }
+        [Import] public IStorageHelperService m_StorageHelperService { get; set; }
 
         public void RecreateTheWholeThing(ModelsForViewing vm, VolumeService volumeService)
         {
             string origFileName = vm.CurrentStorage.FilePath;
             string storageFilePath = System.IO.Path.Combine(m_UserSettingsService.StorageFolder, vm.CurrentStorage.StorageName);
-            string tmpFileName = m_TempFileService.GetNewTmpFileName(vm.CurrentStorage.StorageName);
-            File.Copy(storageFilePath, tmpFileName, true);
+            string newFileTmp = m_TempFileService.GetNewTmpFileName(vm.CurrentStorage.StorageName);
+            //File.Copy(storageFilePath, tmpFileName, true);
+            (int x, int y) offset = (volumeService.CurrentVolume.OffsetX, volumeService.CurrentVolume.OffsetY);
 
-            PdfDocument pdfDoc = new PdfDocument(new PdfReader(origFileName), new PdfWriter(storageFilePath));
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(origFileName), new PdfWriter(newFileTmp));
 
             foreach (Citation cit in volumeService.Citations)
             {
@@ -249,11 +107,13 @@ namespace Dek.Bel.Services
 
                             do //(int i = 0; i < rects.Length; i += 4)
                             {
+                                int x = pageRect.rects[currentRect] + offset.x;
+                                int y = pageHeight - pageRect.rects[currentRect + 1] - pageRect.rects[currentRect + 3] + offset.y;
                                 // Below text highlight
-                                canvas1.Rectangle(pageRect.rects[currentRect], pageHeight - pageRect.rects[currentRect + 1] - pageRect.rects[currentRect + 3], pageRect.rects[currentRect + 2], pageRect.rects[currentRect + 3]);
+                                canvas1.Rectangle(x, y, pageRect.rects[currentRect + 2], pageRect.rects[currentRect + 3]);
                                 canvas1.Fill();
                                 // Above text underline
-                                canvas2.Rectangle(pageRect.rects[currentRect], pageHeight - pageRect.rects[currentRect + 1] - pageRect.rects[currentRect + 3], pageRect.rects[currentRect + 2], 1);
+                                canvas2.Rectangle(x, y, pageRect.rects[currentRect + 2], 1);
                                 canvas2.Fill();
 
                                 if (currentRect + 5 > pageRect.rects.Length)
@@ -278,15 +138,33 @@ namespace Dek.Bel.Services
                 }
 
                 // Add annotation
-                AddMarginBox(pdfDoc, null, firstPageNo, cit.Id.ToString(), cat.Code + $" [{citCat.Weight}]", cit.SelectionRects, 
+                AddMarginBox(pdfDoc, null, firstPageNo, cit.Id.ToString(), cat.Code + $" [{citCat.Weight}]", cit.SelectionRects,
                     color_margin,
-                    cit.MarginBoxSettings);
+                    cit.MarginBoxSettings,
+                    offset);
             }
-            pdfDoc.Close();
+            pdfDoc.Close(); // newFileTmp
+            m_StorageHelperService.GetNextStorageFileName(vm.CurrentStorage);
+            string newStoragePath = System.IO.Path.Combine(m_UserSettingsService.StorageFolder, vm.CurrentStorage.StorageName);
 
-            File.Delete(tmpFileName);
+            int retries = 10;
+            do
+            {
+                try
+                {
+                    //File.Delete(storageFilePath);
+                    File.Copy(newFileTmp, newStoragePath);
+                    retries = 0;
+                }
+                catch (Exception e)
+                {
+                    retries--;
+                    Thread.Sleep(500);
+                }
+            } while (retries > 0);
+
+            File.Delete(newFileTmp);
         }
-
 
         public void AddMarginBox(
             PdfDocument pdfDoc,
@@ -296,15 +174,16 @@ namespace Dek.Bel.Services
             string text,
             string pageRectsString,
             Color marginColor,
-            string pdfMarginBoxSettings
+            string pdfMarginBoxSettings,
+            (int x, int y) offset
             )
         {
             PdfMarginBoxSettings settings = new PdfMarginBoxSettings(pdfMarginBoxSettings);
 
             switch (settings.DisplayMode)
             {
-
-                case "Compact":
+                case Constants.MarginBoxVisualMode.Compact:
+                case Constants.MarginBoxVisualMode.Vertical:
                     AddMarginBox(
                         pdfDoc,
                         existingAnnot,
@@ -320,7 +199,25 @@ namespace Dek.Bel.Services
                         settings.Font,
                         settings.FontSize,
                         settings.RightMargin,
-                        settings.DisplayMode);
+                        settings.DisplayMode,
+                        offset);
+                    break;
+                case Constants.MarginBoxVisualMode.Hidden:
+                    break;
+                case Constants.MarginBoxVisualMode.Minimal:
+                    AddMarginBoxMinimal(
+                        pdfDoc,
+                        existingAnnot,
+                        physicalPage,
+                        id,
+                        text,
+                        pageRectsString,
+                        marginColor,
+                        settings.Height,
+                        settings.Margin,
+                        settings.BorderThickness,
+                        settings.RightMargin,
+                        offset);
                     break;
                 default: // Normal
                     AddMarginBox(
@@ -338,18 +235,19 @@ namespace Dek.Bel.Services
                         settings.Font,
                         settings.FontSize,
                         settings.RightMargin,
-                        settings.DisplayMode);
-                break;
+                        Constants.MarginBoxVisualMode.Normal,
+                        offset);
+                    break;
             }
-                
+
         }
 
         public void AddMarginBox(
-            PdfDocument pdfDoc, 
-            PdfAnnotation existingAnnot, 
-            int physicalPage, 
-            string id, 
-            string text, 
+            PdfDocument pdfDoc,
+            PdfAnnotation existingAnnot,
+            int physicalPage,
+            string id,
+            string text,
             string pageRectsString,
             Color marginColor,
             int width,
@@ -359,7 +257,8 @@ namespace Dek.Bel.Services
             string font,
             float fontSize,
             bool rightMargin,
-            string visualMode)
+            string visualMode,
+            (int x, int y) offset)
         {
             bool annotExists = existingAnnot != null;
 
@@ -372,15 +271,11 @@ namespace Dek.Bel.Services
                 text = text.Replace(" ", Environment.NewLine);
             }
 
-            //int[] rects = ArrayStuff.ConvertStringToPagesAndArrays(rectsString)[0].rects;
-            //int yCoord = rects[1];
-
             int yCoord = GetMinMaxYCoordFromFirstPage(pageRectsString).min;
 
             Rectangle pageSize = pdfDoc.GetPage(physicalPage).GetPageSize();
             int pageHeight = (int)pageSize.GetHeight();
             int pageWidth = (int)pageSize.GetWidth();
-            //Rectangle rect = new Rectangle(boxLeft, pageHeight - yCoord - boxHeight, boxWidth, boxHeight);
 
             int boxWidth = width;
             int boxHeight = height * noOfLines; // Vague attempt at getting position correct when using compact multiline
@@ -389,7 +284,7 @@ namespace Dek.Bel.Services
                 : margin;
             int boxBottom = pageHeight - yCoord - boxHeight;
 
-            if (visualMode == Constants.MarginBoxVisualMode.Minimal)
+            if (visualMode == Constants.MarginBoxVisualMode.Vertical)
             {
                 if (rightMargin)
                 {
@@ -401,61 +296,107 @@ namespace Dek.Bel.Services
                     boxLeft += height;
                     boxBottom += (height - width);
                 }
-                
+
             }
 
-                // Page number labels
-                pdfDoc.GetFirstPage().SetPageLabel(PageLabelNumberingStyle.DECIMAL_ARABIC_NUMERALS, null);
+            boxLeft += offset.x;
+            boxBottom += offset.y;
 
-            //DekRange margin = GetMargin(pdfDoc, physicalPage, rectsString);
-
-            //PdfCanvas pdfCanvas = new PdfCanvas(pdfDoc, physicalPage);
-            //Canvas canvas = new Canvas(pdfCanvas, pdfDoc, rect);
-            //Canvas canvas = new Canvas(pdfCanvas, pdfDoc, rect);
+            // Page number labels
+            pdfDoc.GetFirstPage().SetPageLabel(PageLabelNumberingStyle.DECIMAL_ARABIC_NUMERALS, null);
 
             // Action
             PdfFileSpec spec = PdfFileSpec.CreateExternalFileSpec(pdfDoc, $"belpdf:{id}");
             PdfAction action = PdfAction.CreateLaunch(spec);
 
-            //
-            //PdfFont pdfFont = PdfFontFactory.CreateFont(iText.IO.Font.Constants.StandardFonts.TIMES_ROMAN);
             PdfFont pdfFont = PdfFontFactory.CreateFont(font);
 
-            // Paragraph
-            //var paragraph = new iText.Layout.Element.Paragraph(new Link(text, action));
-            //paragraph.SetBorder(new SolidBorder(1));
-
-            //paragraph.SetFont(font).SetFontSize(9);
-            //canvas.Add(paragraph);
             Link link = new Link(text, action);
             link.GetLinkAnnotation().SetName(new PdfString($"belpdf:{id}"));
             var paragraph1 = new iText.Layout.Element.Paragraph()
                 .Add(link)
                 .SetStrokeColor(ColorConstants.BLACK)
                 .SetFontColor(ColorConstants.BLACK)
-                //.SetBackgroundColor(marginColor)
                 .SetFixedPosition(boxLeft, boxBottom, boxWidth) // NB that height is variable
                 .SetFont(pdfFont)
                 .SetFontSize(fontSize)
                 .SetPageNumber(physicalPage);
 
             var mc = marginColor.GetColorValue();
-            if((mc[0] != 255) && (mc[1] != 255) && (mc[2] != 255))
+            if ((mc[0] != 255) && (mc[1] != 255) && (mc[2] != 255))
                 paragraph1.SetBackgroundColor(marginColor);
 
             if (borderThickness > 0f)
                 paragraph1.SetBorder(new SolidBorder(borderThickness));
 
-            if (visualMode == Constants.MarginBoxVisualMode.Minimal)
+            if (visualMode == Constants.MarginBoxVisualMode.Vertical)
                 paragraph1.SetRotationAngle((rightMargin ? -Math.PI / 2 : Math.PI / 2));
 
             Document doc = new Document(pdfDoc);
             doc.Add(paragraph1);
+        }
 
-            //canvas.Rectangle(rect);
-            //canvas.Stroke();
+        public void AddMarginBoxMinimal(
+            PdfDocument pdfDoc,
+            PdfAnnotation existingAnnot,
+            int physicalPage,
+            string id,
+            string text,
+            string pageRectsString,
+            Color marginColor,
+            int height,
+            int margin,
+            float borderThickness,
+            bool rightMargin,
+            (int x, int y) offset)
+        {
+            bool annotExists = existingAnnot != null;
 
-            //PdfAnnotation ann = new PdfTextAnnotation(rect);
+            int yCoord = GetMinMaxYCoordFromFirstPage(pageRectsString).min;
+
+            Rectangle pageSize = pdfDoc.GetPage(physicalPage).GetPageSize();
+            int pageHeight = (int)pageSize.GetHeight();
+            int pageWidth = (int)pageSize.GetWidth();
+
+            int boxHeight = height; // Vague attempt at getting position correct when using compact multiline
+            int boxLeft = rightMargin ?
+                pageWidth - (margin + boxHeight)
+                : margin;
+            int boxBottom = pageHeight - yCoord - boxHeight;
+
+            boxLeft += offset.x;
+            boxBottom += offset.y;
+
+            // Page number labels
+            pdfDoc.GetFirstPage().SetPageLabel(PageLabelNumberingStyle.DECIMAL_ARABIC_NUMERALS, null);
+
+            // Action
+            PdfFileSpec spec = PdfFileSpec.CreateExternalFileSpec(pdfDoc, $"belpdf:{id}");
+            PdfAction action = PdfAction.CreateLaunch(spec);
+
+            PdfFont pdfFont = PdfFontFactory.CreateFont(Constants.PdfFont.TIMES_ROMAN);
+
+            Link link = new Link(text.Substring(0, 1), action);
+            link.GetLinkAnnotation().SetName(new PdfString($"belpdf:{id}"));
+            var paragraph1 = new iText.Layout.Element.Paragraph()
+                .Add(link)
+                .SetStrokeColor(ColorConstants.BLACK)
+                .SetFontColor(ColorConstants.BLACK)
+                .SetFixedPosition(boxLeft, boxBottom, boxHeight) // NB that height is variable
+                .SetFont(pdfFont)
+                .SetFontSize(8)
+                .SetTextAlignment(iText.Layout.Properties.TextAlignment.CENTER)
+                .SetPageNumber(physicalPage);
+
+            var mc = marginColor.GetColorValue();
+            if ((mc[0] != 255) && (mc[1] != 255) && (mc[2] != 255))
+                paragraph1.SetBackgroundColor(marginColor);
+
+            if (borderThickness > 0f)
+                paragraph1.SetBorder(new SolidBorder(borderThickness));
+
+            Document doc = new Document(pdfDoc);
+            doc.Add(paragraph1);
         }
 
         private bool RemoveAnnotation(string storageFileName, int physicalPage, string citationId)
@@ -478,7 +419,7 @@ namespace Dek.Bel.Services
                 {
                     if (annot is PdfLinkAnnotation linkAnnotation)
                     {
-                        if(linkAnnotation.GetName()?.ToString() == $"belpdf:{citationId}")
+                        if (linkAnnotation.GetName()?.ToString() == $"belpdf:{citationId}")
                             pdfPage.RemoveAnnotation(annot);
                     }
                 }
@@ -512,7 +453,7 @@ namespace Dek.Bel.Services
             int len = firstPageRects.Length;
             int max = int.MinValue;
             int min = int.MaxValue;
-            for(int i = 0; i < len; i += 4)
+            for (int i = 0; i < len; i += 4)
             {
                 int y = firstPageRects[i + 1];
                 if (y > max)
@@ -535,26 +476,6 @@ namespace Dek.Bel.Services
             return minPageNo;
         }
 
-        /// <summary>
-        /// Returns margin x coords. Selects the widest margin of the left and the right one.
-        /// </summary>
-        /// <returns></returns>
-        //private DekRange GetMargin(PdfDocument doc, int pageNo, string rectsString)
-        //{
-        //    PdfPage page = doc.GetPage(pageNo);
-        //    Rectangle pagesize = page.GetPageSize();
-        //    int[] rects = ArrayStuff.ConvertStringToArray(rectsString);
-        //    var bounds = GetLeftAndRightBounds(rects);
-
-        //    if (bounds.Stop > pagesize.GetWidth())
-        //        bounds = new DekRange(bounds.Start, (int)pagesize.GetWidth());
-
-        //    int leftSize = (int)(bounds.Start - pagesize.GetX());
-        //    int rightSize = (int)(pagesize.GetX() + pagesize.GetWidth() - bounds.Stop);
-        //    return leftSize > rightSize
-        //        ? new DekRange((int)pagesize.GetX(), (int)pagesize.GetX() + leftSize)
-        //        : new DekRange(bounds.Stop, rightSize);
-        //}
 
         /// <summary>
         /// Returns outer containing bounds of rect.
@@ -567,7 +488,7 @@ namespace Dek.Bel.Services
             int min = int.MaxValue;
             int max = 0;
             int count = rects.Count() / 4;
-            for (int i = 0 ; i < rects.Count() / 4 ; i++)
+            for (int i = 0; i < rects.Count() / 4; i++)
             {
                 if (rects[i] < min)
                     min = rects[i];
@@ -637,7 +558,128 @@ public static String ExtractAnnotationText(PdfStream xObject)
          
          */
 
+        ///*
+        // pdfDoc.GetPage(33).GetAnnotations().First().SetName(new PdfString("Hello"))
+        // pdfDoc.GetPage(33).GetAnnotations().First(x => x.GetName().ToString() == "Hello")
+        //*/
+        //public void AddCitationToPdfDoc(String storageFileName, int physicalPage, Category cat, CitationCategory citCat, string rectsString)
+        //{
+        //    if (citCat == null)
+        //        return;
 
+        //    if (cat == null)
+        //        citCat.CategoryId = Id.Empty;
+
+        //    string storageFilePath = System.IO.Path.Combine(m_UserSettingsService.StorageFolder, storageFileName);
+
+        //    List<(int page, int[] rects)> pageRects = ArrayStuff.ConvertStringToPagesAndArrays(rectsString);
+
+        //    // Remove existing annot
+        //    int firstPageNo = GetFirstPageFromPageRects(pageRects);
+        //    bool annotExists = RemoveAnnotation(storageFileName, firstPageNo, citCat.CitationId.ToString());
+
+        //    string tmpFileName = m_TempFileService.GetNewTmpFileName(storageFileName);
+        //    PdfDocument pdfDoc = new PdfDocument(new PdfReader(storageFilePath), new PdfWriter(tmpFileName));
+
+        //    //PdfAnnotation existingAnnot = pdfDoc.GetPage(firstPageNo).GetAnnotations().FirstOrDefault(x => x.GetName()?.ToString() == $"belpdf:{citCat.CitationId}");
+        //    //bool annotExists = existingAnnot != null;
+        //    //if (annotExists)
+        //    //    RemoveAnnotation(pdfDoc, citCat.CitationId.ToString());
+
+        //    if (!annotExists && pageRects.Any())
+        //    {
+        //        System.Drawing.Color c;
+        //        c = m_UserSettingsService.PdfHighLightColor;
+        //        Color color_highLight = new DeviceRgb(n(c.R), n(c.G), n(c.B));
+        //        c = m_UserSettingsService.PdfHighLightColor;
+        //        Color color_underLine = new DeviceRgb(n(c.R), n(c.G), n(c.B));
+
+        //        foreach (var pageRect in pageRects)
+        //        {
+        //            //int currentPage = pageRects.First().page;
+        //            int currentPage = pageRect.page;
+        //            int currentRect = 0;
+        //            bool notDone = true;
+        //            do
+        //            {
+        //                PdfCanvas canvas1 = new PdfCanvas(
+        //                    pdfDoc.GetPage(currentPage).NewContentStreamBefore(),
+        //                    pdfDoc.GetPage(currentPage).GetResources(), pdfDoc);
+        //                PdfCanvas canvas2 = new PdfCanvas(
+        //                    pdfDoc.GetPage(currentPage).NewContentStreamAfter(),
+        //                    pdfDoc.GetPage(currentPage).GetResources(), pdfDoc);
+
+        //                Rectangle pageSize = pdfDoc.GetPage(physicalPage).GetPageSize();
+        //                int pageHeight = (int)pageSize.GetHeight();
+        //                int pageWidth = (int)pageSize.GetWidth();
+
+        //                //canvas.SaveState();
+
+        //                canvas1.SetFillColor(color_highLight);
+        //                canvas2.SetFillColor(color_underLine);
+
+        //                do //(int i = 0; i < rects.Length; i += 4)
+        //                {
+        //                    // Below text highlight
+        //                    canvas1.Rectangle(pageRect.rects[currentRect], pageHeight - pageRect.rects[currentRect + 1] - pageRect.rects[currentRect + 3], pageRect.rects[currentRect + 2], pageRect.rects[currentRect + 3]);
+        //                    canvas1.Fill();
+        //                    // Above text underline
+        //                    canvas2.Rectangle(pageRect.rects[currentRect], pageHeight - pageRect.rects[currentRect + 1] - pageRect.rects[currentRect + 3], pageRect.rects[currentRect + 2], 1);
+        //                    canvas2.Fill();
+
+        //                    if (currentRect + 5 > pageRect.rects.Length)
+        //                    {
+        //                        notDone = false;
+        //                        break;
+        //                    }
+
+        //                    // Detect page break
+        //                    int lastY = pageHeight - pageRect.rects[currentRect + 1] - pageRect.rects[currentRect + 3];
+        //                    currentRect += 4;
+        //                    int newY = pageHeight - pageRect.rects[currentRect + 1] - pageRect.rects[currentRect + 3];
+        //                    if (lastY < newY)
+        //                    {
+        //                        currentPage++;
+        //                        break;
+        //                    }
+
+        //                } while (true);
+        //            } while (notDone);
+        //        }
+        //    }
+        //    //canvas.RestoreState();
+
+        //    // Add annotation
+        //    //AddMarginCategoryTextAnnotation(pdfDoc, null, physicalPage, citCat.CitationId.ToString(), cat.Code + $" [{citCat.Weight}]", rectsString, null, );
+
+        //    pdfDoc.Close();
+
+        //    File.Delete(storageFilePath);
+        //    File.Move(tmpFileName, storageFilePath);
+
+        //}
+
+
+        /// <summary>
+        /// Returns margin x coords. Selects the widest margin of the left and the right one.
+        /// </summary>
+        /// <returns></returns>
+        //private DekRange GetMargin(PdfDocument doc, int pageNo, string rectsString)
+        //{
+        //    PdfPage page = doc.GetPage(pageNo);
+        //    Rectangle pagesize = page.GetPageSize();
+        //    int[] rects = ArrayStuff.ConvertStringToArray(rectsString);
+        //    var bounds = GetLeftAndRightBounds(rects);
+
+        //    if (bounds.Stop > pagesize.GetWidth())
+        //        bounds = new DekRange(bounds.Start, (int)pagesize.GetWidth());
+
+        //    int leftSize = (int)(bounds.Start - pagesize.GetX());
+        //    int rightSize = (int)(pagesize.GetX() + pagesize.GetWidth() - bounds.Stop);
+        //    return leftSize > rightSize
+        //        ? new DekRange((int)pagesize.GetX(), (int)pagesize.GetX() + leftSize)
+        //        : new DekRange(bounds.Stop, rightSize);
+        //}
 
     }
 }

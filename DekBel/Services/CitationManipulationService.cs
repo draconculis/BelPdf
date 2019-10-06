@@ -177,8 +177,8 @@ namespace Dek.Bel.Services
                     if(!inExclusion)
                     {
                         inExclusion = true;
-                        //if (lastChar != ' ')
-                        //    sb.Append(' ');
+                        if (lastChar != ' ')
+                            sb.Append(' ');
                         sb.Append(m_UserSettingsService.DeselectionMarker);
                     }
                     continue;
@@ -189,8 +189,8 @@ namespace Dek.Bel.Services
                     {
                         inExclusion = false;
                         
-                        //if (lastChar != ' ' && !" ,.;:".Contains(c))
-                        //    sb.Append(' ');
+                        if (c != ' ')
+                            sb.Append(' ');
                     }
                 }
 

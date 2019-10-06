@@ -17,7 +17,7 @@ using Dek.Bel.Models;
 
 namespace Dek.Bel.Services
 {
-    // ** Special service **
+    // *** Special service ***
     // Called & instantiated from interOp
     // Handles files in files storage
     public class StorageService
@@ -26,6 +26,8 @@ namespace Dek.Bel.Services
         [Import] public StorageRepo m_StorageRepo { get; set; }
         [Import] public IDBService m_DBService { get; set; }
         [Import] public IUserSettingsService UserSettingsService { get; set; }
+        [Import] public IStorageHelperService StorageHelperService { get; set; }
+        [Import] public IPdfService PdfService { get; set; }
 
         public StorageService()
         {
@@ -44,18 +46,27 @@ namespace Dek.Bel.Services
                     StorageFilePath = "",
                 };
 
-            string srcHash = CalculateFileMD5(srcPath);
+            string srcHash = StorageHelperService.CalculateFileMD5(srcPath);
 
             // Do we even exist in db?
             Storage storage = m_StorageRepo.GetStorageByHash(srcHash);
             if (storage == null)
                 storage = CreateNewStorageForFile(fileStorageData, srcHash);
 
-            // Hmm file in store has been removed (this is sooo bad) - recreate it.
+            // Hmm file in store has been removed (this is not bad) - recreate it.
             if (!File.Exists(Path.Combine(UserSettingsService.StorageFolder, storage.StorageName)))
             {
-                CopyFileToStorage(storage.FilePath, storage.StorageName);
-                // TODO: ALSO RECREATE STUFF IN THE FILE FROM DB!! <============================================ o_O
+                //Volume vol = m_DBService.SelectById<Volume>(storage.VolumeId);
+                //Citation citation = m_DBService.Select<Citation>($"`{nameof(Citation.VolumeId)}` = '{storage.VolumeId}'").FirstOrDefault();
+                // TODO: RECREATE STUFF IN THE FILE FROM DB!! <============================================ o_O
+                // Current citation not loaded at this point... Get current citation from db
+                
+                VolumeService volSvc = new VolumeService();
+                volSvc?.LoadVolume(storage.VolumeId);
+                if((volSvc?.Citations.Count).HasValue && volSvc?.Citations.Count > 0)
+                    PdfService.RecreateTheWholeThing(VM, volSvc);
+                else
+                    CopyFileToStorage(storage.FilePath, storage.StorageName);
             }
 
             // Save for posterity.
@@ -86,10 +97,10 @@ namespace Dek.Bel.Services
         public Storage CreateNewStorageForFile(RequestFileStorageData fileStorageData, string sourceHash = null)
         {
             if (sourceHash.IsNullOrWhiteSpace())
-                sourceHash = CalculateFileMD5(fileStorageData.FilePath);
+                sourceHash = StorageHelperService.CalculateFileMD5(fileStorageData.FilePath);
 
             string stoFolder = UserSettingsService.StorageFolder;
-            string stoFileName = GetUniqueStoName(fileStorageData.FilePath);
+            string stoFileName = StorageHelperService.GetUniqueStoName(fileStorageData.FilePath);
             string stoPath = Path.Combine(stoFolder, stoFileName);
 
             CopyFileToStorage(fileStorageData.FilePath, stoFileName);
@@ -124,70 +135,5 @@ namespace Dek.Bel.Services
 
             File.Copy(origFileName, stoPath);
         }
-        
-        /// <summary>
-        /// Looks in the storage folder and generates a new unique file name.
-        /// </summary>
-        /// <param name="fileName"></param>
-        /// <param name="fileStorageFolder"></param>
-        /// <returns></returns>
-        private string GetUniqueStoName(string fileName)
-        {
-            string newFileName = GenerateFirstStoName(fileName);
-            string stoFolder = UserSettingsService.StorageFolder;
-            while (File.Exists(Path.Combine(stoFolder, newFileName)))
-                newFileName = GenerateNextStoName(newFileName);
-
-            return newFileName;
-        }
-
-        /// <summary>
-        /// Return a new filename from a source fileName, e.g:
-        /// "myfile.something.pdf" -> "myfile.something.bel.1.pdf"
-        /// </summary>
-        /// <param name="stoFileName"></param>
-        /// <returns></returns>
-        private string GenerateFirstStoName(string fileName)             // xx.pdf
-        {
-            string name0 = Path.GetFileNameWithoutExtension(fileName);   // xx
-            string ext = Path.GetExtension(fileName);                    // .pdf
-
-            return $"{name0}.bel.1{ext}";
-        }
-
-        /// <summary>
-        /// Return a new filename from a generated stoFileName, e.g:
-        /// "myfile.something.bel.1.pdf" -> "myfile.something.bel.2.pdf"
-        /// </summary>
-        /// <param name="stoFileName"></param>
-        /// <returns></returns>
-        private string GenerateNextStoName(string stoFileName)            // xx.bel.1.pdf
-        {
-            string name0 = Path.GetFileNameWithoutExtension(stoFileName); // xx.bel.1
-            string name1 = Path.GetFileNameWithoutExtension(name0);       // xx.bel
-            string name2 = Path.GetFileNameWithoutExtension(name1);       // xx
-            string ext = Path.GetExtension(stoFileName);                  // .pdf
-            string extNumeral = Path.GetExtension(name0);                 // .1
-
-            int.TryParse(extNumeral.Substring(1), out int numeral);
-            numeral++;
-            return $"{name2}.bel.{numeral.ToString()}{ext}";
-        }
-
-
-
-        public string CalculateFileMD5(string filePath)
-        {
-            using (var md5 = MD5.Create())
-            {
-                using (var stream = File.OpenRead(filePath))
-                {
-                    var hash = md5.ComputeHash(stream);
-                    return BitConverter.ToString(hash).Replace("-", "").ToLowerInvariant();
-                }
-            }
-        }
-
-
     }
 }

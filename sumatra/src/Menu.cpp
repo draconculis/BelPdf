@@ -697,7 +697,7 @@ void OnContextMenu(WindowInfo* win, int x, int y) {
         case DEKBELCODE_SHOWBEL:
         case DEKBELCODE_ADDCITATION:
         case DEKBELCODE_ADDANDSHOWCITATION:
-        case DEKBELCODE_EDITCITATION:
+        case DEKBELCODE_EDITCITATION: // Nope, this is only set during click on belpdf link
             DoBel(win, cmd);
             ReloadDocument(win);
             break;

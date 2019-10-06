@@ -108,6 +108,8 @@
             this.setWeight4ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.setWeight5ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
+            this.label26 = new System.Windows.Forms.Label();
+            this.numericUpDown_pdfMarginBoxWidth = new System.Windows.Forms.NumericUpDown();
             this.numericUpDown_borderThickness = new System.Windows.Forms.NumericUpDown();
             this.label27 = new System.Windows.Forms.Label();
             this.numericUpDown_PdfBoxMargin = new System.Windows.Forms.NumericUpDown();
@@ -116,7 +118,6 @@
             this.numericUpDown_FontSize = new System.Windows.Forms.NumericUpDown();
             this.label25 = new System.Windows.Forms.Label();
             this.label24 = new System.Windows.Forms.Label();
-            this.label23 = new System.Windows.Forms.Label();
             this.label22 = new System.Windows.Forms.Label();
             this.label21 = new System.Windows.Forms.Label();
             this.label20 = new System.Windows.Forms.Label();
@@ -159,8 +160,11 @@
             this.checkBox_right = new System.Windows.Forms.CheckBox();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
-            this.numericUpDown_pdfMarginBoxWidth = new System.Windows.Forms.NumericUpDown();
-            this.label26 = new System.Windows.Forms.Label();
+            this.numericUpDown_offsetX = new System.Windows.Forms.NumericUpDown();
+            this.label23 = new System.Windows.Forms.Label();
+            this.label28 = new System.Windows.Forms.Label();
+            this.label29 = new System.Windows.Forms.Label();
+            this.numericUpDown_offsetY = new System.Windows.Forms.NumericUpDown();
             this.contextMenuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -176,6 +180,7 @@
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_pdfMarginBoxWidth)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_borderThickness)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_PdfBoxMargin)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_FontSize)).BeginInit();
@@ -187,7 +192,8 @@
             this.splitContainer_Volume.Panel2.SuspendLayout();
             this.splitContainer_Volume.SuspendLayout();
             this.tabPage2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_pdfMarginBoxWidth)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_offsetX)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_offsetY)).BeginInit();
             this.SuspendLayout();
             // 
             // contextMenuStrip1
@@ -967,7 +973,6 @@
             this.splitContainer2.Panel2.Controls.Add(this.numericUpDown_FontSize);
             this.splitContainer2.Panel2.Controls.Add(this.label25);
             this.splitContainer2.Panel2.Controls.Add(this.label24);
-            this.splitContainer2.Panel2.Controls.Add(this.label23);
             this.splitContainer2.Panel2.Controls.Add(this.label22);
             this.splitContainer2.Panel2.Controls.Add(this.label21);
             this.splitContainer2.Panel2.Controls.Add(this.label20);
@@ -987,8 +992,39 @@
             this.splitContainer2.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.splitContainer2_SplitterMoved);
             this.splitContainer2.MouseClick += new System.Windows.Forms.MouseEventHandler(this.splitContainer2_MouseClick);
             // 
+            // label26
+            // 
+            this.label26.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.label26.AutoSize = true;
+            this.label26.Location = new System.Drawing.Point(1000, 186);
+            this.label26.Name = "label26";
+            this.label26.Size = new System.Drawing.Size(40, 15);
+            this.label26.TabIndex = 36;
+            this.label26.Text = "Width";
+            // 
+            // numericUpDown_pdfMarginBoxWidth
+            // 
+            this.numericUpDown_pdfMarginBoxWidth.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericUpDown_pdfMarginBoxWidth.Location = new System.Drawing.Point(1046, 183);
+            this.numericUpDown_pdfMarginBoxWidth.Maximum = new decimal(new int[] {
+            999,
+            0,
+            0,
+            0});
+            this.numericUpDown_pdfMarginBoxWidth.Name = "numericUpDown_pdfMarginBoxWidth";
+            this.numericUpDown_pdfMarginBoxWidth.Size = new System.Drawing.Size(43, 23);
+            this.numericUpDown_pdfMarginBoxWidth.TabIndex = 35;
+            this.toolTip1.SetToolTip(this.numericUpDown_pdfMarginBoxWidth, "Width of margin box");
+            this.numericUpDown_pdfMarginBoxWidth.Value = new decimal(new int[] {
+            56,
+            0,
+            0,
+            0});
+            this.numericUpDown_pdfMarginBoxWidth.ValueChanged += new System.EventHandler(this.NumericUpDown_pdfMarginBoxWidth_ValueChanged);
+            // 
             // numericUpDown_borderThickness
             // 
+            this.numericUpDown_borderThickness.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.numericUpDown_borderThickness.DecimalPlaces = 1;
             this.numericUpDown_borderThickness.Increment = new decimal(new int[] {
             2,
@@ -1009,6 +1045,7 @@
             // 
             // label27
             // 
+            this.label27.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label27.AutoSize = true;
             this.label27.Location = new System.Drawing.Point(755, 212);
             this.label27.Name = "label27";
@@ -1018,6 +1055,7 @@
             // 
             // numericUpDown_PdfBoxMargin
             // 
+            this.numericUpDown_PdfBoxMargin.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.numericUpDown_PdfBoxMargin.Location = new System.Drawing.Point(865, 183);
             this.numericUpDown_PdfBoxMargin.Maximum = new decimal(new int[] {
             999,
@@ -1037,6 +1075,7 @@
             // 
             // comboBox_PdfBoxFont
             // 
+            this.comboBox_PdfBoxFont.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.comboBox_PdfBoxFont.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBox_PdfBoxFont.FormattingEnabled = true;
             this.comboBox_PdfBoxFont.ItemHeight = 15;
@@ -1051,6 +1090,7 @@
             // 
             // comboBox_PdfMarginBoxDisplayMode
             // 
+            this.comboBox_PdfMarginBoxDisplayMode.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.comboBox_PdfMarginBoxDisplayMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBox_PdfMarginBoxDisplayMode.FormattingEnabled = true;
             this.comboBox_PdfMarginBoxDisplayMode.ItemHeight = 15;
@@ -1063,6 +1103,7 @@
             // 
             // numericUpDown_FontSize
             // 
+            this.numericUpDown_FontSize.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.numericUpDown_FontSize.Location = new System.Drawing.Point(1145, 210);
             this.numericUpDown_FontSize.Maximum = new decimal(new int[] {
             31,
@@ -1087,6 +1128,7 @@
             // 
             // label25
             // 
+            this.label25.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label25.AutoSize = true;
             this.label25.Location = new System.Drawing.Point(865, 144);
             this.label25.Name = "label25";
@@ -1096,22 +1138,13 @@
             // 
             // label24
             // 
+            this.label24.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label24.AutoSize = true;
             this.label24.Location = new System.Drawing.Point(1110, 214);
             this.label24.Name = "label24";
             this.label24.Size = new System.Drawing.Size(29, 15);
             this.label24.TabIndex = 24;
             this.label24.Text = "Size";
-            // 
-            // label23
-            // 
-            this.label23.AutoSize = true;
-            this.label23.Dock = System.Windows.Forms.DockStyle.Left;
-            this.label23.Location = new System.Drawing.Point(0, 0);
-            this.label23.Name = "label23";
-            this.label23.Size = new System.Drawing.Size(33, 15);
-            this.label23.TabIndex = 23;
-            this.label23.Text = "Font";
             // 
             // label22
             // 
@@ -1124,6 +1157,7 @@
             // 
             // label21
             // 
+            this.label21.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label21.AutoSize = true;
             this.label21.Location = new System.Drawing.Point(1096, 186);
             this.label21.Name = "label21";
@@ -1133,6 +1167,7 @@
             // 
             // label20
             // 
+            this.label20.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label20.AutoSize = true;
             this.label20.Location = new System.Drawing.Point(754, 187);
             this.label20.Name = "label20";
@@ -1143,6 +1178,7 @@
             // 
             // label_PdfMarginBoxColor
             // 
+            this.label_PdfMarginBoxColor.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label_PdfMarginBoxColor.BackColor = System.Drawing.Color.PaleTurquoise;
             this.label_PdfMarginBoxColor.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.label_PdfMarginBoxColor.Cursor = System.Windows.Forms.Cursors.Hand;
@@ -1323,6 +1359,11 @@
             // 
             // splitContainer_Volume.Panel1
             // 
+            this.splitContainer_Volume.Panel1.Controls.Add(this.numericUpDown_offsetY);
+            this.splitContainer_Volume.Panel1.Controls.Add(this.label29);
+            this.splitContainer_Volume.Panel1.Controls.Add(this.label28);
+            this.splitContainer_Volume.Panel1.Controls.Add(this.label23);
+            this.splitContainer_Volume.Panel1.Controls.Add(this.numericUpDown_offsetX);
             this.splitContainer_Volume.Panel1.Controls.Add(this.textBox_volumePublicationDate);
             this.splitContainer_Volume.Panel1.Controls.Add(this.label6);
             this.splitContainer_Volume.Panel1.Controls.Add(this.label2);
@@ -1513,6 +1554,7 @@
             // 
             // label12
             // 
+            this.label12.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label12.AutoSize = true;
             this.label12.Location = new System.Drawing.Point(754, 144);
             this.label12.Name = "label12";
@@ -1522,6 +1564,7 @@
             // 
             // label_PdfHighlightColor
             // 
+            this.label_PdfHighlightColor.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label_PdfHighlightColor.BackColor = System.Drawing.Color.PaleTurquoise;
             this.label_PdfHighlightColor.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.label_PdfHighlightColor.Cursor = System.Windows.Forms.Cursors.Hand;
@@ -1553,6 +1596,7 @@
             // 
             // checkBox_right
             // 
+            this.checkBox_right.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.checkBox_right.AutoSize = true;
             this.checkBox_right.Location = new System.Drawing.Point(914, 185);
             this.checkBox_right.Name = "checkBox_right";
@@ -1563,33 +1607,48 @@
             this.checkBox_right.UseVisualStyleBackColor = true;
             this.checkBox_right.CheckedChanged += new System.EventHandler(this.CheckBox1_CheckedChanged);
             // 
-            // numericUpDown_pdfMarginBoxWidth
+            // numericUpDown_offsetX
             // 
-            this.numericUpDown_pdfMarginBoxWidth.Location = new System.Drawing.Point(1046, 183);
-            this.numericUpDown_pdfMarginBoxWidth.Maximum = new decimal(new int[] {
-            999,
-            0,
-            0,
-            0});
-            this.numericUpDown_pdfMarginBoxWidth.Name = "numericUpDown_pdfMarginBoxWidth";
-            this.numericUpDown_pdfMarginBoxWidth.Size = new System.Drawing.Size(43, 23);
-            this.numericUpDown_pdfMarginBoxWidth.TabIndex = 35;
-            this.toolTip1.SetToolTip(this.numericUpDown_pdfMarginBoxWidth, "Width of margin box");
-            this.numericUpDown_pdfMarginBoxWidth.Value = new decimal(new int[] {
-            56,
-            0,
-            0,
-            0});
-            this.numericUpDown_pdfMarginBoxWidth.ValueChanged += new System.EventHandler(this.NumericUpDown_pdfMarginBoxWidth_ValueChanged);
+            this.numericUpDown_offsetX.Location = new System.Drawing.Point(100, 153);
+            this.numericUpDown_offsetX.Name = "numericUpDown_offsetX";
+            this.numericUpDown_offsetX.Size = new System.Drawing.Size(40, 23);
+            this.numericUpDown_offsetX.TabIndex = 32;
+            this.numericUpDown_offsetX.Leave += new System.EventHandler(this.TextBox_VolumeTitle_Leave);
             // 
-            // label26
+            // label23
             // 
-            this.label26.AutoSize = true;
-            this.label26.Location = new System.Drawing.Point(1000, 186);
-            this.label26.Name = "label26";
-            this.label26.Size = new System.Drawing.Size(40, 15);
-            this.label26.TabIndex = 36;
-            this.label26.Text = "Width";
+            this.label23.Location = new System.Drawing.Point(7, 157);
+            this.label23.Name = "label23";
+            this.label23.Size = new System.Drawing.Size(58, 15);
+            this.label23.TabIndex = 33;
+            this.label23.Text = "Offset";
+            this.label23.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // label28
+            // 
+            this.label28.Location = new System.Drawing.Point(74, 157);
+            this.label28.Name = "label28";
+            this.label28.Size = new System.Drawing.Size(22, 15);
+            this.label28.TabIndex = 34;
+            this.label28.Text = "X";
+            this.label28.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // label29
+            // 
+            this.label29.Location = new System.Drawing.Point(145, 157);
+            this.label29.Name = "label29";
+            this.label29.Size = new System.Drawing.Size(22, 15);
+            this.label29.TabIndex = 35;
+            this.label29.Text = "Y";
+            this.label29.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // numericUpDown_offsetY
+            // 
+            this.numericUpDown_offsetY.Location = new System.Drawing.Point(171, 153);
+            this.numericUpDown_offsetY.Name = "numericUpDown_offsetY";
+            this.numericUpDown_offsetY.Size = new System.Drawing.Size(40, 23);
+            this.numericUpDown_offsetY.TabIndex = 36;
+            this.numericUpDown_offsetY.Leave += new System.EventHandler(this.TextBox_VolumeTitle_Leave);
             // 
             // BelGui
             // 
@@ -1625,6 +1684,7 @@
             this.splitContainer2.Panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
             this.splitContainer2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_pdfMarginBoxWidth)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_borderThickness)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_PdfBoxMargin)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_FontSize)).EndInit();
@@ -1640,7 +1700,8 @@
             this.splitContainer_Volume.ResumeLayout(false);
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_pdfMarginBoxWidth)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_offsetX)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_offsetY)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1767,7 +1828,6 @@
         private System.Windows.Forms.Label label21;
         private System.Windows.Forms.ComboBox comboBox_PdfBoxFont;
         private System.Windows.Forms.Label label24;
-        private System.Windows.Forms.Label label23;
         private System.Windows.Forms.Label label22;
         private System.Windows.Forms.ComboBox comboBox_PdfMarginBoxDisplayMode;
         private System.Windows.Forms.Label label25;
@@ -1778,5 +1838,10 @@
         private System.Windows.Forms.NumericUpDown numericUpDown_borderThickness;
         private System.Windows.Forms.Label label26;
         private System.Windows.Forms.NumericUpDown numericUpDown_pdfMarginBoxWidth;
+        private System.Windows.Forms.NumericUpDown numericUpDown_offsetY;
+        private System.Windows.Forms.Label label29;
+        private System.Windows.Forms.Label label28;
+        private System.Windows.Forms.Label label23;
+        private System.Windows.Forms.NumericUpDown numericUpDown_offsetX;
     }
 }

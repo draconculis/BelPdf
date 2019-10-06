@@ -100,7 +100,7 @@
     <LinkIncremental>true</LinkIncremental>
     <OutDir>..\dbg\</OutDir>
     <IntDir>..\dbg\obj\x32\Debug\SumatraPDF-no-MUPDF\</IntDir>
-    <TargetName>SumatraPDF-no-MUPDF</TargetName>
+    <TargetName>BelSumatraPDF</TargetName>
     <TargetExt>.exe</TargetExt>
     <GenerateManifest>false</GenerateManifest>
   </PropertyGroup>
@@ -108,9 +108,10 @@
     <LinkIncremental>true</LinkIncremental>
     <OutDir>..\dbg64\</OutDir>
     <IntDir>..\dbg64\obj\x64\Debug\SumatraPDF-no-MUPDF\</IntDir>
-    <TargetName>SumatraPDF-no-MUPDF</TargetName>
+    <TargetName>BelSumatraPDF</TargetName>
     <TargetExt>.exe</TargetExt>
     <GenerateManifest>false</GenerateManifest>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>true</LinkIncremental>

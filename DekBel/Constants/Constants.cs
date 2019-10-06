@@ -14,6 +14,7 @@ namespace Dek.Bel
         {
             public const string Normal = nameof(Normal);
             public const string Compact = nameof(Compact);
+            public const string Vertical = nameof(Vertical);
             public const string Minimal = nameof(Minimal);
             public const string Hidden = nameof(Hidden);
         }
@@ -23,6 +24,7 @@ namespace Dek.Bel
             {
                 MarginBoxVisualMode.Normal,
                 MarginBoxVisualMode.Compact,
+                MarginBoxVisualMode.Vertical,
                 MarginBoxVisualMode.Minimal,
                 MarginBoxVisualMode.Hidden,
             };

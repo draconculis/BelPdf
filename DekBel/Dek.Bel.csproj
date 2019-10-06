@@ -157,6 +157,8 @@
     <Compile Include="Models\Reference.cs" />
     <Compile Include="Models\VolumeSeries.cs" />
     <Compile Include="Properties\AssemblyVersion.cs" />
+    <Compile Include="Services\IPdfService.cs" />
+    <Compile Include="Services\IStorageHelperService.cs" />
     <Compile Include="Services\Reference\Form_AddReference.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -207,6 +209,7 @@
     <Compile Include="DB\IndexAttribute.cs" />
     <Compile Include="DB\KeyAttribute.cs" />
     <Compile Include="DB\RefAttribute.cs" />
+    <Compile Include="Services\StorageHelperService.cs" />
     <Compile Include="Services\StupidEncodingFixer.cs" />
     <Compile Include="Services\VolumeService.cs" />
     <Compile Include="Form_ResetCitation.cs">

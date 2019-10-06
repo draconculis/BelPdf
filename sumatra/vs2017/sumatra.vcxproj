@@ -107,6 +107,7 @@
     <IntDir>..\dbg64\obj\x64\Debug\sumatra\</IntDir>
     <TargetName>sumatra</TargetName>
     <TargetExt>.lib</TargetExt>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);E:\pdf\BelPdf\Dek.Bel.Interop;</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>..\rel\</OutDir>
@@ -403,6 +404,9 @@
     <ProjectReference Include="..\..\BelPdf\DekBel\Dek.Bel.csproj">
       <Project>{97cf51e4-6ac7-4144-841f-7f78835727d2}</Project>
       <CopyLocalSatelliteAssemblies>true</CopyLocalSatelliteAssemblies>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Dek.Bel.Interop\Dek.Bel.Interop.vcxproj">
+      <Project>{60898bf8-90cf-49b1-b865-0d4e3c577399}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -1143,8 +1143,16 @@ void ReloadDocument(WindowInfo* win, bool autorefresh) {
         return;
     }
 
+    // Bel
+    LoadArgs origArgs(tab->orgininalFilePath, win);
+    ResultFileStorageData* response = BelRequestFileStorage(origArgs);
+    // End bel
+    AutoFreeW fullPath(path::Normalize(response->StorageFilePath));
+
+    //tab->filePath = fullPath;
+
     HwndPasswordUI pwdUI(win->hwndFrame);
-    Controller* ctrl = CreateControllerForFile(tab->filePath, &pwdUI, win);
+    Controller* ctrl = CreateControllerForFile(fullPath, &pwdUI, win); // Bel
     // We don't allow PDF-repair if it is an autorefresh because
     // a refresh event can occur before the file is finished being written,
     // in which case the repair could fail. Instead, if the file is broken,
@@ -1155,7 +1163,7 @@ void ReloadDocument(WindowInfo* win, bool autorefresh) {
         return;
     }
 
-    DisplayState* ds = NewDisplayState(tab->filePath);
+    DisplayState* ds = NewDisplayState(fullPath); // Bel
     tab->ctrl->UpdateDisplayState(ds);
     UpdateDisplayStateWindowRect(win, *ds);
     UpdateSidebarDisplayState(win, tab, ds);
@@ -1166,10 +1174,11 @@ void ReloadDocument(WindowInfo* win, bool autorefresh) {
                                               : IsIconic(win->hwndFrame) ? WIN_STATE_MINIMIZED : WIN_STATE_NORMAL;
     ds->useDefaultState = false;
 
-    LoadArgs args(tab->filePath, win);
-    args.showWin = true;
-    args.placeWindow = false;
-    LoadDocIntoCurrentTab(args, ctrl, ds);
+    LoadArgs newArgs(fullPath, win);
+
+    newArgs.showWin = true;
+    newArgs.placeWindow = false;
+    LoadDocIntoCurrentTab(newArgs, ctrl, ds);
 
     if (!ctrl) {
         DeleteDisplayState(ds);

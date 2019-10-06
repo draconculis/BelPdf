@@ -29,11 +29,16 @@ namespace Dek.Bel.Services
         {
             if (Exclusion == null)
                 Exclusion = new List<DekRange>();
+            else
+                Exclusion.Clear();
+
             if (Emphasis == null)
                 Emphasis = new List<DekRange>();
+            else
+                Emphasis.Clear();
+
             Exclusion.LoadFromText(CurrentCitation.Exclusion);
             Emphasis.LoadFromText(CurrentCitation.Emphasis);
-
         }
     }
 }

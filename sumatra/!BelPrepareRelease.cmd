@@ -1,3 +1,5 @@
+rem "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Current\Bin\msbuild.exe" VS2017\SumatraPDF.sln /p:Configuration=Release /p:Platform=Win32 /t:BelSumatraPdf
+
 echo %date%
 set CUR_YYYY=%date:~0,4%
 set CUR_MM=%date:~5,2%

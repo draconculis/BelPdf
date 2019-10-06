@@ -33,37 +33,38 @@ namespace Dek.Bel.Services
 
             StringBuilder rtfbuilder = new StringBuilder();
             rtfbuilder.Append(@"{\rtf1\ansi ");
-            bool bold = false;
-            bool strike = false;
-            for(int i = 0; i < s.Length; i++)
+            bool inEmphasis = false;
+            bool inExclusion = false;
+            for (int i = 0; i < s.Length; i++)
             {
-                if (emphasis.ContainsInteger(i) && !bold)
+                if (emphasis.ContainsInteger(i) && !inEmphasis)
                 {
                     if(boldEmphasis)
                         rtfbuilder.Append(@"\b ");
                     if(underlineEmphasis)
                         rtfbuilder.Append(@"\u ");
-                    bold = true;
+
+                    inEmphasis = true;
                 }
-                if (!emphasis.ContainsInteger(i) && bold)
+                if (!emphasis.ContainsInteger(i) && inEmphasis)
                 {
-                    if (boldEmphasis)
-                        rtfbuilder.Append(@"\b0 ");
                     if (underlineEmphasis)
                         rtfbuilder.Append(@"\u0 ");
+                    if (boldEmphasis)
+                        rtfbuilder.Append(@"\b0 ");
 
-                    bold = false;
+                    inEmphasis = false;
                 }
 
-                if (exclusion.ContainsInteger(i) && !strike)
+                if (exclusion.ContainsInteger(i) && !inExclusion)
                 {
                     rtfbuilder.Append(@"\strike ");
-                    strike = true;
+                    inExclusion = true;
                 }
-                if (!exclusion.ContainsInteger(i) && strike)
+                if (!exclusion.ContainsInteger(i) && inExclusion)
                 {
                     rtfbuilder.Append(@"\strike0 ");
-                    strike = false;
+                    inExclusion = false;
                 }
 
                 rtfbuilder.Append(GetRtfUnicodeEscapedChar(s[i]));

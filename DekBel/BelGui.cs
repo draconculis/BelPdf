@@ -39,7 +39,7 @@ namespace Dek.Bel
         [Import] public HistoryRepo HistoryRepo { get; set; }
         [Import] public CitationService m_CitationService { get; set; }
         [Import] public RichTextService RtfService { get; set; }
-        [Import] public PdfService PdfService { get; set; }
+        [Import] public IPdfService PdfService { get; set; }
         [Import] public CitationManipulationService m_CitationManipulationService{ get; set;}
 
 
@@ -115,6 +115,7 @@ namespace Dek.Bel
             comboBox_CategoryWeight.SelectedIndex = 2;
         }
 
+
         private void BelGui_Load(object sender, EventArgs e)
         {
             Font font = m_UserSettingsService.CitationFont;
@@ -151,6 +152,7 @@ namespace Dek.Bel
         private void OnCitationChanged(object sender, EventArgs e)
         {
             m_VolumeService.ReloadCitation(VM.CurrentCitation); // Need to update its list of all citations when current citatation changed
+
             LoadControls();
         }
 
@@ -186,6 +188,8 @@ namespace Dek.Bel
             textBox_VolumeTitle.Text = m_VolumeService.CurrentVolume.Title;
             textBox_VolumeNotes.Text = m_VolumeService.CurrentVolume.Notes;
             textBox_volumePublicationDate.Text = m_VolumeService.CurrentVolume.PublicationDate.ToSaneStringDateOnly();
+            numericUpDown_offsetX.Value = (decimal)m_VolumeService.CurrentVolume.OffsetX;
+            numericUpDown_offsetY.Value = (decimal)m_VolumeService.CurrentVolume.OffsetY;
 
 
             // Load data from storage
@@ -872,16 +876,16 @@ namespace Dek.Bel
         // Write Pdf
         private void Button2_Click(object sender, EventArgs e)
         {
-            var mainCitCat = m_CategoryService.GetMainCitationCategory(VM.CurrentCitation.Id);
-            var mainCategory = m_CategoryService.GetMainCategory(VM.CurrentCitation.Id);
+            //var mainCitCat = m_CategoryService.GetMainCitationCategory(VM.CurrentCitation.Id);
+            //var mainCategory = m_CategoryService.GetMainCategory(VM.CurrentCitation.Id);
 
-            if (mainCategory.Id == Id.Null)
-            {
-                if (m_MessageboxService.ShowYesNo("Write uncategorized citation to pdf?", "Main category not set") == DialogResult.No)
-                    return;
-            }
+            //if (mainCategory.Id == Id.Null)
+            //{
+            //    if (m_MessageboxService.ShowYesNo("Write uncategorized citation to pdf?", "Main category not set") == DialogResult.No)
+            //        return;
+            //}
             
-            PdfService.AddCitationToPdfDoc(VM.CurrentStorage.StorageName, VM.CurrentCitation.PhysicalPageStart, mainCategory, mainCitCat, VM.CurrentCitation.SelectionRects);
+            //PdfService.AddCitationToPdfDoc(VM.CurrentStorage.StorageName, VM.CurrentCitation.PhysicalPageStart, mainCategory, mainCitCat, VM.CurrentCitation.SelectionRects);
         }
 
         private void ToolStripStatusLabel1_Click(object sender, EventArgs e)
@@ -967,6 +971,8 @@ namespace Dek.Bel
             m_VolumeService.CurrentVolume.Title = textBox_VolumeTitle.Text;
             m_VolumeService.CurrentVolume.PublicationDate = textBox_volumePublicationDate.Text.ToSaneDateTime();
             m_VolumeService.CurrentVolume.Notes = textBox_VolumeNotes.Text;
+            m_VolumeService.CurrentVolume.OffsetX = (int)numericUpDown_offsetX.Value;
+            m_VolumeService.CurrentVolume.OffsetY = (int)numericUpDown_offsetY.Value;
             m_DBService.InsertOrUpdate(m_VolumeService.CurrentVolume);
         }
 
@@ -1240,6 +1246,8 @@ namespace Dek.Bel
 
         private void BelGui_FormClosing(object sender, FormClosingEventArgs e)
         {
+
+
             if (m_UserSettingsService.AutoWritePdfOnClose)
                 PdfService.RecreateTheWholeThing(VM, m_VolumeService);
         }

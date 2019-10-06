@@ -390,6 +390,7 @@ void LinkHandler::LaunchFile(const WCHAR* path, PageDestination* link) {
     // pelpdf:<citation guid>
     if (str::StartsWith(path, L"belpdf:")) {
         BelEditCitation(path);
+        ReloadDocument(owner, true);
         return;
     }
 
