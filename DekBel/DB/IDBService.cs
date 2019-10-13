@@ -8,6 +8,8 @@ namespace Dek.Bel.DB
     {
         bool CreateTable(object obj);
         bool CreateTable(Type type);
+        bool TableExists(string tableName);
+        void AddColumn(string tableName, string columnDesc); // Ex: "`Id` TEXT, `Title` TEXT NOT NULL"
 
         DataTable SelectBySql(string query);
         DataTable SelectBySql<T>(string where) where T : new(); // Model gives all cols => SELECT *

@@ -15,6 +15,7 @@ using System.Windows.Forms;
 using Dek.Bel.Services.Report;
 using System.Text.RegularExpressions;
 using Dek.Bel.Helpers;
+using Dek.Bel.CitationSelector;
 
 namespace Dek.Bel
 {
@@ -62,21 +63,27 @@ namespace Dek.Bel
             if (message.Code == (int)InterOp.CodesEnum.DEKBELCODE_SHOWBEL)
             {
                 m_VolumeService.LoadCitations(history.VolumeId);
-                VM.CurrentCitation = m_VolumeService.Citations?.FirstOrDefault();
+                if (m_VolumeService.Citations.Count > 1)
+                {
+                    VM.CurrentCitation = SelectCitation();
+                }
+                else
+                {
+                    VM.CurrentCitation = m_VolumeService.Citations?.FirstOrDefault();
+                }
+
                 if(VM.CurrentCitation == null)
                 {
                     MessageBox.Show(null, "There are no citations for the current volume.", "No citations found", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     Close();
                     return;
                 }
-                LoadCitations();
             }
             else if (message.Code == (int)InterOp.CodesEnum.DEKBELCODE_ADDANDSHOWCITATION)
             {
-                List<RawCitation> rawCitations = m_DBService.Select<RawCitation>();
+                List<RawCitation> rawCitations = m_CitationService.GetRawCitations().ToList();
                 VM.CurrentCitation = m_CitationService.CreateNewCitation(rawCitations, message, m_VolumeService.CurrentVolume.Id);
                 m_VolumeService.LoadCitations(history.VolumeId);
-                LoadCitations(); // Into status strip citations context menu
             }
             else if (message.Code == (int)InterOp.CodesEnum.DEKBELCODE_EDITCITATION)
             {
@@ -106,7 +113,6 @@ namespace Dek.Bel
                     Close();
                     return;
                 }
-                LoadCitations();
             }
 
             m_DBService.DeleteAll<RawCitation>(); // These need to go now
@@ -170,7 +176,8 @@ namespace Dek.Bel
         private void LoadControls()
         {
             // Show which citation is current
-            toolStripDropDownButton_Citation.Text = VM.CurrentCitation.ToString();
+            int len = Math.Min(VM.CurrentCitation.Citation1.Length, 40);
+            toolStripStatusLabel_CitationSelector.Text = $"{VM.CurrentCitation.Id.ToStringShort()} - {VM.CurrentCitation.Citation1.Substring(0,len)}";
 
             // Load data from citation
             VM.InitCitationData();
@@ -275,39 +282,25 @@ namespace Dek.Bel
         }
 
         /// <summary>
-        /// Populate citations into status strip contextMenuStrip_Citations
-        /// </summary>
-        void LoadCitations()
-        {
-            contextMenuStrip_Citations.Items.Clear();
-
-            foreach(var citation in m_VolumeService.Citations)
-            {
-                var item = new ToolStripMenuItem(citation.ToString(), null, CitationsToolStripMenuItem_Click, citation.Id.ToString());
-                contextMenuStrip_Citations.Items.Add(item);
-            }
-        }
-        
-        /// <summary>
         /// Citations dropdown status strip menu click.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void CitationsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (!(sender is ToolStripMenuItem item))
-                return;
+        //private void CitationsToolStripMenuItem_Click(object sender, EventArgs e)
+        //{
+        //    if (!(sender is ToolStripMenuItem item))
+        //        return;
 
-            Citation citation = m_VolumeService.Citations.SingleOrDefault(x => x.Id == Id.NewId(item.Name));
-            if(citation == null)
-            {
-                MessageBox.Show("Error loading citation");
-                return;
-            }
+        //    Citation citation = m_VolumeService.Citations.SingleOrDefault(x => x.Id == Id.NewId(item.Name));
+        //    if(citation == null)
+        //    {
+        //        MessageBox.Show("Error loading citation");
+        //        return;
+        //    }
 
-            VM.CurrentCitation = citation;
-            LoadControls();
-        }
+        //    VM.CurrentCitation = citation;
+        //    LoadControls();
+        //}
 
 
         private void toolStripDropDownButton1_Click(object sender, EventArgs e)
@@ -976,13 +969,6 @@ namespace Dek.Bel
             m_DBService.InsertOrUpdate(m_VolumeService.CurrentVolume);
         }
 
-        private void Button3_Click(object sender, EventArgs e)
-        {
-            FormVolume fm = new FormVolume();
-            fm.ShowDialog();
-        }
-
-
         private void TextChanged_ValidateTextBoxDate(object sender, EventArgs e)
         {
             if (!(sender is TextBox tb))
@@ -1236,7 +1222,7 @@ namespace Dek.Bel
         {
             FormVolume fm = new FormVolume();
 
-            if (fm.ShowDialog() == DialogResult.OK)
+            if (fm.ShowDialog() == DialogResult.OK || fm.SelectedCitation != VM.CurrentCitation) // Citation might be deleted
             {
                 VM.CurrentCitation = fm.SelectedCitation ?? VM.CurrentCitation;
                 LoadControls();
@@ -1246,8 +1232,6 @@ namespace Dek.Bel
 
         private void BelGui_FormClosing(object sender, FormClosingEventArgs e)
         {
-
-
             if (m_UserSettingsService.AutoWritePdfOnClose)
                 PdfService.RecreateTheWholeThing(VM, m_VolumeService);
         }
@@ -1256,6 +1240,25 @@ namespace Dek.Bel
         {
             FormCategory fc = new FormCategory(m_CategoryService);
             fc.ShowDialog();
+        }
+
+        private void toolStripStatusLabel_CitationSelector_Click(object sender, EventArgs e)
+        {
+            VM.CurrentCitation = SelectCitation();
+            LoadControls();
+        }
+
+        private Citation SelectCitation()
+        {
+            FormCitationSelector f = new FormCitationSelector(VM, m_VolumeService, m_CategoryService);
+            f.ShowDialog();
+
+            return f.SelectedCitation;
+        }
+
+        private void StatusStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        {
+
         }
 
 

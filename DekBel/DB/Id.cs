@@ -14,6 +14,7 @@ namespace Dek.Bel.DB
 
         public Guid Value { get; set; } // Defaults to null guid
 
+        // Ctor
         public static Id NewId() => new Id { Value = Guid.NewGuid() };
         public static Id NewId(string id) => new Id(id);
         public static Id NewId(Guid guid) => new Id(guid);
@@ -30,6 +31,16 @@ namespace Dek.Bel.DB
         public override string ToString()
         {
             return Value.ToString();
+        }
+
+        public string ToStringShort()
+        {
+            return ToStringShort(4);
+        }
+
+        public string ToStringShort(int digits)
+        {
+            return Value.ToString().Replace("-","").Substring(0, 5);
         }
 
         public bool Equals(Id other)

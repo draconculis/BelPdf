@@ -39,20 +39,21 @@ namespace Dek.Bel.DB
         private const string ColDescription = "Description";
 
         [ImportingConstructor]
-        public Sqlite(IUserSettingsService userSettingsService, IMessageboxService messageboxService, IDBCreator creator)
+        public Sqlite(IUserSettingsService userSettingsService, IMessageboxService messageboxService, IDBCreator creator, IDBUpdater updater)
         {
             m_UserSettingsService = userSettingsService;
             m_MessageboxService = messageboxService;
-            InitLocal(creator);
+            InitLocal(creator, updater);
         }
 
-        public void InitLocal(IDBCreator creator)
+        public void InitLocal(IDBCreator creator, IDBUpdater updater)
         {
             if(!File.Exists(m_UserSettingsService.DBPath))
                 SQLiteConnection.CreateFile(m_UserSettingsService.DBPath);
 
             m_dbConnection = new SQLiteConnection($"Data Source={m_UserSettingsService.DBPath};Version=3;New=False;");
             creator.Create(this);
+            updater.Upgrade(this);
         }
 
         public List<T> Select<T>(string where = null) where T : new()
@@ -562,6 +563,18 @@ namespace Dek.Bel.DB
             return CreateTable(tableName, colDefs, keyDefs);
         }
 
+
+        /// <summary>
+        /// Add a column to a table
+        /// </summary>
+        /// <param name="tablename"></param>
+        /// <param name="columnDesc">Ex: "`Id` TEXT, `Title` TEXT NOT NULL"</param>
+        public void AddColumn(string tableName, string columnDesc)
+        {
+            string sqlCmd = $"ALTER TABLE {tableName} ADD COLUMN {columnDesc}";
+            ExecuteNonQuery(sqlCmd);
+        }
+
         public void ExecuteNonQuery(string cmd)
         {
             try
@@ -796,6 +809,7 @@ namespace Dek.Bel.DB
                 if (prop.Name.ToLower() == "id" || attributes != null)
                 {
                     whereKeyValues += (whereKeyValues.Length > 0 ? " AND " : "") + $"`{prop.Name}` = '{prop.GetValue(obj, null)}'";
+                    keyFound = true;
                 }
             }
 

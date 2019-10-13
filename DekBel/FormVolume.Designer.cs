@@ -57,7 +57,7 @@
             this.textBox_title.Name = "textBox_title";
             this.textBox_title.Size = new System.Drawing.Size(1032, 42);
             this.textBox_title.TabIndex = 0;
-            this.textBox_title.Text = "Book title";
+            this.textBox_title.Text = "Volume title";
             this.textBox_title.Leave += new System.EventHandler(this.TextBox_title_Leave);
             // 
             // listBox_books

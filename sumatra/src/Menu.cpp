@@ -228,8 +228,9 @@ static MenuDef menuDefContext[] = {
     { _TRN("P&roperties"),                  IDM_PROPERTIES,             MF_PLUGIN_MODE_ONLY },
     { SEP_ITEM,                             0,                          MF_REQ_ALLOW_COPY },
     { _TRN("B&el..."),                      DEKBELCODE_SHOWBEL,                MF_REQ_DISK_ACCESS | MF_REQ_ALLOW_COPY },
-    { _TRN("&New Citation..."),             DEKBELCODE_ADDANDSHOWCITATION,     MF_REQ_DISK_ACCESS | MF_REQ_ALLOW_COPY },
-    { _TRN("Add to next Ci&tation"),        DEKBELCODE_ADDCITATION,            MF_REQ_DISK_ACCESS | MF_REQ_ALLOW_COPY },
+    { _TRN("&New Citation "),             DEKBELCODE_ADDANDSHOWCITATION,     MF_REQ_DISK_ACCESS | MF_REQ_ALLOW_COPY },
+    { _TRN("&New Citation Silent"),         DEKBELCODE_ADDCITATIONSILENT,     MF_REQ_DISK_ACCESS | MF_REQ_ALLOW_COPY },
+    { _TRN("Add to next Ci&tation"),        DEKBELCODE_ADDRAWCITATION,            MF_REQ_DISK_ACCESS | MF_REQ_ALLOW_COPY },
     /*{ _TRN("Edit Citation..."),             DEKBELCODE_EDITCITATION,           MF_REQ_DISK_ACCESS },*/
     { SEP_ITEM,                             0,                          MF_REQ_ALLOW_COPY },
     { _TRN("Set volume title"),             DEKBELCODE_ADDVOLUMETITLE,         MF_REQ_DISK_ACCESS | MF_REQ_ALLOW_COPY },
@@ -650,8 +651,9 @@ void OnContextMenu(WindowInfo* win, int x, int y) {
     if (!win->currentTab->selectionOnPage) {
         win::menu::SetEnabled(popup, IDM_COPY_SELECTION, false);
         /* BELPDF - Disable these if no text selected */
-        win::menu::SetEnabled(popup, DEKBELCODE_ADDCITATION, false);
+        win::menu::SetEnabled(popup, DEKBELCODE_ADDRAWCITATION, false);
         win::menu::SetEnabled(popup, DEKBELCODE_ADDANDSHOWCITATION, false);
+        win::menu::SetEnabled(popup, DEKBELCODE_ADDCITATIONSILENT, false);
         win::menu::SetEnabled(popup, DEKBELCODE_EDITCITATION, false);
         win::menu::SetEnabled(popup, DEKBELCODE_ADDVOLUMETITLE, false);
         win::menu::SetEnabled(popup, DEKBELCODE_ADDBOOKTITLE, false);
@@ -695,8 +697,9 @@ void OnContextMenu(WindowInfo* win, int x, int y) {
             }
             break;
         case DEKBELCODE_SHOWBEL:
-        case DEKBELCODE_ADDCITATION:
+        case DEKBELCODE_ADDRAWCITATION:
         case DEKBELCODE_ADDANDSHOWCITATION:
+        case DEKBELCODE_ADDCITATIONSILENT:
         case DEKBELCODE_EDITCITATION: // Nope, this is only set during click on belpdf link
             DoBel(win, cmd);
             ReloadDocument(win);

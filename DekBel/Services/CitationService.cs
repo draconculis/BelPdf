@@ -16,22 +16,31 @@ namespace Dek.Bel.DB
     [Export]
     public class CitationService
     {
-        [Import] IDBService DBService { get; set; }
+        [Import] IDBService m_DBService { get; set; }
         [Import] public IUserSettingsService UserSettingsService { get; set; }
-        string SqlSelectFields = $"SELECT `Id`, `Fragment`, `PageStart`, `PageStop`, `GlyphStart`, `GlyphStop`, `Rectangles`, `Date`";
+        [Import] public HistoryRepo m_HistoryRepo { get; set; }
+
+        private History LastHistory; // Used to get current Volume
+
+        //private string SqlSelectFields = $"SELECT `Id`, `Fragment`, `PageStart`, `PageStop`, `GlyphStart`, `GlyphStop`, `Rectangles`, `Date`";
 
         public CitationService()
         {
-            Mef.Initialize(this);
+            if (m_DBService == null)
+                Mef.Initialize(this);
+
+            LastHistory = m_HistoryRepo.GetLastOpened(); // Our currently open file in Sumatra
         }
 
         public RawCitation AddRawCitations(EventData message)
         {
             int[] rects = ArrayStuff.ExtractArrayFromIntPtr(message.SelectionRects, message.Len * 4);
+            var volume = m_DBService.SelectById<Volume>(LastHistory.VolumeId);
 
             RawCitation raw = new RawCitation
             {
                 Id = Id.NewId(),
+                VolumeId = volume.Id,
                 Fragment = message.Text,
                 GlyphStart = message.StartGlyph,
                 GlyphStop = message.StopGlyph,
@@ -41,9 +50,15 @@ namespace Dek.Bel.DB
                 Rectangles = ArrayStuff.ConvertPageAndArrayToString(message.StartPage, rects),
             };
 
-            DBService.InsertOrUpdate(raw);
+            m_DBService.InsertOrUpdate(raw);
 
             return raw;
+        }
+
+        public IEnumerable<RawCitation> GetRawCitations()
+        {
+            Id volumeId = LastHistory.VolumeId;
+            return m_DBService.Select<RawCitation>().Where(r => r.VolumeId == volumeId);
         }
 
         private string ComposeCitation(List<RawCitation> rawCitations, string citation)
@@ -71,6 +86,12 @@ namespace Dek.Bel.DB
             return res;
         }
 
+        public Citation CreateNewCitation(EventData message, Id volumeId)
+        {
+            List<RawCitation> rawCitations = m_DBService.Select<RawCitation>().Where(x => x.VolumeId == volumeId).ToList();
+            return CreateNewCitation(rawCitations, message, volumeId);
+        }
+
         internal Citation CreateNewCitation(List<RawCitation> rawCitations, EventData message, Id volumeId)
         {
             (int page, int[] rects) citationPageRects = (message.StartPage, ArrayStuff.ExtractArrayFromIntPtr(message.SelectionRects, message.Len * 4));
@@ -96,7 +117,7 @@ namespace Dek.Bel.DB
                 CitationColors = ColorStuff.ConvertColorsToString(UserSettingsService.PdfHighLightColor, UserSettingsService.PdfUnderlineColor, UserSettingsService.PdfMarginBoxColor),
             };
 
-            DBService.InsertOrUpdate(citation);
+            m_DBService.InsertOrUpdate(citation);
 
             return citation;
         }

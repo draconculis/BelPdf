@@ -120,14 +120,24 @@
     <Compile Include="BelGui.Designer.cs">
       <DependentUpon>BelGui.cs</DependentUpon>
     </Compile>
+    <Compile Include="CitationSelector\CitationSelectorModel.cs" />
     <Compile Include="Cls\ArrayStuff.cs" />
     <Compile Include="Cls\AssemblyStuff.cs" />
     <Compile Include="Cls\ColorStuff.cs" />
     <Compile Include="Cls\DekRangeExtension.cs" />
     <Compile Include="Cls\IntExtensions.cs" />
     <Compile Include="Cls\DekRange.cs" />
+    <Compile Include="Cls\PocoExtension.cs" />
     <Compile Include="Constants\Constants.cs" />
     <Compile Include="Constants\ConstantsHelper.cs" />
+    <Compile Include="CitationSelector\FormCitationSelector.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CitationSelector\FormCitationSelector.Designer.cs">
+      <DependentUpon>FormCitationSelector.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DB\DBUpdater.cs" />
+    <Compile Include="DB\IDBUpdater.cs" />
     <Compile Include="Form_AllCitations.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -143,6 +153,7 @@
     <Compile Include="Helpers\PdfMarginBoxSettings.cs" />
     <Compile Include="ModelExtensions\CitationExtension.cs" />
     <Compile Include="ModelExtensions\ReferenceExtension.cs" />
+    <Compile Include="Models\DBVersion.cs" />
     <Compile Include="Models\SeriesAuthor.cs" />
     <Compile Include="Models\VolumeAuthor.cs" />
     <Compile Include="Models\MetaDbModel.cs" />
@@ -274,6 +285,9 @@
   <ItemGroup>
     <EmbeddedResource Include="BelGui.resx">
       <DependentUpon>BelGui.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CitationSelector\FormCitationSelector.resx">
+      <DependentUpon>FormCitationSelector.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form_AllCitations.resx">
       <DependentUpon>Form_AllCitations.cs</DependentUpon>

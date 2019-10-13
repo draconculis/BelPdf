@@ -105,7 +105,7 @@ namespace BelManagedLib
                         Cancel = string.IsNullOrWhiteSpace(res),
                     };
                     break;
-                case CodesEnum.DEKBELCODE_ADDCITATION:
+                case CodesEnum.DEKBELCODE_ADDRAWCITATION:
                     var citationRepo = new CitationService();
                     var result = citationRepo.AddRawCitations(data);
                     Result = new ResultData
@@ -130,6 +130,9 @@ namespace BelManagedLib
                     }
                     belAdd.ShowDialog();
                     Result = belAdd.Result;
+                    break;
+                case CodesEnum.DEKBELCODE_ADDCITATIONSILENT:
+
                     break;
                 case CodesEnum.DEKBELCODE_EDITCITATION:
                     BelGui belEdit = new BelGui(data);

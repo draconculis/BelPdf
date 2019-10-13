@@ -47,9 +47,9 @@ namespace Dek.Bel.DB
             Pages = m_DBService.Select<Page>($"`VolumeId`='{id}'").OrderBy(x => x.PhysicalPage).ToList();
         }
 
-        public void LoadCitations(Id id)
+        public void LoadCitations(Id volumeId)
         {
-            var citations = m_DBService.Select<Citation>($"`VolumeId`='{id}'");
+            var citations = m_DBService.Select<Citation>($"`VolumeId`='{volumeId}'");
             Citations = citations.AsParallel().OrderBy(x => x.PhysicalPageStart).ThenBy(y => y.GlyphStart).ToList();
         }
 
@@ -77,6 +77,20 @@ namespace Dek.Bel.DB
             }
 
             Citations.Add(citation);
+        }
+
+        public void DeleteCitation(string id)
+        {
+            DeleteCitation(new Id(id));
+        }
+
+        public void DeleteCitation(Id id)
+        {
+            Citation cit = Citations.SingleOrDefault(x => x.Id == id);
+            if (cit == null)
+                return;
+            m_DBService.Delete(cit);
+            LoadCitations(CurrentVolume.Id);
         }
 
         #region References =========================================================================

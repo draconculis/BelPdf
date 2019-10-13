@@ -40,6 +40,16 @@ namespace Dek.Bel.Models
             return $"[{Id.ToString().Substring(0, 8)}]" + " " + Citation1.Substring(0, Citation1.Length > maxlen ? maxlen : Citation1.Length) + $"{(Citation1.Length > maxlen ? "…" : "")}";
         }
 
+        public string ToStringLong()
+        {
+            return $"[{Id.ToString().Substring(0, 8)}]" + " " + Citation1;
+        }
+
+        public string ToStringShort()
+        {
+            return $"[{Id.ToString().Substring(0, 8)}]";
+        }
+
         public int CompareTo(Citation other)
         {
             if (PhysicalPageStart == other.PhysicalPageStart)

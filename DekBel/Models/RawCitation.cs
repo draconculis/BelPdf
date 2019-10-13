@@ -11,6 +11,7 @@ namespace Dek.Bel.Models
     public class RawCitation : IModelWithId
     {
         public Id Id { get; set; }
+        public Id VolumeId { get; set; }
         public string Fragment { get; set; }
         public int PageStart { get; set; }
         public int PageStop { get; set; }
