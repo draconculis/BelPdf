@@ -688,12 +688,12 @@ int APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 
     bool restoreSession = false;
     if (gGlobalPrefs->sessionData->size() > 0 && !gPluginURL) {
-        restoreSession = gGlobalPrefs->restoreSession;
+        //restoreSession = gGlobalPrefs->restoreSession; // BEL
     }
     if (gGlobalPrefs->reopenOnce->size() > 0 && !gPluginURL) {
         if (gGlobalPrefs->reopenOnce->size() == 1 && str::EqI(gGlobalPrefs->reopenOnce->at(0), L"SessionData")) {
             gGlobalPrefs->reopenOnce->FreeMembers();
-            restoreSession = true;
+            //restoreSession = true; // BEL
         }
         while (gGlobalPrefs->reopenOnce->size() > 0) {
             i.fileNames.Append(gGlobalPrefs->reopenOnce->Pop());
@@ -709,6 +709,7 @@ int APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
     }
 
     WindowInfo* win = nullptr;
+    // BEL - skip restore session data
     if (restoreSession) {
         for (SessionData* data : *gGlobalPrefs->sessionData) {
             win = CreateAndShowWindowInfo(data);
@@ -718,6 +719,7 @@ int APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
             TabsSelect(win, data->tabIndex - 1);
         }
     }
+    
     ResetSessionState(gGlobalPrefs->sessionData);
     // prevent the same session from being restored twice
     if (restoreSession && !(gGlobalPrefs->reuseInstance || gGlobalPrefs->useTabs))

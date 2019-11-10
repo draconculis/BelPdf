@@ -81,7 +81,7 @@ int NormalizeRotation(int rotation) {
 }
 
 void DisplayModel::UpdateDisplayState(DisplayState* ds) {
-    if (!ds->filePath || !str::EqI(ds->filePath, engine->FileName()))
+    if (!ds->filePath /*|| !str::EqI(ds->filePath, engine->FileName())*/) // BEL
         str::ReplacePtr(&ds->filePath, engine->FileName());
 
     ds->useDefaultState = !gGlobalPrefs->rememberStatePerDocument;
