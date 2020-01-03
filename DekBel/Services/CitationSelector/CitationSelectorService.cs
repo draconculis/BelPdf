@@ -22,7 +22,7 @@ namespace Dek.Bel.CitationSelector
         {
             FormCitationSelector f = new FormCitationSelector(vm, m_VolumeService, m_CategoryService, m_CitationDeleterService);
             f.ShowDialog();
-            return f.SelectedCitation;
+            return f.Cancel ? null : f.SelectedCitation;
         }
     }
 }

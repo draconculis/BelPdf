@@ -35,7 +35,7 @@ namespace Dek.Bel.DB
 
         public string ToStringShort()
         {
-            return ToStringShort(4);
+            return ToStringShort(5);
         }
 
         public string ToStringShort(int digits)

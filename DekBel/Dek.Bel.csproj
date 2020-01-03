@@ -120,9 +120,9 @@
     <Compile Include="BelGui.Designer.cs">
       <DependentUpon>BelGui.cs</DependentUpon>
     </Compile>
-    <Compile Include="CitationSelector\CitationSelectorService.cs" />
+    <Compile Include="Services\CitationSelector\CitationSelectorService.cs" />
     <Compile Include="Services\CitationDeleter\CitationDeleterService.cs" />
-    <Compile Include="CitationSelector\CitationSelectorModel.cs" />
+    <Compile Include="Services\CitationSelector\CitationSelectorModel.cs" />
     <Compile Include="Cls\ArrayStuff.cs" />
     <Compile Include="Cls\AssemblyStuff.cs" />
     <Compile Include="Cls\ColorStuff.cs" />
@@ -132,10 +132,10 @@
     <Compile Include="Cls\PocoExtension.cs" />
     <Compile Include="Constants\Constants.cs" />
     <Compile Include="Constants\ConstantsHelper.cs" />
-    <Compile Include="CitationSelector\FormCitationSelector.cs">
+    <Compile Include="Services\CitationSelector\FormCitationSelector.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="CitationSelector\FormCitationSelector.Designer.cs">
+    <Compile Include="Services\CitationSelector\FormCitationSelector.Designer.cs">
       <DependentUpon>FormCitationSelector.cs</DependentUpon>
     </Compile>
     <Compile Include="DB\DBUpdater.cs" />
@@ -295,7 +295,7 @@
     <EmbeddedResource Include="BelGui.resx">
       <DependentUpon>BelGui.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="CitationSelector\FormCitationSelector.resx">
+    <EmbeddedResource Include="Services\CitationSelector\FormCitationSelector.resx">
       <DependentUpon>FormCitationSelector.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form_AllCitations.resx">

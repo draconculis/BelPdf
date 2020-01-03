@@ -11,7 +11,8 @@ namespace Dek.Bel.CitationSelector
 {
     public class CitationSelectorModel
     {
-        private Citation Model { get; set; }
+        [Browsable(false)]
+        public Citation Model { get; }
 
         public CitationSelectorModel(Citation model)
         {

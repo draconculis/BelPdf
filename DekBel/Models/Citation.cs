@@ -1,4 +1,5 @@
 ﻿using Dek.Bel.DB;
+using Dek.Cls;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,17 +38,17 @@ namespace Dek.Bel.Models
 
         public override string ToString()
         {
-            return $"[{Id.ToString().Substring(0, 8)}]" + " " + Citation1.Substring(0, Citation1.Length > maxlen ? maxlen : Citation1.Length) + $"{(Citation1.Length > maxlen ? "…" : "")}";
+            return $"[{Id.ToStringShort()}]" + " " + Citation1.Left(maxlen, true);
         }
 
         public string ToStringLong()
         {
-            return $"[{Id.ToString().Substring(0, 8)}]" + " " + Citation1;
+            return $"[{Id.ToStringShort()}]" + " " + Citation1;
         }
 
         public string ToStringShort()
         {
-            return $"[{Id.ToString().Substring(0, 8)}]";
+            return $"[{Id.ToStringShort()}]";
         }
 
         public int CompareTo(Citation other)

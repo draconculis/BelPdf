@@ -23,8 +23,6 @@ namespace Dek.Bel.Services
         public List<DekRange> Emphasis { get; set; } = new List<DekRange>();
         public List<DekRange> Exclusion { get; set; } = new List<DekRange>();
 
-        public List<CitationCategory> CurrentCitations { get; set; } = new List<CitationCategory>();
-
         internal void InitCitationData()
         {
             if (Exclusion == null)

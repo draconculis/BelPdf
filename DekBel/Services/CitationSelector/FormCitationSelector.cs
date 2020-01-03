@@ -19,6 +19,7 @@ namespace Dek.Bel.CitationSelector
     public partial class FormCitationSelector : Form
     {
         public Citation SelectedCitation { get; set; }
+        public bool Cancel { get; set; } = true;
 
         public readonly ModelsForViewing VM;
         
@@ -31,6 +32,7 @@ namespace Dek.Bel.CitationSelector
         //----------------------
 
         public List<CitationSelectorModel> m_Citations { get; set; }
+
         public IEnumerable<CitationSelectorModel> m_FilteredCitations => m_Citations.Where(c =>
             (!checkBox_hideCategorized.Checked || c.HasMainCategory)).ToList();
         
@@ -53,7 +55,7 @@ namespace Dek.Bel.CitationSelector
             dataGridView1.DataSource = m_FilteredCitations;
             UpdateCount();
             if(!SelectRowById(SelectedCitation.Id))
-                dataGridView1.Rows[0].Selected = true;
+                SelectRow(0);
         }
 
         public FormCitationSelector()
@@ -66,6 +68,8 @@ namespace Dek.Bel.CitationSelector
             if (m_Citations == null)
                 m_Citations = new List<CitationSelectorModel>();
 
+            m_Citations.Clear();
+
             foreach(Citation cit in m_VolumeService.Citations)
             {
                 m_Citations.Add(new CitationSelectorModel(cit)
@@ -74,6 +78,9 @@ namespace Dek.Bel.CitationSelector
                     MainCitationCategory = m_CategoryService.GetMainCitationCategory(cit.Id),
                 });
             }
+
+            dataGridView1.DataSource = null;
+            dataGridView1.DataSource = m_FilteredCitations;
         }
 
         private bool SelectRowById(Id id)
@@ -87,14 +94,26 @@ namespace Dek.Bel.CitationSelector
                 if (row.Index < 0) // archaic shit
                     continue;
 
-                if ((((CitationSelectorModel)row.DataBoundItem)?.Id ?? Id.Empty) == id) // everything is possible
-                    row.Selected = true;
-
-                found = true;
-                break;
+                CitationSelectorModel cit = (CitationSelectorModel)row.DataBoundItem;
+                if ((cit?.Model.Id ?? Id.Empty) == id) // everything is possible
+                {
+                    SelectRow(row.Index);
+                    found = true;
+                    break;
+                }
             }
 
             return found;
+        }
+
+        private void SelectRow(int idx)
+        {
+            dataGridView1.ClearSelection();
+            dataGridView1.Rows[idx].Selected = true;
+            dataGridView1.CurrentCell = dataGridView1.Rows[idx].Cells[0];
+
+            CitationSelectorModel cit = (CitationSelectorModel)dataGridView1.Rows[idx].DataBoundItem;
+            SelectedCitation = (Citation)cit.Model;
         }
 
         private void FormSelectCitation_Load(object sender, EventArgs e)
@@ -108,40 +127,83 @@ namespace Dek.Bel.CitationSelector
 
         private void ButtonSelect_Click(object sender, EventArgs e)
         {
-            var row = dataGridView1.CurrentRow;
-            if(row != null && row.Index - 1 >= 0)
-            {
-                Id id = ((CitationSelectorModel)row.DataBoundItem)?.Id ?? Id.Empty;
-                if (id.IsNotNull)
-                {
-                    SelectedCitation = m_VolumeService.Citations.SingleOrDefault(c => c.Id == id);
-                }
-            }
-
-            if (SelectedCitation == null)
-                SelectedCitation = VM.CurrentCitation;
-
-            if (SelectedCitation == null)
-                SelectedCitation = m_VolumeService.Citations.FirstOrDefault();
-
+            Cancel = false;
             Close();
         }
 
         private void CheckBox_hideCategorized_CheckedChanged(object sender, EventArgs e)
         {
             dataGridView1.DataSource = m_FilteredCitations;
+            UpdateCount();
         }
 
         private void button_delete_Click(object sender, EventArgs e)
         {
+            if (dataGridView1.SelectedRows.Count < 1 && dataGridView1.SelectedCells.Count < 1)
+                return;
+            
+            // Some stuff to get selected rows from the collection of selected cells...
+            var selectedCells = new List<DataGridViewCell>();
+            foreach (DataGridViewCell cell in dataGridView1.SelectedCells)
+                selectedCells.Add(cell);
 
+            IEnumerable<int> selectedRowIdxs = selectedCells.Select(c => c.RowIndex).Distinct();
+            List<DataGridViewRow> selectedRows = new List<DataGridViewRow>();
+            foreach (DataGridViewRow row in dataGridView1.Rows)
+                if(selectedRowIdxs.Contains(row.Index))
+                    selectedRows.Add(row);
+
+            Citation oldCitation = SelectedCitation;
+
+            var citationsToDelete = new List<Citation>();
+            foreach (DataGridViewRow row in selectedRows)
+                citationsToDelete.Add(((CitationSelectorModel)row.DataBoundItem).Model);
+
+            // Delete. This might mess things up.
+            m_CitationDeleterService.DeleteCitationsById(citationsToDelete.Select(c => c.Id));
 
             m_VolumeService.LoadCitations();
+
+            if (!m_VolumeService.Citations.Any())
+            {
+                SelectedCitation = null;
+                return;
+            }
+
+            if (m_VolumeService.Citations.Any(c => c.Id == oldCitation.Id))
+                SelectRowById(oldCitation.Id);
+            else
+                SelectRowById(m_VolumeService.Citations.First().Id);
+
+            LoadCitations();
+            UpdateCount();
         }
 
         private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            MessageBox.Show("Click");
+            SelectedCitation = GetSelectedCitationFromGrid();
+        }
+
+        private Citation GetSelectedCitationFromGrid()
+        {
+            Citation result = null;
+            var row = dataGridView1.CurrentRow;
+            if (row != null && row.Index - 1 >= 0)
+            {
+                Id id = ((CitationSelectorModel)row.DataBoundItem)?.Id ?? Id.Empty;
+                if (id.IsNotNull)
+                {
+                    result = m_VolumeService.Citations.SingleOrDefault(c => c.Id == id);
+                }
+            }
+            
+            if (result == null)
+                result = VM.CurrentCitation;
+
+            if (result == null)
+                result = m_VolumeService.Citations.FirstOrDefault();
+
+            return result;
         }
     }
 }

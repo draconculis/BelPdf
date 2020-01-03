@@ -27,19 +27,19 @@ namespace Dek.Bel.Services.CitationDeleterService
             Id volumeId = m_Volumeservice.CurrentVolume.Id;
             if (volumeId.IsNull)
             {
-                m_MessageboxService.Show("No current Volume", "Must have a Volume selected to delete a citation.");
+                m_MessageboxService.Show("Must have a Volume selected to delete a citation.", "No current Volume");
                 return false;
             }
 
             Citation cit = m_CitationService.GetCitation(volumeId, id);
             if (cit == null)
             {
-                m_MessageboxService.Show("Citation not found", $"Citation with id {id} was not found for Volume \"{m_Volumeservice.CurrentVolume.Title}\" with Id {volumeId}.");
+                m_MessageboxService.Show($"Citation with id {id.ToStringShort()} was not found for Volume \"{m_Volumeservice.CurrentVolume.Title}\" with Id {volumeId}.", "Citation not found");
                 return false;
             }
 
 
-            var result = m_MessageboxService.ShowYesNo("Delete citation", $"Do you want to delete citation \"{cit.Citation1.Left(50, true)}\" with id {id}?");
+            var result = m_MessageboxService.ShowYesNo($"Do you want to delete citation \"{cit.Citation1.Left(50, true)}\" with id {id.ToStringShort()}?", "Delete citation");
 
             if (result != System.Windows.Forms.DialogResult.Yes)
                 return false;
@@ -53,17 +53,17 @@ namespace Dek.Bel.Services.CitationDeleterService
             Id volumeId = m_Volumeservice.CurrentVolume.Id;
             if (volumeId.IsNull)
             {
-                m_MessageboxService.Show("No current Volume", "Must have a Volume selected to delete a citation.");
+                m_MessageboxService.Show("Must have a Volume selected to delete a citation.", "No current Volume");
                 return false;
             }
 
             if (ids == null || !ids.Any())
             {
-                m_MessageboxService.Show("No citations selected", "Must have at least one citation selected in order to delete citations.");
+                m_MessageboxService.Show("Must have at least one citation selected in order to delete citations.", "No citations selected");
                 return false;
             }
 
-            var result = m_MessageboxService.ShowYesNo("Delete citations", $"Do you want to delete {ids.Count()} citations?");
+            var result = m_MessageboxService.ShowYesNo($"Do you want to delete {ids.Count()} citations?", "Delete citations");
 
             if (result != System.Windows.Forms.DialogResult.Yes)
                 return false;

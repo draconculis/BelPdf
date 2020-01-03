@@ -1245,7 +1245,26 @@ namespace Dek.Bel
 
         private void toolStripStatusLabel_CitationSelector_Click(object sender, EventArgs e)
         {
+            // Please note that after this call, the number of selected citations may have changed
+            // and there may even be zero citations.
+            var oldCitation = VM.CurrentCitation;
             VM.CurrentCitation = SelectCitation();
+            if(!m_VolumeService.Citations.Any())
+            {
+                m_MessageboxService.Show("No Citations", "No Citations found for current Volume.");
+                Close();
+                return;
+            }
+
+            if(VM.CurrentCitation == null)
+            {
+                // Try to reselect previous citation
+                if (oldCitation != null && m_VolumeService.Citations.Any(c => c.Id == oldCitation.Id))
+                    VM.CurrentCitation = oldCitation;
+                else
+                    VM.CurrentCitation = m_VolumeService.Citations.First();
+            }
+
             LoadControls();
         }
 
