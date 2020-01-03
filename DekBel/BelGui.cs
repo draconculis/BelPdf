@@ -37,11 +37,12 @@ namespace Dek.Bel
         [Import] public IDBService m_DBService { get; set; }
         [Import] public CategoryRepo m_CategoryRepo { get; set; }
         private StorageService m_StorageService { get; } = new StorageService();
-        [Import] public HistoryRepo HistoryRepo { get; set; }
+        [Import] public HistoryRepo m_HistoryRepo { get; set; }
         [Import] public CitationService m_CitationService { get; set; }
         [Import] public RichTextService RtfService { get; set; }
         [Import] public IPdfService PdfService { get; set; }
-        [Import] public CitationManipulationService m_CitationManipulationService{ get; set;}
+        [Import] public CitationManipulationService m_CitationManipulationService { get; set; }
+        [Import] public CitationSelectorService m_CitationSelectorService { get; set; }
 
 
         /// <summary>
@@ -56,7 +57,7 @@ namespace Dek.Bel
             VM.Message = message;
 
             // Get volume and storage
-            History history = HistoryRepo.GetLastOpened(); // Our currently open file in Sumatra
+            History history = m_HistoryRepo.GetLastOpened(); // Our currently open file in Sumatra
             m_VolumeService.LoadVolume(history.VolumeId);
             VM.CurrentStorage = m_DBService.SelectById<Storage>(history.StorageId);
 
@@ -69,19 +70,19 @@ namespace Dek.Bel
                 }
                 else
                 {
-                    VM.CurrentCitation = m_VolumeService.Citations?.FirstOrDefault();
-                }
-
-                if(VM.CurrentCitation == null)
-                {
                     MessageBox.Show(null, "There are no citations for the current volume.", "No citations found", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     Close();
                     return;
                 }
+
+                if (VM.CurrentCitation == null)
+                {
+                    VM.CurrentCitation = m_VolumeService.Citations?.FirstOrDefault();
+                }
             }
             else if (message.Code == (int)InterOp.CodesEnum.DEKBELCODE_ADDANDSHOWCITATION)
             {
-                List<RawCitation> rawCitations = m_CitationService.GetRawCitations().ToList();
+                List<RawCitation> rawCitations = m_CitationService.GetRawCitations(history.VolumeId).ToList();
                 VM.CurrentCitation = m_CitationService.CreateNewCitation(rawCitations, message, m_VolumeService.CurrentVolume.Id);
                 m_VolumeService.LoadCitations(history.VolumeId);
             }
@@ -1250,10 +1251,7 @@ namespace Dek.Bel
 
         private Citation SelectCitation()
         {
-            FormCitationSelector f = new FormCitationSelector(VM, m_VolumeService, m_CategoryService);
-            f.ShowDialog();
-
-            return f.SelectedCitation;
+            return m_CitationSelectorService.ShowSelector(VM);
         }
 
         private void StatusStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)

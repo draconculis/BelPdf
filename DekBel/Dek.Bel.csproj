@@ -120,6 +120,8 @@
     <Compile Include="BelGui.Designer.cs">
       <DependentUpon>BelGui.cs</DependentUpon>
     </Compile>
+    <Compile Include="CitationSelector\CitationSelectorService.cs" />
+    <Compile Include="Services\CitationDeleter\CitationDeleterService.cs" />
     <Compile Include="CitationSelector\CitationSelectorModel.cs" />
     <Compile Include="Cls\ArrayStuff.cs" />
     <Compile Include="Cls\AssemblyStuff.cs" />
@@ -170,6 +172,7 @@
     <Compile Include="Properties\AssemblyVersion.cs" />
     <Compile Include="Services\IPdfService.cs" />
     <Compile Include="Services\IStorageHelperService.cs" />
+    <Compile Include="Services\MainService.cs" />
     <Compile Include="Services\Reference\Form_AddReference.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -222,6 +225,12 @@
     <Compile Include="DB\RefAttribute.cs" />
     <Compile Include="Services\StorageHelperService.cs" />
     <Compile Include="Services\StupidEncodingFixer.cs" />
+    <Compile Include="Services\Toaster\Toast.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Services\Toaster\Toast.Designer.cs">
+      <DependentUpon>Toast.cs</DependentUpon>
+    </Compile>
     <Compile Include="Services\VolumeService.cs" />
     <Compile Include="Form_ResetCitation.cs">
       <SubType>Form</SubType>
@@ -319,6 +328,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Services\Report\Form_ReportColumns.resx">
       <DependentUpon>Form_ReportColumns.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Services\Toaster\Toast.resx">
+      <DependentUpon>Toast.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

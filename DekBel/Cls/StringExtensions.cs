@@ -83,5 +83,20 @@ namespace Dek.Cls
             return ret;
         }
 
+        public static string Left(this string me, int noOfChars, bool ellipsis = false)
+        {
+            int len = me.Length;
+            if (len == 0 || noOfChars == 0)
+                return string.Empty;
+            if (len > noOfChars)
+                return me.Substring(0, noOfChars);
+
+            if (len == noOfChars)
+                return me;
+
+            return me + (ellipsis ? "…" : "");
+        }
+
+
     }
 }

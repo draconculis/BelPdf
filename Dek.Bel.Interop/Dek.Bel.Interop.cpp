@@ -7,7 +7,7 @@
 #include "Dek.Bel.Interop.h"
 
 // And the exported function is defined as in the following.
-// Note how the.NET delegate gets invoked through the function pointer.
+// Note how the .NET delegate gets invoked through the function pointer.
 
 DEKBELINTEROP_API ResultData* doBel(EventData data)
 {

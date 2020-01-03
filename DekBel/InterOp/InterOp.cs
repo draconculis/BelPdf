@@ -106,8 +106,8 @@ namespace BelManagedLib
                     };
                     break;
                 case CodesEnum.DEKBELCODE_ADDRAWCITATION:
-                    var citationRepo = new CitationService();
-                    var result = citationRepo.AddRawCitations(data);
+                    var mainService = new MainService();
+                    var result = mainService.AddRawCitations(data);
                     Result = new ResultData
                     {
                         Code = 0,
@@ -132,7 +132,18 @@ namespace BelManagedLib
                     Result = belAdd.Result;
                     break;
                 case CodesEnum.DEKBELCODE_ADDCITATIONSILENT:
-
+                    var mainService2 = new MainService();
+                    bool result2 = mainService2.AddCitationSilent(data);
+                    if (!result2)
+                    {
+                        Result = new ResultData
+                        {
+                            Cancel = true,
+                            Code = -1,
+                            Message = "Cancel"
+                        };
+                        break;
+                    }
                     break;
                 case CodesEnum.DEKBELCODE_EDITCITATION:
                     BelGui belEdit = new BelGui(data);

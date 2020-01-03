@@ -22,8 +22,6 @@ namespace Dek.Bel.DB
 
         private History LastHistory; // Used to get current Volume
 
-        //private string SqlSelectFields = $"SELECT `Id`, `Fragment`, `PageStart`, `PageStop`, `GlyphStart`, `GlyphStop`, `Rectangles`, `Date`";
-
         public CitationService()
         {
             if (m_DBService == null)
@@ -34,6 +32,8 @@ namespace Dek.Bel.DB
 
         public RawCitation AddRawCitations(EventData message)
         {
+            LastHistory = m_HistoryRepo.GetLastOpened(); // Our currently open file in Sumatra
+
             int[] rects = ArrayStuff.ExtractArrayFromIntPtr(message.SelectionRects, message.Len * 4);
             var volume = m_DBService.SelectById<Volume>(LastHistory.VolumeId);
 
@@ -55,10 +55,22 @@ namespace Dek.Bel.DB
             return raw;
         }
 
-        public IEnumerable<RawCitation> GetRawCitations()
+        public IEnumerable<RawCitation> GetRawCitations(Id volumeId)
         {
-            Id volumeId = LastHistory.VolumeId;
+            //LastHistory = m_HistoryRepo.GetLastOpened(); // Our currently open file in Sumatra
+            //Id volumeId = LastHistory.VolumeId;
+            //return m_DBService.Select<RawCitation>().Where(r => r.VolumeId == volumeId);
             return m_DBService.Select<RawCitation>().Where(r => r.VolumeId == volumeId);
+        }
+
+        public IEnumerable<Citation> GetCitations(Id volumeId)
+        {
+            return m_DBService.Select<Citation>().Where(c => c.VolumeId == volumeId);
+        }
+
+        public Citation GetCitation(Id volumeId, Id id)
+        {
+            return GetCitations(volumeId).SingleOrDefault(c => c.Id == id);
         }
 
         private string ComposeCitation(List<RawCitation> rawCitations, string citation)
@@ -120,6 +132,22 @@ namespace Dek.Bel.DB
             m_DBService.InsertOrUpdate(citation);
 
             return citation;
+        }
+
+        public Citation DeleteCitationById(Id volumeId, Id id)
+        {
+            Citation cit = GetCitations(volumeId).SingleOrDefault(c => c.Id == id);
+            if (cit == null)
+                return null;
+
+            DeleteCitation(cit);
+
+            return cit;
+        }
+
+        public void DeleteCitation(Citation citation)
+        {
+            m_DBService.Delete(citation);
         }
 
         /// <summary>

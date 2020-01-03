@@ -28,6 +28,7 @@ namespace Dek.Bel.Services
         [Import] public IUserSettingsService UserSettingsService { get; set; }
         [Import] public IStorageHelperService StorageHelperService { get; set; }
         [Import] public IPdfService PdfService { get; set; }
+        [Import] public VolumeService m_VolumeService { get; set; }
 
         public StorageService()
         {
@@ -53,6 +54,9 @@ namespace Dek.Bel.Services
             if (storage == null)
                 storage = CreateNewStorageForFile(fileStorageData, srcHash);
 
+            if(VM.CurrentStorage == null)
+                VM.CurrentStorage = storage;
+
             // Hmm file in store has been removed (this is not bad) - recreate it.
             if (!File.Exists(Path.Combine(UserSettingsService.StorageFolder, storage.StorageName)))
             {
@@ -60,11 +64,12 @@ namespace Dek.Bel.Services
                 //Citation citation = m_DBService.Select<Citation>($"`{nameof(Citation.VolumeId)}` = '{storage.VolumeId}'").FirstOrDefault();
                 // TODO: RECREATE STUFF IN THE FILE FROM DB!! <============================================ o_O
                 // Current citation not loaded at this point... Get current citation from db
-                
-                VolumeService volSvc = new VolumeService();
-                volSvc?.LoadVolume(storage.VolumeId);
-                if((volSvc?.Citations.Count).HasValue && volSvc?.Citations.Count > 0)
-                    PdfService.RecreateTheWholeThing(VM, volSvc);
+
+                //VolumeService volSvc = new VolumeService();
+                m_VolumeService.LoadVolume(storage.VolumeId);
+                m_VolumeService.LoadCitations();
+                if(m_VolumeService.Citations.Any())
+                    PdfService.RecreateTheWholeThing(VM, m_VolumeService);
                 else
                     CopyFileToStorage(storage.FilePath, storage.StorageName);
             }

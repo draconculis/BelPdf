@@ -83,6 +83,7 @@ namespace Dek.Bel.DB
         }
 
         public bool IsNull => Guid.Empty == Value;
+        public bool IsNotNull => !IsNull;
     }
 
     public static class IdExtensions
