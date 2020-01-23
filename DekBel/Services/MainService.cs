@@ -39,10 +39,10 @@ namespace Dek.Bel.Services
             History history = m_HistoryRepo.GetLastOpened(); // Our currently open file in Sumatra
             //m_VolumeService.LoadVolume(history.VolumeId);
 
-            if (message.Code == (int)InterOp.CodesEnum.DEKBELCODE_ADDANDSHOWCITATION)
+            if (message.Code == (int)InterOp.CodesEnum.DEKBELCODE_ADDCITATIONSILENT)
             {
                 List<RawCitation> rawCitations = m_CitationService.GetRawCitations(history.VolumeId).ToList();
-                Citation cit = m_CitationService.CreateNewCitation(rawCitations, message, m_VolumeService.CurrentVolume.Id);
+                Citation cit = m_CitationService.CreateNewCitation(rawCitations, message, history.VolumeId);
                 m_DBService.DeleteAll<RawCitation>();
 
                 Toast toast = new Toast("Citation added", cit.Citation1);

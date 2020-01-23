@@ -37,7 +37,8 @@ namespace Dek.Bel.Cls
             StringBuilder sb = new StringBuilder();
             foreach (var pageRect in pageRects)
             {
-                sb.Append(ConvertPageAndArrayToString(pageRect.page, pageRect.rects));
+                if(pageRect.rects.Count() > 0)
+                    sb.Append(ConvertPageAndArrayToString(pageRect.page, pageRect.rects));
             }
             return sb.ToString();
         }

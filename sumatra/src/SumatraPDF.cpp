@@ -1601,6 +1601,11 @@ void LoadModelIntoTab(WindowInfo* win, TabInfo* tdata) {
 
     CloseDocumentInTab(win, true);
 
+    // BEL
+    LoadArgs origArgs(tdata->orgininalFilePath, win);
+    ResultFileStorageData* response = BelRequestFileStorage(origArgs);
+    // END BEL
+
     win->currentTab = tdata;
     win->ctrl = tdata->ctrl;
 

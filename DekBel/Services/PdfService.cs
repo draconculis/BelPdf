@@ -81,8 +81,11 @@ namespace Dek.Bel.Services
                     color_underLine = new DeviceRgb(n(cu.R), n(cu.G), n(cu.B));
                     color_margin = new DeviceRgb(n(cm.R), n(cm.G), n(cm.B));
 
-                    foreach (var pageRect in pageRects)
+                    foreach ((int page, int[] rects) pageRect in pageRects)
                     {
+                        if (pageRect.rects.Count() > 0) // If no rects, for some reason...
+                            continue;
+
                         //int currentPage = pageRects.First().page;
                         int currentPage = pageRect.page;
                         int currentRect = 0;
@@ -107,6 +110,9 @@ namespace Dek.Bel.Services
 
                             do //(int i = 0; i < rects.Length; i += 4)
                             {
+                                if (currentRect >= pageRect.rects.Length) // Sometime this is necessary, page rects are empty or broken.
+                                    break;
+
                                 int x = pageRect.rects[currentRect] + offset.x;
                                 int y = pageHeight - pageRect.rects[currentRect + 1] - pageRect.rects[currentRect + 3] + offset.y;
                                 // Below text highlight
