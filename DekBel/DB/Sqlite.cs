@@ -58,8 +58,20 @@ namespace Dek.Bel.DB
 
         public void InitLocal(IDBCreator creator, IDBUpdater updater)
         {
-            if(!File.Exists(m_UserSettingsService.DBPath))
-                SQLiteConnection.CreateFile(m_UserSettingsService.DBPath);
+            if (!File.Exists(m_UserSettingsService.DBPath))
+            {
+                // Does an old beta file exist?
+                if (File.Exists(m_UserSettingsService.DBPathBeta))
+                {
+                    Directory.CreateDirectory(Path.GetDirectoryName(m_UserSettingsService.DBPath));
+                    File.Copy(m_UserSettingsService.DBPathBeta, m_UserSettingsService.DBPath);
+                }
+                else
+                {
+                    // Nope, we are fresh
+                    SQLiteConnection.CreateFile(m_UserSettingsService.DBPath);
+                }
+            }
 
             m_dbConnection = new SQLiteConnection($"Data Source={m_UserSettingsService.DBPath};Version=3;New=False;");
             m_Command = new SQLiteCommand(m_dbConnection);
@@ -863,14 +875,31 @@ namespace Dek.Bel.DB
 
         public void CloseDb(bool hardClose = false)
         {
+            SQLiteConnection.ClearAllPools(); // although pools not used
+
             if (m_dbConnection != null && m_dbConnection.State != System.Data.ConnectionState.Closed)
                 m_dbConnection.Close();
 
+            int counter = 0;
+            while(m_dbConnection.State != ConnectionState.Closed)
+            {
+                Thread.Sleep(250);
+
+                if (counter++ > 10)
+                    break;
+            }
+
+            if (m_dbConnection.State != ConnectionState.Closed)
+            {
+                m_MessageboxService.Show("Could not close db. Please try again.", "Close DB");
+                return;
+            }
+
             if (hardClose)
             {
-                SQLiteConnection.ClearAllPools();
+                //m_dbConnection.Shutdown();
 
-                if(m_Adapter != null)
+                if (m_Adapter != null)
                     m_Adapter.Dispose();
 
                 if (m_Command != null)
@@ -878,6 +907,10 @@ namespace Dek.Bel.DB
 
                 if (m_dbConnection != null)
                     m_dbConnection.Dispose();
+
+                m_Adapter = null;
+                m_Command = null;
+                m_dbConnection = null;
 
                 GC.Collect();
                 GC.WaitForPendingFinalizers();

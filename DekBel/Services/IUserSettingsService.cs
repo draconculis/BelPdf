@@ -10,6 +10,7 @@ namespace Dek.Bel.Services
 
         string DBName { get; }
         string DBPath { get; }
+        string DBPathBeta { get; }
         string DeselectionMarker { get; }
         Font CitationFont { get; set; }
         bool BoldEmphasis { get; set; }

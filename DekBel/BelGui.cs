@@ -126,6 +126,9 @@ namespace Dek.Bel
 
         private void BelGui_Load(object sender, EventArgs e)
         {
+            label_citationNotes.Font = new Font(Font, FontStyle.Bold);
+            label_citationVolume.Font = new Font(Font, FontStyle.Bold);
+
             Font font = m_UserSettingsService.CitationFont;
 
             richTextBox1.Font = font;
@@ -206,23 +209,6 @@ namespace Dek.Bel
             LoadReferences();
             LoadPdfMarginBoxControls();
 
-            // Set pdf colors
-            System.Drawing.Color ch, cu, cm;
-            Color[] colors = ColorStuff.ConvertStringToColors(VM.CurrentCitation.CitationColors);
-            ch = (colors.Length >= 1)
-                ? colors[0]
-                : m_UserSettingsService.PdfHighLightColor;
-            cu = (colors.Length >= 2)
-                ? colors[1]
-                : m_UserSettingsService.PdfUnderlineColor;
-            cm = (colors.Length >= 3)
-                ? colors[2]
-                : m_UserSettingsService.PdfMarginBoxColor;
-
-            label_PdfHighlightColor.BackColor = ch;
-            label_PdfUnderLineColor.ForeColor = cu;
-            label_PdfMarginBoxColor.BackColor = cm;
-
             toolStripButton_AutoUpdate.Checked = m_UserSettingsService.AutoWritePdfOnClose;
         }
 
@@ -256,6 +242,24 @@ namespace Dek.Bel
             numericUpDown_borderThickness.Value = (decimal)settings.BorderThickness;
             numericUpDown_PdfBoxMargin.Value = (decimal)settings.Margin;
             numericUpDown_pdfMarginBoxWidth.Value = (decimal)settings.Width;
+
+            // Set pdf colors
+            System.Drawing.Color ch, cu, cm;
+            Color[] colors = ColorStuff.ConvertStringToColors(VM.CurrentCitation.CitationColors);
+            ch = (colors.Length >= 1)
+                ? colors[0]
+                : m_UserSettingsService.PdfHighLightColor;
+            cu = (colors.Length >= 2)
+                ? colors[1]
+                : m_UserSettingsService.PdfUnderlineColor;
+            cm = (colors.Length >= 3)
+                ? colors[2]
+                : m_UserSettingsService.PdfMarginBoxColor;
+
+            label_PdfHighlightColor.BackColor = ch;
+            label_PdfUnderLineColor.ForeColor = cu;
+            label_PdfMarginBoxColor.BackColor = cm;
+
         }
 
         void LoadReferences()
@@ -1039,7 +1043,7 @@ namespace Dek.Bel
 
         #region Pdf Margin Box Settings ===========================================
 
-        private void NumericUpDown_borderThickness_ValueChanged(object sender, EventArgs e)
+        private void NumericUpDown_borderThickness_Leave(object sender, EventArgs e)
         {
             float val;
             try
@@ -1071,25 +1075,15 @@ namespace Dek.Bel
             m_VolumeService.SaveAndReloadCitation(VM.CurrentCitation);
         }
 
-        private void ComboBox_PdfBoxFont_SelectedIndexChanged(object sender, EventArgs e)
+        private void ComboBox_PdfBoxFont_Leave(object sender, EventArgs e)
         {
             m_UserSettingsService.PdfMarginBoxFont = comboBox_PdfBoxFont.SelectedItem.ToString();
             SaveMarginBoxSettingsToCitation();
         }
 
-        private void TextBox_pdfMarginBoxFontSize_TextChanged(object sender, EventArgs e)
+        private void TextBox_pdfMarginBoxFontSize_Leave(object sender, EventArgs e)
         {
-            float fontSize = m_UserSettingsService.PdfMarginBoxFontSize;
-            try
-            {
-                m_UserSettingsService.PdfMarginBoxFontSize = (float)numericUpDown_FontSize.Value;
-            }
-            catch
-            {
 
-            }
-
-            SaveMarginBoxSettingsToCitation();
         }
 
         private void ComboBox_PdfMarginBoxDisplayMode_SelectedIndexChanged(object sender, EventArgs e)
@@ -1104,7 +1098,7 @@ namespace Dek.Bel
             SaveMarginBoxSettingsToCitation();
         }
 
-        private void NumericUpDown_PdfBoxMargin_ValueChanged(object sender, EventArgs e)
+        private void NumericUpDown_PdfBoxMargin_Leave(object sender, EventArgs e)
         {
             int val;
             try
@@ -1120,7 +1114,7 @@ namespace Dek.Bel
             SaveMarginBoxSettingsToCitation();
         }
 
-        private void NumericUpDown_FontSize_ValueChanged(object sender, EventArgs e)
+        private void NumericUpDown_FontSize_Leave(object sender, EventArgs e)
         {
             float val;
             try
@@ -1136,7 +1130,7 @@ namespace Dek.Bel
             SaveMarginBoxSettingsToCitation();
         }
 
-        private void NumericUpDown_pdfMarginBoxWidth_ValueChanged(object sender, EventArgs e)
+        private void NumericUpDown_pdfMarginBoxWidth_Leave(object sender, EventArgs e)
         {
             int val;
             try

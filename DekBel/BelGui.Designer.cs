@@ -74,6 +74,7 @@
             this.toolStripDropDownButton1 = new System.Windows.Forms.ToolStripDropDownButton();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exportDBToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.restoreDatabaseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.categoriesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.authorsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.editRawCitationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -124,7 +125,9 @@
             this.label_PdfMarginBoxColor = new System.Windows.Forms.Label();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage3 = new System.Windows.Forms.TabPage();
-            this.label11 = new System.Windows.Forms.Label();
+            this.label_volumeTitle = new System.Windows.Forms.Label();
+            this.label_citationVolume = new System.Windows.Forms.Label();
+            this.label_citationNotes = new System.Windows.Forms.Label();
             this.textBox_CitationNotes = new System.Windows.Forms.TextBox();
             this.label_CitationEdited = new System.Windows.Forms.Label();
             this.label16 = new System.Windows.Forms.Label();
@@ -165,9 +168,6 @@
             this.checkBox_right = new System.Windows.Forms.CheckBox();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
-            this.label30 = new System.Windows.Forms.Label();
-            this.label_volumeTitle = new System.Windows.Forms.Label();
-            this.restoreDatabaseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -451,6 +451,7 @@
             // 
             // toolStripTextBox1
             // 
+            this.toolStripTextBox1.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.toolStripTextBox1.Name = "toolStripTextBox1";
             this.toolStripTextBox1.Size = new System.Drawing.Size(100, 26);
             this.toolStripTextBox1.Text = "…";
@@ -640,9 +641,16 @@
             // exportDBToolStripMenuItem
             // 
             this.exportDBToolStripMenuItem.Name = "exportDBToolStripMenuItem";
-            this.exportDBToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.exportDBToolStripMenuItem.Size = new System.Drawing.Size(166, 22);
             this.exportDBToolStripMenuItem.Text = "Backup database";
             this.exportDBToolStripMenuItem.Click += new System.EventHandler(this.exportDBToolStripMenuItem_Click);
+            // 
+            // restoreDatabaseToolStripMenuItem
+            // 
+            this.restoreDatabaseToolStripMenuItem.Name = "restoreDatabaseToolStripMenuItem";
+            this.restoreDatabaseToolStripMenuItem.Size = new System.Drawing.Size(166, 22);
+            this.restoreDatabaseToolStripMenuItem.Text = "Restore database";
+            this.restoreDatabaseToolStripMenuItem.Click += new System.EventHandler(this.restoreDatabaseToolStripMenuItem_Click);
             // 
             // categoriesToolStripMenuItem
             // 
@@ -1031,7 +1039,7 @@
             0,
             0,
             0});
-            this.numericUpDown_pdfMarginBoxWidth.ValueChanged += new System.EventHandler(this.NumericUpDown_pdfMarginBoxWidth_ValueChanged);
+            this.numericUpDown_pdfMarginBoxWidth.Leave += new System.EventHandler(this.NumericUpDown_pdfMarginBoxWidth_Leave);
             // 
             // numericUpDown_borderThickness
             // 
@@ -1052,7 +1060,7 @@
             this.numericUpDown_borderThickness.Size = new System.Drawing.Size(43, 23);
             this.numericUpDown_borderThickness.TabIndex = 34;
             this.toolTip1.SetToolTip(this.numericUpDown_borderThickness, "Border thickness of margin box");
-            this.numericUpDown_borderThickness.ValueChanged += new System.EventHandler(this.NumericUpDown_borderThickness_ValueChanged);
+            this.numericUpDown_borderThickness.Leave += new System.EventHandler(this.NumericUpDown_borderThickness_Leave);
             // 
             // label27
             // 
@@ -1082,7 +1090,7 @@
             0,
             0,
             0});
-            this.numericUpDown_PdfBoxMargin.ValueChanged += new System.EventHandler(this.NumericUpDown_PdfBoxMargin_ValueChanged);
+            this.numericUpDown_PdfBoxMargin.Leave += new System.EventHandler(this.NumericUpDown_PdfBoxMargin_Leave);
             // 
             // comboBox_PdfBoxFont
             // 
@@ -1097,7 +1105,7 @@
             this.comboBox_PdfBoxFont.Size = new System.Drawing.Size(270, 23);
             this.comboBox_PdfBoxFont.TabIndex = 25;
             this.toolTip1.SetToolTip(this.comboBox_PdfBoxFont, "Margin box font");
-            this.comboBox_PdfBoxFont.SelectedIndexChanged += new System.EventHandler(this.ComboBox_PdfBoxFont_SelectedIndexChanged);
+            this.comboBox_PdfBoxFont.Leave += new System.EventHandler(this.ComboBox_PdfBoxFont_Leave);
             // 
             // comboBox_PdfMarginBoxDisplayMode
             // 
@@ -1110,7 +1118,7 @@
             this.comboBox_PdfMarginBoxDisplayMode.Size = new System.Drawing.Size(227, 23);
             this.comboBox_PdfMarginBoxDisplayMode.TabIndex = 28;
             this.toolTip1.SetToolTip(this.comboBox_PdfMarginBoxDisplayMode, "Select display mode");
-            this.comboBox_PdfMarginBoxDisplayMode.SelectedIndexChanged += new System.EventHandler(this.ComboBox_PdfMarginBoxDisplayMode_SelectedIndexChanged);
+            this.comboBox_PdfMarginBoxDisplayMode.Leave += new System.EventHandler(this.ComboBox_PdfMarginBoxDisplayMode_SelectedIndexChanged);
             // 
             // numericUpDown_FontSize
             // 
@@ -1135,7 +1143,7 @@
             0,
             0,
             0});
-            this.numericUpDown_FontSize.ValueChanged += new System.EventHandler(this.NumericUpDown_FontSize_ValueChanged);
+            this.numericUpDown_FontSize.Leave += new System.EventHandler(this.NumericUpDown_FontSize_Leave);
             // 
             // label25
             // 
@@ -1220,8 +1228,8 @@
             // tabPage3
             // 
             this.tabPage3.Controls.Add(this.label_volumeTitle);
-            this.tabPage3.Controls.Add(this.label30);
-            this.tabPage3.Controls.Add(this.label11);
+            this.tabPage3.Controls.Add(this.label_citationVolume);
+            this.tabPage3.Controls.Add(this.label_citationNotes);
             this.tabPage3.Controls.Add(this.textBox_CitationNotes);
             this.tabPage3.Controls.Add(this.label_CitationEdited);
             this.tabPage3.Controls.Add(this.label16);
@@ -1240,19 +1248,39 @@
             this.tabPage3.Text = "Citation";
             this.tabPage3.UseVisualStyleBackColor = true;
             // 
-            // label11
+            // label_volumeTitle
             // 
-            this.label11.Location = new System.Drawing.Point(4, 85);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(63, 15);
-            this.label11.TabIndex = 33;
-            this.label11.Text = "Notes";
+            this.label_volumeTitle.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.label_volumeTitle.Location = new System.Drawing.Point(73, 4);
+            this.label_volumeTitle.Name = "label_volumeTitle";
+            this.label_volumeTitle.Size = new System.Drawing.Size(661, 15);
+            this.label_volumeTitle.TabIndex = 36;
+            this.label_volumeTitle.Text = "-";
+            // 
+            // label_citationVolume
+            // 
+            this.label_citationVolume.Location = new System.Drawing.Point(7, 5);
+            this.label_citationVolume.Name = "label_citationVolume";
+            this.label_citationVolume.Size = new System.Drawing.Size(60, 14);
+            this.label_citationVolume.TabIndex = 35;
+            this.label_citationVolume.Text = "Volume";
+            this.label_citationVolume.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // label_citationNotes
+            // 
+            this.label_citationNotes.Location = new System.Drawing.Point(4, 85);
+            this.label_citationNotes.Name = "label_citationNotes";
+            this.label_citationNotes.Size = new System.Drawing.Size(63, 15);
+            this.label_citationNotes.TabIndex = 33;
+            this.label_citationNotes.Text = "Notes";
             // 
             // textBox_CitationNotes
             // 
             this.textBox_CitationNotes.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBox_CitationNotes.BackColor = System.Drawing.SystemColors.Info;
             this.textBox_CitationNotes.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.textBox_CitationNotes.Location = new System.Drawing.Point(3, 103);
             this.textBox_CitationNotes.Multiline = true;
@@ -1263,7 +1291,7 @@
             // 
             // label_CitationEdited
             // 
-            this.label_CitationEdited.Location = new System.Drawing.Point(320, 66);
+            this.label_CitationEdited.Location = new System.Drawing.Point(320, 67);
             this.label_CitationEdited.Name = "label_CitationEdited";
             this.label_CitationEdited.Size = new System.Drawing.Size(161, 15);
             this.label_CitationEdited.TabIndex = 31;
@@ -1280,7 +1308,7 @@
             // 
             // label_CitationCreated
             // 
-            this.label_CitationCreated.Location = new System.Drawing.Point(73, 66);
+            this.label_CitationCreated.Location = new System.Drawing.Point(73, 67);
             this.label_CitationCreated.Name = "label_CitationCreated";
             this.label_CitationCreated.Size = new System.Drawing.Size(172, 15);
             this.label_CitationCreated.TabIndex = 29;
@@ -1288,7 +1316,7 @@
             // 
             // label15
             // 
-            this.label15.Location = new System.Drawing.Point(4, 66);
+            this.label15.Location = new System.Drawing.Point(4, 67);
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(63, 15);
             this.label15.TabIndex = 28;
@@ -1663,32 +1691,6 @@
             this.checkBox_right.UseVisualStyleBackColor = true;
             this.checkBox_right.CheckedChanged += new System.EventHandler(this.CheckBox1_CheckedChanged);
             // 
-            // label30
-            // 
-            this.label30.Location = new System.Drawing.Point(7, 5);
-            this.label30.Name = "label30";
-            this.label30.Size = new System.Drawing.Size(60, 14);
-            this.label30.TabIndex = 35;
-            this.label30.Text = "Volume";
-            this.label30.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // label_volumeTitle
-            // 
-            this.label_volumeTitle.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.label_volumeTitle.Location = new System.Drawing.Point(73, 6);
-            this.label_volumeTitle.Name = "label_volumeTitle";
-            this.label_volumeTitle.Size = new System.Drawing.Size(661, 15);
-            this.label_volumeTitle.TabIndex = 36;
-            this.label_volumeTitle.Text = "-";
-            // 
-            // restoreDatabaseToolStripMenuItem
-            // 
-            this.restoreDatabaseToolStripMenuItem.Name = "restoreDatabaseToolStripMenuItem";
-            this.restoreDatabaseToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.restoreDatabaseToolStripMenuItem.Text = "Restore database";
-            this.restoreDatabaseToolStripMenuItem.Click += new System.EventHandler(this.restoreDatabaseToolStripMenuItem_Click);
-            // 
             // BelGui
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -1840,7 +1842,7 @@
         private System.Windows.Forms.Label label16;
         private System.Windows.Forms.Label label_CitationCreated;
         private System.Windows.Forms.Label label15;
-        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.Label label_citationNotes;
         private System.Windows.Forms.TextBox textBox_CitationNotes;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.TextBox textBox_VolumeNotes;
@@ -1883,7 +1885,7 @@
         private System.Windows.Forms.NumericUpDown numericUpDown_offsetX;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel_CitationSelector;
         private System.Windows.Forms.Label label_volumeTitle;
-        private System.Windows.Forms.Label label30;
+        private System.Windows.Forms.Label label_citationVolume;
         private System.Windows.Forms.ToolStripMenuItem restoreDatabaseToolStripMenuItem;
     }
 }

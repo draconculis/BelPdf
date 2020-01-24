@@ -91,6 +91,8 @@ namespace Dek.Bel.DB
             if (!string.IsNullOrWhiteSpace(m_UserSettingsService.LastSelectedDatabaseFile))
                 fd.InitialDirectory = Path.GetDirectoryName(m_UserSettingsService.LastSelectedDatabaseFile);
 
+            fd.FileName = Path.GetFileNameWithoutExtension(m_UserSettingsService.DBName) + "_" + DateTime.Now.ToCompactStringShort() + ".sqlite";
+
             //fd.Filter = "Database files (*.sqlite)|*.sqlite|All files (*.*)|*.*";
             fd.Filter = "Database files (*.sqlite)|*.sqlite";
 
