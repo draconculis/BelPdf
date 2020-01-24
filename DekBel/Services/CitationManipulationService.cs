@@ -95,17 +95,44 @@ namespace Dek.Bel.Services
             string s = VM.CurrentCitation.Citation2;
 
             StringBuilder sb = new StringBuilder();
+            bool previousWasSpace = false;
             for (int i = 0; i < s.Length; i++)
             {
-                if (i >= from && i <= to && (s[i] == '\r' || s[i] == '\r'))
+                if (i >= from && i <= to)
                 {
-                    AdjustExclusionRemoveOneCharAt(i);
-                    continue;
+                    if (s[i] == ' ')
+                    {
+                        previousWasSpace = true;
+                        sb.Append(" ");
+                        continue;
+                    }
+                    else if (s[i] == '\r' || s[i] == '\n')
+                    {
+                        if (previousWasSpace)
+                        {
+                            AdjustExclusionRemoveOneCharAt(i);
+                            continue;
+                        }
+                        else
+                        {
+                            sb.Append(" ");
+                            previousWasSpace = true;
+                            continue;
+                        }
+                    }
+                    sb.Append(s[i]);
+                    previousWasSpace = false;
                 }
-                sb.Append(s[i]);
+
+
+                //if (i >= from && i <= to && (s[i] == '\r' || s[i] == '\n'))
+                //{
+                //    AdjustExclusionRemoveOneCharAt(i);
+                //}
+                //sb.Append(s[i]);
             }
 
-            //VM.CurrentCitation.Citation2 = sb.ToString().Replace("\r", "\r\n");
+            VM.CurrentCitation.Citation2 = sb.ToString();
 
             m_DBService.InsertOrUpdate(VM.CurrentCitation);
             FireCitationChanged();

@@ -43,6 +43,7 @@ namespace Dek.Bel
         [Import] public IPdfService PdfService { get; set; }
         [Import] public CitationManipulationService m_CitationManipulationService { get; set; }
         [Import] public CitationSelectorService m_CitationSelectorService { get; set; }
+        [Import] public DatabaseAdminService m_DatabaseAdminService { get; set; }
 
 
         /// <summary>
@@ -146,16 +147,11 @@ namespace Dek.Bel
             textBox_CategorySearch.Focus();
         }
 
-        private void CreateCitation()
-        {
-
-        }
-
-        private void EditCitation()
-        {
-
-        }
-
+        /// <summary>
+        /// Event fired from CitationManipulationService.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void OnCitationChanged(object sender, EventArgs e)
         {
             m_VolumeService.ReloadCitation(VM.CurrentCitation); // Need to update its list of all citations when current citatation changed
@@ -171,6 +167,7 @@ namespace Dek.Bel
             toolStripTextBox1.Text = (string)Properties.Settings.Default["DeselectionMarker"];
         }
 
+        #region Control Loading =========================================
         /// <summary>
         /// Load data into controls
         /// </summary>
@@ -186,7 +183,7 @@ namespace Dek.Bel
             richTextBox2.Rtf = RtfService.CreateRtfWithExlusionsAndEmphasis(VM.CurrentCitation.Citation3, null, VM.Emphasis);
 
             //label1_MD5.Text = VM.CurrentCitation.Id.ToString();
-
+            label_volumeTitle.Text = m_VolumeService.CurrentVolume.Title;
             label_CitationLength.Text = $"{VM.CurrentCitation.Citation1.Length}";
             label_CitationCreated.Text = $"{VM.CurrentCitation.CreatedDate.ToSaneStringShort()}";
             label_CitationEdited.Text = $"{VM.CurrentCitation.EditedDate.ToSaneStringShort()}";
@@ -281,6 +278,7 @@ namespace Dek.Bel
             label_citationStart.Text = $"Page: {startPage} (physical page: {VM.CurrentCitation.PhysicalPageStart}), Character: {VM.CurrentCitation.GlyphStart}";
             label_CitationStop.Text = $"Page: {stopPage} (physical page: {VM.CurrentCitation.PhysicalPageStop}), Character: {VM.CurrentCitation.GlyphStop}";
         }
+        #endregion Load Controls ===========================================
 
         /// <summary>
         /// Citations dropdown status strip menu click.
@@ -303,6 +301,17 @@ namespace Dek.Bel
         //    LoadControls();
         //}
 
+        #region Citation text boxes =====================================================
+
+        private void richTextBox2_KeyUp(object sender, KeyEventArgs e)
+        {
+
+        }
+
+        #endregion Citation text boxes ==================================================
+
+
+        #region Toolstrip 1 (top menu row) ==============================================
 
         private void toolStripDropDownButton1_Click(object sender, EventArgs e)
         {
@@ -330,6 +339,7 @@ namespace Dek.Bel
             richTextBox2.Font = newFont;
             m_UserSettingsService.CitationFont = newFont;
         }
+
 
         private void toolStripButton4_Click(object sender, EventArgs e)
         {
@@ -389,10 +399,8 @@ namespace Dek.Bel
             }
         }
 
-        private void button_category_Click(object sender, EventArgs e)
-        {
+        #endregion Toolstrip 1 (top menu row) ===========================================
 
-        }
 
         private void splitContainer2_SplitterMoved(object sender, SplitterEventArgs e)
         {
@@ -402,8 +410,6 @@ namespace Dek.Bel
         private void splitContainer2_MouseClick(object sender, MouseEventArgs e)
         {
             var split = sender as SplitContainer;
-            
-
         }
 
         private void toolStripButton6_Click(object sender, EventArgs e)
@@ -956,7 +962,7 @@ namespace Dek.Bel
         }
 
         /// <summary>
-        /// Update volume data
+        /// Update volume data.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -968,6 +974,7 @@ namespace Dek.Bel
             m_VolumeService.CurrentVolume.OffsetX = (int)numericUpDown_offsetX.Value;
             m_VolumeService.CurrentVolume.OffsetY = (int)numericUpDown_offsetY.Value;
             m_DBService.InsertOrUpdate(m_VolumeService.CurrentVolume);
+            label_volumeTitle.Text = m_VolumeService.CurrentVolume.Title;
         }
 
         private void TextChanged_ValidateTextBoxDate(object sender, EventArgs e)
@@ -1278,13 +1285,71 @@ namespace Dek.Bel
 
         }
 
+        #region Database admin ============================================================
 
+        /// <summary>
+        /// Make backup of database.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void exportDBToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            (bool cancel, string selectedPath) = m_DatabaseAdminService.SelectDatabasePathForBackup();
+            if (cancel || String.IsNullOrWhiteSpace(selectedPath))
+                return;
 
-        // --------------------------
-        /*************************************************
-         
-        ***************************************************/
+            if (!selectedPath.EndsWith(".sqlite"))
+                selectedPath += ".sqlite";
 
+            (bool success, string error) = m_DatabaseAdminService.CopyDatabaseFile(m_UserSettingsService.DBPath, selectedPath);
+            if(!success)
+            {
+                MessageBox.Show($"{error}", "Backup database error");
+                return;
+            }
 
+            var result = MessageBox.Show($"Database sucessfully backed up to {selectedPath}{Environment.NewLine}Show file in folder?", "Success", MessageBoxButtons.YesNo);
+            if(result == DialogResult.Yes)
+            {
+                System.Diagnostics.Process.Start("explorer.exe", $"/select,{selectedPath}");
+            }
+
+        }
+
+        private void restoreDatabaseToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            (bool cancel, string selectedPath) = m_DatabaseAdminService.SelectDatabasePathForRestore();
+            if (cancel)
+                return;
+
+            if (!selectedPath.EndsWith(".sqlite"))
+                selectedPath += ".sqlite";
+
+            (bool success, string error) = m_DatabaseAdminService.RestoreDatabaseFile(selectedPath);
+            if (!success)
+            {
+                MessageBox.Show($"{error}", "Restore database error");
+                return;
+            }
+
+            var result = MessageBox.Show($"Database restored from {selectedPath}{Environment.NewLine}Show file in folder?", "Success", MessageBoxButtons.YesNo);
+            if (result == DialogResult.Yes)
+            {
+                System.Diagnostics.Process.Start("explorer.exe", $"/select,{selectedPath}");
+            }
+        }
+
+        private void ShowRestoreWorkaround(string selectedFile)
+        {
+            var x = Environment.NewLine;
+            MessageBox.Show(
+                $"Please note!{x}It is currently not possible to restore a database when Bel is running. This is a common known problem with SQlite.{x}" +
+                $"The workaround is to close BelSumatra and copy the file back by hand.{x}" +
+                $"Open a command prompt and type:{x}" +
+                $"",
+                "Not working yet");
+        }
+
+        #endregion Database admin ==========================================================
     }
 }

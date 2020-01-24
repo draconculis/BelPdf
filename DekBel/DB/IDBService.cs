@@ -24,5 +24,9 @@ namespace Dek.Bel.DB
         void Delete<T>(T obj) where T : new();
         void Delete<T>(string where) where T : new();
         void Delete(object model, string where);
+
+        // Some admin stuff
+        void CloseDb(bool hardClose);
+        void RenitializeDbConnection();
     }
 }

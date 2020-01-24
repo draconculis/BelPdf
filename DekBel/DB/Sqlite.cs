@@ -8,6 +8,7 @@ using System.Data.SQLite;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
 
 namespace Dek.Bel.DB
 {
@@ -23,6 +24,12 @@ namespace Dek.Bel.DB
         private readonly IUserSettingsService m_UserSettingsService;
         private readonly IMessageboxService m_MessageboxService;
         SQLiteConnection m_dbConnection;
+        SQLiteCommand m_Command;
+        SQLiteDataAdapter m_Adapter;
+
+        // These are persisted because we need to shut down db during database restore!
+        private IDBCreator m_Creator { get; set; }
+        private IDBUpdater m_Updater { get; set; }
 
         // Table names
         public string TableBookName => "Book";
@@ -44,6 +51,9 @@ namespace Dek.Bel.DB
             m_UserSettingsService = userSettingsService;
             m_MessageboxService = messageboxService;
             InitLocal(creator, updater);
+
+            m_Creator = creator;
+            m_Updater = updater;
         }
 
         public void InitLocal(IDBCreator creator, IDBUpdater updater)
@@ -52,6 +62,7 @@ namespace Dek.Bel.DB
                 SQLiteConnection.CreateFile(m_UserSettingsService.DBPath);
 
             m_dbConnection = new SQLiteConnection($"Data Source={m_UserSettingsService.DBPath};Version=3;New=False;");
+            m_Command = new SQLiteCommand(m_dbConnection);
             creator.Create(this);
             updater.Upgrade(this);
         }
@@ -324,13 +335,11 @@ namespace Dek.Bel.DB
 
             try
             {
-                SQLiteDataAdapter ad;
-                SQLiteCommand cmd;
                 m_dbConnection.Open();  //Initiate connection to the db
-                cmd = m_dbConnection.CreateCommand();
-                cmd.CommandText = query;  //set the passed query
-                ad = new SQLiteDataAdapter(cmd);
-                ad.Fill(dt); //fill the datasource
+                m_Command = m_dbConnection.CreateCommand();
+                m_Command.CommandText = query;  //set the passed query
+                using (m_Adapter = new SQLiteDataAdapter(m_Command))
+                    m_Adapter.Fill(dt); //fill the datasource
             }
             catch (SQLiteException sqlex)
             {
@@ -344,7 +353,7 @@ namespace Dek.Bel.DB
             }
             finally
             {
-                m_dbConnection.Close();
+                CloseDb();
             }
             return dt;
         }
@@ -356,13 +365,11 @@ namespace Dek.Bel.DB
 
             try
             {
-                SQLiteDataAdapter ad;
-                SQLiteCommand cmd;
                 m_dbConnection.Open();  //Initiate connection to the db
-                cmd = m_dbConnection.CreateCommand();
-                cmd.CommandText = $"select {column} from {table} where {column} = {value}";  //set the passed query
-                ad = new SQLiteDataAdapter(cmd);
-                ad.Fill(dt); //fill the datasource
+                m_Command = m_dbConnection.CreateCommand();
+                m_Command.CommandText = $"select {column} from {table} where {column} = {value}";  //set the passed query
+                using (m_Adapter = new SQLiteDataAdapter(m_Command))
+                    m_Adapter.Fill(dt); //fill the datasource
             }
             catch (SQLiteException sqlex)
             {
@@ -375,7 +382,7 @@ namespace Dek.Bel.DB
             }
             finally
             {
-                m_dbConnection.Close();
+                CloseDb();
             }
 
             return dt.Rows.Count > 0;
@@ -392,11 +399,11 @@ namespace Dek.Bel.DB
         {
             try
             {
-                using (SQLiteCommand command = m_dbConnection.CreateCommand())
+                using (m_Command = m_dbConnection.CreateCommand())
                 {
                     m_dbConnection.Open();
-                    command.CommandText = $"SELECT name FROM sqlite_master WHERE name='{tablename}'";
-                    var name = command.ExecuteScalar();
+                    m_Command.CommandText = $"SELECT name FROM sqlite_master WHERE name='{tablename}'";
+                    var name = m_Command.ExecuteScalar();
                     if (name != null && name.ToString() == $"{tablename}")
                         return false;
 
@@ -410,18 +417,18 @@ namespace Dek.Bel.DB
                     if (primaryDescEmpty)
                     {
                         // Accept no primary key
-                        command.CommandText = $"CREATE TABLE `{tablename}` ({columnDesc})";
+                        m_Command.CommandText = $"CREATE TABLE `{tablename}` ({columnDesc})";
                     }
                     else
                     {
                         if (!primaryKey.StartsWith("`") || !primaryKey.EndsWith("`"))
                             throw new Exception($"Create {tablename}: No `backticks` in primary key desc, stupido!");
 
-                        command.CommandText = $"CREATE TABLE `{tablename}` ({columnDesc}, PRIMARY KEY({primaryKey})) ";
+                        m_Command.CommandText = $"CREATE TABLE `{tablename}` ({columnDesc}, PRIMARY KEY({primaryKey})) ";
                     }
 
-                    m_MessageboxService.Debug(command.CommandText);
-                    command.ExecuteNonQuery();
+                    m_MessageboxService.Debug(m_Command.CommandText);
+                    m_Command.ExecuteNonQuery();
                 }
             }
             catch (SQLiteException sqlex)
@@ -453,11 +460,11 @@ namespace Dek.Bel.DB
         {
             try
             {
-                using (SQLiteCommand command = m_dbConnection.CreateCommand())
+                using (m_Command = m_dbConnection.CreateCommand())
                 {
                     m_dbConnection.Open();
-                    command.CommandText = $"SELECT name FROM sqlite_master WHERE name='{tableName}'";
-                    var name = command.ExecuteScalar();
+                    m_Command.CommandText = $"SELECT name FROM sqlite_master WHERE name='{tableName}'";
+                    var name = m_Command.ExecuteScalar();
                     if (name != null && name.ToString() == $"{tableName}")
                         return true;
                 }
@@ -472,7 +479,7 @@ namespace Dek.Bel.DB
             }
             finally
             {
-                m_dbConnection.Close();
+                CloseDb();
             }
 
             return false;
@@ -579,11 +586,11 @@ namespace Dek.Bel.DB
         {
             try
             {
-                using (SQLiteCommand command = m_dbConnection.CreateCommand())
+                using (m_Command = m_dbConnection.CreateCommand())
                 {
                     m_dbConnection.Open();
-                    command.CommandText = cmd;
-                    command.ExecuteNonQuery();
+                    m_Command.CommandText = cmd;
+                    m_Command.ExecuteNonQuery();
                 }
             }
             catch (SQLiteException sqlex)
@@ -598,7 +605,7 @@ namespace Dek.Bel.DB
             }
             finally
             {
-                m_dbConnection.Close();
+                CloseDb();
             }
 
         }
@@ -663,12 +670,12 @@ namespace Dek.Bel.DB
         {
             try
             {
-                using (SQLiteCommand command = m_dbConnection.CreateCommand())
+                using (m_Command = m_dbConnection.CreateCommand())
                 {
                     m_dbConnection.Open();
-                    command.CommandText = $"INSERT INTO {tablename} ({columns}) VALUES ({values})";
-                    m_MessageboxService.Debug(command.CommandText);
-                    command.ExecuteNonQuery();
+                    m_Command.CommandText = $"INSERT INTO {tablename} ({columns}) VALUES ({values})";
+                    m_MessageboxService.Debug(m_Command.CommandText);
+                    m_Command.ExecuteNonQuery();
                 }
             }
             catch (SQLiteException sqlex)
@@ -684,7 +691,7 @@ namespace Dek.Bel.DB
             }
             finally
             {
-                m_dbConnection.Close();
+                CloseDb();
             }
 
         }
@@ -693,11 +700,11 @@ namespace Dek.Bel.DB
         {
             try
             {
-                using (SQLiteCommand command = m_dbConnection.CreateCommand())
+                using (m_Command = m_dbConnection.CreateCommand())
                 {
                     m_dbConnection.Open();
-                    command.CommandText = $"UPDATE {tablename} SET {columnValues} WHERE {where}";
-                    command.ExecuteNonQuery();
+                    m_Command.CommandText = $"UPDATE {tablename} SET {columnValues} WHERE {where}";
+                    m_Command.ExecuteNonQuery();
                 }
             }
             catch (SQLiteException sqlex)
@@ -712,7 +719,7 @@ namespace Dek.Bel.DB
             }
             finally
             {
-                m_dbConnection.Close();
+                CloseDb();
             }
         }
 
@@ -732,11 +739,11 @@ namespace Dek.Bel.DB
 
             try
                 {
-                using (SQLiteCommand command = m_dbConnection.CreateCommand())
+                using (m_Command = m_dbConnection.CreateCommand())
                 {
                     m_dbConnection.Open();
-                    command.CommandText = $"SELECT * FROM {tableName} WHERE {whereKeyValues}";
-                    bool idExists = command.ExecuteScalar() != null;
+                    m_Command.CommandText = $"SELECT * FROM {tableName} WHERE {whereKeyValues}";
+                    bool idExists = m_Command.ExecuteScalar() != null;
                     return idExists;
                 }
             }
@@ -768,13 +775,13 @@ namespace Dek.Bel.DB
 
             try
             {
-                using (SQLiteCommand command = m_dbConnection.CreateCommand())
+                using (m_Command = m_dbConnection.CreateCommand())
                 {
                     string tableName = model.GetType().Name;
 
                     m_dbConnection.Open();
-                    command.CommandText = $"DELETE FROM '{tableName}'";
-                    command.ExecuteNonQuery();
+                    m_Command.CommandText = $"DELETE FROM '{tableName}'";
+                    m_Command.ExecuteNonQuery();
                 }
             }
             catch (SQLiteException sqlex)
@@ -826,13 +833,13 @@ namespace Dek.Bel.DB
 
             try
             {
-                using (SQLiteCommand command = m_dbConnection.CreateCommand())
+                using (m_Command = m_dbConnection.CreateCommand())
                 {
                     string tableName = model.GetType().Name;
 
                     m_dbConnection.Open();
-                    command.CommandText = $"DELETE FROM '{tableName}' WHERE {where}";
-                    command.ExecuteNonQuery();
+                    m_Command.CommandText = $"DELETE FROM '{tableName}' WHERE {where}";
+                    m_Command.ExecuteNonQuery();
                 }
             }
             catch (SQLiteException sqlex)
@@ -845,14 +852,54 @@ namespace Dek.Bel.DB
             }
             finally
             {
-                m_dbConnection.Close();
+                CloseDb();
             }
         }
 
         public void Dispose()
         {
-            if(m_dbConnection != null && m_dbConnection.State != System.Data.ConnectionState.Closed)
+            CloseDb(true);
+        }
+
+        public void CloseDb(bool hardClose = false)
+        {
+            if (m_dbConnection != null && m_dbConnection.State != System.Data.ConnectionState.Closed)
                 m_dbConnection.Close();
+
+            if (hardClose)
+            {
+                SQLiteConnection.ClearAllPools();
+
+                if(m_Adapter != null)
+                    m_Adapter.Dispose();
+
+                if (m_Command != null)
+                    m_Command.Dispose();
+
+                if (m_dbConnection != null)
+                    m_dbConnection.Dispose();
+
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
+            }
+        }
+
+        /// <summary>
+        /// Reinitializes a db connection. Also upgrades db if necessary, good for old backups.
+        /// </summary>
+        public void RenitializeDbConnection()
+        {
+            if (!File.Exists(m_UserSettingsService.DBPath))
+                SQLiteConnection.CreateFile(m_UserSettingsService.DBPath);
+
+            m_dbConnection = new SQLiteConnection($"Data Source={m_UserSettingsService.DBPath};Version=3;New=False;");
+            m_Command = new SQLiteCommand(m_dbConnection);
+            
+            if(m_Creator != null) 
+                m_Creator.Create(this);
+            
+            if(m_Updater != null)
+                m_Updater.Upgrade(this);
         }
     }
 }

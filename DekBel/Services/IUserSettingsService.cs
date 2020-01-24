@@ -6,6 +6,8 @@ namespace Dek.Bel.Services
     {
         bool ShowDebugMessages { get; set; }
         string StorageFolder { get; set; }
+        string LastSelectedDatabaseFile { get; set; }
+
         string DBName { get; }
         string DBPath { get; }
         string DeselectionMarker { get; }

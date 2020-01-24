@@ -44,7 +44,7 @@ namespace Dek.Bel.Services.Toaster
             Width = MinWidth;
             label3.Text = message;
             label2.Text = text;
-            Visible = false;
+            Visible = false;    
         }
 
         private void Toast_Click(object sender, EventArgs e)

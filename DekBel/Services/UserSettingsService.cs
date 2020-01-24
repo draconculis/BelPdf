@@ -18,6 +18,8 @@ namespace Dek.Bel.Services
         public string DBPath => Path.Combine(StorageFolder, dbSubFolderPath + "\\" + DBName);
         public string DeselectionMarker => (string)Properties.Settings.Default.DeselectionMarker ?? "…";
         private const string StorageFolderSettingName = "StorageFolder";
+        private const string LastSelectedDatabaseFileName = "LastSelectedDatabaseFile";
+        
 
         public string StorageFolder
         {
@@ -31,6 +33,12 @@ namespace Dek.Bel.Services
                 Set(StorageFolderSettingName, value);
                 EnsureStorageFolderExists();
             }
+        }
+
+        public string LastSelectedDatabaseFile
+        {
+            get => Get<string>(LastSelectedDatabaseFileName, Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments));
+            set => Set(LastSelectedDatabaseFileName, value);
         }
 
         public Font CitationFont
