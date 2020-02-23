@@ -7,5 +7,6 @@ namespace Dek.Bel.Services
         string CalculateFileMD5(string filePath);
         string GetUniqueStoName(string fileName);
         Storage GetNextStorageFileName(Storage storage);
+        void DeleteOldStorageFiles(string storagePath);
     }
 }

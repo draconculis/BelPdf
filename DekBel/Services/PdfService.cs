@@ -83,7 +83,7 @@ namespace Dek.Bel.Services
 
                     foreach ((int page, int[] rects) pageRect in pageRects)
                     {
-                        if (pageRect.rects.Count() > 0) // If no rects, for some reason...
+                        if (pageRect.rects.Count() < 4) // If no rects, for some reason...
                             continue;
 
                         //int currentPage = pageRects.First().page;
@@ -170,6 +170,7 @@ namespace Dek.Bel.Services
             } while (retries > 0);
 
             File.Delete(newFileTmp);
+            m_StorageHelperService.DeleteOldStorageFiles(newStoragePath);
         }
 
         public void AddMarginBox(

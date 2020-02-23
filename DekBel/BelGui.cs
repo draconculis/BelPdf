@@ -45,6 +45,7 @@ namespace Dek.Bel
         [Import] public CitationSelectorService m_CitationSelectorService { get; set; }
         [Import] public DatabaseAdminService m_DatabaseAdminService { get; set; }
 
+        private bool LoadingControls = false;
 
         /// <summary>
         /// Coming in here means add a new citation. We are called from Sumatra.
@@ -69,11 +70,15 @@ namespace Dek.Bel
                 {
                     VM.CurrentCitation = SelectCitation();
                 }
-                else
+                else if (m_VolumeService.Citations.Count < 1)
                 {
                     MessageBox.Show(null, "There are no citations for the current volume.", "No citations found", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     Close();
                     return;
+                }
+                else
+                {
+                    VM.CurrentCitation = m_VolumeService.Citations?.FirstOrDefault();
                 }
 
                 if (VM.CurrentCitation == null)
@@ -126,6 +131,8 @@ namespace Dek.Bel
 
         private void BelGui_Load(object sender, EventArgs e)
         {
+            LoadingControls = true;
+
             label_citationNotes.Font = new Font(Font, FontStyle.Bold);
             label_citationVolume.Font = new Font(Font, FontStyle.Bold);
 
@@ -148,6 +155,8 @@ namespace Dek.Bel
 
             ActiveControl = textBox_CategorySearch;
             textBox_CategorySearch.Focus();
+
+            
         }
 
         /// <summary>
@@ -176,6 +185,8 @@ namespace Dek.Bel
         /// </summary>
         private void LoadControls()
         {
+            LoadingControls = true;
+
             // Show which citation is current
             int len = Math.Min(VM.CurrentCitation.Citation1.Length, 40);
             toolStripStatusLabel_CitationSelector.Text = $"{VM.CurrentCitation.Id.ToStringShort()} - {VM.CurrentCitation.Citation1.Substring(0,len)}";
@@ -210,6 +221,8 @@ namespace Dek.Bel
             LoadPdfMarginBoxControls();
 
             toolStripButton_AutoUpdate.Checked = m_UserSettingsService.AutoWritePdfOnClose;
+
+            LoadingControls = false;
         }
 
         void LoadCategoryControl()
@@ -241,7 +254,7 @@ namespace Dek.Bel
             numericUpDown_FontSize.Value = (decimal)settings.FontSize;
             numericUpDown_borderThickness.Value = (decimal)settings.BorderThickness;
             numericUpDown_PdfBoxMargin.Value = (decimal)settings.Margin;
-            numericUpDown_pdfMarginBoxWidth.Value = (decimal)settings.Width;
+            NumericUpDown_pdfMarginBoxWidth.Value = (decimal)settings.Width;
 
             // Set pdf colors
             System.Drawing.Color ch, cu, cm;
@@ -776,7 +789,7 @@ namespace Dek.Bel
         // ContextMenuStrip  Rtb 1 ==============================================
         private void excludeToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            toolStripButton6_Click_1(sender, e);
+            toolStripButton8_Click(sender, e);
         }
 
         private void doneToolStripMenuItem_Click(object sender, EventArgs e)
@@ -843,11 +856,6 @@ namespace Dek.Bel
             m_CitationManipulationService.ResetCitation2();
         }
 
-        private void LeftToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-           
-        }
-
         private void SplitContainer2_Panel2_Paint(object sender, PaintEventArgs e)
         {
 
@@ -869,27 +877,6 @@ namespace Dek.Bel
         private void RichTextBox1_Enter(object sender, EventArgs e)
         {
             toolStripButton6.Enabled = true;
-        }
-
-        private void Button1_Click(object sender, EventArgs e)
-        {
-            //PdfService.ManipulatePdf(Path.Combine(UserSettingsService.StorageFolder, VM.CurrentStorage.StorageName), VM.CurrentCitation.SelectionRects);
-        }
-
-
-        // Write Pdf
-        private void Button2_Click(object sender, EventArgs e)
-        {
-            //var mainCitCat = m_CategoryService.GetMainCitationCategory(VM.CurrentCitation.Id);
-            //var mainCategory = m_CategoryService.GetMainCategory(VM.CurrentCitation.Id);
-
-            //if (mainCategory.Id == Id.Null)
-            //{
-            //    if (m_MessageboxService.ShowYesNo("Write uncategorized citation to pdf?", "Main category not set") == DialogResult.No)
-            //        return;
-            //}
-            
-            //PdfService.AddCitationToPdfDoc(VM.CurrentStorage.StorageName, VM.CurrentCitation.PhysicalPageStart, mainCategory, mainCitCat, VM.CurrentCitation.SelectionRects);
         }
 
         private void ToolStripStatusLabel1_Click(object sender, EventArgs e)
@@ -1045,6 +1032,9 @@ namespace Dek.Bel
 
         private void NumericUpDown_borderThickness_Leave(object sender, EventArgs e)
         {
+            if (LoadingControls)
+                return;
+
             float val;
             try
             {
@@ -1075,11 +1065,16 @@ namespace Dek.Bel
             m_VolumeService.SaveAndReloadCitation(VM.CurrentCitation);
         }
 
-        private void ComboBox_PdfBoxFont_Leave(object sender, EventArgs e)
+        private void comboBox_PdfBoxFont_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (LoadingControls)
+                return;
+
             m_UserSettingsService.PdfMarginBoxFont = comboBox_PdfBoxFont.SelectedItem.ToString();
             SaveMarginBoxSettingsToCitation();
         }
+
+
 
         private void TextBox_pdfMarginBoxFontSize_Leave(object sender, EventArgs e)
         {
@@ -1088,6 +1083,9 @@ namespace Dek.Bel
 
         private void ComboBox_PdfMarginBoxDisplayMode_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (LoadingControls)
+                return;
+
             m_UserSettingsService.PdfMarginBoxVisualMode = comboBox_PdfMarginBoxDisplayMode.SelectedItem.ToString();
             SaveMarginBoxSettingsToCitation();
         }
@@ -1100,6 +1098,9 @@ namespace Dek.Bel
 
         private void NumericUpDown_PdfBoxMargin_Leave(object sender, EventArgs e)
         {
+            if (LoadingControls)
+                return;
+
             int val;
             try
             {
@@ -1116,6 +1117,9 @@ namespace Dek.Bel
 
         private void NumericUpDown_FontSize_Leave(object sender, EventArgs e)
         {
+            if (LoadingControls)
+                return;
+
             float val;
             try
             {
@@ -1132,10 +1136,13 @@ namespace Dek.Bel
 
         private void NumericUpDown_pdfMarginBoxWidth_Leave(object sender, EventArgs e)
         {
+            if (LoadingControls)
+                return;
+
             int val;
             try
             {
-                val = (int)numericUpDown_pdfMarginBoxWidth.Value;
+                val = (int)NumericUpDown_pdfMarginBoxWidth.Value;
             }
             catch
             {
@@ -1151,6 +1158,7 @@ namespace Dek.Bel
 
         private void Button1_Click_1(object sender, EventArgs e)
         {
+            SaveMarginBoxSettingsToCitation();
             PdfService.RecreateTheWholeThing(VM, m_VolumeService);
         }
 
@@ -1345,5 +1353,10 @@ namespace Dek.Bel
         }
 
         #endregion Database admin ==========================================================
+
+        private void BelGui_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            SaveMarginBoxSettingsToCitation();
+        }
     }
 }

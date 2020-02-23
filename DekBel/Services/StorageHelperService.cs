@@ -60,6 +60,20 @@ namespace Dek.Bel.Services
             return newFileName;
         }
 
+        public void DeleteOldStorageFiles(string storagePath)
+        {
+            IEnumerable<string> files = EnumerateExitingStoFiles(storagePath);
+            IEnumerable<string> filesToDelete = files.Where(x => x != storagePath);
+            foreach(string x in filesToDelete)
+            {
+                try
+                {
+                    File.Delete(x);
+                }
+                catch { }
+            }
+        }
+
         /// <summary>
         /// Return a new filename from a source fileName, e.g:
         /// "myfile.something.pdf" -> "myfile.something.bel.1.pdf"
@@ -91,6 +105,19 @@ namespace Dek.Bel.Services
             int.TryParse(extNumeral.Substring(1), out int numeral);
             numeral++;
             return $"{name2}.bel.{numeral.ToString()}{ext}";
+        }
+
+        private IEnumerable<string> EnumerateExitingStoFiles(string stoFileName) // xx.bel.1.pdf
+        {
+            string name0 = Path.GetFileNameWithoutExtension(stoFileName); // xx.bel.1
+            string name1 = Path.GetFileNameWithoutExtension(name0);       // xx.bel
+            string name2 = Path.GetFileNameWithoutExtension(name1);       // xx
+            string ext = Path.GetExtension(stoFileName);                  // .pdf
+            string extNumeral = Path.GetExtension(name0);                 // .1
+
+            IEnumerable<string> result = Directory.EnumerateFiles(UserSettingsService.StorageFolder, $"{name2}.bel.*.pdf", SearchOption.TopDirectoryOnly);
+
+            return result;
         }
 
         public string CalculateFileMD5(string filePath)

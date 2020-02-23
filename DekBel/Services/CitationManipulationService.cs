@@ -234,7 +234,7 @@ namespace Dek.Bel.Services
 
         void FireCitationChanged()
         {
-            CitationChangedEventHandler.Invoke(this, EventArgs.Empty);
+            CitationChangedEventHandler(this, EventArgs.Empty);
         }
 
 
