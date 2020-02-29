@@ -6,12 +6,44 @@
         xmlns:local="clr-namespace:Dek.Bel.Wpf"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-  <Grid>
-    <ToolBar HorizontalAlignment="Left" Height="60" VerticalAlignment="Top" Width="792">
-    </ToolBar>
-    <DockPanel HorizontalAlignment="Left" Height="190" LastChildFill="False" Margin="130,124,0,0" VerticalAlignment="Top" Width="482">
-      <StatusBar HorizontalAlignment="Left" Height="58" Margin="204,220,-204,0" VerticalAlignment="Top" Width="792"/>
-    </DockPanel>
+    <Grid>
+        <ToolBar HorizontalAlignment="Left" Height="60" VerticalAlignment="Top" Width="792">
+        </ToolBar>
+        <DockPanel HorizontalAlignment="Left" Height="359" LastChildFill="True" Margin="0,60,0,0" VerticalAlignment="Top" Width="792">
+            <StackPanel Width="120" Orientation="Vertical" DockPanel.Dock="Left">
+                <ListBox/>
+            </StackPanel>
 
-  </Grid>
+            <Grid Name="Properties" DockPanel.Dock="Right" Width="200">
+                <TabControl VerticalAlignment="Stretch">
+                    <TabPanel Name="CitationProperties">
+                        <Grid>
+                            
+                        </Grid>
+                    </TabPanel>
+                    <TabPanel Name="VolumeProperties">
+
+                    </TabPanel>
+                    <TabPanel Name="FileProperties">
+
+                    </TabPanel>
+                </TabControl>
+                
+            </Grid>
+            
+            <StatusBar Height="51" DockPanel.Dock="Bottom"/>
+            <!-- Last child -->
+            
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <RichTextBox Name="Rtb1" Grid.Row="0"/>
+                <RichTextBox Name="Rtb2" Grid.Row="1"/>
+            </Grid>
+
+        </DockPanel>
+
+    </Grid>
 </Window>

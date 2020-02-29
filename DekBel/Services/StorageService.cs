@@ -1,12 +1,15 @@
 ﻿using BelManagedLib;
-using Dek.Bel.Cls;
 using Dek.Cls;
 using System;
 using System.ComponentModel.Composition;
 using System.IO;
 using System.Linq;
-using Dek.Bel.Models;
-using Dek.Bel.DB;
+using Dek.Bel.Core.Models;
+using Dek.DB;
+using Dek.Bel.Core.DB;
+using System.Collections.Generic;
+using Dek.Bel.Core.Services;
+using Dek.Bel.Core.GUI;
 
 namespace Dek.Bel.Services
 {
@@ -26,7 +29,7 @@ namespace Dek.Bel.Services
         public StorageService()
         {
             if(m_DBService == null)
-                Mef.Initialize(this);
+                Mef.Initialize(this, new List<Type> { typeof(StorageRepo), typeof(MessageboxService) });
         }
 
         // The meat, entry point from interop

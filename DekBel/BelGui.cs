@@ -1,8 +1,8 @@
 ﻿using BelManagedLib;
 using Dek.Bel.Services;
-using Dek.Bel.Cls;
-using Dek.Bel.Models;
 using Dek.Cls;
+using Dek.DB;
+using Dek.Bel.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
@@ -16,6 +16,10 @@ using System.Text.RegularExpressions;
 using Dek.Bel.Helpers;
 using Dek.Bel.CitationSelector;
 using Dek.Bel.DB;
+using Dek.Bel.Core.GUI;
+using Dek.Bel.Core.Services;
+using Dek.Bel.Core.DB;
+using Dek.Bel.Core.Helpers;
 
 namespace Dek.Bel
 {
@@ -33,6 +37,7 @@ namespace Dek.Bel
         [Import] public ModelsForViewing VM { get; set; }
         [Import] public VolumeService m_VolumeService { get; set; }
         [Import] public ICategoryService m_CategoryService { get; set; }
+        [Import] public CategoryLabelService m_CategoryLabelService { get; set; }
         [Import] public IUserSettingsService m_UserSettingsService { get; set; }
         [Import] public IDBService m_DBService { get; set; }
         [Import] public HistoryRepo m_HistoryRepo { get; set; }
@@ -42,6 +47,7 @@ namespace Dek.Bel
         [Import] public CitationManipulationService m_CitationManipulationService { get; set; }
         [Import] public CitationSelectorService m_CitationSelectorService { get; set; }
         [Import] public DatabaseAdminService m_DatabaseAdminService { get; set; }
+        [Import] public DatabaseAdminServiceSaveOpen m_DatabaseAdminServiceGUI { get; set; }
         [Import] public CitationPersisterService m_CitationPersisterService { get; set; }
 
         private bool LoadingControls = false;
@@ -53,7 +59,7 @@ namespace Dek.Bel
         public BelGui(EventData message) : this()
         {
             if (m_DBService == null)
-                Mef.Initialize(this);
+                Mef.Initialize(this, new List<Type> { GetType(), typeof(ModelsForViewing) });
 
             VM.Message = message;
 
@@ -142,9 +148,9 @@ namespace Dek.Bel
             richTextBox2.Font = font;
 
             // Init margin box dropdowns
-            PdfMarginBoxSettings.LoadAComboBoxWithPdfFonts(comboBox_PdfBoxFont);
+            GuiHelper.LoadAComboBoxWithPdfFonts(comboBox_PdfBoxFont);
             SetComboBoxSelectedIndex(comboBox_PdfBoxFont, Constants.PdfFont.TIMES_ROMAN);
-            PdfMarginBoxSettings.LoadAComboBoxWithDisplayModes(comboBox_PdfMarginBoxDisplayMode);
+            GuiHelper.LoadAComboBoxWithDisplayModes(comboBox_PdfMarginBoxDisplayMode);
             SetComboBoxSelectedIndex(comboBox_PdfBoxFont, Constants.MarginBoxVisualMode.Normal);
 
             LoadControls();
@@ -503,8 +509,8 @@ namespace Dek.Bel
             if (((sender as ToolStripMenuItem)?.Owner as ContextMenuStrip)?.SourceControl is Label label)
             {
                 m_CategoryService.SetMainCategory(label.Tag as CitationCategory);
-                m_CategoryService.ClearMainStyleFromLabels(flowLayoutPanel_Categories.Controls.OfType<Label>());
-                m_CategoryService.SetMainStyleOnLabel(label);
+                m_CategoryLabelService.ClearMainStyleFromLabels(flowLayoutPanel_Categories.Controls.OfType<Label>());
+                m_CategoryLabelService.SetMainStyleOnLabel(label);
             }
         }
 
@@ -708,10 +714,10 @@ namespace Dek.Bel
         // Called from load controls
         private void AddCategoryLabel(CitationCategory citationCat, Category cat)
         {
-            Label l = m_CategoryService.CreateCategoryLabelControl(citationCat, cat, contextMenuStrip_Category, toolTip1);
+            Label l = m_CategoryLabelService.CreateCategoryLabelControl(citationCat, cat, contextMenuStrip_Category, toolTip1);
 
             if (citationCat.IsMain)
-                m_CategoryService.SetMainStyleOnLabel(l);
+                m_CategoryLabelService.SetMainStyleOnLabel(l);
 
             flowLayoutPanel_Categories.Controls.Add(l);
             textBox_CategorySearch.Focus();
@@ -780,7 +786,7 @@ namespace Dek.Bel
         private void toolStripButton7_Click(object sender, EventArgs e)
         {
             if (VM.CurrentCitation.Citation3.Length > 0)
-                if (m_MessageboxService.ShowYesNo("Edited citation will be overwritten. Continue?", "Citation not empty") == DialogResult.No)
+                if (m_MessageboxService.ShowYesNo("Edited citation will be overwritten. Continue?", "Citation not empty") == DekDialogResult.No)
                     return;
 
             m_CitationManipulationService.BeginEdit();
@@ -803,14 +809,32 @@ namespace Dek.Bel
             //if (MessageBox.Show($"This will reset the citation in the first box with the original citation text.{Environment.NewLine}Continue and loose exclusions?", "Reset citation to original?", MessageBoxButtons.YesNo) == DialogResult.No)
             //    return;
 
-            m_CitationManipulationService.ResetCitation2();
+            ResetCitation2();
+        }
+
+        /// <summary>
+        /// Citation2 is shown in first rtf box. This makes citation2 = citation1 (the original citation)
+        /// </summary>
+        public void ResetCitation2()
+        {
+            var resetform = new Form_ResetCitation(VM.CurrentCitation.Citation1, m_UserSettingsService.CitationFont);
+
+            if (resetform.ShowDialog() == DialogResult.Yes)
+            {
+                VM.CurrentCitation.Citation2 = VM.CurrentCitation.Citation1;
+                VM.Exclusion.Clear();
+                VM.CurrentCitation.Exclusion = null;
+                m_DBService.InsertOrUpdate(VM.CurrentCitation);
+
+                m_CitationManipulationService.FireCitationChanged();
+            }
         }
 
 
         // --------------------------
 
         #region ContextMenuStrip  Rtb 1 ==============================================
-        
+
         private void excludeToolStripMenuItem_Click(object sender, EventArgs e)
         {
             toolStripButton8_Click(sender, e);
@@ -823,7 +847,7 @@ namespace Dek.Bel
 
         private void showOriginalToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            m_CitationManipulationService.ResetCitation2();
+            ResetCitation2();
         }
 
 
@@ -1313,7 +1337,7 @@ namespace Dek.Bel
         /// <param name="e"></param>
         private void exportDBToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            (bool cancel, string selectedPath) = m_DatabaseAdminService.SelectDatabasePathForBackup();
+            (bool cancel, string selectedPath) = m_DatabaseAdminServiceGUI.SelectDatabasePathForBackup();
             if (cancel || String.IsNullOrWhiteSpace(selectedPath))
                 return;
 
@@ -1337,7 +1361,7 @@ namespace Dek.Bel
 
         private void restoreDatabaseToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            (bool cancel, string selectedPath) = m_DatabaseAdminService.SelectDatabasePathForRestore();
+            (bool cancel, string selectedPath) = m_DatabaseAdminServiceGUI.SelectDatabasePathForRestore();
             if (cancel)
                 return;
 

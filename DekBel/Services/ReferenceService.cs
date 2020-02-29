@@ -1,10 +1,13 @@
 ﻿using BelManagedLib;
-using Dek.Bel.Cls;
-using Dek.Bel.Models;
+using Dek.Bel.Core.Cls;
+using Dek.Bel.Core.DB;
+using Dek.Bel.Core.GUI;
+using Dek.Bel.Core.Models;
 using Dek.Bel.ReferenceGui;
 using Dek.Cls;
-using Dek.Bel.DB;
+using Dek.DB;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.Composition;
 
 namespace Dek.Bel.Services
@@ -24,7 +27,7 @@ namespace Dek.Bel.Services
         public ReferenceService()
         {
             if (m_DBService == null)
-                Mef.Initialize(this);
+                Mef.Initialize(this, new List<Type>{ GetType(), typeof(HistoryRepo) } );
 
             LastHistory = m_HistoryRepo.GetLastOpened(); // Our currently open file in Sumatra
 

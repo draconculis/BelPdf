@@ -1,11 +1,11 @@
-﻿using Dek.Bel.Cls;
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.ComponentModel.Composition;
 using System.Drawing;
 using System.Windows.Forms;
-using Dek.Bel.DB;
-
+using Dek.DB;
+using Dek.Bel.Core.Services;
+using Dek.Cls;
 
 namespace Dek.Bel.Services
 {

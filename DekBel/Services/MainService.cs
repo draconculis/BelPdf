@@ -1,11 +1,14 @@
 ﻿using BelManagedLib;
-using Dek.Bel.Cls;
-using Dek.Bel.Models;
-using Dek.Bel.Services.Toaster;
+using Dek.Cls;
+using Dek.Bel.Core.Models;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
-using Dek.Bel.DB;
+using Dek.DB;
+using Dek.Bel.Core.Services;
+using Dek.Bel.Core.Services.Toaster;
+using Dek.Bel.Core.DB;
+using System;
 
 namespace Dek.Bel.Services
 {
@@ -19,11 +22,12 @@ namespace Dek.Bel.Services
         [Import] IDBService m_DBService { get; set; }
         [Import] public VolumeService m_VolumeService { get; set; }
         [Import] public HistoryRepo m_HistoryRepo { get; set; }
+        [Import] public IToasterService m_Toaster { get; set; }
 
         public MainService()
         {
             if (m_DBService == null)
-                Mef.Initialize(this);
+                Mef.Initialize(this, new List<Type> { GetType(), typeof(StorageRepo)});
         }
 
         /// <summary>
@@ -42,8 +46,7 @@ namespace Dek.Bel.Services
                 Citation cit = m_CitationService.CreateNewCitation(rawCitations, message, history.VolumeId);
                 m_DBService.DeleteAll<RawCitation>();
 
-                Toast toast = new Toast("Citation added", cit.Citation1);
-                toast.Show();
+                m_Toaster.ShowToast("Citation added", cit.Citation1);
 
                 return true;
             }
@@ -53,8 +56,7 @@ namespace Dek.Bel.Services
 
         public RawCitation AddRawCitations(EventData message)
         {
-            Toast toast = new Toast("Fragment added", message.Text);
-            toast.Show();
+            m_Toaster.ShowToast("Fragment added", message.Text);
 
             return m_CitationService.AddRawCitations(message);
         }

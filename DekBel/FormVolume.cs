@@ -1,13 +1,15 @@
 ﻿using Dek.Bel.Cls;
-using Dek.Bel.Models;
+using Dek.Bel.Core.Models;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.ComponentModel.Composition;
 using System.Data;
 using System.Linq;
 using System.Windows.Forms;
-using Dek.Bel.DB;
+using Dek.DB;
+using Dek.Bel.Core.DB;
+using Dek.Bel.Core.Services;
+using Dek.Cls;
 
 namespace Dek.Bel
 {

@@ -1,4 +1,4 @@
-﻿using Dek.Bel.Models;
+﻿using Dek.Bel.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Drawing;

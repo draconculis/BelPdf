@@ -1,4 +1,6 @@
 ﻿using Dek.Bel.Cls;
+using Dek.Bel.Core.GUI;
+using Dek.Bel.Core.Services;
 using Dek.Cls;
 using System;
 using System.Collections.Generic;

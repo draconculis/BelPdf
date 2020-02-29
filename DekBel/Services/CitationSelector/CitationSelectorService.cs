@@ -1,13 +1,6 @@
-﻿using Dek.Bel.Cls;
-using Dek.Bel.Models;
-using Dek.Bel.Services;
-using Dek.Bel.Services.CitationDeleterService;
-using System;
-using System.Collections.Generic;
+﻿using Dek.Bel.Core.Models;
+using Dek.Bel.Core.Services;
 using System.ComponentModel.Composition;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Dek.Bel.CitationSelector
 {
