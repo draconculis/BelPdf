@@ -1,15 +1,10 @@
-﻿using Dek.Bel.Services;
-using Dek.Bel.Models;
+﻿using Dek.Bel.Models;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using Dek.Bel.DB;
 using Dek.Bel.Cls;
 
 namespace Dek.Bel.Services

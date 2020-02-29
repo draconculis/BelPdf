@@ -5,13 +5,9 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Colors;
-using iText.IO.Font;
-using iText.IO.Image;
 using iText.Kernel.Font;
 using iText.Layout;
 using iText.Layout.Element;
@@ -23,8 +19,7 @@ using Dek.Bel.Models;
 using iText.Kernel.Pdf.Filespec;
 using iText.Kernel.Pdf.Action;
 using iText.Layout.Borders;
-using iText.Kernel.Pdf.Colorspace;
-using Dek.Bel.DB;
+//using iText.Kernel.Pdf.Colorspace;
 using Dek.Bel.Helpers;
 using System.Threading;
 
@@ -162,7 +157,7 @@ namespace Dek.Bel.Services
                     File.Copy(newFileTmp, newStoragePath);
                     retries = 0;
                 }
-                catch (Exception e)
+                catch
                 {
                     retries--;
                     Thread.Sleep(500);

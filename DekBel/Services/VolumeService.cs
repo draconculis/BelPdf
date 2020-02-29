@@ -4,11 +4,9 @@ using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using static Dek.Bel.Models.Reference;
+using Dek.Bel.DB;
 
-namespace Dek.Bel.DB
+namespace Dek.Bel.Cls
 {
     /// <summary>
     /// Represents current loaded Volume, including reference types.

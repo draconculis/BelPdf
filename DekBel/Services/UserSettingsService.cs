@@ -139,7 +139,7 @@ namespace Dek.Bel.Services
 
         public bool AutoWritePdfOnClose
         {
-            get => Get(nameof(AutoWritePdfOnClose), false);
+            get => Get(nameof(AutoWritePdfOnClose), true);
             set => Set(nameof(AutoWritePdfOnClose), value);
         }
 

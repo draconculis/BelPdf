@@ -32,13 +32,13 @@ namespace Dek.Bel.Cls
         {
             (1, new []{ 200, 200, 22, 22, 100, 100, 11, 11 }),
         };
-        string pageRectString2_1 = "#1!200,200,22,22;#2!100,100,11,11;";
+        //string pageRectString2_1 = "#1!200,200,22,22;#2!100,100,11,11;";
 
         List<(int page, int[] rects)> pageRects2_2 = new List<(int page, int[] rects)>
         {
             (1, new []{ 100, 100, 11, 11, 300, 300, 33, 33, 200, 200, 22, 22 }),
         };
-        string pageRectString2_2 = "#1!100,100,11,11;300,300,33,33;#2!200,200,22,22;";
+        //string pageRectString2_2 = "#1!100,100,11,11;300,300,33,33;#2!200,200,22,22;";
 
 
         [Test]

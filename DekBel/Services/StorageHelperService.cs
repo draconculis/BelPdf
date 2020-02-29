@@ -1,19 +1,12 @@
-﻿using BelManagedLib;
-using Dek.Bel.DB;
-using Dek.Cls;
-using Dek.Bel.Services;
+﻿using Dek.Bel.Cls;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
-using System.ComponentModel.Composition.Hosting;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using Dek.Bel.Cls;
 using Dek.Bel.Models;
+using Dek.Bel.DB;
 
 namespace Dek.Bel.Services
 {

@@ -3,9 +3,7 @@ using Dek.Cls;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Dek.Bel.Services
@@ -178,7 +176,7 @@ namespace Dek.Bel.Services
 
                 if (start > position)
                     start--;
-                if (stop > stop)
+                if (stop > position)
                     stop--;
 
                 DekRange newRange = new DekRange(start, stop);

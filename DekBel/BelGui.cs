@@ -1,7 +1,6 @@
 ﻿using BelManagedLib;
 using Dek.Bel.Services;
 using Dek.Bel.Cls;
-using Dek.Bel.DB;
 using Dek.Bel.Models;
 using Dek.Cls;
 using System;
@@ -16,6 +15,7 @@ using Dek.Bel.Services.Report;
 using System.Text.RegularExpressions;
 using Dek.Bel.Helpers;
 using Dek.Bel.CitationSelector;
+using Dek.Bel.DB;
 
 namespace Dek.Bel
 {
@@ -35,8 +35,6 @@ namespace Dek.Bel
         [Import] public ICategoryService m_CategoryService { get; set; }
         [Import] public IUserSettingsService m_UserSettingsService { get; set; }
         [Import] public IDBService m_DBService { get; set; }
-        [Import] public CategoryRepo m_CategoryRepo { get; set; }
-        private StorageService m_StorageService { get; } = new StorageService();
         [Import] public HistoryRepo m_HistoryRepo { get; set; }
         [Import] public CitationService m_CitationService { get; set; }
         [Import] public RichTextService RtfService { get; set; }
@@ -44,6 +42,7 @@ namespace Dek.Bel
         [Import] public CitationManipulationService m_CitationManipulationService { get; set; }
         [Import] public CitationSelectorService m_CitationSelectorService { get; set; }
         [Import] public DatabaseAdminService m_DatabaseAdminService { get; set; }
+        [Import] public CitationPersisterService m_CitationPersisterService { get; set; }
 
         private bool LoadingControls = false;
 
@@ -107,7 +106,7 @@ namespace Dek.Bel
                 {
                     citationId = cmd.Split(':')[1];
                 }
-                catch (Exception ex)
+                catch //(Exception ex)
                 {
                     MessageBox.Show(null, $"Something went wrong trying to edit citation. {Environment.NewLine}Cmd: {cmd}.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     Close();
@@ -126,8 +125,9 @@ namespace Dek.Bel
 
             m_CitationManipulationService.CitationChanged += OnCitationChanged;
             comboBox_CategoryWeight.SelectedIndex = 2;
+            m_CitationPersisterService.TimeToSave += CitationPersisterService_TimeToSave;
+            m_CitationPersisterService.Rtb = richTextBox2;
         }
-
 
         private void BelGui_Load(object sender, EventArgs e)
         {
@@ -320,10 +320,37 @@ namespace Dek.Bel
 
         #region Citation text boxes =====================================================
 
+        private void richTextBox2_Enter(object sender, EventArgs e)
+        {
+            toolStripButton_Emphasis.Enabled = true;
+        }
+
+        private void CitationPersisterService_TimeToSave(object sender, CitationPersisterService.TimeToSaveEventArgs e)
+        {
+            if (e.TheControl == richTextBox2)
+            {
+                VM.CurrentCitation.Citation3 = richTextBox2.Text;
+                m_DBService.InsertOrUpdate(VM.CurrentCitation);
+                //richTextBox2.BackColor = Color.White;
+            }
+        }
+
         private void richTextBox2_KeyUp(object sender, KeyEventArgs e)
         {
-
+            //richTextBox2.BackColor = Color.Beige;
         }
+
+        private void richTextBox2_Leave(object sender, EventArgs e)
+        {
+            VM.CurrentCitation.Citation3 = richTextBox2.Text;
+            m_VolumeService.SaveAndReloadCitation(VM.CurrentCitation);
+
+            if (toolStripButton_Emphasis.Selected)
+                return;
+
+            toolStripButton_Emphasis.Enabled = false;
+        }
+
 
         #endregion Citation text boxes ==================================================
 
@@ -740,21 +767,6 @@ namespace Dek.Bel
 
         // toolstrip
 
-        private void richTextBox2_Enter(object sender, EventArgs e)
-        {
-            toolStripButton8.Enabled = true;
-        }
-
-        private void richTextBox2_Leave(object sender, EventArgs e)
-        {
-            VM.CurrentCitation.Citation3 = richTextBox2.Text;
-            m_VolumeService.SaveAndReloadCitation(VM.CurrentCitation);
-
-            if (toolStripButton8.Selected)
-                return;
-
-            toolStripButton8.Enabled = false;
-        }
 
         /// Exclusion
         private void toolStripButton6_Click_1(object sender, EventArgs e)
@@ -777,16 +789,28 @@ namespace Dek.Bel
         /// Emphasis
         private void toolStripButton8_Click(object sender, EventArgs e)
         {
+            var currentCursorPos = richTextBox2.SelectionStart;
+
             if (richTextBox2.SelectionLength > 0)
                 m_CitationManipulationService.AddEmphasis(richTextBox2.SelectionStart, richTextBox2.SelectionStart + richTextBox2.SelectionLength - 1);
 
             richTextBox2.Focus();
+            richTextBox2.SelectionStart = currentCursorPos;
+        }
+
+        private void toolStripButton1_Click_1(object sender, EventArgs e)
+        {
+            //if (MessageBox.Show($"This will reset the citation in the first box with the original citation text.{Environment.NewLine}Continue and loose exclusions?", "Reset citation to original?", MessageBoxButtons.YesNo) == DialogResult.No)
+            //    return;
+
+            m_CitationManipulationService.ResetCitation2();
         }
 
 
         // --------------------------
 
-        // ContextMenuStrip  Rtb 1 ==============================================
+        #region ContextMenuStrip  Rtb 1 ==============================================
+        
         private void excludeToolStripMenuItem_Click(object sender, EventArgs e)
         {
             toolStripButton8_Click(sender, e);
@@ -818,12 +842,16 @@ namespace Dek.Bel
                 m_CitationManipulationService.RemoveLinebreakInCitation2(0, richTextBox1.Text.Length - 1);
         }
 
+        private void RemoveLineEndingsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            RemoveLineEndingsToolStripMenuItem1_Click(sender, e);
+        }
 
 
-        // End contextMenuStrip Rtb 1 ==============================================
+        #endregion ContextMenuStrip  Rtb 1 ==============================================
 
 
-        // ContextMenuStrip Rtb 2 ==============================================
+        #region ContextMenuStrip Rtb 2 ==============================================
 
         private void EmphasisToolStripMenuItem1_Click(object sender, EventArgs e)
         {
@@ -837,7 +865,7 @@ namespace Dek.Bel
 
         private void CopyToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            richTextBox2.Copy();
+            Clipboard.SetText(richTextBox2.Text);
         }
 
         private void PasteToolStripMenuItem_Click(object sender, EventArgs e)
@@ -845,16 +873,9 @@ namespace Dek.Bel
             richTextBox2.Paste();
         }
 
-        // End ContextMenuStrip Rtb 2  ==============================================
+        #endregion ContextMenuStrip Rtb 2 ==============================================
 
 
-        private void toolStripButton1_Click_1(object sender, EventArgs e)
-        {
-            //if (MessageBox.Show($"This will reset the citation in the first box with the original citation text.{Environment.NewLine}Continue and loose exclusions?", "Reset citation to original?", MessageBoxButtons.YesNo) == DialogResult.No)
-            //    return;
-
-            m_CitationManipulationService.ResetCitation2();
-        }
 
         private void SplitContainer2_Panel2_Paint(object sender, PaintEventArgs e)
         {
@@ -1078,7 +1099,8 @@ namespace Dek.Bel
 
         private void TextBox_pdfMarginBoxFontSize_Leave(object sender, EventArgs e)
         {
-
+            if (LoadingControls)
+                return;
         }
 
         private void ComboBox_PdfMarginBoxDisplayMode_SelectedIndexChanged(object sender, EventArgs e)
@@ -1092,6 +1114,9 @@ namespace Dek.Bel
 
         private void CheckBox1_CheckedChanged(object sender, EventArgs e)
         {
+            if (LoadingControls)
+                return;
+
             m_UserSettingsService.PdfMarginBoxRightMargin = checkBox_right.Checked;
             SaveMarginBoxSettingsToCitation();
         }
@@ -1156,16 +1181,6 @@ namespace Dek.Bel
 
         #endregion Pdf Margin Box Settings ========================================
 
-        private void Button1_Click_1(object sender, EventArgs e)
-        {
-            SaveMarginBoxSettingsToCitation();
-            PdfService.RecreateTheWholeThing(VM, m_VolumeService);
-        }
-
-        private void RemoveLineEndingsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            RemoveLineEndingsToolStripMenuItem1_Click(sender, e);
-        }
 
         private void SetComboBoxSelectedIndex(ComboBox theComboBox, string text)
         {
@@ -1242,6 +1257,8 @@ namespace Dek.Bel
 
         private void BelGui_FormClosing(object sender, FormClosingEventArgs e)
         {
+            SaveMarginBoxSettingsToCitation();
+
             if (m_UserSettingsService.AutoWritePdfOnClose)
                 PdfService.RecreateTheWholeThing(VM, m_VolumeService);
         }
@@ -1356,7 +1373,7 @@ namespace Dek.Bel
 
         private void BelGui_FormClosed(object sender, FormClosedEventArgs e)
         {
-            SaveMarginBoxSettingsToCitation();
+            
         }
     }
 }

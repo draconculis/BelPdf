@@ -637,7 +637,7 @@ namespace Dek.Bel.DB
 
             string names = "", values = "", updateValues = "", updateWhereValues = "";
             //List<string> ids = new List<string>(), keys = new List<string>();
-            bool keyFound = false;
+            //bool keyFound = false;
             foreach (var prop in obj.GetType().GetProperties())
             {
                 object val;
@@ -656,7 +656,7 @@ namespace Dek.Bel.DB
                 object attributes = prop.GetCustomAttributes(typeof(KeyAttribute), true).FirstOrDefault();
                 if (prop.Name.ToLower() == "id" || attributes != null)
                 {
-                    keyFound = true;
+                    //keyFound = true;
                     //ids.Add(prop.Name);
                     //keys.Add(prop.GetValue(obj, null).ToString());
                     updateWhereValues += (updateWhereValues.Length > 0 ? " AND " : "") + $"`{prop.Name}` = '{val}'";

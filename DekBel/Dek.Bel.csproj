@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Dek.Bel</RootNamespace>
     <AssemblyName>Dek.Bel</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
     <NuGetPackageImportStamp>
@@ -121,6 +121,7 @@
       <DependentUpon>BelGui.cs</DependentUpon>
     </Compile>
     <Compile Include="DB\DatabaseAdminService.cs" />
+    <Compile Include="Services\CitationPersisterService.cs" />
     <Compile Include="Services\CitationSelector\CitationSelectorService.cs" />
     <Compile Include="Services\CitationDeleter\CitationDeleterService.cs" />
     <Compile Include="Services\CitationSelector\CitationSelectorModel.cs" />
@@ -216,7 +217,7 @@
     <Compile Include="Services\Report\ReportService.cs" />
     <Compile Include="Services\RichTextService.cs" />
     <Compile Include="DB\HistoryRepo.cs" />
-    <Compile Include="DB\Id.cs" />
+    <Compile Include="Cls\Id.cs" />
     <Compile Include="Cls\Mef.cs" />
     <Compile Include="DB\DBCreator.cs" />
     <Compile Include="DB\IDBCreator.cs" />
@@ -263,7 +264,6 @@
     <Compile Include="Services\Categories\FormCategory.Designer.cs">
       <DependentUpon>FormCategory.cs</DependentUpon>
     </Compile>
-    <Compile Include="DB\CategoryRepo.cs" />
     <Compile Include="DB\StorageRepo.cs" />
     <Compile Include="DB\IDBService.cs" />
     <Compile Include="DB\Sqlite.cs" />
@@ -336,7 +336,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="bel.ico" />
-    <Content Include="logo_Obj_icon.ico" />
     <Content Include="Resources\bel32.png" />
     <None Include="Resources\metaopen.png" />
     <None Include="Resources\metaclose.png" />
@@ -363,6 +362,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Documentation\" />
+    <Folder Include="WPF\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

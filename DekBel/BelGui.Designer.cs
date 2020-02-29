@@ -43,7 +43,7 @@
             this.removeLineEndingsToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.copyToolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
-            this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButton_Reset = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripSplitButton1 = new System.Windows.Forms.ToolStripSplitButton();
             this.removeLineEndingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -60,7 +60,7 @@
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripButton6 = new System.Windows.Forms.ToolStripButton();
             this.toolStripButton7 = new System.Windows.Forms.ToolStripButton();
-            this.toolStripButton8 = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButton_Emphasis = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripButton_AutoUpdate = new System.Windows.Forms.ToolStripButton();
             this.toolStripButton_updatePdf = new System.Windows.Forms.ToolStripButton();
@@ -322,7 +322,7 @@
             this.toolStrip1.Font = new System.Drawing.Font("Corbel", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.toolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripButton1,
+            this.toolStripButton_Reset,
             this.toolStripSeparator5,
             this.toolStripSplitButton1,
             this.toolStripSeparator1,
@@ -335,7 +335,7 @@
             this.toolStripSeparator2,
             this.toolStripButton6,
             this.toolStripButton7,
-            this.toolStripButton8,
+            this.toolStripButton_Emphasis,
             this.toolStripSeparator3,
             this.toolStripButton_AutoUpdate,
             this.toolStripButton_updatePdf});
@@ -345,15 +345,15 @@
             this.toolStrip1.TabIndex = 1;
             this.toolStrip1.Text = "toolStrip1";
             // 
-            // toolStripButton1
+            // toolStripButton_Reset
             // 
-            this.toolStripButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.toolStripButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton1.Image")));
-            this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButton1.Name = "toolStripButton1";
-            this.toolStripButton1.Size = new System.Drawing.Size(102, 23);
-            this.toolStripButton1.Text = "Reset to original.";
-            this.toolStripButton1.Click += new System.EventHandler(this.toolStripButton1_Click_1);
+            this.toolStripButton_Reset.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.toolStripButton_Reset.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton_Reset.Image")));
+            this.toolStripButton_Reset.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButton_Reset.Name = "toolStripButton_Reset";
+            this.toolStripButton_Reset.Size = new System.Drawing.Size(102, 23);
+            this.toolStripButton_Reset.Text = "Reset to original.";
+            this.toolStripButton_Reset.Click += new System.EventHandler(this.toolStripButton1_Click_1);
             // 
             // toolStripSeparator5
             // 
@@ -402,6 +402,7 @@
             // underlineEmphasisToolStripMenuItem
             // 
             this.underlineEmphasisToolStripMenuItem.CheckOnClick = true;
+            this.underlineEmphasisToolStripMenuItem.Enabled = false;
             this.underlineEmphasisToolStripMenuItem.Name = "underlineEmphasisToolStripMenuItem";
             this.underlineEmphasisToolStripMenuItem.Size = new System.Drawing.Size(209, 22);
             this.underlineEmphasisToolStripMenuItem.Text = "Underline emphasis";
@@ -451,7 +452,6 @@
             // 
             // toolStripTextBox1
             // 
-            this.toolStripTextBox1.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.toolStripTextBox1.Name = "toolStripTextBox1";
             this.toolStripTextBox1.Size = new System.Drawing.Size(100, 26);
             this.toolStripTextBox1.Text = "…";
@@ -496,16 +496,16 @@
             this.toolStripButton7.Text = "Begin edit";
             this.toolStripButton7.Click += new System.EventHandler(this.toolStripButton7_Click);
             // 
-            // toolStripButton8
+            // toolStripButton_Emphasis
             // 
-            this.toolStripButton8.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.toolStripButton8.Enabled = false;
-            this.toolStripButton8.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton8.Image")));
-            this.toolStripButton8.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButton8.Name = "toolStripButton8";
-            this.toolStripButton8.Size = new System.Drawing.Size(62, 23);
-            this.toolStripButton8.Text = "Emphasis";
-            this.toolStripButton8.Click += new System.EventHandler(this.toolStripButton8_Click);
+            this.toolStripButton_Emphasis.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.toolStripButton_Emphasis.Enabled = false;
+            this.toolStripButton_Emphasis.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton_Emphasis.Image")));
+            this.toolStripButton_Emphasis.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButton_Emphasis.Name = "toolStripButton_Emphasis";
+            this.toolStripButton_Emphasis.Size = new System.Drawing.Size(62, 23);
+            this.toolStripButton_Emphasis.Text = "Emphasis";
+            this.toolStripButton_Emphasis.Click += new System.EventHandler(this.toolStripButton8_Click);
             // 
             // toolStripSeparator3
             // 
@@ -647,8 +647,9 @@
             // 
             // restoreDatabaseToolStripMenuItem
             // 
+            this.restoreDatabaseToolStripMenuItem.Enabled = false;
             this.restoreDatabaseToolStripMenuItem.Name = "restoreDatabaseToolStripMenuItem";
-            this.restoreDatabaseToolStripMenuItem.Size = new System.Drawing.Size(166, 22);
+            this.restoreDatabaseToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.restoreDatabaseToolStripMenuItem.Text = "Restore database";
             this.restoreDatabaseToolStripMenuItem.Click += new System.EventHandler(this.restoreDatabaseToolStripMenuItem_Click);
             // 
@@ -1796,11 +1797,11 @@
         private System.Windows.Forms.ToolStripButton toolStripButton7;
         private System.Windows.Forms.ToolStripSplitButton toolStripSplitButton1;
         private System.Windows.Forms.ToolStripMenuItem removeLineEndingsToolStripMenuItem;
-        private System.Windows.Forms.ToolStripButton toolStripButton1;
+        private System.Windows.Forms.ToolStripButton toolStripButton_Reset;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
-        private System.Windows.Forms.ToolStripButton toolStripButton8;
+        private System.Windows.Forms.ToolStripButton toolStripButton_Emphasis;
         private System.Windows.Forms.ListBox listBox1;
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage tabPage1;

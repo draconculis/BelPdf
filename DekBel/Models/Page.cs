@@ -1,4 +1,4 @@
-﻿using Dek.Bel.DB;
+﻿using Dek.Bel.Cls;
 
 namespace Dek.Bel.Models
 {

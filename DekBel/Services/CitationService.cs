@@ -1,17 +1,13 @@
 ﻿using BelManagedLib;
-using Dek.Bel.Cls;
+using Dek.Bel.DB;
 using Dek.Bel.Models;
 using Dek.Bel.Services;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 
-namespace Dek.Bel.DB
+namespace Dek.Bel.Cls
 {
     [Export]
     public class CitationService

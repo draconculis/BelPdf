@@ -1,12 +1,8 @@
 ﻿using Dek.Bel.Models;
 using Dek.Bel.Cls;
-using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Dek.Bel.DB
 {
@@ -36,7 +32,7 @@ namespace Dek.Bel.DB
             return history;
         }
 
-        public List<History> GetHistory()
+        public IEnumerable<History> GetHistory()
         {
             string sql = $"SELECT * FROM {nameof(History)} ORDER BY {nameof(History.OpenDate)} DESC";
 

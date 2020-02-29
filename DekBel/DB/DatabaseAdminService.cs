@@ -1,12 +1,8 @@
 ﻿using Dek.Bel.Services;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.IO;
 using Dek.Bel.Cls;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Dek.Bel.DB

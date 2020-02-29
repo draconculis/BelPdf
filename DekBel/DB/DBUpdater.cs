@@ -1,10 +1,7 @@
 ﻿using Dek.Bel.Models;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Dek.Bel.DB
 {
@@ -31,9 +28,6 @@ namespace Dek.Bel.DB
                 Repo.AddColumn(nameof(RawCitation), "`VolumeId` TEXT");
                 version = IncrementDBVersion();
             }
-
-
-
         }
 
 
@@ -67,12 +61,17 @@ namespace Dek.Bel.DB
 
         private int IncrementDBVersion()
         {
-            int version = GetDBVersion();
-            version++;
-            InsertDBVersion(version);
-            return version;
-
-            return -1;
+            try
+            {
+                int version = GetDBVersion();
+                version++;
+                InsertDBVersion(version);
+                return version;
+            }
+            catch
+            {
+                return -1;
+            }
         }
 
         private void InsertDBVersion(int version)
