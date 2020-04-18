@@ -121,6 +121,12 @@
       <DependentUpon>BelGui.cs</DependentUpon>
     </Compile>
     <Compile Include="DB\DatabaseAdminServiceSaveOpen.cs" />
+    <Compile Include="Form_Outline.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form_Outline.Designer.cs">
+      <DependentUpon>Form_Outline.cs</DependentUpon>
+    </Compile>
     <Compile Include="Helpers\GuiHelper.cs" />
     <Compile Include="Services\Categories\CategoryLabelService.cs" />
     <Compile Include="Services\CitationPersisterService.cs" />
@@ -210,11 +216,13 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Include="TextData.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="BelGui.resx">
       <DependentUpon>BelGui.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form_Outline.resx">
+      <DependentUpon>Form_Outline.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Services\CitationSelector\FormCitationSelector.resx">
       <DependentUpon>FormCitationSelector.cs</DependentUpon>

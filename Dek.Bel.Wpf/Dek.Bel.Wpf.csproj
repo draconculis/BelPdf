@@ -110,6 +110,13 @@
   <ItemGroup>
     <Resource Include="bel.ico" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Img\" />
+    <Folder Include="InterOp\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="bel32.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>echo Copying to Sumatra

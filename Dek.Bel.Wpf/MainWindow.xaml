@@ -5,41 +5,213 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Dek.Bel.Wpf"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="450" Width="800" Icon="bel32.png">
+    <Window.Resources>
+        <Style  x:Key="CategoryLabelStyle" TargetType="{x:Type Label}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Label">
+                        <Border BorderThickness="2"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                Background="{TemplateBinding Background}"
+                                CornerRadius="4"
+                                Padding="0">
+                            <Grid>
+                                <Rectangle Fill="PeachPuff"
+                                        RadiusX="{Binding CornerRadius.TopLeft, RelativeSource={RelativeSource AncestorType={x:Type Border}}}" 
+                                        RadiusY="{Binding RadiusX, RelativeSource={RelativeSource Self}}" />
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Margin="6,2,6,3" />
+                            </Grid>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style  x:Key="CategoryAddStyle" TargetType="{x:Type Label}">
+            <Setter Property="FontSize" Value="16" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Label">
+                        <Border BorderThickness="2"
+                                BorderBrush="#EEE"
+                                Background="{TemplateBinding Background}"
+                                CornerRadius="10"
+                                Margin="0">
+                            <Grid>
+                                <Rectangle Fill="Transparent"
+                                        RadiusX="{Binding CornerRadius.TopLeft, RelativeSource={RelativeSource AncestorType={x:Type Border}}}" 
+                                        RadiusY="{Binding RadiusX, RelativeSource={RelativeSource Self}}" />
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Margin="6,2,6,2" />
+                            </Grid>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
     <Grid>
-        <ToolBar HorizontalAlignment="Left" Height="60" VerticalAlignment="Top" Width="792">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="31"/>
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        
+        <ToolBar Grid.Row="0" Margin="0">
+            <Menu Background="Transparent" Margin="0" VerticalAlignment="Center">
+                <MenuItem Background="Transparent">
+                    <MenuItem.Header>
+                        <StackPanel Orientation="Vertical">
+                            <Image Source="Img/HamburgerMenu_16x.png" />
+                            <!--<TextBlock Margin="3,0,0,0">File</TextBlock>-->
+                        </StackPanel>
+                    </MenuItem.Header>
+                    <MenuItem Header="MenuItem1"/>
+                </MenuItem>
+            </Menu>
+            <Menu Background="Transparent" Margin="0" VerticalAlignment="Center">
+                <MenuItem Background="Transparent">
+                    <MenuItem.Header>
+                        <StackPanel Orientation="Vertical">
+                            <Image Source="Img/SourceFileGroup_16x.png" />
+                            <!--<TextBlock Margin="3,0,0,0">File</TextBlock>-->
+                        </StackPanel>
+                    </MenuItem.Header>
+                    <MenuItem Header="MenuItem1"/>
+                </MenuItem>
+            </Menu>
+            <Menu Background="Transparent" Margin="0" VerticalAlignment="Center">
+                <MenuItem Background="Transparent">
+                    <MenuItem.Header>
+                        <StackPanel Orientation="Vertical">
+                            <Image Source="Img/EditDocument_16x.png" />
+                            <!--<TextBlock Margin="3,0,0,0">File</TextBlock>-->
+                        </StackPanel>
+                    </MenuItem.Header>
+                    <MenuItem Header="MenuItem1"/>
+                </MenuItem>
+            </Menu>
+            <Button FontFamily="Times New Roman" FontSize="13 pt" FontWeight="Bold">A⁺</Button>
+            <Button FontFamily="Times New Roman" FontSize="13 pt" FontWeight="Bold">A⁻</Button>
+            <TextBox>[...]</TextBox>
+             <Button Command="Paste">
+                <StackPanel Orientation="Vertical">
+                    <Image Source="Img/ASX_Paste_grey_16x.png" />
+                    <!--<TextBlock Margin="3,0,0,0">Paste</TextBlock>-->
+                </StackPanel>
+            </Button>
+            <Button FontFamily="Times New Roman" FontSize="13 pt" FontWeight="Bold">…</Button>
         </ToolBar>
-        <DockPanel HorizontalAlignment="Left" Height="359" LastChildFill="True" Margin="0,60,0,0" VerticalAlignment="Top" Width="792">
-            <StackPanel Width="120" Orientation="Vertical" DockPanel.Dock="Left">
-                <ListBox/>
-            </StackPanel>
+        
+        <DockPanel HorizontalAlignment="Left" LastChildFill="True" Margin="0" Grid.Row="1">
+            <Grid Width="129" DockPanel.Dock="Left">
+                <TreeView>
+                    <TreeViewItem />
+                    <TreeViewItem />
+                </TreeView>
+            </Grid>
 
             <Grid Name="Properties" DockPanel.Dock="Right" Width="200">
                 <TabControl VerticalAlignment="Stretch">
-                    <TabPanel Name="CitationProperties">
+                    <TabItem Name="CitationProperties">
+                        <TabItem.Header>
+                            <StackPanel Orientation="Horizontal">
+                                <Image Source="Img/CommentCode_16x.png" />
+                                <TextBlock Text="Citation" Foreground="Blue" />
+                            </StackPanel>
+                        </TabItem.Header>
                         <Grid>
-                            
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="100"/>
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+                            <TextBox TextWrapping="Wrap" Grid.Row="0" >
+                                <TextBox.Background>
+                                    <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+                                        <GradientStop Color="#FFE" Offset="0.0" />
+                                        <GradientStop Color="#FFA" Offset="1.0" />
+                                    </LinearGradientBrush>
+                                </TextBox.Background>
+                            </TextBox>
+                            <!--<StackPanel Grid.Row="1" Orientation="Vertical">
+                                <StackPanel Orientation="Horizontal">
+                                    <Label FontWeight="Bold">Volume Title:</Label>
+                                    <Label>Hej och hå!</Label>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <Label FontWeight="Bold">Volume Title:</Label>
+                                    <Label>Hej och hå!</Label>
+                                </StackPanel>
+                            </StackPanel>-->
+                            <ListBox Grid.Row="1">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid Margin="0,2">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="100" />
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Text="{Binding Title}" />
+                                            <ProgressBar Grid.Column="1" Minimum="0" Maximum="100" Value="{Binding Completion}" />
+                                        </Grid>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <Label FontWeight="Bold">Volume Title:</Label>
+                                    <Label>Hej och hå!</Label>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <Label FontWeight="Bold">Volume Title:</Label>
+                                    <Label>Hej och hå!</Label>
+                                </StackPanel>
+
+                            </ListBox>
+
+
                         </Grid>
-                    </TabPanel>
-                    <TabPanel Name="VolumeProperties">
-
-                    </TabPanel>
-                    <TabPanel Name="FileProperties">
-
-                    </TabPanel>
+                    </TabItem>
+                    <TabItem Name="VolumeProperties">
+                        <TabItem.Header>
+                            <StackPanel Orientation="Horizontal">
+                                <Image Source="Img/StackPanel_16x.png" />
+                                <TextBlock Text="Volume" Foreground="Red" />
+                            </StackPanel>
+                        </TabItem.Header>
+                    </TabItem>
+                    <TabItem Name="FileProperties">
+                        <TabItem.Header>
+                            <StackPanel Orientation="Horizontal">
+                                <Image Source="Img/FileSystemDriverFile_16x.png" />
+                                <TextBlock Text="File" Foreground="Green" />
+                            </StackPanel>
+                        </TabItem.Header>
+                    </TabItem>
                 </TabControl>
-                
+
             </Grid>
-            
-            <StatusBar Height="51" DockPanel.Dock="Bottom"/>
+
+            <WrapPanel x:Name="CategoryWrapPanel" Height="72" DockPanel.Dock="Bottom">
+                <Label Style="{StaticResource CategoryLabelStyle}">Olle</Label>
+                <Label Style="{StaticResource CategoryLabelStyle}">Pellegrin</Label>
+                <Label Style="{StaticResource CategoryAddStyle}" MouseUp="">+</Label>
+            </WrapPanel>
+
             <!-- Last child -->
-            
+
             <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition />
-                    <RowDefinition />
+                    <RowDefinition Height="50*" />
+                    <RowDefinition Height="50*" />
                 </Grid.RowDefinitions>
-                <RichTextBox Name="Rtb1" Grid.Row="0"/>
+                <RichTextBox Name="Rtb1" Grid.Row="0" IsReadOnly="True" >
+                    <RichTextBox.Background>
+                        <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+                            <GradientStop Color="#EEE" Offset="0.0" />
+                            <GradientStop Color="#FEFEFE" Offset="0.5" />
+                            <GradientStop Color="#FAFAFA" Offset="1.0" />
+                        </LinearGradientBrush>
+                    </RichTextBox.Background>
+
+                </RichTextBox>
                 <RichTextBox Name="Rtb2" Grid.Row="1"/>
             </Grid>
 

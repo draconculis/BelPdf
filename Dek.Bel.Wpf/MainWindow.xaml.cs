@@ -24,5 +24,15 @@ namespace Dek.Bel.Wpf
         {
             InitializeComponent();
         }
+
+        private void Label_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            Style style = FindResource("CategoryLabelStyle") as Style;
+            var addLabel = CategoryWrapPanel.Children[CategoryWrapPanel.Children.Count - 1];
+            CategoryWrapPanel.Children.Remove(addLabel);
+            CategoryWrapPanel.Children.Add(new Label { Style = style });
+            CategoryWrapPanel.Children.Add(addLabel);
+
+        }
     }
 }

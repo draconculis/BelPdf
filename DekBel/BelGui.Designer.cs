@@ -168,6 +168,8 @@
             this.checkBox_right = new System.Windows.Forms.CheckBox();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
+            this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
             this.contextMenuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -322,6 +324,8 @@
             this.toolStrip1.Font = new System.Drawing.Font("Corbel", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.toolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripButton1,
+            this.toolStripSeparator6,
             this.toolStripButton_Reset,
             this.toolStripSeparator5,
             this.toolStripSplitButton1,
@@ -452,6 +456,7 @@
             // 
             // toolStripTextBox1
             // 
+            this.toolStripTextBox1.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.toolStripTextBox1.Name = "toolStripTextBox1";
             this.toolStripTextBox1.Size = new System.Drawing.Size(100, 26);
             this.toolStripTextBox1.Text = "…";
@@ -598,15 +603,14 @@
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripDropDownButton1,
             this.toolStripStatusLabel1,
-            this.toolStripSplitButton2,
-            this.toolStripStatusLabel_CitationSelector});
+            this.toolStripStatusLabel_CitationSelector,
+            this.toolStripSplitButton2});
             this.statusStrip1.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
             this.statusStrip1.Location = new System.Drawing.Point(0, 420);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Size = new System.Drawing.Size(1197, 27);
             this.statusStrip1.TabIndex = 2;
             this.statusStrip1.Text = "statusStrip1";
-            this.statusStrip1.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.StatusStrip1_ItemClicked);
             this.statusStrip1.Click += new System.EventHandler(this.statusStrip1_Click);
             // 
             // toolStripDropDownButton1
@@ -649,7 +653,7 @@
             // 
             this.restoreDatabaseToolStripMenuItem.Enabled = false;
             this.restoreDatabaseToolStripMenuItem.Name = "restoreDatabaseToolStripMenuItem";
-            this.restoreDatabaseToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.restoreDatabaseToolStripMenuItem.Size = new System.Drawing.Size(166, 22);
             this.restoreDatabaseToolStripMenuItem.Text = "Restore database";
             this.restoreDatabaseToolStripMenuItem.Click += new System.EventHandler(this.restoreDatabaseToolStripMenuItem_Click);
             // 
@@ -1292,7 +1296,7 @@
             this.textBox_CitationNotes.Location = new System.Drawing.Point(3, 17);
             this.textBox_CitationNotes.Multiline = true;
             this.textBox_CitationNotes.Name = "textBox_CitationNotes";
-            this.textBox_CitationNotes.Size = new System.Drawing.Size(736, 88);
+            this.textBox_CitationNotes.Size = new System.Drawing.Size(736, 86);
             this.textBox_CitationNotes.TabIndex = 32;
             this.textBox_CitationNotes.Leave += new System.EventHandler(this.TextBox_CitationNotes_Leave);
             // 
@@ -1698,6 +1702,22 @@
             this.checkBox_right.UseVisualStyleBackColor = true;
             this.checkBox_right.CheckedChanged += new System.EventHandler(this.CheckBox1_CheckedChanged);
             // 
+            // toolStripButton1
+            // 
+            this.toolStripButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.toolStripButton1.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.toolStripButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton1.Image")));
+            this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButton1.Name = "toolStripButton1";
+            this.toolStripButton1.Size = new System.Drawing.Size(28, 23);
+            this.toolStripButton1.Text = "<<";
+            this.toolStripButton1.Click += new System.EventHandler(this.toolStripButton1_Click_2);
+            // 
+            // toolStripSeparator6
+            // 
+            this.toolStripSeparator6.Name = "toolStripSeparator6";
+            this.toolStripSeparator6.Size = new System.Drawing.Size(6, 26);
+            // 
             // BelGui
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -1713,6 +1733,7 @@
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.BelGui_FormClosing);
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.BelGui_FormClosed);
             this.Load += new System.EventHandler(this.BelGui_Load);
+            this.Move += new System.EventHandler(this.BelGui_Move);
             this.contextMenuStrip1.ResumeLayout(false);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel1.PerformLayout();
@@ -1895,5 +1916,7 @@
         private System.Windows.Forms.Label label_volumeTitle;
         private System.Windows.Forms.Label label_citationVolume;
         private System.Windows.Forms.ToolStripMenuItem restoreDatabaseToolStripMenuItem;
+        private System.Windows.Forms.ToolStripButton toolStripButton1;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator6;
     }
 }

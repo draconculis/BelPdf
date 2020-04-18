@@ -163,7 +163,10 @@ namespace Dek.Bel.Core.Services
             if (references == null || references.Count == 0)
                 return null;
 
-            List<T> orderedReferences = references.OrderBy(x => x).ToList();
+            List<T> orderedReferences = references
+                .OfType<T>()
+                .OrderBy(x => x)
+                .ToList();
 
             // If pointing before first reference, return null
             if (physicalPage < orderedReferences.First().PhysicalPage 
@@ -185,12 +188,34 @@ namespace Dek.Bel.Core.Services
             return lastref;
         }
 
+        /// <summary>
+        /// Gets an ordered list of references for currently loaded volume. Does not include page numbers.
+        /// </summary>
+        /// <returns></returns>
+        public List<Reference> GetAllReferences()
+        {
+            if (CurrentVolume.Id == Id.Empty)
+                return new List<Reference>();
+
+            List<Reference> references = new List<Reference>();
+
+            references.AddRange(Books);
+            references.AddRange(Chapters);
+            references.AddRange(SubChapters);
+            references.AddRange(Paragraphs);
+
+            return references
+                .OrderBy(x => x)
+                .ToList();
+        }
+
         public static T GetReferenceForVolume<T>(Id volumeId, List<T> references, int physicalPage, int glyph) where T : Reference
         {
             if (references == null || references.Count == 0)
                 return null;
 
             List<T> orderedReferences = references
+                .OfType<T>()
                 .Where(v => v.VolumeId == volumeId)
                 .OrderBy(x => x).ToList();
 

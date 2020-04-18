@@ -11,18 +11,33 @@ namespace Dek.Cls
         public static void Initialize(object target, List<object> classes) => InitializeInternal(target, classes);
         public static void Initialize(object target, List<Type> types) => InitializeInternal(target, types);
 
+        static AggregateCatalog TheCatalog;
+        static CompositionContainer TheContainer;
+
+        public static void Compose(object target)
+        {
+            try
+            {
+                TheContainer.ComposeParts(target);
+            }
+            catch (CompositionException compositionException)
+            {
+                throw compositionException;
+            }
+        }
+
         private static void InitializeInternal(object target, IEnumerable<object> classes)
         {
-            var catalog = new AggregateCatalog();
+            TheCatalog = new AggregateCatalog();
 
             foreach (object obj in classes)
-                catalog.Catalogs.Add(new AssemblyCatalog(obj.GetType().Assembly));
+                TheCatalog.Catalogs.Add(new AssemblyCatalog(obj.GetType().Assembly));
 
-            var container = new CompositionContainer(catalog);
+            TheContainer = new CompositionContainer(TheCatalog);
 
             try
             {
-                container.ComposeParts(target);
+                TheContainer.ComposeParts(target);
             }
             catch (CompositionException compositionException)
             {
@@ -33,16 +48,16 @@ namespace Dek.Cls
 
         private static void InitializeInternal(object target, IEnumerable<Type> types)
         {
-            var catalog = new AggregateCatalog();
+            TheCatalog = new AggregateCatalog();
 
             foreach (Type t in types)
-                catalog.Catalogs.Add(new AssemblyCatalog(t.Assembly));
+                TheCatalog.Catalogs.Add(new AssemblyCatalog(t.Assembly));
 
-            var container = new CompositionContainer(catalog);
+            TheContainer = new CompositionContainer(TheCatalog);
 
             try
             {
-                container.ComposeParts(target);
+                TheContainer.ComposeParts(target);
             }
             catch (CompositionException compositionException)
             {

@@ -20,6 +20,7 @@ using Dek.Bel.Core.GUI;
 using Dek.Bel.Core.Services;
 using Dek.Bel.Core.DB;
 using Dek.Bel.Core.Helpers;
+using OfficeOpenXml.FormulaParsing.Excel.Functions.Text;
 
 namespace Dek.Bel
 {
@@ -162,7 +163,9 @@ namespace Dek.Bel
             ActiveControl = textBox_CategorySearch;
             textBox_CategorySearch.Focus();
 
-            
+            OldLeft = Left;
+            OldTop = Top;
+
         }
 
         /// <summary>
@@ -1281,6 +1284,8 @@ namespace Dek.Bel
 
         private void BelGui_FormClosing(object sender, FormClosingEventArgs e)
         {
+            richTextBox1.Focus();
+
             SaveMarginBoxSettingsToCitation();
 
             if (m_UserSettingsService.AutoWritePdfOnClose)
@@ -1321,11 +1326,6 @@ namespace Dek.Bel
         private Citation SelectCitation()
         {
             return m_CitationSelectorService.ShowSelector(VM);
-        }
-
-        private void StatusStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
-        {
-
         }
 
         #region Database admin ============================================================
@@ -1399,5 +1399,63 @@ namespace Dek.Bel
         {
             
         }
+
+        #region Outline ====================================================================
+
+        bool FormOutlineOpen = false;
+        Form_Outline FormOutline;
+
+        /// <summary>
+        /// Show Outline
+        /// </summary>
+        private void toolStripButton1_Click_2(object sender, EventArgs e)
+        {
+            if (FormOutlineOpen)
+            {
+                FormOutline.Close();
+                FormOutline = null;
+                return;
+            }
+
+            FormOutline = new Form_Outline(m_VolumeService, Left - 250, Top, 250, Height);
+            FormOutline.FormClosing += Form_Outline_FormClosing;
+            FormOutline.CitationSelected += FormOutline_CitationSelected;
+            FormOutline.Owner = this;
+            FormOutlineOpen = true;
+            FormOutline.Show();
+        }
+
+        private void FormOutline_CitationSelected(object sender, EventArgs e)
+        {
+            VM.CurrentCitation = FormOutline.SelectedCitation ?? VM.CurrentCitation;
+            LoadControls();
+        }
+
+        private void Form_Outline_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            FormOutlineOpen = false;
+            FormOutline.FormClosing -= Form_Outline_FormClosing;
+            FormOutline.CitationSelected -= FormOutline_CitationSelected;
+        }
+
+
+        int OldLeft;
+        int OldTop;
+        private void BelGui_Move(object sender, EventArgs e)
+        {
+            if (FormOutline == null)
+                return;
+
+            FormOutline.Top += (Top - OldTop);
+            FormOutline.Left += (Left - OldLeft);
+            //FormOutline.Top = Top;
+            //FormOutline.Left = Left - FormOutline.Width;
+
+            OldLeft = Left;
+            OldTop = Top;
+        }
+
+        #endregion Outline =================================================================
+
     }
 }

@@ -53,5 +53,13 @@ namespace Dek.Bel.Core.Models
 
             return PhysicalPageStart.CompareTo(other.PhysicalPageStart);
         }
+
+        public int CompareTo(Reference other)
+        {
+            if (PhysicalPageStart == other.PhysicalPage)
+                return GlyphStart.CompareTo(other.Glyph);
+
+            return PhysicalPageStart.CompareTo(other.PhysicalPage);
+        }
     }
 }

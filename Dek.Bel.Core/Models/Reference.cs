@@ -21,6 +21,14 @@ namespace Dek.Bel.Core.Models
             return PhysicalPage.CompareTo(other.PhysicalPage);
         }
 
+        public int CompareTo(Citation other)
+        {
+            if (PhysicalPage == other.PhysicalPageStart)
+                return Glyph.CompareTo(other.GlyphStart);
+
+            return PhysicalPage.CompareTo(other.PhysicalPageStart);
+        }
+
         public override string ToString()
         {
             return Title;

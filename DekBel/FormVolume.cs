@@ -1,5 +1,4 @@
-﻿using Dek.Bel.Cls;
-using Dek.Bel.Core.Models;
+﻿using Dek.Bel.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
@@ -44,6 +43,7 @@ namespace Dek.Bel
                 return m_Books;
             }
         }
+
         List<Chapter> Chapters
         {
             get
@@ -86,7 +86,6 @@ namespace Dek.Bel
             }
         }
 
-
         /// <summary>
         /// Populate the list with an 'All' item and the contents of the volume.
         /// </summary>
@@ -116,7 +115,7 @@ namespace Dek.Bel
             InitializeComponent();
 
             if (m_DBService == null)
-                Mef.Initialize(this);
+                Mef.Initialize(this, new List<Type> { GetType(), typeof(ModelsForViewing) });
 
         }
 
