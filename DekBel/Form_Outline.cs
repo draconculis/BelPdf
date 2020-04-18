@@ -80,6 +80,8 @@ namespace Dek.Bel
             //e.Graphics.FillRectangle(new SolidBrush(Color.CornflowerBlue), rc);
             StringFormat sf = new StringFormat();
             sf.Alignment = StringAlignment.Near;
+            sf.Trimming = StringTrimming.EllipsisCharacter;
+            sf.FormatFlags = StringFormatFlags.NoWrap;
 
             CitationReference citRef = CitationReferences[e.Index];
             string indent = "";
@@ -87,26 +89,26 @@ namespace Dek.Bel
             Font theFont = Font;
             if(citRef.Reference is null)
             {
-                indent = "      ";
+                indent = "       ";
             }
             else if (citRef.Reference is Book)
             {
-                theFont = new Font(FontFamily.GenericSerif, 14, FontStyle.Bold);
+                theFont = new Font(FontFamily.GenericSerif, 14, FontStyle.Bold | FontStyle.Underline);
             }
             else if (citRef.Reference is Chapter)
             {
                 theFont = new Font(FontFamily.GenericSansSerif, 12, FontStyle.Bold);
-                indent = " ";
+                indent = "  ";
             }
             else if (citRef.Reference is SubChapter)
             {
                 theFont = new Font(FontFamily.GenericSansSerif, 12, FontStyle.Bold | FontStyle.Italic);
-                indent = "  ";
+                indent = "    ";
             }
             else if (citRef.Reference is Paragraph)
             {
                 theFont = new Font(FontFamily.GenericSansSerif, 11, FontStyle.Bold);
-                indent = "   § ";
+                indent = "      §";
             }
 
             e.Graphics.DrawString(indent + citRef.ToString().Replace("\n", " ").Replace("\r", " "),

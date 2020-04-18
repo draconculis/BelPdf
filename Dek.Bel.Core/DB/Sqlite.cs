@@ -286,37 +286,6 @@ namespace Dek.DB
             foreach (var prop in obj.GetType().GetProperties())
             {
                 LoadProperty(obj, prop, row, prefixTableName);
-
-                //string name = (prefixTableName ? $"{obj.GetType().Name}." : "") + prop.Name;
-                //object val = null;
-                //try
-                //{
-                //    val = row[name];
-                //}
-                //catch
-                //{
-                //    continue;
-                //}
-                //bool isNullable = Nullable.GetUnderlyingType(prop.GetType()) != null;
-                //bool isEnum = prop.GetType().IsEnum;
-                //Type type = prop.GetType();
-                //string typeName = type.Name;
-                //if (isEnum)
-                //    typeName = "enum";
-
-                //switch (typeName)
-                //{
-                //    case nameof(DateTime):
-                //        prop.SetValue(obj, ((string)val).ToSaneDateTime());
-                //        break;
-                //    case "enum":
-                //        prop.SetValue(obj, Enum.Parse(type, ((string)val)));
-                //        break;
-                //    default:
-                //        prop.SetValue(obj, val);
-                //        break;
-                //}
-
             }
 
         }
@@ -380,7 +349,7 @@ namespace Dek.DB
             {
                 m_dbConnection.Open();  //Initiate connection to the db
                 m_Command = m_dbConnection.CreateCommand();
-                m_Command.CommandText = $"select {column} from {table} where {column} = {value}";  //set the passed query
+                m_Command.CommandText = $"select {column} from {table} where {column} = {value.ToString().Replace("'", "''")}";  //set the passed query
                 using (m_Adapter = new SQLiteDataAdapter(m_Command))
                     m_Adapter.Fill(dt); //fill the datasource
             }
@@ -648,7 +617,7 @@ namespace Dek.DB
                     val = prop.GetValue(obj);
 
                 names += (names.Length > 0 ? ", " : "") + $"`{prop.Name}`";
-                values += (values.Length > 0 ? ", " : "") + $"'{val}'";
+                values += (values.Length > 0 ? ", " : "") + $"'{val?.ToString().Replace("'", "''")}'";
 
                 // Automatic date update for column EditedDate
                 if (prop.Name == "EditedDate")
@@ -660,11 +629,11 @@ namespace Dek.DB
                     //keyFound = true;
                     //ids.Add(prop.Name);
                     //keys.Add(prop.GetValue(obj, null).ToString());
-                    updateWhereValues += (updateWhereValues.Length > 0 ? " AND " : "") + $"`{prop.Name}` = '{val}'";
+                    updateWhereValues += (updateWhereValues.Length > 0 ? " AND " : "") + $"`{prop.Name}` = '{val?.ToString().Replace("'", "''")}'";
                 }
                 else // Don't add keys to update string
                 {
-                    updateValues += (updateValues.Length > 0 ? ", " : "") + $"`{prop.Name}` = '{val}'";
+                    updateValues += (updateValues.Length > 0 ? ", " : "") + $"`{prop.Name}` = '{val?.ToString().Replace("'", "''")}'";
                 }
             }
 

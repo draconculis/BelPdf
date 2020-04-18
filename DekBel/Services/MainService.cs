@@ -45,6 +45,7 @@ namespace Dek.Bel.Services
                 List<RawCitation> rawCitations = m_CitationService.GetRawCitations(history.VolumeId).ToList();
                 Citation cit = m_CitationService.CreateNewCitation(rawCitations, message, history.VolumeId);
                 m_DBService.DeleteAll<RawCitation>();
+                m_DBService.InsertOrUpdate(cit);
 
                 m_Toaster.ShowToast("Citation added", cit.Citation1);
 

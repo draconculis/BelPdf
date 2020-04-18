@@ -151,7 +151,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 19F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.SystemColors.GradientActiveCaption;
+            this.BackColor = System.Drawing.SystemColors.Control;
             this.CancelButton = this.button_cancel;
             this.ClientSize = new System.Drawing.Size(246, 101);
             this.ControlBox = false;
@@ -164,7 +164,9 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "Form_AddReference";
+            this.ShowIcon = false;
             this.ShowInTaskbar = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "BelPdf";
             this.Load += new System.EventHandler(this.Form_AddReference_Load);
             this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.Form_AddReference_MouseDown);
