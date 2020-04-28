@@ -43,7 +43,7 @@ namespace Dek.Bel
             }
         }
 
-        public Form_Outline(VolumeService volumeService, int left, int top, int width, int height)
+        public Form_Outline(VolumeService volumeService, Id currentCitation, int left, int top, int width, int height)
         {
             InitializeComponent();
 
@@ -62,6 +62,13 @@ namespace Dek.Bel
             listBox1.DrawItem += ListBox1_DrawItem;
             listBox1.MeasureItem += ListBox1_MeasureItem;
             listBox1.DataSource = CitationReferences;
+
+            CitationReference sel = CitationReferences.SingleOrDefault(x => x.Citation?.Id == currentCitation);
+
+            if (sel != null)
+            {
+                listBox1.SelectedItem = sel;
+            }
         }
 
         #region Custom paint =======================================================
@@ -152,7 +159,6 @@ namespace Dek.Bel
             //var curReference = references.First();
 
             bool endOfCit = false;
-            bool endOfRef = false;
             foreach(Reference reference in references)
             {
                 while (reference.CompareTo(citations[curCit]) > 0 && !endOfCit)

@@ -60,6 +60,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Dek.Bel.Core\Dek.Bel.Core.csproj">
+      <Project>{d1b3a630-5fc2-4ac5-abaf-d4875643e85d}</Project>
+      <Name>Dek.Bel.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\DekBel\Dek.Bel.csproj">
       <Project>{97cf51e4-6ac7-4144-841f-7f78835727d2}</Project>
       <Name>Dek.Bel</Name>

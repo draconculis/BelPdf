@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using Dek.Cls;
 using Dek.Bel.Core.Models;
 using Dek.Bel.Core.Services;
+using OfficeOpenXml.FormulaParsing.Excel.Functions.RefAndLookup;
 
 namespace Dek.Bel.Services
 {
@@ -26,8 +27,12 @@ namespace Dek.Bel.Services
             m_CategoryService = categoryService;
             Filter = (c) => true;
             dataGridView1.DataSource = m_FilteredCategories;
+            dataGridView1.SelectAll();
+            dataGridView1.ClearSelection();
             UpdateCount();
             m_CategoryService.CategoryUpdated += OnCategoryUpdated;
+
+            AdjustColumns();
             
         }
 
@@ -45,14 +50,20 @@ namespace Dek.Bel.Services
 
         private void AdjustColumns()
         {
-            int previouswidth = dataGridView1.Columns[0].Width + dataGridView1.Columns[1].Width + dataGridView1.Columns[2].Width + dataGridView1.Columns[4].Width;
-            dataGridView1.Columns[3].Width = dataGridView1.Width - previouswidth;
+            dataGridView1.Columns[0].Visible = false;
+            dataGridView1.Columns[5].Visible = false;
+            dataGridView1.Columns[4].Width = 25;
 
+            int previouswidth = dataGridView1.Columns[1].Width + dataGridView1.Columns[2].Width + dataGridView1.Columns[4].Width;
+            dataGridView1.Columns[3].Width = dataGridView1.Width - previouswidth;
+            dataGridView1.Columns[3].DefaultCellStyle.BackColor = Color.White;
+
+            dataGridView1.Columns[4].HeaderText = "";
         }
 
         private void UpdateCount()
         {
-            label_count.Text = $"{m_FilteredCategories.Count()} / {m_CategoryService.Categories.Count().ToString()}";
+            label_count.Text = $"{m_FilteredCategories.Count()} / {m_CategoryService.Categories.Count() - 1}"; // Don't count the ubiquotus 'Uncategorized'
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)
@@ -172,18 +183,49 @@ namespace Dek.Bel.Services
 
         private void DataGridView1_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
-            dataGridView1.Columns[4].Width = 25;
-            foreach (DataGridViewRow Myrow in dataGridView1.Rows)
+            if (e.ColumnIndex == 4)
+            //foreach (DataGridViewRow Myrow in dataGridView1.Rows)
             {
-                var colors = ColorStuff.ConvertStringToColors((string)Myrow.Cells[4].Value);
+                DataGridViewRow row = dataGridView1.Rows[e.RowIndex];
+                var colors = ColorStuff.ConvertStringToColors((string)row.Cells[4].Value);
                 if (colors.Any())
                 {
-                    Myrow.Cells[4].Style.BackColor = colors[0];
+                    row.Cells[4].Style.BackColor = colors[0];
+                    row.Cells[4].Style.ForeColor = colors[0];
+                    row.Cells[4].Style.SelectionBackColor = colors[0];
+                    row.Cells[4].Style.SelectionForeColor = colors[0];
                 }
                 else
                 {
-                    Myrow.Cells[4].Style.BackColor = Color.Red;
+                    row.Cells[4].Style.BackColor = Color.White;
+                    row.Cells[4].Style.ForeColor = Color.White;
+                    row.Cells[4].Style.SelectionBackColor = Color.White;
+                    row.Cells[4].Style.SelectionForeColor = Color.White;
                 }
+            }
+        }
+
+        private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex < 0 || e.RowIndex >= dataGridView1.Rows.Count)
+                return;
+
+            if (e.ColumnIndex == 4)
+            {
+                Id id = (Id)dataGridView1.Rows[e.RowIndex].Cells[0].Value;
+
+                Category cat =  m_FilteredCategories.SingleOrDefault(x => x.Id == id);
+
+                ColorDialog dlg = new ColorDialog();
+                Color[] colors = ColorStuff.ConvertStringToColors(cat.CategoryColor);
+                dlg.Color = colors.Any() ? colors[0] : Color.White;
+                DialogResult result =  dlg.ShowDialog(this);
+                if (result == DialogResult.Cancel)
+                    return;
+
+                cat.CategoryColor = ColorStuff.ConvertColorsToString(new Color[] { dlg.Color });
+
+                m_CategoryService.InsertOrUpdate(cat);
             }
         }
     }

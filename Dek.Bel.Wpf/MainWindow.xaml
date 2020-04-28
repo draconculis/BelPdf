@@ -192,7 +192,7 @@
             <WrapPanel x:Name="CategoryWrapPanel" Height="72" DockPanel.Dock="Bottom">
                 <Label Style="{StaticResource CategoryLabelStyle}">Olle</Label>
                 <Label Style="{StaticResource CategoryLabelStyle}">Pellegrin</Label>
-                <Label Style="{StaticResource CategoryAddStyle}" MouseUp="">+</Label>
+                <Label Style="{StaticResource CategoryAddStyle}">+</Label><!-- Mousup -->
             </WrapPanel>
 
             <!-- Last child -->

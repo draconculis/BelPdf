@@ -652,7 +652,7 @@ namespace Dek.Bel
 
         private void Button_CategoryAddCreate_Click(object sender, EventArgs e)
         {
-            if (button_CategoryAddCreate.Text == CategoryAddText)
+                if (button_CategoryAddCreate.Text == CategoryAddText)
             {
                 if (!(listBox1.SelectedItem is Category cat))
                     return;
@@ -1237,6 +1237,7 @@ namespace Dek.Bel
         {
             FormCategory fc = new FormCategory(m_CategoryService);
             fc.ShowDialog();
+            LoadCategoryControl();
         }
 
         private void closeToolStripMenuItem1_Click(object sender, EventArgs e)
@@ -1296,6 +1297,7 @@ namespace Dek.Bel
         {
             FormCategory fc = new FormCategory(m_CategoryService);
             fc.ShowDialog();
+            LoadCategoryControl();
         }
 
         private void toolStripStatusLabel_CitationSelector_Click(object sender, EventArgs e)
@@ -1417,7 +1419,7 @@ namespace Dek.Bel
                 return;
             }
 
-            FormOutline = new Form_Outline(m_VolumeService, Left - 250, Top, 250, Height);
+            FormOutline = new Form_Outline(m_VolumeService, VM.CurrentCitation.Id, Left - 250, Top, 250, Height);
             FormOutline.FormClosing += Form_Outline_FormClosing;
             FormOutline.CitationSelected += FormOutline_CitationSelected;
             FormOutline.Owner = this;
