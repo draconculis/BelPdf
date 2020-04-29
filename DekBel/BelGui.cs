@@ -1459,5 +1459,11 @@ namespace Dek.Bel
 
         #endregion Outline =================================================================
 
+        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FormAbout f = new FormAbout();
+            
+            f.ShowDialog(this);
+        }
     }
 }

@@ -21,6 +21,8 @@ namespace Dek.Bel.Services
         private Predicate<Category> Filter;
         private Predicate<Category> HideUncategorized = x => x.Id != Id.Null;
 
+        private const int ColorColIdx = 4;
+
         public FormCategory(ICategoryService categoryService)
         {
             InitializeComponent();
@@ -52,13 +54,13 @@ namespace Dek.Bel.Services
         {
             dataGridView1.Columns[0].Visible = false;
             dataGridView1.Columns[5].Visible = false;
-            dataGridView1.Columns[4].Width = 25;
+            dataGridView1.Columns[ColorColIdx].Width = 25;
 
-            int previouswidth = dataGridView1.Columns[1].Width + dataGridView1.Columns[2].Width + dataGridView1.Columns[4].Width;
+            int previouswidth = dataGridView1.Columns[1].Width + dataGridView1.Columns[2].Width + dataGridView1.Columns[ColorColIdx].Width;
             dataGridView1.Columns[3].Width = dataGridView1.Width - previouswidth;
             dataGridView1.Columns[3].DefaultCellStyle.BackColor = Color.White;
 
-            dataGridView1.Columns[4].HeaderText = "";
+            dataGridView1.Columns[ColorColIdx].HeaderText = "";
         }
 
         private void UpdateCount()
@@ -187,20 +189,20 @@ namespace Dek.Bel.Services
             //foreach (DataGridViewRow Myrow in dataGridView1.Rows)
             {
                 DataGridViewRow row = dataGridView1.Rows[e.RowIndex];
-                var colors = ColorStuff.ConvertStringToColors((string)row.Cells[4].Value);
+                var colors = ColorStuff.ConvertStringToColors((string)row.Cells[ColorColIdx].Value);
                 if (colors.Any())
                 {
-                    row.Cells[4].Style.BackColor = colors[0];
-                    row.Cells[4].Style.ForeColor = colors[0];
-                    row.Cells[4].Style.SelectionBackColor = colors[0];
-                    row.Cells[4].Style.SelectionForeColor = colors[0];
+                    row.Cells[ColorColIdx].Style.BackColor = colors[0];
+                    row.Cells[ColorColIdx].Style.ForeColor = colors[0];
+                    row.Cells[ColorColIdx].Style.SelectionBackColor = colors[0];
+                    row.Cells[ColorColIdx].Style.SelectionForeColor = colors[0];
                 }
                 else
                 {
-                    row.Cells[4].Style.BackColor = Color.White;
-                    row.Cells[4].Style.ForeColor = Color.White;
-                    row.Cells[4].Style.SelectionBackColor = Color.White;
-                    row.Cells[4].Style.SelectionForeColor = Color.White;
+                    row.Cells[ColorColIdx].Style.BackColor = Color.White;
+                    row.Cells[ColorColIdx].Style.ForeColor = Color.White;
+                    row.Cells[ColorColIdx].Style.SelectionBackColor = Color.White;
+                    row.Cells[ColorColIdx].Style.SelectionForeColor = Color.White;
                 }
             }
         }

@@ -66,11 +66,11 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("Palatino Linotype", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(71, 12);
+            this.label3.Font = new System.Drawing.Font("Corbel", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.Location = new System.Drawing.Point(71, 14);
             this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(31, 22);
+            this.label3.Size = new System.Drawing.Size(31, 19);
             this.label3.TabIndex = 2;
             this.label3.Text = "Bel";
             // 
@@ -90,6 +90,7 @@
             this.Name = "Toast";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Toast";
+            this.TopMost = true;
             this.Load += new System.EventHandler(this.Toast_Load);
             this.Click += new System.EventHandler(this.Toast_Click);
             this.ResumeLayout(false);

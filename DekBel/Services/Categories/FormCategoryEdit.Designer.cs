@@ -43,9 +43,9 @@
             // buttonOK
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonOK.Location = new System.Drawing.Point(168, 171);
+            this.buttonOK.Location = new System.Drawing.Point(282, 131);
             this.buttonOK.Name = "buttonOK";
-            this.buttonOK.Size = new System.Drawing.Size(142, 37);
+            this.buttonOK.Size = new System.Drawing.Size(92, 24);
             this.buttonOK.TabIndex = 0;
             this.buttonOK.Text = "OK";
             this.buttonOK.UseVisualStyleBackColor = true;
@@ -55,9 +55,9 @@
             // 
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.buttonCancel.Location = new System.Drawing.Point(317, 171);
+            this.buttonCancel.Location = new System.Drawing.Point(380, 131);
             this.buttonCancel.Name = "buttonCancel";
-            this.buttonCancel.Size = new System.Drawing.Size(142, 37);
+            this.buttonCancel.Size = new System.Drawing.Size(92, 24);
             this.buttonCancel.TabIndex = 1;
             this.buttonCancel.Text = "Cancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
@@ -68,7 +68,7 @@
             this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(10, 62);
+            this.label3.Location = new System.Drawing.Point(10, 50);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(70, 15);
             this.label3.TabIndex = 303;
@@ -79,7 +79,7 @@
             this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(167, 9);
+            this.label2.Location = new System.Drawing.Point(167, 6);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(91, 15);
             this.label2.TabIndex = 302;
@@ -90,7 +90,7 @@
             this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(10, 9);
+            this.label1.Location = new System.Drawing.Point(10, 6);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(37, 15);
             this.label1.TabIndex = 301;
@@ -101,11 +101,11 @@
             this.textBoxDesc.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxDesc.Location = new System.Drawing.Point(5, 81);
+            this.textBoxDesc.Location = new System.Drawing.Point(5, 69);
             this.textBoxDesc.Multiline = true;
             this.textBoxDesc.Name = "textBoxDesc";
             this.textBoxDesc.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBoxDesc.Size = new System.Drawing.Size(453, 82);
+            this.textBoxDesc.Size = new System.Drawing.Size(467, 56);
             this.textBoxDesc.TabIndex = 306;
             // 
             // textBoxName
@@ -113,15 +113,15 @@
             this.textBoxName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxName.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBoxName.Location = new System.Drawing.Point(162, 27);
+            this.textBoxName.Location = new System.Drawing.Point(162, 24);
             this.textBoxName.Name = "textBoxName";
-            this.textBoxName.Size = new System.Drawing.Size(295, 21);
+            this.textBoxName.Size = new System.Drawing.Size(309, 21);
             this.textBoxName.TabIndex = 305;
             this.textBoxName.TextChanged += new System.EventHandler(this.textBoxName_TextChanged);
             // 
             // textBoxCode
             // 
-            this.textBoxCode.Location = new System.Drawing.Point(5, 27);
+            this.textBoxCode.Location = new System.Drawing.Point(5, 24);
             this.textBoxCode.Name = "textBoxCode";
             this.textBoxCode.Size = new System.Drawing.Size(145, 21);
             this.textBoxCode.TabIndex = 304;
@@ -131,7 +131,7 @@
             // 
             this.label_warn.AutoSize = true;
             this.label_warn.ForeColor = System.Drawing.Color.Maroon;
-            this.label_warn.Location = new System.Drawing.Point(109, 62);
+            this.label_warn.Location = new System.Drawing.Point(6, 136);
             this.label_warn.Name = "label_warn";
             this.label_warn.Size = new System.Drawing.Size(41, 15);
             this.label_warn.TabIndex = 307;
@@ -145,7 +145,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ControlLight;
             this.CancelButton = this.buttonCancel;
-            this.ClientSize = new System.Drawing.Size(463, 213);
+            this.ClientSize = new System.Drawing.Size(477, 161);
             this.Controls.Add(this.label_warn);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);

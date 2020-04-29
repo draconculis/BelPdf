@@ -121,6 +121,12 @@
       <DependentUpon>BelGui.cs</DependentUpon>
     </Compile>
     <Compile Include="DB\DatabaseAdminServiceSaveOpen.cs" />
+    <Compile Include="FormAbout.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormAbout.Designer.cs">
+      <DependentUpon>FormAbout.cs</DependentUpon>
+    </Compile>
     <Compile Include="Form_Outline.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -221,6 +227,9 @@
     <EmbeddedResource Include="BelGui.resx">
       <DependentUpon>BelGui.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="FormAbout.resx">
+      <DependentUpon>FormAbout.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Form_Outline.resx">
       <DependentUpon>Form_Outline.cs</DependentUpon>
     </EmbeddedResource>
@@ -265,6 +274,7 @@
   <ItemGroup>
     <Content Include="bel.ico" />
     <Content Include="Resources\bel32.png" />
+    <Content Include="Resources\gradient.png" />
     <None Include="Resources\metaopen.png" />
     <None Include="Resources\metaclose.png" />
     <None Include="app.config" />
