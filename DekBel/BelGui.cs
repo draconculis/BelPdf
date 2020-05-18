@@ -21,6 +21,7 @@ using Dek.Bel.Core.Services;
 using Dek.Bel.Core.DB;
 using Dek.Bel.Core.Helpers;
 using OfficeOpenXml.FormulaParsing.Excel.Functions.Text;
+using Dek.Bel.Core.ViewModels;
 
 namespace Dek.Bel
 {
@@ -50,6 +51,8 @@ namespace Dek.Bel
         [Import] public DatabaseAdminService m_DatabaseAdminService { get; set; }
         [Import] public DatabaseAdminServiceSaveOpen m_DatabaseAdminServiceGUI { get; set; }
         [Import] public CitationPersisterService m_CitationPersisterService { get; set; }
+        [Import] public SeriesService m_SeriesService { get; set; }
+        [Import] public AuthorService m_AuthorService { get; set; }
 
         private bool LoadingControls = false;
 
@@ -219,6 +222,11 @@ namespace Dek.Bel
             numericUpDown_offsetX.Value = (decimal)m_VolumeService.CurrentVolume.OffsetX;
             numericUpDown_offsetY.Value = (decimal)m_VolumeService.CurrentVolume.OffsetY;
 
+            // Series
+            LoadSeries();
+
+            //Authors
+            LoadAuthors();
 
             // Load data from storage
             label_fileName.Text = Path.GetFileName(VM.CurrentStorage.FileName);
@@ -304,6 +312,33 @@ namespace Dek.Bel
             label_citationStart.Text = $"Page: {startPage} (physical page: {VM.CurrentCitation.PhysicalPageStart}), Character: {VM.CurrentCitation.GlyphStart}";
             label_CitationStop.Text = $"Page: {stopPage} (physical page: {VM.CurrentCitation.PhysicalPageStop}), Character: {VM.CurrentCitation.GlyphStop}";
         }
+
+        List<Volume> m_VolumesInSeries = null;
+        void LoadSeries()
+        {
+            Series series = m_SeriesService.GetSeriesForVolume(VM.CurrentCitation.VolumeId);
+            if(series == null)
+            {
+                label_SeriesName.Text = "This Volume does not belong to a Series.";
+                textBox_SeriesNote.Text = "";
+                listBox_VolumesInSeries.DataSource = null;
+                return;
+            }
+
+            label_SeriesName.Text = series.Name;
+            textBox_SeriesNote.Text = series.Notes;
+            m_VolumesInSeries = m_SeriesService.GetOtherVolumesInSeriesByVolumeId(VM.CurrentCitation.VolumeId).ToList();
+            listBox_VolumesInSeries.DataSource = m_VolumesInSeries;
+        }
+
+        List<AuthorsGridViewModel> m_AuthorGridViewModels;
+        void LoadAuthors()
+        {
+            // Set up grid
+
+            // Load
+        }
+
         #endregion Load Controls ===========================================
 
         /// <summary>
@@ -477,21 +512,6 @@ namespace Dek.Bel
 
         }
 
-        private void label7_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void textBox1_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void toolStripButton1_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private void toolStripSplitButton1_ButtonClick(object sender, EventArgs e)
         {
 
@@ -652,7 +672,7 @@ namespace Dek.Bel
 
         private void Button_CategoryAddCreate_Click(object sender, EventArgs e)
         {
-                if (button_CategoryAddCreate.Text == CategoryAddText)
+            if (button_CategoryAddCreate.Text == CategoryAddText)
             {
                 if (!(listBox1.SelectedItem is Category cat))
                     return;
@@ -704,6 +724,7 @@ namespace Dek.Bel
                 LoadCategoryControl();
 
                 textBox_CategorySearch.Text = "";
+                button_CategoryAddCreate.Text = CategoryAddText;
             }
         }
 
@@ -1067,6 +1088,23 @@ namespace Dek.Bel
             SaveColors();
         }
 
+        private void button_CopyCategoryColor_Click(object sender, EventArgs e)
+        {
+            Category cat = m_CategoryService.GetMainCategory(VM.CurrentCitation.Id);
+            if (cat == null)
+                return;
+            if (string.IsNullOrEmpty(cat.CategoryColor) || cat.CategoryColor.Length < 3)
+                return;
+
+            Color[] colors = ColorStuff.ConvertStringToColors(cat.CategoryColor);
+            if (!colors.Any())
+                return;
+
+            m_UserSettingsService.PdfMarginBoxColor = colors[0];
+            label_PdfMarginBoxColor.BackColor = m_UserSettingsService.PdfMarginBoxColor;
+        }
+
+
         private void SaveColors()
         {
             VM.CurrentCitation.CitationColors =
@@ -1230,7 +1268,8 @@ namespace Dek.Bel
 
         private void AuthorsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
+            FormAuthors fa = new FormAuthors();
+            fa.ShowDialog();
         }
 
         private void categoriesToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1262,7 +1301,12 @@ namespace Dek.Bel
             fr.Show();
         }
 
+        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FormAbout f = new FormAbout();
 
+            f.ShowDialog(this);
+        }
 
         #endregion Hamburger ======================================================================
         // end Hamburger ==========================================================================
@@ -1459,11 +1503,73 @@ namespace Dek.Bel
 
         #endregion Outline =================================================================
 
-        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+
+        #region Series ============================================================
+
+        private void button_EditSeries_Click(object sender, EventArgs e)
         {
-            FormAbout f = new FormAbout();
-            
-            f.ShowDialog(this);
+
         }
+
+        private void button_Series_Click(object sender, EventArgs e)
+        {
+            VolumeSeries volumeSeries = m_SeriesService.GetVolumeSeriesByVolumeId(VM.CurrentCitation.VolumeId);
+
+            FormSeries f = new FormSeries(VM.CurrentCitation.VolumeId);
+            f.ShowDialog();
+            
+            if(f.SelectedSeries == null && volumeSeries == null)
+            {
+                return; // Safe to return, nothing happened
+            }
+            if (f.SelectedSeries == null && volumeSeries != null)
+            {
+                m_SeriesService.DetachVolumeFromSeries(VM.CurrentCitation.VolumeId);
+                LoadSeries();
+                return;
+            }
+
+            if (volumeSeries == null)
+            {
+                // Selected somthing new
+                m_SeriesService.AttachVolumeToSeries(VM.CurrentCitation.VolumeId, f.SelectedSeries.Id);
+            }
+            else
+            {
+                // Selected somthing new
+                m_SeriesService.DetachVolumeFromSeries(VM.CurrentCitation.VolumeId);
+                m_SeriesService.AttachVolumeToSeries(VM.CurrentCitation.VolumeId, f.SelectedSeries.Id);
+            }
+
+            LoadSeries();
+        }
+
+        #endregion Series =========================================================
+
+        #region Authors tab ===============================================
+
+        private void button_authorEdit_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button_authorAdd_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button_authorRemove_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        #endregion Authors tab ============================================
+
+        #region Books tab =================================================
+
+
+
+        #endregion Books tab ==============================================
+
     }
 }

@@ -9,6 +9,7 @@ namespace Dek.Bel.Core.Models
         public Id BookId { get; set; }
         [Key]
         public Id AuthorId { get; set; }
+
         public AuthorType AuthorType { get; set; }
 
         public string Notes { get; set; }

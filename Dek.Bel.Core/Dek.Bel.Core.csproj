@@ -103,8 +103,10 @@
     <Compile Include="Cls\DekRange.cs" />
     <Compile Include="Cls\DekRangeDouble.cs" />
     <Compile Include="Cls\DekRangeExtension.cs" />
+    <Compile Include="Cls\EnumStuff.cs" />
     <Compile Include="Cls\Id.cs" />
     <Compile Include="Cls\IntExtensions.cs" />
+    <Compile Include="Cls\JulianDate.cs" />
     <Compile Include="Cls\Mef.cs" />
     <Compile Include="Cls\PocoExtension.cs" />
     <Compile Include="Cls\StringExtensions.cs" />
@@ -125,12 +127,13 @@
     <Compile Include="DB\RefAttribute.cs" />
     <Compile Include="DB\Sqlite.cs" />
     <Compile Include="DB\StorageRepo.cs" />
-    <Compile Include="GUI\DialogResultEnum.cs" />
+    <Compile Include="GUI\DekDialogResultEnum.cs" />
     <Compile Include="Helpers\PdfMarginBoxSettings.cs" />
     <Compile Include="InterOp\CodesEnum.cs" />
     <Compile Include="InterOp\Data.cs" />
     <Compile Include="ModelExtensions\CitationExtension.cs" />
     <Compile Include="ModelExtensions\ReferenceExtension.cs" />
+    <Compile Include="Models\AuthorWithType.cs" />
     <Compile Include="Models\Author.cs" />
     <Compile Include="Models\AuthorType.cs" />
     <Compile Include="Models\Book.cs" />
@@ -166,6 +169,8 @@
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="Services\Authors\AuthorService.cs" />
+    <Compile Include="ViewModels\AuthorsGridViewModel.cs" />
     <Compile Include="Services\Categories\CategoryEventArgs.cs" />
     <Compile Include="Services\Categories\CategoryService.cs" />
     <Compile Include="Services\Categories\ICategoryService.cs" />
@@ -177,7 +182,7 @@
     <Compile Include="Services\IPdfService.cs" />
     <Compile Include="Services\IStorageHelperService.cs" />
     <Compile Include="Services\IUserSettingsService.cs" />
-    <Compile Include="Services\ModelsForViewing.cs" />
+    <Compile Include="ViewModels\ModelsForViewing.cs" />
     <Compile Include="Services\PdfService.cs" />
     <Compile Include="Services\Report\Export\CsvExporter.cs" />
     <Compile Include="Services\Report\Export\ExcelExporter.cs" />
@@ -188,6 +193,7 @@
     <Compile Include="Services\Report\ReportDataCache.cs" />
     <Compile Include="Services\Report\ReportService.cs" />
     <Compile Include="Services\RichTextService.cs" />
+    <Compile Include="Services\SeriesService.cs" />
     <Compile Include="Services\StorageHelperService.cs" />
     <Compile Include="Services\StupidEncodingFixer.cs" />
     <Compile Include="Services\TempFileService.cs" />

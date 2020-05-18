@@ -127,6 +127,19 @@
     <Compile Include="FormAbout.Designer.cs">
       <DependentUpon>FormAbout.cs</DependentUpon>
     </Compile>
+    <Compile Include="Services\Authors\AuthorsGridService.cs" />
+    <Compile Include="Services\Authors\FormAddAuthor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Services\Authors\FormAddAuthor.Designer.cs">
+      <DependentUpon>FormAddAuthor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Services\Authors\FormAuthors.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Services\Authors\FormAuthors.Designer.cs">
+      <DependentUpon>FormAuthors.cs</DependentUpon>
+    </Compile>
     <Compile Include="Form_Outline.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -134,6 +147,12 @@
       <DependentUpon>Form_Outline.cs</DependentUpon>
     </Compile>
     <Compile Include="Helpers\GuiHelper.cs" />
+    <Compile Include="Services\Authors\FormEditAuthor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Services\Authors\FormEditAuthor.Designer.cs">
+      <DependentUpon>FormEditAuthor.cs</DependentUpon>
+    </Compile>
     <Compile Include="Services\Categories\CategoryLabelService.cs" />
     <Compile Include="Services\CitationPersisterService.cs" />
     <Compile Include="Services\CitationSelector\CitationSelectorService.cs" />
@@ -156,6 +175,12 @@
       <DependentUpon>FormVolume.cs</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyVersion.cs" />
+    <Compile Include="FormSeries.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormSeries.Designer.cs">
+      <DependentUpon>FormSeries.cs</DependentUpon>
+    </Compile>
     <Compile Include="Services\MainService.cs" />
     <Compile Include="Services\Reference\Form_AddReference.cs">
       <SubType>Form</SubType>
@@ -230,8 +255,17 @@
     <EmbeddedResource Include="FormAbout.resx">
       <DependentUpon>FormAbout.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Services\Authors\FormAddAuthor.resx">
+      <DependentUpon>FormAddAuthor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Services\Authors\FormAuthors.resx">
+      <DependentUpon>FormAuthors.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Form_Outline.resx">
       <DependentUpon>Form_Outline.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Services\Authors\FormEditAuthor.resx">
+      <DependentUpon>FormEditAuthor.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Services\CitationSelector\FormCitationSelector.resx">
       <DependentUpon>FormCitationSelector.cs</DependentUpon>
@@ -241,6 +275,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FormVolume.resx">
       <DependentUpon>FormVolume.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormSeries.resx">
+      <DependentUpon>FormSeries.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Services\Reference\Form_AddReference.resx">
       <DependentUpon>Form_AddReference.cs</DependentUpon>

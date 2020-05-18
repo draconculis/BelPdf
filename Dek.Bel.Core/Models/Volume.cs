@@ -19,5 +19,10 @@ namespace Dek.Bel.Core.Models
         // Draw all pdf boxes with this offset for this volume
         public int OffsetX { get; set; } = 0;
         public int OffsetY { get; set; } = 0;
+
+        public override string ToString()
+        {
+            return Title;
+        }
     }
 }

@@ -46,6 +46,10 @@ namespace Dek.Bel.Core.Services
 
             foreach (Citation cit in volumeService.Citations)
             {
+                // Yeah, somtimes illegal citations end up in the database.
+                if (cit.SelectionRects.Trim().Length < 5)
+                    continue;
+
                 var cat = m_CategoryService.GetMainCategory(cit.Id);
                 var citCat = m_CategoryService.GetMainCitationCategory(cit.Id);
 
@@ -135,13 +139,14 @@ namespace Dek.Bel.Core.Services
                             } while (true);
                         } while (notDone);
                     }
-                }
 
-                // Add annotation
-                AddMarginBox(pdfDoc, null, firstPageNo, cit.Id.ToString(), cat.Code + $" [{citCat.Weight}]", cit.SelectionRects,
-                    color_margin,
-                    cit.MarginBoxSettings,
-                    offset);
+                    // Add annotation
+                    AddMarginBox(pdfDoc, null, firstPageNo, cit.Id.ToString(), cat.Code + $" [{citCat.Weight}]", cit.SelectionRects,
+                        color_margin,
+                        cit.MarginBoxSettings,
+                        offset);
+                }// if pagerects.any
+
             }
             pdfDoc.Close(); // newFileTmp
             m_StorageHelperService.GetNextStorageFileName(vm.CurrentStorage);

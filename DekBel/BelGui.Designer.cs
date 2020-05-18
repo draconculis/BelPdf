@@ -82,6 +82,7 @@
             this.editRawCitationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showVolumeOutlineToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem_Report = new System.Windows.Forms.ToolStripMenuItem();
+            this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.closeToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabel_CitationSelector = new System.Windows.Forms.ToolStripStatusLabel();
@@ -111,6 +112,7 @@
             this.setWeight4ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.setWeight5ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
+            this.button_CopyCategoryColor = new System.Windows.Forms.Button();
             this.label26 = new System.Windows.Forms.Label();
             this.NumericUpDown_pdfMarginBoxWidth = new System.Windows.Forms.NumericUpDown();
             this.numericUpDown_borderThickness = new System.Windows.Forms.NumericUpDown();
@@ -163,6 +165,17 @@
             this.label9 = new System.Windows.Forms.Label();
             this.label1_MD5 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
+            this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.button_Series = new System.Windows.Forms.Button();
+            this.label_SeriesName = new System.Windows.Forms.Label();
+            this.label11 = new System.Windows.Forms.Label();
+            this.textBox_SeriesNote = new System.Windows.Forms.TextBox();
+            this.listBox_VolumesInSeries = new System.Windows.Forms.ListBox();
+            this.label31 = new System.Windows.Forms.Label();
+            this.tabPage5 = new System.Windows.Forms.TabPage();
+            this.button_authorRemove = new System.Windows.Forms.Button();
+            this.button_authorEdit = new System.Windows.Forms.Button();
+            this.button_authorAdd = new System.Windows.Forms.Button();
             this.label18 = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
             this.label_PdfHighlightColor = new System.Windows.Forms.Label();
@@ -170,7 +183,8 @@
             this.checkBox_right = new System.Windows.Forms.CheckBox();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
-            this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.tabPage6 = new System.Windows.Forms.TabPage();
+            this.dataGridView_Authors = new System.Windows.Forms.DataGridView();
             this.contextMenuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -200,6 +214,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_offsetY)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_offsetX)).BeginInit();
             this.tabPage2.SuspendLayout();
+            this.tabPage4.SuspendLayout();
+            this.tabPage5.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView_Authors)).BeginInit();
             this.SuspendLayout();
             // 
             // contextMenuStrip1
@@ -709,6 +726,13 @@
             this.toolStripMenuItem_Report.Text = "Report...";
             this.toolStripMenuItem_Report.Click += new System.EventHandler(this.ToolStripMenuItem_Report_Click);
             // 
+            // aboutToolStripMenuItem
+            // 
+            this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
+            this.aboutToolStripMenuItem.Text = "About...";
+            this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
+            // 
             // closeToolStripMenuItem1
             // 
             this.closeToolStripMenuItem1.Name = "closeToolStripMenuItem1";
@@ -774,9 +798,9 @@
             this.groupBox1.Controls.Add(this.comboBox_CategoryWeight);
             this.groupBox1.Controls.Add(this.textBox_CategorySearch);
             this.groupBox1.Controls.Add(this.flowLayoutPanel_Categories);
-            this.groupBox1.Location = new System.Drawing.Point(751, 7);
+            this.groupBox1.Location = new System.Drawing.Point(654, 7);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(437, 123);
+            this.groupBox1.Size = new System.Drawing.Size(534, 123);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Category";
@@ -784,9 +808,9 @@
             // button2
             // 
             this.button2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button2.Location = new System.Drawing.Point(405, 15);
+            this.button2.Location = new System.Drawing.Point(502, 15);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(24, 23);
+            this.button2.Size = new System.Drawing.Size(24, 25);
             this.button2.TabIndex = 4;
             this.button2.Text = "...";
             this.button2.UseVisualStyleBackColor = true;
@@ -795,9 +819,9 @@
             // button_CategoryAddCreate
             // 
             this.button_CategoryAddCreate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button_CategoryAddCreate.Location = new System.Drawing.Point(330, 15);
+            this.button_CategoryAddCreate.Location = new System.Drawing.Point(427, 15);
             this.button_CategoryAddCreate.Name = "button_CategoryAddCreate";
-            this.button_CategoryAddCreate.Size = new System.Drawing.Size(73, 23);
+            this.button_CategoryAddCreate.Size = new System.Drawing.Size(73, 25);
             this.button_CategoryAddCreate.TabIndex = 3;
             this.button_CategoryAddCreate.Text = "Add";
             this.button_CategoryAddCreate.UseVisualStyleBackColor = true;
@@ -808,7 +832,7 @@
             this.listBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.listBox1.FormattingEnabled = true;
             this.listBox1.ItemHeight = 15;
-            this.listBox1.Location = new System.Drawing.Point(34, 32);
+            this.listBox1.Location = new System.Drawing.Point(131, 32);
             this.listBox1.Name = "listBox1";
             this.listBox1.ScrollAlwaysVisible = true;
             this.listBox1.Size = new System.Drawing.Size(178, 64);
@@ -821,7 +845,7 @@
             // 
             this.label19.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label19.AutoSize = true;
-            this.label19.Location = new System.Drawing.Point(232, 20);
+            this.label19.Location = new System.Drawing.Point(329, 20);
             this.label19.Name = "label19";
             this.label19.Size = new System.Drawing.Size(46, 15);
             this.label19.TabIndex = 9999;
@@ -838,7 +862,7 @@
             "3",
             "4",
             "5"});
-            this.comboBox_CategoryWeight.Location = new System.Drawing.Point(287, 16);
+            this.comboBox_CategoryWeight.Location = new System.Drawing.Point(384, 16);
             this.comboBox_CategoryWeight.Name = "comboBox_CategoryWeight";
             this.comboBox_CategoryWeight.Size = new System.Drawing.Size(39, 23);
             this.comboBox_CategoryWeight.TabIndex = 2;
@@ -851,7 +875,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textBox_CategorySearch.Location = new System.Drawing.Point(10, 17);
             this.textBox_CategorySearch.Name = "textBox_CategorySearch";
-            this.textBox_CategorySearch.Size = new System.Drawing.Size(219, 23);
+            this.textBox_CategorySearch.Size = new System.Drawing.Size(316, 23);
             this.textBox_CategorySearch.TabIndex = 1;
             this.toolTip1.SetToolTip(this.textBox_CategorySearch, "To add category enter \"Code Name\" followed by enter");
             this.textBox_CategorySearch.TextChanged += new System.EventHandler(this.textBox_CategorySearch_TextChanged);
@@ -864,9 +888,10 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.flowLayoutPanel_Categories.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.flowLayoutPanel_Categories.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("flowLayoutPanel_Categories.BackgroundImage")));
             this.flowLayoutPanel_Categories.Location = new System.Drawing.Point(10, 41);
             this.flowLayoutPanel_Categories.Name = "flowLayoutPanel_Categories";
-            this.flowLayoutPanel_Categories.Size = new System.Drawing.Size(420, 77);
+            this.flowLayoutPanel_Categories.Size = new System.Drawing.Size(517, 77);
             this.flowLayoutPanel_Categories.TabIndex = 6;
             // 
             // textBox_volumePublicationDate
@@ -904,7 +929,7 @@
             this.textBox_Chapter.Location = new System.Drawing.Point(70, 76);
             this.textBox_Chapter.Name = "textBox_Chapter";
             this.textBox_Chapter.ReadOnly = true;
-            this.textBox_Chapter.Size = new System.Drawing.Size(419, 23);
+            this.textBox_Chapter.Size = new System.Drawing.Size(295, 23);
             this.textBox_Chapter.TabIndex = 7;
             this.textBox_Chapter.TextChanged += new System.EventHandler(this.textBox6_TextChanged);
             // 
@@ -923,7 +948,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textBox_VolumeTitle.Location = new System.Drawing.Point(70, 8);
             this.textBox_VolumeTitle.Name = "textBox_VolumeTitle";
-            this.textBox_VolumeTitle.Size = new System.Drawing.Size(419, 23);
+            this.textBox_VolumeTitle.Size = new System.Drawing.Size(295, 23);
             this.textBox_VolumeTitle.TabIndex = 0;
             this.textBox_VolumeTitle.Leave += new System.EventHandler(this.TextBox_VolumeTitle_Leave);
             // 
@@ -1005,6 +1030,7 @@
             // 
             // splitContainer2.Panel2
             // 
+            this.splitContainer2.Panel2.Controls.Add(this.button_CopyCategoryColor);
             this.splitContainer2.Panel2.Controls.Add(this.label26);
             this.splitContainer2.Panel2.Controls.Add(this.NumericUpDown_pdfMarginBoxWidth);
             this.splitContainer2.Panel2.Controls.Add(this.numericUpDown_borderThickness);
@@ -1034,11 +1060,22 @@
             this.splitContainer2.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.splitContainer2_SplitterMoved);
             this.splitContainer2.MouseClick += new System.Windows.Forms.MouseEventHandler(this.splitContainer2_MouseClick);
             // 
+            // button_CopyCategoryColor
+            // 
+            this.button_CopyCategoryColor.Location = new System.Drawing.Point(1096, 171);
+            this.button_CopyCategoryColor.Name = "button_CopyCategoryColor";
+            this.button_CopyCategoryColor.Size = new System.Drawing.Size(87, 25);
+            this.button_CopyCategoryColor.TabIndex = 37;
+            this.button_CopyCategoryColor.Text = "CopyCat";
+            this.toolTip1.SetToolTip(this.button_CopyCategoryColor, "Copy main category color");
+            this.button_CopyCategoryColor.UseVisualStyleBackColor = true;
+            this.button_CopyCategoryColor.Click += new System.EventHandler(this.button_CopyCategoryColor_Click);
+            // 
             // label26
             // 
             this.label26.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label26.AutoSize = true;
-            this.label26.Location = new System.Drawing.Point(915, 174);
+            this.label26.Location = new System.Drawing.Point(817, 174);
             this.label26.Name = "label26";
             this.label26.Size = new System.Drawing.Size(40, 15);
             this.label26.TabIndex = 36;
@@ -1047,7 +1084,7 @@
             // NumericUpDown_pdfMarginBoxWidth
             // 
             this.NumericUpDown_pdfMarginBoxWidth.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.NumericUpDown_pdfMarginBoxWidth.Location = new System.Drawing.Point(961, 172);
+            this.NumericUpDown_pdfMarginBoxWidth.Location = new System.Drawing.Point(863, 172);
             this.NumericUpDown_pdfMarginBoxWidth.Maximum = new decimal(new int[] {
             999,
             0,
@@ -1074,7 +1111,7 @@
             0,
             0,
             65536});
-            this.numericUpDown_borderThickness.Location = new System.Drawing.Point(1145, 172);
+            this.numericUpDown_borderThickness.Location = new System.Drawing.Point(1047, 172);
             this.numericUpDown_borderThickness.Maximum = new decimal(new int[] {
             9,
             0,
@@ -1091,7 +1128,7 @@
             // 
             this.label27.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label27.AutoSize = true;
-            this.label27.Location = new System.Drawing.Point(755, 199);
+            this.label27.Location = new System.Drawing.Point(657, 199);
             this.label27.Name = "label27";
             this.label27.Size = new System.Drawing.Size(33, 15);
             this.label27.TabIndex = 33;
@@ -1100,7 +1137,7 @@
             // numericUpDown_PdfBoxMargin
             // 
             this.numericUpDown_PdfBoxMargin.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.numericUpDown_PdfBoxMargin.Location = new System.Drawing.Point(865, 172);
+            this.numericUpDown_PdfBoxMargin.Location = new System.Drawing.Point(767, 172);
             this.numericUpDown_PdfBoxMargin.Maximum = new decimal(new int[] {
             999,
             0,
@@ -1126,7 +1163,7 @@
             this.comboBox_PdfBoxFont.ItemHeight = 15;
             this.comboBox_PdfBoxFont.Items.AddRange(new object[] {
             "Times-Roman"});
-            this.comboBox_PdfBoxFont.Location = new System.Drawing.Point(819, 196);
+            this.comboBox_PdfBoxFont.Location = new System.Drawing.Point(721, 196);
             this.comboBox_PdfBoxFont.Name = "comboBox_PdfBoxFont";
             this.comboBox_PdfBoxFont.Size = new System.Drawing.Size(270, 23);
             this.comboBox_PdfBoxFont.TabIndex = 25;
@@ -1140,9 +1177,9 @@
             this.comboBox_PdfMarginBoxDisplayMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBox_PdfMarginBoxDisplayMode.FormattingEnabled = true;
             this.comboBox_PdfMarginBoxDisplayMode.ItemHeight = 15;
-            this.comboBox_PdfMarginBoxDisplayMode.Location = new System.Drawing.Point(961, 131);
+            this.comboBox_PdfMarginBoxDisplayMode.Location = new System.Drawing.Point(1047, 131);
             this.comboBox_PdfMarginBoxDisplayMode.Name = "comboBox_PdfMarginBoxDisplayMode";
-            this.comboBox_PdfMarginBoxDisplayMode.Size = new System.Drawing.Size(227, 23);
+            this.comboBox_PdfMarginBoxDisplayMode.Size = new System.Drawing.Size(135, 23);
             this.comboBox_PdfMarginBoxDisplayMode.TabIndex = 28;
             this.toolTip1.SetToolTip(this.comboBox_PdfMarginBoxDisplayMode, "Select display mode");
             this.comboBox_PdfMarginBoxDisplayMode.SelectedIndexChanged += new System.EventHandler(this.ComboBox_PdfMarginBoxDisplayMode_SelectedIndexChanged);
@@ -1151,7 +1188,7 @@
             // numericUpDown_FontSize
             // 
             this.numericUpDown_FontSize.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.numericUpDown_FontSize.Location = new System.Drawing.Point(1145, 197);
+            this.numericUpDown_FontSize.Location = new System.Drawing.Point(1047, 197);
             this.numericUpDown_FontSize.Maximum = new decimal(new int[] {
             31,
             0,
@@ -1178,7 +1215,7 @@
             // 
             this.label25.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label25.AutoSize = true;
-            this.label25.Location = new System.Drawing.Point(865, 135);
+            this.label25.Location = new System.Drawing.Point(950, 135);
             this.label25.Name = "label25";
             this.label25.Size = new System.Drawing.Size(80, 15);
             this.label25.TabIndex = 27;
@@ -1188,7 +1225,7 @@
             // 
             this.label24.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label24.AutoSize = true;
-            this.label24.Location = new System.Drawing.Point(1097, 201);
+            this.label24.Location = new System.Drawing.Point(999, 201);
             this.label24.Name = "label24";
             this.label24.Size = new System.Drawing.Size(41, 15);
             this.label24.TabIndex = 24;
@@ -1197,7 +1234,7 @@
             // label22
             // 
             this.label22.AutoSize = true;
-            this.label22.Location = new System.Drawing.Point(865, 199);
+            this.label22.Location = new System.Drawing.Point(767, 199);
             this.label22.Name = "label22";
             this.label22.Size = new System.Drawing.Size(33, 15);
             this.label22.TabIndex = 22;
@@ -1207,7 +1244,7 @@
             // 
             this.label21.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label21.AutoSize = true;
-            this.label21.Location = new System.Drawing.Point(1096, 175);
+            this.label21.Location = new System.Drawing.Point(998, 175);
             this.label21.Name = "label21";
             this.label21.Size = new System.Drawing.Size(43, 15);
             this.label21.TabIndex = 20;
@@ -1217,7 +1254,7 @@
             // 
             this.label20.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label20.AutoSize = true;
-            this.label20.Location = new System.Drawing.Point(754, 175);
+            this.label20.Location = new System.Drawing.Point(656, 175);
             this.label20.Name = "label20";
             this.label20.Size = new System.Drawing.Size(45, 15);
             this.label20.TabIndex = 19;
@@ -1231,7 +1268,7 @@
             this.label_PdfMarginBoxColor.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.label_PdfMarginBoxColor.Cursor = System.Windows.Forms.Cursors.Hand;
             this.label_PdfMarginBoxColor.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label_PdfMarginBoxColor.Location = new System.Drawing.Point(819, 175);
+            this.label_PdfMarginBoxColor.Location = new System.Drawing.Point(721, 175);
             this.label_PdfMarginBoxColor.Name = "label_PdfMarginBoxColor";
             this.label_PdfMarginBoxColor.Size = new System.Drawing.Size(40, 20);
             this.label_PdfMarginBoxColor.TabIndex = 18;
@@ -1246,12 +1283,15 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tabControl1.Controls.Add(this.tabPage3);
+            this.tabControl1.Controls.Add(this.tabPage4);
             this.tabControl1.Controls.Add(this.tabPage1);
+            this.tabControl1.Controls.Add(this.tabPage6);
+            this.tabControl1.Controls.Add(this.tabPage5);
             this.tabControl1.Controls.Add(this.tabPage2);
             this.tabControl1.Location = new System.Drawing.Point(2, 2);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(750, 222);
+            this.tabControl1.Size = new System.Drawing.Size(646, 222);
             this.tabControl1.TabIndex = 0;
             // 
             // tabPage3
@@ -1272,7 +1312,7 @@
             this.tabPage3.Controls.Add(this.label14);
             this.tabPage3.Location = new System.Drawing.Point(4, 24);
             this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Size = new System.Drawing.Size(742, 194);
+            this.tabPage3.Size = new System.Drawing.Size(638, 194);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Citation";
             this.tabPage3.UseVisualStyleBackColor = true;
@@ -1283,7 +1323,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.label_volumeTitle.Location = new System.Drawing.Point(73, 107);
             this.label_volumeTitle.Name = "label_volumeTitle";
-            this.label_volumeTitle.Size = new System.Drawing.Size(661, 15);
+            this.label_volumeTitle.Size = new System.Drawing.Size(557, 15);
             this.label_volumeTitle.TabIndex = 36;
             this.label_volumeTitle.Text = "-";
             // 
@@ -1314,7 +1354,7 @@
             this.textBox_CitationNotes.Location = new System.Drawing.Point(3, 17);
             this.textBox_CitationNotes.Multiline = true;
             this.textBox_CitationNotes.Name = "textBox_CitationNotes";
-            this.textBox_CitationNotes.Size = new System.Drawing.Size(736, 86);
+            this.textBox_CitationNotes.Size = new System.Drawing.Size(632, 78);
             this.textBox_CitationNotes.TabIndex = 32;
             this.textBox_CitationNotes.Leave += new System.EventHandler(this.TextBox_CitationNotes_Leave);
             // 
@@ -1375,7 +1415,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.label_CitationStop.Location = new System.Drawing.Point(73, 139);
             this.label_CitationStop.Name = "label_CitationStop";
-            this.label_CitationStop.Size = new System.Drawing.Size(661, 15);
+            this.label_CitationStop.Size = new System.Drawing.Size(557, 15);
             this.label_CitationStop.TabIndex = 25;
             this.label_CitationStop.Text = "-";
             // 
@@ -1394,7 +1434,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.label_citationStart.Location = new System.Drawing.Point(73, 123);
             this.label_citationStart.Name = "label_citationStart";
-            this.label_citationStart.Size = new System.Drawing.Size(661, 15);
+            this.label_citationStart.Size = new System.Drawing.Size(557, 15);
             this.label_citationStart.TabIndex = 23;
             this.label_citationStart.Text = "-";
             // 
@@ -1414,7 +1454,7 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 24);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(742, 194);
+            this.tabPage1.Size = new System.Drawing.Size(638, 194);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Volume";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -1451,8 +1491,8 @@
             // 
             this.splitContainer_Volume.Panel2.Controls.Add(this.label4);
             this.splitContainer_Volume.Panel2.Controls.Add(this.textBox_VolumeNotes);
-            this.splitContainer_Volume.Size = new System.Drawing.Size(742, 196);
-            this.splitContainer_Volume.SplitterDistance = 494;
+            this.splitContainer_Volume.Size = new System.Drawing.Size(638, 196);
+            this.splitContainer_Volume.SplitterDistance = 370;
             this.splitContainer_Volume.TabIndex = 32;
             // 
             // numericUpDown_offsetY
@@ -1523,7 +1563,7 @@
             this.textBox_Paragraph.Location = new System.Drawing.Point(70, 121);
             this.textBox_Paragraph.Name = "textBox_Paragraph";
             this.textBox_Paragraph.ReadOnly = true;
-            this.textBox_Paragraph.Size = new System.Drawing.Size(419, 23);
+            this.textBox_Paragraph.Size = new System.Drawing.Size(295, 23);
             this.textBox_Paragraph.TabIndex = 30;
             // 
             // textBox_Book
@@ -1533,7 +1573,7 @@
             this.textBox_Book.Location = new System.Drawing.Point(70, 53);
             this.textBox_Book.Name = "textBox_Book";
             this.textBox_Book.ReadOnly = true;
-            this.textBox_Book.Size = new System.Drawing.Size(419, 23);
+            this.textBox_Book.Size = new System.Drawing.Size(295, 23);
             this.textBox_Book.TabIndex = 29;
             this.textBox_Book.TextChanged += new System.EventHandler(this.TextBox_Book_TextChanged);
             // 
@@ -1544,7 +1584,7 @@
             this.textBox_SubChapter.Location = new System.Drawing.Point(70, 98);
             this.textBox_SubChapter.Name = "textBox_SubChapter";
             this.textBox_SubChapter.ReadOnly = true;
-            this.textBox_SubChapter.Size = new System.Drawing.Size(419, 23);
+            this.textBox_SubChapter.Size = new System.Drawing.Size(295, 23);
             this.textBox_SubChapter.TabIndex = 22;
             // 
             // label5
@@ -1562,7 +1602,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.label4.Location = new System.Drawing.Point(3, 7);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(235, 14);
+            this.label4.Size = new System.Drawing.Size(255, 14);
             this.label4.TabIndex = 27;
             this.label4.Text = "Volume notes";
             // 
@@ -1571,12 +1611,13 @@
             this.textBox_VolumeNotes.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBox_VolumeNotes.BackColor = System.Drawing.SystemColors.Info;
             this.textBox_VolumeNotes.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.textBox_VolumeNotes.Location = new System.Drawing.Point(3, 26);
             this.textBox_VolumeNotes.Multiline = true;
             this.textBox_VolumeNotes.Name = "textBox_VolumeNotes";
             this.textBox_VolumeNotes.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBox_VolumeNotes.Size = new System.Drawing.Size(238, 164);
+            this.textBox_VolumeNotes.Size = new System.Drawing.Size(258, 164);
             this.textBox_VolumeNotes.TabIndex = 0;
             this.textBox_VolumeNotes.Leave += new System.EventHandler(this.TextBox_VolumeTitle_Leave);
             // 
@@ -1591,7 +1632,7 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 24);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(742, 194);
+            this.tabPage2.Size = new System.Drawing.Size(638, 194);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "File";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -1602,7 +1643,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.label_storageName.Location = new System.Drawing.Point(118, 30);
             this.label_storageName.Name = "label_storageName";
-            this.label_storageName.Size = new System.Drawing.Size(600, 15);
+            this.label_storageName.Size = new System.Drawing.Size(496, 15);
             this.label_storageName.TabIndex = 35;
             this.label_storageName.Text = "-";
             // 
@@ -1612,7 +1653,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.label_fileName.Location = new System.Drawing.Point(118, 8);
             this.label_fileName.Name = "label_fileName";
-            this.label_fileName.Size = new System.Drawing.Size(600, 15);
+            this.label_fileName.Size = new System.Drawing.Size(496, 15);
             this.label_fileName.TabIndex = 34;
             this.label_fileName.Text = "-";
             // 
@@ -1645,6 +1686,7 @@
             this.label1_MD5.Size = new System.Drawing.Size(259, 15);
             this.label1_MD5.TabIndex = 30;
             this.label1_MD5.Text = "00000000-0000-0000-0000-000000000000";
+            this.toolTip1.SetToolTip(this.label1_MD5, "MD5 is a fingerprint which uniquely identifies a file.");
             // 
             // label7
             // 
@@ -1656,10 +1698,134 @@
             this.label7.Text = "File MD5";
             this.label7.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
+            // tabPage4
+            // 
+            this.tabPage4.Controls.Add(this.button_Series);
+            this.tabPage4.Controls.Add(this.label_SeriesName);
+            this.tabPage4.Controls.Add(this.label11);
+            this.tabPage4.Controls.Add(this.textBox_SeriesNote);
+            this.tabPage4.Controls.Add(this.listBox_VolumesInSeries);
+            this.tabPage4.Controls.Add(this.label31);
+            this.tabPage4.Location = new System.Drawing.Point(4, 24);
+            this.tabPage4.Name = "tabPage4";
+            this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage4.Size = new System.Drawing.Size(638, 194);
+            this.tabPage4.TabIndex = 3;
+            this.tabPage4.Text = "Series";
+            this.tabPage4.UseVisualStyleBackColor = true;
+            // 
+            // button_Series
+            // 
+            this.button_Series.Location = new System.Drawing.Point(529, 7);
+            this.button_Series.Name = "button_Series";
+            this.button_Series.Size = new System.Drawing.Size(102, 23);
+            this.button_Series.TabIndex = 34;
+            this.button_Series.Text = "Series...";
+            this.button_Series.UseVisualStyleBackColor = true;
+            this.button_Series.Click += new System.EventHandler(this.button_Series_Click);
+            // 
+            // label_SeriesName
+            // 
+            this.label_SeriesName.Font = new System.Drawing.Font("Corbel", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label_SeriesName.Location = new System.Drawing.Point(6, 7);
+            this.label_SeriesName.Name = "label_SeriesName";
+            this.label_SeriesName.Size = new System.Drawing.Size(517, 46);
+            this.label_SeriesName.TabIndex = 33;
+            this.label_SeriesName.Text = "Series";
+            // 
+            // label11
+            // 
+            this.label11.Location = new System.Drawing.Point(322, 53);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(309, 14);
+            this.label11.TabIndex = 32;
+            this.label11.Text = "Series notes";
+            this.label11.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // textBox_SeriesNote
+            // 
+            this.textBox_SeriesNote.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBox_SeriesNote.BackColor = System.Drawing.SystemColors.Info;
+            this.textBox_SeriesNote.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.textBox_SeriesNote.Location = new System.Drawing.Point(322, 70);
+            this.textBox_SeriesNote.Multiline = true;
+            this.textBox_SeriesNote.Name = "textBox_SeriesNote";
+            this.textBox_SeriesNote.ReadOnly = true;
+            this.textBox_SeriesNote.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.textBox_SeriesNote.Size = new System.Drawing.Size(309, 124);
+            this.textBox_SeriesNote.TabIndex = 31;
+            // 
+            // listBox_VolumesInSeries
+            // 
+            this.listBox_VolumesInSeries.FormattingEnabled = true;
+            this.listBox_VolumesInSeries.ItemHeight = 15;
+            this.listBox_VolumesInSeries.Location = new System.Drawing.Point(6, 70);
+            this.listBox_VolumesInSeries.Name = "listBox_VolumesInSeries";
+            this.listBox_VolumesInSeries.ScrollAlwaysVisible = true;
+            this.listBox_VolumesInSeries.Size = new System.Drawing.Size(309, 124);
+            this.listBox_VolumesInSeries.TabIndex = 30;
+            // 
+            // label31
+            // 
+            this.label31.Location = new System.Drawing.Point(6, 53);
+            this.label31.Name = "label31";
+            this.label31.Size = new System.Drawing.Size(309, 14);
+            this.label31.TabIndex = 29;
+            this.label31.Text = "Other Volumes in this series";
+            this.label31.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // tabPage5
+            // 
+            this.tabPage5.Controls.Add(this.dataGridView_Authors);
+            this.tabPage5.Controls.Add(this.button_authorRemove);
+            this.tabPage5.Controls.Add(this.button_authorEdit);
+            this.tabPage5.Controls.Add(this.button_authorAdd);
+            this.tabPage5.Location = new System.Drawing.Point(4, 24);
+            this.tabPage5.Name = "tabPage5";
+            this.tabPage5.Size = new System.Drawing.Size(638, 194);
+            this.tabPage5.TabIndex = 4;
+            this.tabPage5.Text = "Authors";
+            this.tabPage5.UseVisualStyleBackColor = true;
+            // 
+            // button_authorRemove
+            // 
+            this.button_authorRemove.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.button_authorRemove.Location = new System.Drawing.Point(125, 160);
+            this.button_authorRemove.Name = "button_authorRemove";
+            this.button_authorRemove.Size = new System.Drawing.Size(115, 25);
+            this.button_authorRemove.TabIndex = 3;
+            this.button_authorRemove.Text = "Remove";
+            this.button_authorRemove.UseVisualStyleBackColor = true;
+            this.button_authorRemove.Click += new System.EventHandler(this.button_authorRemove_Click);
+            // 
+            // button_authorEdit
+            // 
+            this.button_authorEdit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.button_authorEdit.Location = new System.Drawing.Point(520, 160);
+            this.button_authorEdit.Name = "button_authorEdit";
+            this.button_authorEdit.Size = new System.Drawing.Size(115, 25);
+            this.button_authorEdit.TabIndex = 10;
+            this.button_authorEdit.Text = "Authors...";
+            this.button_authorEdit.UseVisualStyleBackColor = true;
+            this.button_authorEdit.Click += new System.EventHandler(this.button_authorEdit_Click);
+            // 
+            // button_authorAdd
+            // 
+            this.button_authorAdd.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.button_authorAdd.Location = new System.Drawing.Point(4, 160);
+            this.button_authorAdd.Name = "button_authorAdd";
+            this.button_authorAdd.Size = new System.Drawing.Size(115, 25);
+            this.button_authorAdd.TabIndex = 2;
+            this.button_authorAdd.Text = "Add";
+            this.button_authorAdd.UseVisualStyleBackColor = true;
+            this.button_authorAdd.Click += new System.EventHandler(this.button_authorAdd_Click);
+            // 
             // label18
             // 
             this.label18.AutoSize = true;
-            this.label18.Location = new System.Drawing.Point(754, 156);
+            this.label18.Location = new System.Drawing.Point(765, 135);
             this.label18.Name = "label18";
             this.label18.Size = new System.Drawing.Size(59, 15);
             this.label18.TabIndex = 15;
@@ -1669,7 +1835,7 @@
             // 
             this.label12.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(754, 135);
+            this.label12.Location = new System.Drawing.Point(656, 135);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(58, 15);
             this.label12.TabIndex = 14;
@@ -1682,7 +1848,7 @@
             this.label_PdfHighlightColor.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.label_PdfHighlightColor.Cursor = System.Windows.Forms.Cursors.Hand;
             this.label_PdfHighlightColor.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label_PdfHighlightColor.Location = new System.Drawing.Point(819, 131);
+            this.label_PdfHighlightColor.Location = new System.Drawing.Point(721, 131);
             this.label_PdfHighlightColor.Name = "label_PdfHighlightColor";
             this.label_PdfHighlightColor.Size = new System.Drawing.Size(40, 19);
             this.label_PdfHighlightColor.TabIndex = 12;
@@ -1696,11 +1862,11 @@
             this.label_PdfUnderLineColor.BackColor = System.Drawing.Color.White;
             this.label_PdfUnderLineColor.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.label_PdfUnderLineColor.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.label_PdfUnderLineColor.Font = new System.Drawing.Font("Times New Roman", 12F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label_PdfUnderLineColor.Font = new System.Drawing.Font("Times New Roman", 9.75F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label_PdfUnderLineColor.ForeColor = System.Drawing.Color.DarkRed;
-            this.label_PdfUnderLineColor.Location = new System.Drawing.Point(819, 152);
+            this.label_PdfUnderLineColor.Location = new System.Drawing.Point(830, 131);
             this.label_PdfUnderLineColor.Name = "label_PdfUnderLineColor";
-            this.label_PdfUnderLineColor.Size = new System.Drawing.Size(40, 21);
+            this.label_PdfUnderLineColor.Size = new System.Drawing.Size(32, 18);
             this.label_PdfUnderLineColor.TabIndex = 13;
             this.label_PdfUnderLineColor.Text = "__";
             this.label_PdfUnderLineColor.TextAlign = System.Drawing.ContentAlignment.TopCenter;
@@ -1711,7 +1877,7 @@
             // 
             this.checkBox_right.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.checkBox_right.AutoSize = true;
-            this.checkBox_right.Location = new System.Drawing.Point(1010, 174);
+            this.checkBox_right.Location = new System.Drawing.Point(912, 174);
             this.checkBox_right.Name = "checkBox_right";
             this.checkBox_right.Size = new System.Drawing.Size(80, 19);
             this.checkBox_right.TabIndex = 30;
@@ -1720,12 +1886,39 @@
             this.checkBox_right.UseVisualStyleBackColor = true;
             this.checkBox_right.CheckedChanged += new System.EventHandler(this.CheckBox1_CheckedChanged);
             // 
-            // aboutToolStripMenuItem
+            // tabPage6
             // 
-            this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
-            this.aboutToolStripMenuItem.Text = "About...";
-            this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
+            this.tabPage6.Location = new System.Drawing.Point(4, 24);
+            this.tabPage6.Name = "tabPage6";
+            this.tabPage6.Size = new System.Drawing.Size(638, 194);
+            this.tabPage6.TabIndex = 5;
+            this.tabPage6.Text = "Books";
+            this.tabPage6.UseVisualStyleBackColor = true;
+            // 
+            // dataGridView_Authors
+            // 
+            this.dataGridView_Authors.AllowUserToAddRows = false;
+            this.dataGridView_Authors.AllowUserToDeleteRows = false;
+            this.dataGridView_Authors.AllowUserToOrderColumns = true;
+            this.dataGridView_Authors.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dataGridView_Authors.BackgroundColor = System.Drawing.Color.WhiteSmoke;
+            this.dataGridView_Authors.ClipboardCopyMode = System.Windows.Forms.DataGridViewClipboardCopyMode.EnableWithoutHeaderText;
+            this.dataGridView_Authors.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
+            this.dataGridView_Authors.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView_Authors.GridColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.dataGridView_Authors.Location = new System.Drawing.Point(4, 4);
+            this.dataGridView_Authors.Name = "dataGridView_Authors";
+            this.dataGridView_Authors.RowHeadersVisible = false;
+            this.dataGridView_Authors.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dataGridView_Authors.ShowCellErrors = false;
+            this.dataGridView_Authors.ShowEditingIcon = false;
+            this.dataGridView_Authors.ShowRowErrors = false;
+            this.dataGridView_Authors.Size = new System.Drawing.Size(631, 150);
+            this.dataGridView_Authors.StandardTab = true;
+            this.dataGridView_Authors.TabIndex = 1;
+            this.toolTip1.SetToolTip(this.dataGridView_Authors, "Authors, translators and editors etc for this volume.");
             // 
             // BelGui
             // 
@@ -1781,6 +1974,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_offsetX)).EndInit();
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
+            this.tabPage4.ResumeLayout(false);
+            this.tabPage4.PerformLayout();
+            this.tabPage5.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView_Authors)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1928,5 +2125,19 @@
         private System.Windows.Forms.ToolStripButton toolStripButton1;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator6;
         private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
+        private System.Windows.Forms.Button button_CopyCategoryColor;
+        private System.Windows.Forms.TabPage tabPage4;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.TextBox textBox_SeriesNote;
+        private System.Windows.Forms.ListBox listBox_VolumesInSeries;
+        private System.Windows.Forms.Label label31;
+        private System.Windows.Forms.Button button_Series;
+        private System.Windows.Forms.Label label_SeriesName;
+        private System.Windows.Forms.TabPage tabPage5;
+        private System.Windows.Forms.Button button_authorRemove;
+        private System.Windows.Forms.Button button_authorEdit;
+        private System.Windows.Forms.Button button_authorAdd;
+        private System.Windows.Forms.TabPage tabPage6;
+        private System.Windows.Forms.DataGridView dataGridView_Authors;
     }
 }

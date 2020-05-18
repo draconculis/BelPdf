@@ -3,9 +3,13 @@ using Dek.Cls;
 using Dek.Bel.Core.Models;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
+using Dek.Bel.Core.ViewModels;
 
 namespace Dek.Bel.Core.Services
 {
+    /// <summary>
+    /// Collection class for common GUI state objects (current citation etc)
+    /// </summary>
     [Export]
     public class ModelsForViewing
     {
@@ -16,6 +20,9 @@ namespace Dek.Bel.Core.Services
 
         public List<DekRange> Emphasis { get; set; } = new List<DekRange>();
         public List<DekRange> Exclusion { get; set; } = new List<DekRange>();
+
+        // This is a list of authors for the current volume
+        public List<AuthorsGridViewModel> Authors { get; set; } = new List<AuthorsGridViewModel>();
 
         public void InitCitationData()
         {

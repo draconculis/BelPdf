@@ -55,6 +55,7 @@
     <Compile Include="Cls\ArrayStuff_SplitArrayIntoPageAndrects_Tests.cs" />
     <Compile Include="Cls\DekRangeListSubtractTest.cs" />
     <Compile Include="Cls\DekRangeListTestHelper.cs" />
+    <Compile Include="Cls\JulianDate\JulianDate.cs" />
     <Compile Include="Cls\TextRangeListTest.cs" />
     <Compile Include="Cls\TextRangeTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -73,6 +74,7 @@
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

@@ -344,6 +344,25 @@
   <metadata name="toolTip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>1022, 17</value>
   </metadata>
+  <data name="flowLayoutPanel_Categories.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABEAAAE3CAYAAABM76plAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
+        wwAADsMBx2+oZAAAAxRJREFUeF7t1cdSm0EQReF+/wcxOGBsbGxMzjkICUROEjkIlAgitO9ey9OLqb+0
+        +Lru6ixn7O3DnYqJvOpQmYu8a0DZi3xoMNbSoTqRdp1IO3vR+0Z1Iu06kXYxkWcdKiryrsFkLqJ/kEoo
+        8qRDdSLtYiKPOpQ9tjSgmEiz9eZUUORFA7KGDpVQpK5DWf1ZA7KaDqXIqwaTUKT69OpUTORBhwqKPGpA
+        dq9DKdLSYGIilWbLqYQidzpUUKShAdmtDqXIiwZjNzpUUKSuAcVErnWomMhV7cWphCKXtWengiJVDcgu
+        dKiEIucPz05FRZ40GDvToWIip/dPTiUUKetQVq48OhUTKelQVrrTgBRpajAxkZPbplNRkYYGY8c3DaeS
+        itQ1GDu6rjuVtcjhVc2phCIHlzWnFKlqMAlF9i+qTinyoMHERPbOH5xKKLJ7du9U1iI7pxWnEopslytO
+        KXKnwcREtkp3TkVFbjUYK+pQVjzRgGxTh7LNYw1IkRsNJiaycXTjVEykcHTtlBUONaCYSF6HsvzBlVMx
+        kXUdytb3NSDL7V86Zbk9DSgmsqZDBUV2L5yyVR0qJrKyc+GUIucajK1sa0AxkWUdypa3zpyyJR0qKFLU
+        gGyxeOpUUGRTA7IFHUqRsgZj8xtlpxKKzOlQNlcoORUTmdWhEorM5EtOKXKiwcREpnUom17XgGxKh1Lk
+        WIOJiUzmjp1KKDKRO3IqKLKmAdm4DhUTGdOhFDnUYGxsVQOKiYzqUAlFRlYOnIqJDOtQCUWGlvedSigy
+        qEMFRZY0IEX2NBj7p0PFRAZ0KBtY1IBiIn8Xd50KiixoQPZHh4qK7Ggw1q9DWf+8BhQT+a1DRUW2NRj7
+        NbftVEKRPh1KkS0NxvpmNSD7qUNlLfJjZsupqEhRg0kpMq0BWa8O1Ym0s96pTafsuw6VucikBhQT6dGh
+        oiIbGoz1TGhACUW+6VApRcY1oJjI1/GCU5mLjGlACUW+6FBBkdG8UzGRzzpUUGREA8papFuHsu7hdac6
+        kXbWpUNZ15AGlL1IToOxT4M5Z3L+HwGLLuI/OtiCAAAAAElFTkSuQmCC
+</value>
+  </data>
   <metadata name="contextMenuStrip_Category.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>664, 17</value>
   </metadata>
@@ -354,7 +373,7 @@
     <value>1321, 17</value>
   </metadata>
   <metadata name="$this.TrayHeight" type="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>73</value>
+    <value>101</value>
   </metadata>
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>

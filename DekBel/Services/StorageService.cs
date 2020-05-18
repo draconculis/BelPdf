@@ -53,6 +53,8 @@ namespace Dek.Bel.Services
             if(VM.CurrentStorage == null)
                 VM.CurrentStorage = storage;
 
+            VM.CurrentStorage.FilePath = srcPath;
+
             // Hmm file in store has been removed (this is not bad) - recreate it.
             if (!File.Exists(Path.Combine(UserSettingsService.StorageFolder, storage.StorageName)))
             {
