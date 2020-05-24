@@ -8,7 +8,7 @@ namespace Dek.Bel.Core.Services
         public int Idx { get; set; }
         public Id VolumeId { get; set; }
         public string VolumeTitle { get; set; }
-        public DateTime PublicationDate { get; set; }
+        public string PublicationDate { get; set; }
 
         public Id CitationId { get; set; }
         public int Page { get; set; }

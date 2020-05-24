@@ -45,7 +45,7 @@
             this.dataGridView1.Location = new System.Drawing.Point(14, 14);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.Size = new System.Drawing.Size(731, 270);
-            this.dataGridView1.TabIndex = 0;
+            this.dataGridView1.TabIndex = 10;
             // 
             // comboBox1
             // 
@@ -61,7 +61,7 @@
             this.comboBox1.Location = new System.Drawing.Point(126, 289);
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(261, 27);
-            this.comboBox1.TabIndex = 1;
+            this.comboBox1.TabIndex = 100;
             // 
             // label1
             // 
@@ -78,7 +78,7 @@
             this.button_cancel.Location = new System.Drawing.Point(468, 290);
             this.button_cancel.Name = "button_cancel";
             this.button_cancel.Size = new System.Drawing.Size(134, 24);
-            this.button_cancel.TabIndex = 3;
+            this.button_cancel.TabIndex = 200;
             this.button_cancel.Text = "Cancel";
             this.button_cancel.UseVisualStyleBackColor = true;
             this.button_cancel.Click += new System.EventHandler(this.button_cancel_Click);
@@ -88,7 +88,7 @@
             this.button_ok.Location = new System.Drawing.Point(611, 290);
             this.button_ok.Name = "button_ok";
             this.button_ok.Size = new System.Drawing.Size(134, 24);
-            this.button_ok.TabIndex = 4;
+            this.button_ok.TabIndex = 210;
             this.button_ok.Text = "Add";
             this.button_ok.UseVisualStyleBackColor = true;
             this.button_ok.Click += new System.EventHandler(this.button_ok_Click);

@@ -46,7 +46,7 @@
             this.buttonOK.Location = new System.Drawing.Point(282, 131);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(92, 24);
-            this.buttonOK.TabIndex = 0;
+            this.buttonOK.TabIndex = 100;
             this.buttonOK.Text = "OK";
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.buttonOK_Click);
@@ -58,7 +58,7 @@
             this.buttonCancel.Location = new System.Drawing.Point(380, 131);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(92, 24);
-            this.buttonCancel.TabIndex = 1;
+            this.buttonCancel.TabIndex = 110;
             this.buttonCancel.Text = "Cancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
             this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
@@ -106,7 +106,7 @@
             this.textBoxDesc.Name = "textBoxDesc";
             this.textBoxDesc.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.textBoxDesc.Size = new System.Drawing.Size(467, 56);
-            this.textBoxDesc.TabIndex = 306;
+            this.textBoxDesc.TabIndex = 30;
             // 
             // textBoxName
             // 
@@ -116,7 +116,7 @@
             this.textBoxName.Location = new System.Drawing.Point(162, 24);
             this.textBoxName.Name = "textBoxName";
             this.textBoxName.Size = new System.Drawing.Size(309, 21);
-            this.textBoxName.TabIndex = 305;
+            this.textBoxName.TabIndex = 20;
             this.textBoxName.TextChanged += new System.EventHandler(this.textBoxName_TextChanged);
             // 
             // textBoxCode
@@ -124,7 +124,7 @@
             this.textBoxCode.Location = new System.Drawing.Point(5, 24);
             this.textBoxCode.Name = "textBoxCode";
             this.textBoxCode.Size = new System.Drawing.Size(145, 21);
-            this.textBoxCode.TabIndex = 304;
+            this.textBoxCode.TabIndex = 10;
             this.textBoxCode.TextChanged += new System.EventHandler(this.textBoxCode_TextChanged);
             // 
             // label_warn

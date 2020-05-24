@@ -182,6 +182,165 @@ namespace Dek.Bel.Core.Cls
             return Weekdays[ToWeekDayNbr(julianDate)];
         }
 
+        public static bool IsValidSaneDate(string me)
+        {
+            // fail fast
+            string trim = me.Trim().Replace("    ", " ").Replace("   ", " ").Replace("  ", " ");
+            if (trim.Length < 1)
+                return false;
+
+            bool bc = false;
+            bool ad = false;
+            if (trim.ToLower().Contains("bc")
+                || trim.ToLower().Contains("b.c.")
+                || trim.ToLower().Contains("bce")
+                || trim.ToLower().Contains("b.c.e.")
+                )
+            {
+                trim = trim
+                    .Replace("b.c.e.", "")
+                    .Replace("B.C.E.", "")
+                    .Replace("bce", "")
+                    .Replace("BCE", "")
+                    .Replace("b.c.", "")
+                    .Replace("B.C.", "")
+                    .Replace("bc", "")
+                    .Replace("BC", "")
+                    .Trim();
+                bc = true;
+            }
+
+            // Do NOT allow negative year, as this clashes with '-' separator
+            if (trim.ToLower().StartsWith("-"))
+                return false;
+
+            if (trim.ToLower().Contains("ad")
+                || trim.ToLower().Contains("a.d.")
+                || trim.ToLower().Contains("ce")
+                || trim.ToLower().Contains("c.e.")
+                )
+            {
+                trim = trim
+                    .Replace("a.d.", "")
+                    .Replace("A.D.", "")
+                    .Replace("ad", "")
+                    .Replace("AD", "")
+                    .Replace("ce", "")
+                    .Replace("CE", "")
+                    .Replace("c.e.", "")
+                    .Replace("C.E.", "")
+                    .Trim();
+                ad = true;
+            }
+
+            if (ad && bc)
+                return false;
+
+            // Valid chars
+            foreach (char c in trim.ToLower())
+            {
+                if (!" 1234567890-:.".Contains(c))
+                    return false;
+            }
+
+            string[] dateParts = trim.Split(new[] {' ', '-', ':'});
+
+            // First datepart always year
+            int year;
+            try
+            {
+                year = int.Parse(dateParts[0]);
+                if (year == 0)
+                    return false;
+                if (dateParts.Length == 1)
+                    return true;
+            }
+            catch
+            {
+                return false;
+            }
+
+            if (bc)
+                year = -year;
+
+            // Second should be month
+            int month;
+            try
+            {
+                // Enforce 2 digit month
+                if (dateParts[1].Length != 2)
+                    return false;
+
+                month = int.Parse(dateParts[1]);
+                if (month < 1 || month > 12)
+                    return false;
+                if (dateParts.Length == 2)
+                    return true;
+            }
+            catch
+            {
+                return false;
+            }
+
+            // Third should be day
+            int day;
+            int[] daysOfMonth = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+            try
+            {
+                // Enforce 2 digit day
+                if (dateParts[2].Length != 2)
+                    return false;
+
+                day = int.Parse(dateParts[2]);
+                if (day < 1) // definitely wrong
+                    return false;
+
+                if (IsLeapYear(year) && month == 2 && day > 29)
+                    return false;
+
+                if (day > daysOfMonth[month])
+                    return false;
+
+                if (dateParts.Length == 3)
+                    return true;
+            }
+            catch
+            {
+                return false;
+            }
+
+            // TODO: Add time parsing
+            return true;
+        }
+
+        /*
+         45 BC, 42 BC, 39 BC, 36 BC, 33 BC, 30 BC, 27 BC, 24 BC, 21 BC, 18 BC, 15 BC, 12 BC, 9 BC, 8 AD, 12 AD, 
+          */
+        static int[] leapYears = { -45, -42, -39, -36, -33, -30, -27, -24, -21, -18, -15, -12, -9, 8, 12 };
+        public static bool IsLeapYear(int year)
+        {
+            if(year > 1582)
+            {
+                if (year % 4 != 0)
+                    return false;
+                else if (year % 100 != 0)
+                    return true;
+                else if (year % 400 != 0)
+                    return false;
+                else
+                    return true;
+            }
+            else if(year > 7)
+            {
+                return year % 4 == 0;
+            }
+            else if (year > -47)
+            {
+                return leapYears.Contains(year);
+            }
+
+            return false;
+        }
 
     }
 }

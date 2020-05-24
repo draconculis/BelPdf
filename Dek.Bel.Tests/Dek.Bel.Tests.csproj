@@ -55,7 +55,8 @@
     <Compile Include="Cls\ArrayStuff_SplitArrayIntoPageAndrects_Tests.cs" />
     <Compile Include="Cls\DekRangeListSubtractTest.cs" />
     <Compile Include="Cls\DekRangeListTestHelper.cs" />
-    <Compile Include="Cls\JulianDate\JulianDate.cs" />
+    <Compile Include="Cls\JulianDate\JulianDateExtensions.cs" />
+    <Compile Include="Cls\JulianDate\JulianDateTest.cs" />
     <Compile Include="Cls\TextRangeListTest.cs" />
     <Compile Include="Cls\TextRangeTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

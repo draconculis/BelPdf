@@ -88,7 +88,7 @@
             this.textBox_name.Location = new System.Drawing.Point(14, 25);
             this.textBox_name.Name = "textBox_name";
             this.textBox_name.Size = new System.Drawing.Size(672, 27);
-            this.textBox_name.TabIndex = 4;
+            this.textBox_name.TabIndex = 10;
             this.textBox_name.TextChanged += new System.EventHandler(this.textBox_name_TextChanged);
             // 
             // textBox_notes
@@ -102,7 +102,7 @@
             this.textBox_notes.Name = "textBox_notes";
             this.textBox_notes.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.textBox_notes.Size = new System.Drawing.Size(672, 76);
-            this.textBox_notes.TabIndex = 8;
+            this.textBox_notes.TabIndex = 100;
             this.textBox_notes.TextChanged += new System.EventHandler(this.textBox_notes_TextChanged);
             // 
             // label_age
@@ -116,7 +116,7 @@
             this.label_age.Margin = new System.Windows.Forms.Padding(3);
             this.label_age.Name = "label_age";
             this.label_age.Size = new System.Drawing.Size(108, 26);
-            this.label_age.TabIndex = 7;
+            this.label_age.TabIndex = 0;
             this.label_age.Text = "72";
             // 
             // label5
@@ -134,7 +134,7 @@
             this.button_done.Location = new System.Drawing.Point(577, 214);
             this.button_done.Name = "button_done";
             this.button_done.Size = new System.Drawing.Size(109, 25);
-            this.button_done.TabIndex = 12;
+            this.button_done.TabIndex = 210;
             this.button_done.Text = "OK";
             this.button_done.UseVisualStyleBackColor = true;
             this.button_done.Click += new System.EventHandler(this.button_done_Click);
@@ -146,7 +146,7 @@
             this.button_cancel.Location = new System.Drawing.Point(460, 214);
             this.button_cancel.Name = "button_cancel";
             this.button_cancel.Size = new System.Drawing.Size(111, 25);
-            this.button_cancel.TabIndex = 13;
+            this.button_cancel.TabIndex = 200;
             this.button_cancel.Text = "Cancel";
             this.button_cancel.UseVisualStyleBackColor = true;
             // 
@@ -158,7 +158,7 @@
             this.textBox_born.Location = new System.Drawing.Point(3, 18);
             this.textBox_born.Name = "textBox_born";
             this.textBox_born.Size = new System.Drawing.Size(275, 27);
-            this.textBox_born.TabIndex = 14;
+            this.textBox_born.TabIndex = 20;
             this.textBox_born.TextChanged += new System.EventHandler(this.textBox_born_TextChanged);
             // 
             // textBox_dead
@@ -169,7 +169,7 @@
             this.textBox_dead.Location = new System.Drawing.Point(284, 18);
             this.textBox_dead.Name = "textBox_dead";
             this.textBox_dead.Size = new System.Drawing.Size(275, 27);
-            this.textBox_dead.TabIndex = 15;
+            this.textBox_dead.TabIndex = 30;
             this.textBox_dead.TextChanged += new System.EventHandler(this.textBox_dead_TextChanged);
             // 
             // tableLayoutPanel1

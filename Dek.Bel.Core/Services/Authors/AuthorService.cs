@@ -113,7 +113,7 @@ namespace Dek.Bel.Core.Services
         /// <param name="authorId"></param>
         public void RemoveAuthor(Id authorId)
         {
-            m_DBService.Delete(typeof(Author), $"`Id`='{authorId}'");
+            m_DBService.Delete<Author>($"`Id`='{authorId}'");
         }
 
         /// <summary>
@@ -122,13 +122,10 @@ namespace Dek.Bel.Core.Services
         /// <param name="authorId"></param>
         public void DetachAuthor(Id authorId)
         {
-            m_DBService.Delete(typeof(BookAuthor), $"`AuthorId`='{authorId}'");
-            m_DBService.Delete(typeof(VolumeAuthor), $"`AuthorId`='{authorId}'");
-            m_DBService.Delete(typeof(SeriesAuthor), $"`AuthorId`='{authorId}'");
+            m_DBService.Delete<BookAuthor>($"`AuthorId`='{authorId}'");
+            m_DBService.Delete<VolumeAuthor>($"`AuthorId`='{authorId}'");
+            m_DBService.Delete<SeriesAuthor>($"`AuthorId`='{authorId}'");
         }
-
-
-
 
         private AuthorWithType GetAuthorWithType(Author author, Id itemId, AuthorType authorType)
         {

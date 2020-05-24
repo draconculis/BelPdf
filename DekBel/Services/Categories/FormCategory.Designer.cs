@@ -63,7 +63,7 @@
             this.button_done.Location = new System.Drawing.Point(384, 320);
             this.button_done.Name = "button_done";
             this.button_done.Size = new System.Drawing.Size(83, 24);
-            this.button_done.TabIndex = 30;
+            this.button_done.TabIndex = 300;
             this.button_done.Text = "Close";
             this.button_done.UseVisualStyleBackColor = true;
             this.button_done.Click += new System.EventHandler(this.button_done_Click);
@@ -107,7 +107,7 @@
             this.button_delete.Location = new System.Drawing.Point(179, 320);
             this.button_delete.Name = "button_delete";
             this.button_delete.Size = new System.Drawing.Size(83, 25);
-            this.button_delete.TabIndex = 190;
+            this.button_delete.TabIndex = 260;
             this.button_delete.Text = "Delete";
             this.button_delete.UseVisualStyleBackColor = true;
             this.button_delete.Click += new System.EventHandler(this.Button_delete_Click);
@@ -123,7 +123,7 @@
             this.button_update.Location = new System.Drawing.Point(91, 320);
             this.button_update.Name = "button_update";
             this.button_update.Size = new System.Drawing.Size(83, 25);
-            this.button_update.TabIndex = 230;
+            this.button_update.TabIndex = 250;
             this.button_update.Text = "Edit";
             this.button_update.UseVisualStyleBackColor = true;
             this.button_update.Click += new System.EventHandler(this.button_update_Click);
@@ -139,10 +139,8 @@
             this.dataGridView1.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
             dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Corbel", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Corbel", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.Color.Empty;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.Color.Empty;
             dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
             this.dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
@@ -160,7 +158,7 @@
             this.dataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dataGridView1.ShowRowErrors = false;
             this.dataGridView1.Size = new System.Drawing.Size(465, 287);
-            this.dataGridView1.TabIndex = 301;
+            this.dataGridView1.TabIndex = 20;
             this.dataGridView1.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellClick);
             this.dataGridView1.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick);
             this.dataGridView1.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.DataGridView1_CellFormatting);

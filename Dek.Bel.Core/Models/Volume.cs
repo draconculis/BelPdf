@@ -9,11 +9,12 @@ namespace Dek.Bel.Core.Models
         public Id Id { get; set; }
         public Id SeriesId { get; set; }
         public string Title { get; set; }
+        public string ISBN { get; set; }
         public string Editor { get; set; }
         public string Author { get; set; }
         public string Translator { get; set; }
         public DateTime CreatedDate { get; set; }
-        public DateTime PublicationDate { get; set; }
+        public string PublicationDate { get; set; }
         public string Notes { get; set; }
 
         // Draw all pdf boxes with this offset for this volume

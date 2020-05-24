@@ -31,7 +31,7 @@ kapiel (start + slutsida)
     {
         public string ISBN { get; set; }
         public string Edition { get; set; }
-        public DateTime PublicationDate { get; set; }
+        public string PublicationDate { get; set; }
         public string Notes { get; set; }
     }
 }

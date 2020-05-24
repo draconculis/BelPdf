@@ -25,11 +25,19 @@ namespace Dek.Bel.Core.DB
             if (version < 0)
                 throw new Exception("Failed to get DB version.");
 
-            if(version == 0)
+            if (version == 0)
             {
                 Repo.AddColumn(nameof(RawCitation), "`VolumeId` TEXT");
                 version = IncrementDBVersion();
             }
+
+            if (version == 1)
+            {
+                Repo.AddColumn(nameof(Volume), "`ISBN` TEXT");
+                version = IncrementDBVersion();
+            }
+
+
         }
 
 

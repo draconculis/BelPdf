@@ -44,8 +44,9 @@
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView1.Location = new System.Drawing.Point(12, 12);
             this.dataGridView1.Name = "dataGridView1";
+            this.dataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dataGridView1.Size = new System.Drawing.Size(837, 234);
-            this.dataGridView1.TabIndex = 0;
+            this.dataGridView1.TabIndex = 10;
             // 
             // button_new
             // 
@@ -53,7 +54,7 @@
             this.button_new.Location = new System.Drawing.Point(12, 252);
             this.button_new.Name = "button_new";
             this.button_new.Size = new System.Drawing.Size(134, 23);
-            this.button_new.TabIndex = 1;
+            this.button_new.TabIndex = 100;
             this.button_new.Text = "New Author...";
             this.button_new.UseVisualStyleBackColor = true;
             this.button_new.Click += new System.EventHandler(this.button_new_Click);
@@ -64,7 +65,7 @@
             this.button_edit.Location = new System.Drawing.Point(152, 252);
             this.button_edit.Name = "button_edit";
             this.button_edit.Size = new System.Drawing.Size(134, 23);
-            this.button_edit.TabIndex = 2;
+            this.button_edit.TabIndex = 110;
             this.button_edit.Text = "Edit Author...";
             this.button_edit.UseVisualStyleBackColor = true;
             this.button_edit.Click += new System.EventHandler(this.button_edit_Click);
@@ -75,7 +76,7 @@
             this.button_delete.Location = new System.Drawing.Point(292, 252);
             this.button_delete.Name = "button_delete";
             this.button_delete.Size = new System.Drawing.Size(134, 23);
-            this.button_delete.TabIndex = 3;
+            this.button_delete.TabIndex = 120;
             this.button_delete.Text = "Delete Author...";
             this.button_delete.UseVisualStyleBackColor = true;
             this.button_delete.Click += new System.EventHandler(this.button_delete_Click);
@@ -87,7 +88,7 @@
             this.button_close.Location = new System.Drawing.Point(715, 252);
             this.button_close.Name = "button_close";
             this.button_close.Size = new System.Drawing.Size(134, 23);
-            this.button_close.TabIndex = 4;
+            this.button_close.TabIndex = 200;
             this.button_close.Text = "Close";
             this.button_close.UseVisualStyleBackColor = true;
             this.button_close.Click += new System.EventHandler(this.button_close_Click);

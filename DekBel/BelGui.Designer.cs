@@ -143,6 +143,13 @@
             this.label17 = new System.Windows.Forms.Label();
             this.label_citationStart = new System.Windows.Forms.Label();
             this.label14 = new System.Windows.Forms.Label();
+            this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.button_Series = new System.Windows.Forms.Button();
+            this.label_SeriesName = new System.Windows.Forms.Label();
+            this.label11 = new System.Windows.Forms.Label();
+            this.textBox_SeriesNote = new System.Windows.Forms.TextBox();
+            this.listBox_VolumesInSeries = new System.Windows.Forms.ListBox();
+            this.label31 = new System.Windows.Forms.Label();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.splitContainer_Volume = new System.Windows.Forms.SplitContainer();
             this.numericUpDown_offsetY = new System.Windows.Forms.NumericUpDown();
@@ -158,6 +165,12 @@
             this.label5 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.textBox_VolumeNotes = new System.Windows.Forms.TextBox();
+            this.tabPage6 = new System.Windows.Forms.TabPage();
+            this.tabPage5 = new System.Windows.Forms.TabPage();
+            this.dataGridView_Authors = new System.Windows.Forms.DataGridView();
+            this.button_authorRemove = new System.Windows.Forms.Button();
+            this.button_authorEdit = new System.Windows.Forms.Button();
+            this.button_authorAdd = new System.Windows.Forms.Button();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.label_storageName = new System.Windows.Forms.Label();
             this.label_fileName = new System.Windows.Forms.Label();
@@ -165,17 +178,6 @@
             this.label9 = new System.Windows.Forms.Label();
             this.label1_MD5 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
-            this.tabPage4 = new System.Windows.Forms.TabPage();
-            this.button_Series = new System.Windows.Forms.Button();
-            this.label_SeriesName = new System.Windows.Forms.Label();
-            this.label11 = new System.Windows.Forms.Label();
-            this.textBox_SeriesNote = new System.Windows.Forms.TextBox();
-            this.listBox_VolumesInSeries = new System.Windows.Forms.ListBox();
-            this.label31 = new System.Windows.Forms.Label();
-            this.tabPage5 = new System.Windows.Forms.TabPage();
-            this.button_authorRemove = new System.Windows.Forms.Button();
-            this.button_authorEdit = new System.Windows.Forms.Button();
-            this.button_authorAdd = new System.Windows.Forms.Button();
             this.label18 = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
             this.label_PdfHighlightColor = new System.Windows.Forms.Label();
@@ -183,8 +185,8 @@
             this.checkBox_right = new System.Windows.Forms.CheckBox();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
-            this.tabPage6 = new System.Windows.Forms.TabPage();
-            this.dataGridView_Authors = new System.Windows.Forms.DataGridView();
+            this.textBox_ISBN = new System.Windows.Forms.TextBox();
+            this.label30 = new System.Windows.Forms.Label();
             this.contextMenuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -206,6 +208,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_FontSize)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.tabPage3.SuspendLayout();
+            this.tabPage4.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer_Volume)).BeginInit();
             this.splitContainer_Volume.Panel1.SuspendLayout();
@@ -213,10 +216,9 @@
             this.splitContainer_Volume.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_offsetY)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_offsetX)).BeginInit();
-            this.tabPage2.SuspendLayout();
-            this.tabPage4.SuspendLayout();
             this.tabPage5.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView_Authors)).BeginInit();
+            this.tabPage2.SuspendLayout();
             this.SuspendLayout();
             // 
             // contextMenuStrip1
@@ -490,7 +492,6 @@
             // 
             // toolStripTextBox1
             // 
-            this.toolStripTextBox1.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.toolStripTextBox1.Name = "toolStripTextBox1";
             this.toolStripTextBox1.Size = new System.Drawing.Size(100, 26);
             this.toolStripTextBox1.Text = "…";
@@ -899,7 +900,7 @@
             this.textBox_volumePublicationDate.Location = new System.Drawing.Point(70, 31);
             this.textBox_volumePublicationDate.Name = "textBox_volumePublicationDate";
             this.textBox_volumePublicationDate.Size = new System.Drawing.Size(110, 23);
-            this.textBox_volumePublicationDate.TabIndex = 14;
+            this.textBox_volumePublicationDate.TabIndex = 20;
             this.textBox_volumePublicationDate.TextChanged += new System.EventHandler(this.TextChanged_ValidateTextBoxDate);
             this.textBox_volumePublicationDate.Leave += new System.EventHandler(this.TextBox_VolumeTitle_Leave);
             // 
@@ -914,7 +915,7 @@
             // 
             // label3
             // 
-            this.label3.Location = new System.Drawing.Point(7, 79);
+            this.label3.Location = new System.Drawing.Point(7, 104);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(60, 14);
             this.label3.TabIndex = 8;
@@ -926,16 +927,16 @@
             // 
             this.textBox_Chapter.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox_Chapter.Location = new System.Drawing.Point(70, 76);
+            this.textBox_Chapter.Location = new System.Drawing.Point(70, 101);
             this.textBox_Chapter.Name = "textBox_Chapter";
             this.textBox_Chapter.ReadOnly = true;
             this.textBox_Chapter.Size = new System.Drawing.Size(295, 23);
-            this.textBox_Chapter.TabIndex = 7;
+            this.textBox_Chapter.TabIndex = 50;
             this.textBox_Chapter.TextChanged += new System.EventHandler(this.textBox6_TextChanged);
             // 
             // label1
             // 
-            this.label1.Location = new System.Drawing.Point(6, 56);
+            this.label1.Location = new System.Drawing.Point(6, 82);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(61, 14);
             this.label1.TabIndex = 4;
@@ -949,7 +950,7 @@
             this.textBox_VolumeTitle.Location = new System.Drawing.Point(70, 8);
             this.textBox_VolumeTitle.Name = "textBox_VolumeTitle";
             this.textBox_VolumeTitle.Size = new System.Drawing.Size(295, 23);
-            this.textBox_VolumeTitle.TabIndex = 0;
+            this.textBox_VolumeTitle.TabIndex = 10;
             this.textBox_VolumeTitle.Leave += new System.EventHandler(this.TextBox_VolumeTitle_Leave);
             // 
             // contextMenuStrip_Category
@@ -1448,256 +1449,6 @@
             this.label14.TextAlign = System.Drawing.ContentAlignment.TopRight;
             this.toolTip1.SetToolTip(this.label14, "txt");
             // 
-            // tabPage1
-            // 
-            this.tabPage1.Controls.Add(this.splitContainer_Volume);
-            this.tabPage1.Location = new System.Drawing.Point(4, 24);
-            this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(638, 194);
-            this.tabPage1.TabIndex = 0;
-            this.tabPage1.Text = "Volume";
-            this.tabPage1.UseVisualStyleBackColor = true;
-            // 
-            // splitContainer_Volume
-            // 
-            this.splitContainer_Volume.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.splitContainer_Volume.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer_Volume.Name = "splitContainer_Volume";
-            // 
-            // splitContainer_Volume.Panel1
-            // 
-            this.splitContainer_Volume.Panel1.Controls.Add(this.numericUpDown_offsetY);
-            this.splitContainer_Volume.Panel1.Controls.Add(this.label29);
-            this.splitContainer_Volume.Panel1.Controls.Add(this.label28);
-            this.splitContainer_Volume.Panel1.Controls.Add(this.label23);
-            this.splitContainer_Volume.Panel1.Controls.Add(this.numericUpDown_offsetX);
-            this.splitContainer_Volume.Panel1.Controls.Add(this.textBox_volumePublicationDate);
-            this.splitContainer_Volume.Panel1.Controls.Add(this.label6);
-            this.splitContainer_Volume.Panel1.Controls.Add(this.label2);
-            this.splitContainer_Volume.Panel1.Controls.Add(this.label8);
-            this.splitContainer_Volume.Panel1.Controls.Add(this.textBox_Chapter);
-            this.splitContainer_Volume.Panel1.Controls.Add(this.textBox_Paragraph);
-            this.splitContainer_Volume.Panel1.Controls.Add(this.label1);
-            this.splitContainer_Volume.Panel1.Controls.Add(this.textBox_Book);
-            this.splitContainer_Volume.Panel1.Controls.Add(this.label3);
-            this.splitContainer_Volume.Panel1.Controls.Add(this.textBox_VolumeTitle);
-            this.splitContainer_Volume.Panel1.Controls.Add(this.textBox_SubChapter);
-            this.splitContainer_Volume.Panel1.Controls.Add(this.label5);
-            // 
-            // splitContainer_Volume.Panel2
-            // 
-            this.splitContainer_Volume.Panel2.Controls.Add(this.label4);
-            this.splitContainer_Volume.Panel2.Controls.Add(this.textBox_VolumeNotes);
-            this.splitContainer_Volume.Size = new System.Drawing.Size(638, 196);
-            this.splitContainer_Volume.SplitterDistance = 370;
-            this.splitContainer_Volume.TabIndex = 32;
-            // 
-            // numericUpDown_offsetY
-            // 
-            this.numericUpDown_offsetY.Location = new System.Drawing.Point(171, 145);
-            this.numericUpDown_offsetY.Name = "numericUpDown_offsetY";
-            this.numericUpDown_offsetY.Size = new System.Drawing.Size(40, 23);
-            this.numericUpDown_offsetY.TabIndex = 36;
-            this.numericUpDown_offsetY.Leave += new System.EventHandler(this.TextBox_VolumeTitle_Leave);
-            // 
-            // label29
-            // 
-            this.label29.Location = new System.Drawing.Point(145, 148);
-            this.label29.Name = "label29";
-            this.label29.Size = new System.Drawing.Size(22, 14);
-            this.label29.TabIndex = 35;
-            this.label29.Text = "Y";
-            this.label29.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // label28
-            // 
-            this.label28.Location = new System.Drawing.Point(74, 148);
-            this.label28.Name = "label28";
-            this.label28.Size = new System.Drawing.Size(22, 14);
-            this.label28.TabIndex = 34;
-            this.label28.Text = "X";
-            this.label28.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // label23
-            // 
-            this.label23.Location = new System.Drawing.Point(7, 148);
-            this.label23.Name = "label23";
-            this.label23.Size = new System.Drawing.Size(58, 14);
-            this.label23.TabIndex = 33;
-            this.label23.Text = "Offset";
-            this.label23.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // numericUpDown_offsetX
-            // 
-            this.numericUpDown_offsetX.Location = new System.Drawing.Point(100, 145);
-            this.numericUpDown_offsetX.Name = "numericUpDown_offsetX";
-            this.numericUpDown_offsetX.Size = new System.Drawing.Size(40, 23);
-            this.numericUpDown_offsetX.TabIndex = 32;
-            this.numericUpDown_offsetX.Leave += new System.EventHandler(this.TextBox_VolumeTitle_Leave);
-            // 
-            // label2
-            // 
-            this.label2.Location = new System.Drawing.Point(7, 11);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(60, 14);
-            this.label2.TabIndex = 26;
-            this.label2.Text = "Volume";
-            this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // label8
-            // 
-            this.label8.Location = new System.Drawing.Point(9, 124);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(58, 14);
-            this.label8.TabIndex = 31;
-            this.label8.Text = "Paragr.";
-            this.label8.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // textBox_Paragraph
-            // 
-            this.textBox_Paragraph.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox_Paragraph.Location = new System.Drawing.Point(70, 121);
-            this.textBox_Paragraph.Name = "textBox_Paragraph";
-            this.textBox_Paragraph.ReadOnly = true;
-            this.textBox_Paragraph.Size = new System.Drawing.Size(295, 23);
-            this.textBox_Paragraph.TabIndex = 30;
-            // 
-            // textBox_Book
-            // 
-            this.textBox_Book.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox_Book.Location = new System.Drawing.Point(70, 53);
-            this.textBox_Book.Name = "textBox_Book";
-            this.textBox_Book.ReadOnly = true;
-            this.textBox_Book.Size = new System.Drawing.Size(295, 23);
-            this.textBox_Book.TabIndex = 29;
-            this.textBox_Book.TextChanged += new System.EventHandler(this.TextBox_Book_TextChanged);
-            // 
-            // textBox_SubChapter
-            // 
-            this.textBox_SubChapter.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox_SubChapter.Location = new System.Drawing.Point(70, 98);
-            this.textBox_SubChapter.Name = "textBox_SubChapter";
-            this.textBox_SubChapter.ReadOnly = true;
-            this.textBox_SubChapter.Size = new System.Drawing.Size(295, 23);
-            this.textBox_SubChapter.TabIndex = 22;
-            // 
-            // label5
-            // 
-            this.label5.Location = new System.Drawing.Point(6, 101);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(61, 14);
-            this.label5.TabIndex = 23;
-            this.label5.Text = "Sub Ch.";
-            this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // label4
-            // 
-            this.label4.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.label4.Location = new System.Drawing.Point(3, 7);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(255, 14);
-            this.label4.TabIndex = 27;
-            this.label4.Text = "Volume notes";
-            // 
-            // textBox_VolumeNotes
-            // 
-            this.textBox_VolumeNotes.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox_VolumeNotes.BackColor = System.Drawing.SystemColors.Info;
-            this.textBox_VolumeNotes.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.textBox_VolumeNotes.Location = new System.Drawing.Point(3, 26);
-            this.textBox_VolumeNotes.Multiline = true;
-            this.textBox_VolumeNotes.Name = "textBox_VolumeNotes";
-            this.textBox_VolumeNotes.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBox_VolumeNotes.Size = new System.Drawing.Size(258, 164);
-            this.textBox_VolumeNotes.TabIndex = 0;
-            this.textBox_VolumeNotes.Leave += new System.EventHandler(this.TextBox_VolumeTitle_Leave);
-            // 
-            // tabPage2
-            // 
-            this.tabPage2.Controls.Add(this.label_storageName);
-            this.tabPage2.Controls.Add(this.label_fileName);
-            this.tabPage2.Controls.Add(this.label10);
-            this.tabPage2.Controls.Add(this.label9);
-            this.tabPage2.Controls.Add(this.label1_MD5);
-            this.tabPage2.Controls.Add(this.label7);
-            this.tabPage2.Location = new System.Drawing.Point(4, 24);
-            this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(638, 194);
-            this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "File";
-            this.tabPage2.UseVisualStyleBackColor = true;
-            // 
-            // label_storageName
-            // 
-            this.label_storageName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.label_storageName.Location = new System.Drawing.Point(118, 30);
-            this.label_storageName.Name = "label_storageName";
-            this.label_storageName.Size = new System.Drawing.Size(496, 15);
-            this.label_storageName.TabIndex = 35;
-            this.label_storageName.Text = "-";
-            // 
-            // label_fileName
-            // 
-            this.label_fileName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.label_fileName.Location = new System.Drawing.Point(118, 8);
-            this.label_fileName.Name = "label_fileName";
-            this.label_fileName.Size = new System.Drawing.Size(496, 15);
-            this.label_fileName.TabIndex = 34;
-            this.label_fileName.Text = "-";
-            // 
-            // label10
-            // 
-            this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(50, 9);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(59, 15);
-            this.label10.TabIndex = 33;
-            this.label10.Text = "File name";
-            this.label10.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // label9
-            // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(8, 31);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(101, 15);
-            this.label9.TabIndex = 32;
-            this.label9.Text = "Storage file name";
-            this.label9.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // label1_MD5
-            // 
-            this.label1_MD5.AutoSize = true;
-            this.label1_MD5.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1_MD5.Location = new System.Drawing.Point(118, 52);
-            this.label1_MD5.Name = "label1_MD5";
-            this.label1_MD5.Size = new System.Drawing.Size(259, 15);
-            this.label1_MD5.TabIndex = 30;
-            this.label1_MD5.Text = "00000000-0000-0000-0000-000000000000";
-            this.toolTip1.SetToolTip(this.label1_MD5, "MD5 is a fingerprint which uniquely identifies a file.");
-            // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(54, 52);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(55, 15);
-            this.label7.TabIndex = 28;
-            this.label7.Text = "File MD5";
-            this.label7.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
             // tabPage4
             // 
             this.tabPage4.Controls.Add(this.button_Series);
@@ -1776,6 +1527,190 @@
             this.label31.Text = "Other Volumes in this series";
             this.label31.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
+            // tabPage1
+            // 
+            this.tabPage1.Controls.Add(this.splitContainer_Volume);
+            this.tabPage1.Location = new System.Drawing.Point(4, 24);
+            this.tabPage1.Name = "tabPage1";
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage1.Size = new System.Drawing.Size(638, 194);
+            this.tabPage1.TabIndex = 0;
+            this.tabPage1.Text = "Volume";
+            this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // splitContainer_Volume
+            // 
+            this.splitContainer_Volume.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.splitContainer_Volume.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer_Volume.Name = "splitContainer_Volume";
+            // 
+            // splitContainer_Volume.Panel1
+            // 
+            this.splitContainer_Volume.Panel1.Controls.Add(this.textBox_ISBN);
+            this.splitContainer_Volume.Panel1.Controls.Add(this.label30);
+            this.splitContainer_Volume.Panel1.Controls.Add(this.numericUpDown_offsetY);
+            this.splitContainer_Volume.Panel1.Controls.Add(this.label29);
+            this.splitContainer_Volume.Panel1.Controls.Add(this.label28);
+            this.splitContainer_Volume.Panel1.Controls.Add(this.label23);
+            this.splitContainer_Volume.Panel1.Controls.Add(this.numericUpDown_offsetX);
+            this.splitContainer_Volume.Panel1.Controls.Add(this.textBox_volumePublicationDate);
+            this.splitContainer_Volume.Panel1.Controls.Add(this.label6);
+            this.splitContainer_Volume.Panel1.Controls.Add(this.label2);
+            this.splitContainer_Volume.Panel1.Controls.Add(this.label8);
+            this.splitContainer_Volume.Panel1.Controls.Add(this.textBox_Chapter);
+            this.splitContainer_Volume.Panel1.Controls.Add(this.textBox_Paragraph);
+            this.splitContainer_Volume.Panel1.Controls.Add(this.label1);
+            this.splitContainer_Volume.Panel1.Controls.Add(this.textBox_Book);
+            this.splitContainer_Volume.Panel1.Controls.Add(this.label3);
+            this.splitContainer_Volume.Panel1.Controls.Add(this.textBox_VolumeTitle);
+            this.splitContainer_Volume.Panel1.Controls.Add(this.textBox_SubChapter);
+            this.splitContainer_Volume.Panel1.Controls.Add(this.label5);
+            // 
+            // splitContainer_Volume.Panel2
+            // 
+            this.splitContainer_Volume.Panel2.Controls.Add(this.label4);
+            this.splitContainer_Volume.Panel2.Controls.Add(this.textBox_VolumeNotes);
+            this.splitContainer_Volume.Size = new System.Drawing.Size(638, 196);
+            this.splitContainer_Volume.SplitterDistance = 370;
+            this.splitContainer_Volume.TabIndex = 32;
+            // 
+            // numericUpDown_offsetY
+            // 
+            this.numericUpDown_offsetY.Location = new System.Drawing.Point(174, 170);
+            this.numericUpDown_offsetY.Name = "numericUpDown_offsetY";
+            this.numericUpDown_offsetY.Size = new System.Drawing.Size(43, 23);
+            this.numericUpDown_offsetY.TabIndex = 90;
+            this.numericUpDown_offsetY.Leave += new System.EventHandler(this.TextBox_VolumeTitle_Leave);
+            // 
+            // label29
+            // 
+            this.label29.Location = new System.Drawing.Point(148, 173);
+            this.label29.Name = "label29";
+            this.label29.Size = new System.Drawing.Size(22, 14);
+            this.label29.TabIndex = 35;
+            this.label29.Text = "Y";
+            this.label29.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // label28
+            // 
+            this.label28.Location = new System.Drawing.Point(74, 173);
+            this.label28.Name = "label28";
+            this.label28.Size = new System.Drawing.Size(22, 14);
+            this.label28.TabIndex = 34;
+            this.label28.Text = "X";
+            this.label28.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // label23
+            // 
+            this.label23.Location = new System.Drawing.Point(7, 173);
+            this.label23.Name = "label23";
+            this.label23.Size = new System.Drawing.Size(58, 14);
+            this.label23.TabIndex = 33;
+            this.label23.Text = "Offset";
+            this.label23.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // numericUpDown_offsetX
+            // 
+            this.numericUpDown_offsetX.Location = new System.Drawing.Point(100, 170);
+            this.numericUpDown_offsetX.Name = "numericUpDown_offsetX";
+            this.numericUpDown_offsetX.Size = new System.Drawing.Size(43, 23);
+            this.numericUpDown_offsetX.TabIndex = 80;
+            this.numericUpDown_offsetX.Leave += new System.EventHandler(this.TextBox_VolumeTitle_Leave);
+            // 
+            // label2
+            // 
+            this.label2.Location = new System.Drawing.Point(7, 11);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(60, 14);
+            this.label2.TabIndex = 26;
+            this.label2.Text = "Volume";
+            this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // label8
+            // 
+            this.label8.Location = new System.Drawing.Point(9, 148);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(58, 14);
+            this.label8.TabIndex = 31;
+            this.label8.Text = "Paragr.";
+            this.label8.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // textBox_Paragraph
+            // 
+            this.textBox_Paragraph.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBox_Paragraph.Location = new System.Drawing.Point(70, 145);
+            this.textBox_Paragraph.Name = "textBox_Paragraph";
+            this.textBox_Paragraph.ReadOnly = true;
+            this.textBox_Paragraph.Size = new System.Drawing.Size(295, 23);
+            this.textBox_Paragraph.TabIndex = 70;
+            // 
+            // textBox_Book
+            // 
+            this.textBox_Book.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBox_Book.Location = new System.Drawing.Point(70, 79);
+            this.textBox_Book.Name = "textBox_Book";
+            this.textBox_Book.ReadOnly = true;
+            this.textBox_Book.Size = new System.Drawing.Size(295, 23);
+            this.textBox_Book.TabIndex = 40;
+            this.textBox_Book.TextChanged += new System.EventHandler(this.TextBox_Book_TextChanged);
+            // 
+            // textBox_SubChapter
+            // 
+            this.textBox_SubChapter.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBox_SubChapter.Location = new System.Drawing.Point(70, 123);
+            this.textBox_SubChapter.Name = "textBox_SubChapter";
+            this.textBox_SubChapter.ReadOnly = true;
+            this.textBox_SubChapter.Size = new System.Drawing.Size(295, 23);
+            this.textBox_SubChapter.TabIndex = 60;
+            // 
+            // label5
+            // 
+            this.label5.Location = new System.Drawing.Point(6, 126);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(61, 14);
+            this.label5.TabIndex = 23;
+            this.label5.Text = "Sub Ch.";
+            this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // label4
+            // 
+            this.label4.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.label4.Location = new System.Drawing.Point(3, 7);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(255, 14);
+            this.label4.TabIndex = 27;
+            this.label4.Text = "Volume notes";
+            // 
+            // textBox_VolumeNotes
+            // 
+            this.textBox_VolumeNotes.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBox_VolumeNotes.BackColor = System.Drawing.SystemColors.Info;
+            this.textBox_VolumeNotes.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.textBox_VolumeNotes.Location = new System.Drawing.Point(3, 26);
+            this.textBox_VolumeNotes.Multiline = true;
+            this.textBox_VolumeNotes.Name = "textBox_VolumeNotes";
+            this.textBox_VolumeNotes.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.textBox_VolumeNotes.Size = new System.Drawing.Size(258, 164);
+            this.textBox_VolumeNotes.TabIndex = 200;
+            this.textBox_VolumeNotes.Leave += new System.EventHandler(this.TextBox_VolumeTitle_Leave);
+            // 
+            // tabPage6
+            // 
+            this.tabPage6.Location = new System.Drawing.Point(4, 24);
+            this.tabPage6.Name = "tabPage6";
+            this.tabPage6.Size = new System.Drawing.Size(638, 194);
+            this.tabPage6.TabIndex = 5;
+            this.tabPage6.Text = "Books";
+            this.tabPage6.UseVisualStyleBackColor = true;
+            // 
             // tabPage5
             // 
             this.tabPage5.Controls.Add(this.dataGridView_Authors);
@@ -1788,6 +1723,31 @@
             this.tabPage5.TabIndex = 4;
             this.tabPage5.Text = "Authors";
             this.tabPage5.UseVisualStyleBackColor = true;
+            // 
+            // dataGridView_Authors
+            // 
+            this.dataGridView_Authors.AllowUserToAddRows = false;
+            this.dataGridView_Authors.AllowUserToDeleteRows = false;
+            this.dataGridView_Authors.AllowUserToOrderColumns = true;
+            this.dataGridView_Authors.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dataGridView_Authors.BackgroundColor = System.Drawing.Color.WhiteSmoke;
+            this.dataGridView_Authors.ClipboardCopyMode = System.Windows.Forms.DataGridViewClipboardCopyMode.EnableWithoutHeaderText;
+            this.dataGridView_Authors.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
+            this.dataGridView_Authors.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView_Authors.GridColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.dataGridView_Authors.Location = new System.Drawing.Point(4, 4);
+            this.dataGridView_Authors.Name = "dataGridView_Authors";
+            this.dataGridView_Authors.RowHeadersVisible = false;
+            this.dataGridView_Authors.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dataGridView_Authors.ShowCellErrors = false;
+            this.dataGridView_Authors.ShowEditingIcon = false;
+            this.dataGridView_Authors.ShowRowErrors = false;
+            this.dataGridView_Authors.Size = new System.Drawing.Size(631, 150);
+            this.dataGridView_Authors.StandardTab = true;
+            this.dataGridView_Authors.TabIndex = 1;
+            this.toolTip1.SetToolTip(this.dataGridView_Authors, "Authors, translators and editors etc for this volume.");
             // 
             // button_authorRemove
             // 
@@ -1821,6 +1781,83 @@
             this.button_authorAdd.Text = "Add";
             this.button_authorAdd.UseVisualStyleBackColor = true;
             this.button_authorAdd.Click += new System.EventHandler(this.button_authorAdd_Click);
+            // 
+            // tabPage2
+            // 
+            this.tabPage2.Controls.Add(this.label_storageName);
+            this.tabPage2.Controls.Add(this.label_fileName);
+            this.tabPage2.Controls.Add(this.label10);
+            this.tabPage2.Controls.Add(this.label9);
+            this.tabPage2.Controls.Add(this.label1_MD5);
+            this.tabPage2.Controls.Add(this.label7);
+            this.tabPage2.Location = new System.Drawing.Point(4, 24);
+            this.tabPage2.Name = "tabPage2";
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage2.Size = new System.Drawing.Size(638, 194);
+            this.tabPage2.TabIndex = 1;
+            this.tabPage2.Text = "File";
+            this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // label_storageName
+            // 
+            this.label_storageName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.label_storageName.Location = new System.Drawing.Point(118, 30);
+            this.label_storageName.Name = "label_storageName";
+            this.label_storageName.Size = new System.Drawing.Size(496, 15);
+            this.label_storageName.TabIndex = 35;
+            this.label_storageName.Text = "-";
+            // 
+            // label_fileName
+            // 
+            this.label_fileName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.label_fileName.Location = new System.Drawing.Point(118, 8);
+            this.label_fileName.Name = "label_fileName";
+            this.label_fileName.Size = new System.Drawing.Size(496, 15);
+            this.label_fileName.TabIndex = 34;
+            this.label_fileName.Text = "-";
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(50, 9);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(59, 15);
+            this.label10.TabIndex = 33;
+            this.label10.Text = "File name";
+            this.label10.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(8, 31);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(101, 15);
+            this.label9.TabIndex = 32;
+            this.label9.Text = "Storage file name";
+            this.label9.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // label1_MD5
+            // 
+            this.label1_MD5.AutoSize = true;
+            this.label1_MD5.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1_MD5.Location = new System.Drawing.Point(118, 52);
+            this.label1_MD5.Name = "label1_MD5";
+            this.label1_MD5.Size = new System.Drawing.Size(259, 15);
+            this.label1_MD5.TabIndex = 30;
+            this.label1_MD5.Text = "00000000-0000-0000-0000-000000000000";
+            this.toolTip1.SetToolTip(this.label1_MD5, "MD5 is a fingerprint which uniquely identifies a file.");
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(54, 52);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(55, 15);
+            this.label7.TabIndex = 28;
+            this.label7.Text = "File MD5";
+            this.label7.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // label18
             // 
@@ -1886,39 +1923,22 @@
             this.checkBox_right.UseVisualStyleBackColor = true;
             this.checkBox_right.CheckedChanged += new System.EventHandler(this.CheckBox1_CheckedChanged);
             // 
-            // tabPage6
+            // textBox_ISBN
             // 
-            this.tabPage6.Location = new System.Drawing.Point(4, 24);
-            this.tabPage6.Name = "tabPage6";
-            this.tabPage6.Size = new System.Drawing.Size(638, 194);
-            this.tabPage6.TabIndex = 5;
-            this.tabPage6.Text = "Books";
-            this.tabPage6.UseVisualStyleBackColor = true;
+            this.textBox_ISBN.Location = new System.Drawing.Point(70, 54);
+            this.textBox_ISBN.Name = "textBox_ISBN";
+            this.textBox_ISBN.Size = new System.Drawing.Size(295, 23);
+            this.textBox_ISBN.TabIndex = 92;
+            this.textBox_ISBN.Leave += new System.EventHandler(this.TextBox_VolumeTitle_Leave);
             // 
-            // dataGridView_Authors
+            // label30
             // 
-            this.dataGridView_Authors.AllowUserToAddRows = false;
-            this.dataGridView_Authors.AllowUserToDeleteRows = false;
-            this.dataGridView_Authors.AllowUserToOrderColumns = true;
-            this.dataGridView_Authors.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.dataGridView_Authors.BackgroundColor = System.Drawing.Color.WhiteSmoke;
-            this.dataGridView_Authors.ClipboardCopyMode = System.Windows.Forms.DataGridViewClipboardCopyMode.EnableWithoutHeaderText;
-            this.dataGridView_Authors.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
-            this.dataGridView_Authors.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView_Authors.GridColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.dataGridView_Authors.Location = new System.Drawing.Point(4, 4);
-            this.dataGridView_Authors.Name = "dataGridView_Authors";
-            this.dataGridView_Authors.RowHeadersVisible = false;
-            this.dataGridView_Authors.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridView_Authors.ShowCellErrors = false;
-            this.dataGridView_Authors.ShowEditingIcon = false;
-            this.dataGridView_Authors.ShowRowErrors = false;
-            this.dataGridView_Authors.Size = new System.Drawing.Size(631, 150);
-            this.dataGridView_Authors.StandardTab = true;
-            this.dataGridView_Authors.TabIndex = 1;
-            this.toolTip1.SetToolTip(this.dataGridView_Authors, "Authors, translators and editors etc for this volume.");
+            this.label30.Location = new System.Drawing.Point(13, 57);
+            this.label30.Name = "label30";
+            this.label30.Size = new System.Drawing.Size(54, 14);
+            this.label30.TabIndex = 91;
+            this.label30.Text = "ISBN";
+            this.label30.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // BelGui
             // 
@@ -1963,6 +1983,8 @@
             this.tabControl1.ResumeLayout(false);
             this.tabPage3.ResumeLayout(false);
             this.tabPage3.PerformLayout();
+            this.tabPage4.ResumeLayout(false);
+            this.tabPage4.PerformLayout();
             this.tabPage1.ResumeLayout(false);
             this.splitContainer_Volume.Panel1.ResumeLayout(false);
             this.splitContainer_Volume.Panel1.PerformLayout();
@@ -1972,12 +1994,10 @@
             this.splitContainer_Volume.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_offsetY)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_offsetX)).EndInit();
-            this.tabPage2.ResumeLayout(false);
-            this.tabPage2.PerformLayout();
-            this.tabPage4.ResumeLayout(false);
-            this.tabPage4.PerformLayout();
             this.tabPage5.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView_Authors)).EndInit();
+            this.tabPage2.ResumeLayout(false);
+            this.tabPage2.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -2139,5 +2159,7 @@
         private System.Windows.Forms.Button button_authorAdd;
         private System.Windows.Forms.TabPage tabPage6;
         private System.Windows.Forms.DataGridView dataGridView_Authors;
+        private System.Windows.Forms.TextBox textBox_ISBN;
+        private System.Windows.Forms.Label label30;
     }
 }

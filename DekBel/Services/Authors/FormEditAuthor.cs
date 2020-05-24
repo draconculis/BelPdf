@@ -1,4 +1,5 @@
-﻿using Dek.Bel.Core.Models;
+﻿using Dek.Bel.Core.Cls;
+using Dek.Bel.Core.Models;
 using Dek.Cls;
 using System;
 using System.Collections.Generic;
@@ -37,8 +38,10 @@ namespace Dek.Bel.Services.Authors
 
             if (Author.Id.IsNotNull)
             {
-                textBox_born.Text = Author.Born.ToSaneStringDateOnly("");
-                textBox_dead.Text = Author.Dead.ToSaneStringDateOnly("");
+                textBox_name.Text = Author.Name;
+                textBox_born.Text = Author.Born;
+                textBox_dead.Text = Author.Dead;
+                textBox_notes.Text = Author.Notes;
                 Text = "Edit Author";
             }
             else
@@ -50,13 +53,14 @@ namespace Dek.Bel.Services.Authors
         private void button_done_Click(object sender, EventArgs e)
         {
             Author.Name = textBox_name.Text;
-            Author.Born = Born;
-            Author.Dead = Dead;
+            Author.Born = textBox_born.Text;
+            Author.Dead = textBox_dead.Text;
             Author.Notes = textBox_notes.Text;
 
             if (Author.Id.IsNull)
                 Author.Id = Id.NewId();
 
+            this.DialogResult = DialogResult.OK;
             Close();
         }
 
@@ -73,7 +77,7 @@ namespace Dek.Bel.Services.Authors
             if (!(sender is TextBox tb))
                 return;
 
-            if (tb.Text.IsValidSaneDateTime())
+            if (tb.Text.IsValidSaneDate())
             {
                 tb.BackColor = Color.White;
                 Born = textBox_dead.Text.ToSaneDateTime();
@@ -88,7 +92,7 @@ namespace Dek.Bel.Services.Authors
             if (!(sender is TextBox tb))
                 return;
 
-            if (tb.Text.IsValidSaneDateTime())
+            if (tb.Text.IsValidSaneDate())
             {
                 tb.BackColor = tb.BackColor = Color.White;
                 Born = textBox_born.Text.ToSaneDateTime();

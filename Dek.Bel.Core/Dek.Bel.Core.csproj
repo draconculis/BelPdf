@@ -106,7 +106,8 @@
     <Compile Include="Cls\EnumStuff.cs" />
     <Compile Include="Cls\Id.cs" />
     <Compile Include="Cls\IntExtensions.cs" />
-    <Compile Include="Cls\JulianDate.cs" />
+    <Compile Include="Cls\DekJulianDate.cs" />
+    <Compile Include="Cls\DekJulianDateExtensions.cs" />
     <Compile Include="Cls\Mef.cs" />
     <Compile Include="Cls\PocoExtension.cs" />
     <Compile Include="Cls\StringExtensions.cs" />

@@ -22,6 +22,7 @@ using Dek.Bel.Core.DB;
 using Dek.Bel.Core.Helpers;
 using OfficeOpenXml.FormulaParsing.Excel.Functions.Text;
 using Dek.Bel.Core.ViewModels;
+using Dek.Bel.Core.Cls;
 
 namespace Dek.Bel
 {
@@ -218,7 +219,7 @@ namespace Dek.Bel
             // Volume data
             textBox_VolumeTitle.Text = m_VolumeService.CurrentVolume.Title;
             textBox_VolumeNotes.Text = m_VolumeService.CurrentVolume.Notes;
-            textBox_volumePublicationDate.Text = m_VolumeService.CurrentVolume.PublicationDate.ToSaneStringDateOnly();
+            textBox_volumePublicationDate.Text = m_VolumeService.CurrentVolume.PublicationDate;//.ToSaneStringDateOnly();
             numericUpDown_offsetX.Value = (decimal)m_VolumeService.CurrentVolume.OffsetX;
             numericUpDown_offsetY.Value = (decimal)m_VolumeService.CurrentVolume.OffsetY;
 
@@ -1029,7 +1030,8 @@ namespace Dek.Bel
         private void TextBox_VolumeTitle_Leave(object sender, EventArgs e)
         {
             m_VolumeService.CurrentVolume.Title = textBox_VolumeTitle.Text;
-            m_VolumeService.CurrentVolume.PublicationDate = textBox_volumePublicationDate.Text.ToSaneDateTime();
+            m_VolumeService.CurrentVolume.PublicationDate = textBox_volumePublicationDate.Text;//.ToSaneDateTime();
+            m_VolumeService.CurrentVolume.ISBN = textBox_ISBN.Text;
             m_VolumeService.CurrentVolume.Notes = textBox_VolumeNotes.Text;
             m_VolumeService.CurrentVolume.OffsetX = (int)numericUpDown_offsetX.Value;
             m_VolumeService.CurrentVolume.OffsetY = (int)numericUpDown_offsetY.Value;
@@ -1042,7 +1044,7 @@ namespace Dek.Bel
             if (!(sender is TextBox tb))
                 return;
 
-            if (tb.Text.IsValidSaneDateTime())
+            if (tb.Text.IsValidSaneDate())
                 tb.BackColor = textBox_VolumeTitle.BackColor;
             else
                 tb.BackColor = Color.LightPink;
@@ -1550,7 +1552,8 @@ namespace Dek.Bel
 
         private void button_authorEdit_Click(object sender, EventArgs e)
         {
-
+            FormAuthors fa = new FormAuthors();
+            fa.ShowDialog();
         }
 
         private void button_authorAdd_Click(object sender, EventArgs e)
@@ -1570,6 +1573,5 @@ namespace Dek.Bel
 
 
         #endregion Books tab ==============================================
-
     }
 }
