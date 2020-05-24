@@ -21,7 +21,8 @@ namespace Dek.Bel.Services.Report
         public Form_Report()
         {
             InitializeComponent();
-            Mef.Initialize(this);
+            if(m_ReportService == null)
+                Mef.Compose(this);
 
             long milliseconds = 0;
             try
