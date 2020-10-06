@@ -109,6 +109,7 @@
     <Compile Include="Cls\DekJulianDate.cs" />
     <Compile Include="Cls\DekJulianDateExtensions.cs" />
     <Compile Include="Cls\Mef.cs" />
+    <Compile Include="Cls\ObjectDumper.cs" />
     <Compile Include="Cls\PocoExtension.cs" />
     <Compile Include="Cls\StringExtensions.cs" />
     <Compile Include="Cls\TextData.cs" />

@@ -297,7 +297,7 @@ class BaseEngine {
     // pages where clipping doesn't help are rendered in larger tiles
     virtual bool HasClipOptimizations(int pageNo) = 0;
     // the layout type this document's author suggests (if the user doesn't care)
-    virtual PageLayoutType PreferredLayout() { return Layout_Single; }
+    virtual PageLayoutType PreferredLayout() { return PageLayoutType::Layout_Single; }
     // whether the content should be displayed as images instead of as document pages
     // (e.g. with a black background and less padding in between and without search UI)
     virtual bool IsImageCollection() const { return false; }

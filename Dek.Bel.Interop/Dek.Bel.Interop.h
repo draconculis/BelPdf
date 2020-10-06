@@ -1,7 +1,11 @@
+#pragma once
+
+#ifndef DEKBELINTEROP_H
+#define DEKBELINTEROP_H
+
 /***********************************************************************
     See: http://tigerang.blogspot.com/2008/09/reverse-pinvoke.html
  ***********************************************************************/
-#pragma once
 #include <windows.h>
 
 #ifdef DEKBELINTEROP_EXPORTS
@@ -50,3 +54,5 @@ typedef ResultFileStorageData* (*NativeToManagedF)(RequestFileStorageData data);
 
 DEKBELINTEROP_API ResultData* doBel(EventData data);
 DEKBELINTEROP_API ResultFileStorageData* doBelRequestFileStorage(RequestFileStorageData data);
+
+#endif

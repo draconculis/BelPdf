@@ -171,13 +171,13 @@ static WCHAR* FormatSizeSuccint(size_t size) {
     double s = (double)size;
 
     if (size > GB) {
-        s /= GB;
+        s /= (1024 * 1024 * 1024);
         unit = _TR("GB");
     } else if (size > MB) {
-        s /= MB;
+        s /= (1024 * 1024);
         unit = _TR("MB");
     } else {
-        s /= KB;
+        s /= 1024;
         unit = _TR("KB");
     }
 

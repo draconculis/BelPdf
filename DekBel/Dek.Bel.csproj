@@ -128,12 +128,6 @@
       <DependentUpon>FormAbout.cs</DependentUpon>
     </Compile>
     <Compile Include="Services\Authors\AuthorsGridService.cs" />
-    <Compile Include="Services\Authors\FormAddAuthor.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Services\Authors\FormAddAuthor.Designer.cs">
-      <DependentUpon>FormAddAuthor.cs</DependentUpon>
-    </Compile>
     <Compile Include="Services\Authors\FormAuthors.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -254,9 +248,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FormAbout.resx">
       <DependentUpon>FormAbout.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Services\Authors\FormAddAuthor.resx">
-      <DependentUpon>FormAddAuthor.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Services\Authors\FormAuthors.resx">
       <DependentUpon>FormAuthors.cs</DependentUpon>
