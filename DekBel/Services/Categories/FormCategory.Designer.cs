@@ -43,6 +43,7 @@
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.label_count = new System.Windows.Forms.Label();
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
+            this.buttonRemoveColor = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -52,7 +53,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textBox_search.Location = new System.Drawing.Point(117, 4);
             this.textBox_search.Name = "textBox_search";
-            this.textBox_search.Size = new System.Drawing.Size(283, 22);
+            this.textBox_search.Size = new System.Drawing.Size(355, 22);
             this.textBox_search.TabIndex = 10;
             this.textBox_search.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             // 
@@ -60,7 +61,7 @@
             // 
             this.button_done.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.button_done.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.button_done.Location = new System.Drawing.Point(384, 320);
+            this.button_done.Location = new System.Drawing.Point(456, 268);
             this.button_done.Name = "button_done";
             this.button_done.Size = new System.Drawing.Size(83, 24);
             this.button_done.TabIndex = 300;
@@ -81,7 +82,7 @@
             // 
             this.button_clear.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.button_clear.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.button_clear.Location = new System.Drawing.Point(380, 5);
+            this.button_clear.Location = new System.Drawing.Point(452, 5);
             this.button_clear.Margin = new System.Windows.Forms.Padding(0);
             this.button_clear.Name = "button_clear";
             this.button_clear.Size = new System.Drawing.Size(19, 20);
@@ -93,7 +94,7 @@
             // button_add
             // 
             this.button_add.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.button_add.Location = new System.Drawing.Point(3, 320);
+            this.button_add.Location = new System.Drawing.Point(3, 268);
             this.button_add.Name = "button_add";
             this.button_add.Size = new System.Drawing.Size(83, 25);
             this.button_add.TabIndex = 240;
@@ -104,7 +105,7 @@
             // button_delete
             // 
             this.button_delete.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.button_delete.Location = new System.Drawing.Point(179, 320);
+            this.button_delete.Location = new System.Drawing.Point(179, 268);
             this.button_delete.Name = "button_delete";
             this.button_delete.Size = new System.Drawing.Size(83, 25);
             this.button_delete.TabIndex = 260;
@@ -120,7 +121,7 @@
             // button_update
             // 
             this.button_update.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.button_update.Location = new System.Drawing.Point(91, 320);
+            this.button_update.Location = new System.Drawing.Point(91, 268);
             this.button_update.Name = "button_update";
             this.button_update.Size = new System.Drawing.Size(83, 25);
             this.button_update.TabIndex = 250;
@@ -157,7 +158,7 @@
             this.dataGridView1.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.dataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dataGridView1.ShowRowErrors = false;
-            this.dataGridView1.Size = new System.Drawing.Size(465, 287);
+            this.dataGridView1.Size = new System.Drawing.Size(537, 235);
             this.dataGridView1.TabIndex = 20;
             this.dataGridView1.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellClick);
             this.dataGridView1.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick);
@@ -169,12 +170,23 @@
             // 
             this.label_count.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label_count.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label_count.Location = new System.Drawing.Point(406, 7);
+            this.label_count.Location = new System.Drawing.Point(478, 7);
             this.label_count.Name = "label_count";
             this.label_count.Size = new System.Drawing.Size(61, 12);
             this.label_count.TabIndex = 302;
             this.label_count.Text = "0 / 0";
             this.label_count.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            // 
+            // buttonRemoveColor
+            // 
+            this.buttonRemoveColor.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.buttonRemoveColor.Location = new System.Drawing.Point(267, 268);
+            this.buttonRemoveColor.Name = "buttonRemoveColor";
+            this.buttonRemoveColor.Size = new System.Drawing.Size(83, 25);
+            this.buttonRemoveColor.TabIndex = 303;
+            this.buttonRemoveColor.Text = "Clear color";
+            this.buttonRemoveColor.UseVisualStyleBackColor = true;
+            this.buttonRemoveColor.Click += new System.EventHandler(this.buttonRemoveColor_Click);
             // 
             // FormCategory
             // 
@@ -182,7 +194,8 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 14F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.button_done;
-            this.ClientSize = new System.Drawing.Size(470, 359);
+            this.ClientSize = new System.Drawing.Size(542, 307);
+            this.Controls.Add(this.buttonRemoveColor);
             this.Controls.Add(this.label_count);
             this.Controls.Add(this.dataGridView1);
             this.Controls.Add(this.button_update);
@@ -222,5 +235,6 @@
         private System.Windows.Forms.DataGridView dataGridView1;
         private System.Windows.Forms.Label label_count;
         private System.Windows.Forms.ColorDialog colorDialog1;
+        private System.Windows.Forms.Button buttonRemoveColor;
     }
 }

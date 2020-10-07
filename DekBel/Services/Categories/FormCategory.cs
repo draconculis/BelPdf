@@ -246,12 +246,34 @@ namespace Dek.Bel.Services
                 m_CategoryService.InsertOrUpdate(cat);
 
                 FireCategoryChanged(cat);
+
+                dataGridView1.Rows[e.RowIndex].Selected = true;
             }
         }
 
         private void dataGridView1_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
             button_update_Click(sender, e);
+        }
+
+        private void buttonRemoveColor_Click(object sender, EventArgs e)
+        {
+            if (dataGridView1.SelectedCells.Count < 1)
+                return;
+
+            int rowIdx = dataGridView1.SelectedCells[0].RowIndex;
+
+            DataGridViewRow row = dataGridView1.Rows[rowIdx];
+            Id id = (Id)row.Cells[0].Value;
+            Category cat = m_FilteredCategories.SingleOrDefault(x => x.Id == id);
+
+            cat.CategoryColor = string.Empty;
+
+            m_CategoryService.InsertOrUpdate(cat);
+
+            FireCategoryChanged(cat);
+
+            dataGridView1.Rows[rowIdx].Selected = true;
         }
     }
 }

@@ -1106,7 +1106,6 @@ namespace Dek.Bel
             label_PdfMarginBoxColor.BackColor = m_UserSettingsService.PdfMarginBoxColor;
         }
 
-
         private void SaveColors()
         {
             VM.CurrentCitation.CitationColors =
