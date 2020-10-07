@@ -39,7 +39,6 @@
             this.toolStripMenuItem_columns = new System.Windows.Forms.ToolStripMenuItem();
             this.button1 = new System.Windows.Forms.Button();
             this.label_time = new System.Windows.Forms.Label();
-            this.checkBox_autoSizeRows = new System.Windows.Forms.CheckBox();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.button2 = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
@@ -62,7 +61,6 @@
             this.dataGridView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.dataGridView1.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.DisplayedCells;
             this.dataGridView1.BackgroundColor = System.Drawing.SystemColors.Control;
             this.dataGridView1.ClipboardCopyMode = System.Windows.Forms.DataGridViewClipboardCopyMode.EnableWithoutHeaderText;
             dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
@@ -96,7 +94,6 @@
             dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.ControlText;
             dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
             this.dataGridView1.RowHeadersDefaultCellStyle = dataGridViewCellStyle4;
-            this.dataGridView1.RowHeadersVisible = false;
             this.dataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
             this.dataGridView1.ShowCellErrors = false;
             this.dataGridView1.ShowEditingIcon = false;
@@ -138,18 +135,6 @@
             this.label_time.Size = new System.Drawing.Size(35, 13);
             this.label_time.TabIndex = 2;
             this.label_time.Text = "Took:";
-            // 
-            // checkBox_autoSizeRows
-            // 
-            this.checkBox_autoSizeRows.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.checkBox_autoSizeRows.AutoSize = true;
-            this.checkBox_autoSizeRows.Location = new System.Drawing.Point(5, 374);
-            this.checkBox_autoSizeRows.Name = "checkBox_autoSizeRows";
-            this.checkBox_autoSizeRows.Size = new System.Drawing.Size(94, 17);
-            this.checkBox_autoSizeRows.TabIndex = 3;
-            this.checkBox_autoSizeRows.Text = "Auto size rows";
-            this.checkBox_autoSizeRows.UseVisualStyleBackColor = true;
-            this.checkBox_autoSizeRows.CheckedChanged += new System.EventHandler(this.CheckBox_autoSizeRows_CheckedChanged);
             // 
             // textBox1
             // 
@@ -224,7 +209,6 @@
             this.Controls.Add(this.button3);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.textBox1);
-            this.Controls.Add(this.checkBox_autoSizeRows);
             this.Controls.Add(this.label_time);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.dataGridView1);
@@ -244,7 +228,6 @@
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.ContextMenuStrip Columns;
         private System.Windows.Forms.Label label_time;
-        private System.Windows.Forms.CheckBox checkBox_autoSizeRows;
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Button button3;

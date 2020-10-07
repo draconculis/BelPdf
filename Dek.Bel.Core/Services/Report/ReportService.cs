@@ -40,31 +40,34 @@ grid.DataSource = filtered;*/
             Cache.LoadCache(forceReload);
             /*TIME*/ long t1 = t.ElapsedMilliseconds;
 
-            IEnumerable<Citation> orderedCitations = new List<Citation>();
-            IEnumerable<Citation> citations = m_DBService.Select<Citation>();
-            orderedCitations = citations
-                .OrderBy(x => x.VolumeId)
-                .ThenBy(y => y.PhysicalPageStart)
-                .ThenBy(y => y.GlyphStart);
+
+            IEnumerable<Citation> orderedCitations0 = m_DBService.Select<Citation>();
+            /*TIME*/ long t11 = t.ElapsedMilliseconds;
+
+            IEnumerable< Citation > orderedCitations = 
+                orderedCitations0
+                    .OrderBy(x => x.VolumeId)
+                    .ThenBy(y => y.PhysicalPageStart)
+                    .ThenBy(y => y.GlyphStart);
 
             /*TIME*/ long t2 = t.ElapsedMilliseconds;
 
             int counter = 1;
-            var nullCategory = Cache.Categories.Single(c => c.Id == Id.Null);
+            var nullCategory = Cache.Categories[Id.Null];
             foreach (Citation c in orderedCitations)
             {
-                Volume volume = Cache.Volumes.SingleOrDefault(x => x.Id == c.VolumeId);
+                Volume volume = Cache.Volumes[c.VolumeId];
                 var mainCitCat = Cache.CitationCategories.Where(x => x.CitationId == c.Id)?.SingleOrDefault(x => x.IsMain);
                 var mainCategory = (mainCitCat == null)
                     ? nullCategory
-                    : Cache.Categories.Single(x => x.Id == mainCitCat.CategoryId);
+                    : Cache.Categories[mainCitCat.CategoryId];
 
                 ReportModel m = new ReportModel
                 {
                     Idx = counter++,
                     VolumeId = c.VolumeId,
                     VolumeTitle = volume?.Title,
-                    PublicationDate = volume?.PublicationDate ?? "",
+                    VolumePublicationDate = volume?.PublicationDate ?? "",
                     CitationId = c.Id,
                     OriginalCitation = c.Citation1,
                     Citation = c.Citation3,
@@ -75,7 +78,7 @@ grid.DataSource = filtered;*/
                     SubChapter = VolumeService.GetReferenceForVolume(volume.Id, Cache.SubChapters, c.PhysicalPageStart, c.GlyphStart)?.Title ?? "",
                     Paragraph = VolumeService.GetReferenceForVolume(volume.Id, Cache.Paragraphs, c.PhysicalPageStart, c.GlyphStart)?.Title ?? "",
                     MainCategory = mainCategory.ToString(),
-                    Weight = mainCitCat?.Weight ?? 0,
+                    MainCategoryWeight = mainCitCat?.Weight ?? 0,
 
                     // Hidden
                     Emphasis = c.Emphasis,

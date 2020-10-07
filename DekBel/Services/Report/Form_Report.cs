@@ -13,7 +13,6 @@ namespace Dek.Bel.Services.Report
 {
     public partial class Form_Report : Form
     {
-
         [Import] public ReportService m_ReportService { get; set; }
         [Import] public IMessageboxService m_MessageBoxService { get; set; }
         [Import] public IUserSettingsService m_UserSettingsService { get; set; }
@@ -33,6 +32,7 @@ namespace Dek.Bel.Services.Report
             {
                 m_MessageBoxService.Show($"Exception: {aex.Message}", "Exception when generating report");
             }
+
             var source = new BindingSource();
             source.DataSource = m_ReportService.Filtered;
             dataGridView1.DataSource = source;
@@ -46,16 +46,6 @@ namespace Dek.Bel.Services.Report
         private void Button1_Click(object sender, EventArgs e)
         {
             Close();
-        }
-
-        private void CheckBox_autoSizeRows_CheckedChanged(object sender, EventArgs e)
-        {
-            dataGridView1.AutoResizeRows(
-                checkBox_autoSizeRows.Checked
-                ? DataGridViewAutoSizeRowsMode.DisplayedCells
-                : DataGridViewAutoSizeRowsMode.None);
-
-            dataGridView1.Invalidate(true);
         }
 
         private void Button2_Click(object sender, EventArgs e)

@@ -219,10 +219,35 @@ namespace Dek.Bel.Core.Services
                 .Where(v => v.VolumeId == volumeId)
                 .OrderBy(x => x).ToList();
 
-            if (orderedReferences  == null || orderedReferences.Count == 0)
+            if (orderedReferences == null || orderedReferences.Count == 0)
                 return null;
 
-            var lastref = orderedReferences.FirstOrDefault();
+            var lastref = orderedReferences.First();
+            int idx = 1;
+            while (idx < orderedReferences.Count)
+            {
+                var cur = orderedReferences[idx++];
+                if (cur.PhysicalPage > physicalPage || (cur.PhysicalPage == physicalPage && cur.Glyph > glyph))
+                    break;
+
+                lastref = cur;
+            }
+
+            return lastref;
+        }
+
+        /// <summary>
+        /// Expects ordered data!
+        /// </summary>
+        public static T GetReferenceForVolumeOrdered<T>(Id volumeId, List<T> orderedReferences, int physicalPage, int glyph) where T : Reference
+        {
+            if (orderedReferences == null || orderedReferences.Count == 0)
+                return null;
+
+            if (orderedReferences == null || orderedReferences.Count == 0)
+                return null;
+
+            var lastref = orderedReferences.First();
             int idx = 1;
             while (idx < orderedReferences.Count)
             {
