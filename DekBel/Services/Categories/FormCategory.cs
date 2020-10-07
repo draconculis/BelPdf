@@ -23,6 +23,8 @@ namespace Dek.Bel.Services
 
         private const int ColorColIdx = 4;
 
+        public event EventHandler<CategoryEventArgs> CategoryChanged;
+
         public FormCategory(ICategoryService categoryService)
         {
             InitializeComponent();
@@ -35,7 +37,6 @@ namespace Dek.Bel.Services
             m_CategoryService.CategoryUpdated += OnCategoryUpdated;
 
             AdjustColumns();
-            
         }
 
         public void OnCategoryUpdated(object sender, CategoryEventArgs args)
@@ -67,6 +68,10 @@ namespace Dek.Bel.Services
         {
             label_count.Text = $"{m_FilteredCategories.Count()} / {m_CategoryService.Categories.Count() - 1}"; // Don't count the ubiquotus 'Uncategorized'
         }
+        private void FireCategoryChanged(Category cat)
+        {
+            CategoryChanged?.Invoke(this, new CategoryEventArgs { Category = cat });
+        }
 
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
@@ -75,7 +80,7 @@ namespace Dek.Bel.Services
 
         private void button_done_Click(object sender, EventArgs e)
         {
-            Close();
+            this.Visible = false;
         }
 
         private void button_clear_Click(object sender, EventArgs e)
@@ -126,6 +131,7 @@ namespace Dek.Bel.Services
 
             int row = dataGridView1.SelectedCells[0].RowIndex;
             var cat = new Category {
+                Id = Id.NewId(dataGridView1.Rows[row].Cells[0].Value?.ToString()),
                 Code = dataGridView1.Rows[row].Cells[1].Value as string,
                 Name = dataGridView1.Rows[row].Cells[2].Value as string,
                 Description = dataGridView1.Rows[row].Cells[3].Value as string
@@ -139,6 +145,8 @@ namespace Dek.Bel.Services
                 dataGridView1.DataSource = m_FilteredCategories;
                 AdjustColumns();
             }
+
+            FireCategoryChanged(cat);
         }
 
         private void button_add_Click(object sender, EventArgs e)
@@ -159,17 +167,24 @@ namespace Dek.Bel.Services
             int row = dataGridView1.SelectedCells[0].RowIndex;
             var cat = new Category
             {
-                Id = Id.NewId(dataGridView1.Rows[row].Cells[0].Value as string),
+                Id = Id.NewId(dataGridView1.Rows[row].Cells[0].Value?.ToString()),
                 Code = dataGridView1.Rows[row].Cells[1].Value as string,
                 Name = dataGridView1.Rows[row].Cells[2].Value as string,
                 Description = dataGridView1.Rows[row].Cells[3].Value as string
             };
 
-            if (MessageBox.Show($"Delete this category {cat}?", "Delete Category?", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            List<CitationCategory> referencedCitations = m_CategoryService.CitationCategoriesByCategory(cat.Id);
+
+            string idString = string.Join($"{Environment.NewLine}", referencedCitations.Select(x => x.CitationId.ToString()).ToArray());
+
+            if (MessageBox.Show($"Delete category {cat}?" + Environment.NewLine + 
+                $"It will be removed from these {referencedCitations.Count} Citations in the current and other Volumes: " + Environment.NewLine + 
+                idString, 
+                "Delete Category?", MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
                 try
                 {
-                    m_CategoryService.Remove(cat);
+                    m_CategoryService.Remove(cat, true);
                     dataGridView1.DataSource = null;
                     dataGridView1.DataSource = m_FilteredCategories;
                 }
@@ -181,6 +196,7 @@ namespace Dek.Bel.Services
                 AdjustColumns();
             }
 
+            FireCategoryChanged(cat);
         }
 
         private void DataGridView1_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
@@ -228,7 +244,14 @@ namespace Dek.Bel.Services
                 cat.CategoryColor = ColorStuff.ConvertColorsToString(new Color[] { dlg.Color });
 
                 m_CategoryService.InsertOrUpdate(cat);
+
+                FireCategoryChanged(cat);
             }
+        }
+
+        private void dataGridView1_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            button_update_Click(sender, e);
         }
     }
 }

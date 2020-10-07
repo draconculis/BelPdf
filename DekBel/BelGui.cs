@@ -246,7 +246,7 @@ namespace Dek.Bel
         void LoadCategoryControl()
         {
             flowLayoutPanel_Categories.Controls.Clear();
-            var cgs = m_CategoryService.CitationCategories(VM.CurrentCitation.Id);
+            var cgs = m_CategoryService.CitationCategoriesByCitation(VM.CurrentCitation.Id);
             var categories = m_CategoryService.Categories;
 
             foreach (var cg in cgs)
@@ -599,7 +599,7 @@ namespace Dek.Bel
             }
 
             listBox1.Items.Clear();
-            var citCats = m_CategoryService.CitationCategories(VM.CurrentCitation.Id);
+            var citCats = m_CategoryService.CitationCategoriesByCitation(VM.CurrentCitation.Id);
             //var cats = m_CategoryService.Categories
             //    .Where(x =>
             //    x.Code.ToLower().Contains(textbox.Text.ToLower())
@@ -654,8 +654,8 @@ namespace Dek.Bel
             if (!(listBox1.SelectedItem is Category cat))
                 return;
 
-            bool hasNullCategory = m_CategoryService.CitationCategories(VM.CurrentCitation.Id).Any(x => x.CitationId == Id.Null);
-            bool hasMainCategory = m_CategoryService.CitationCategories(VM.CurrentCitation.Id).Any(x => x.IsMain);
+            bool hasNullCategory = m_CategoryService.CitationHasNullCategory(VM.CurrentCitation.Id);
+            bool hasMainCategory = m_CategoryService.CitationHasMainCategory(VM.CurrentCitation.Id);
 
             //bool hasNullCategory = flowLayoutPanel_Categories.Controls.Count == 1
             //    && ((CitationCategory)((Label)flowLayoutPanel_Categories.Controls[0]).Tag).CategoryId == Id.Null;
@@ -678,8 +678,8 @@ namespace Dek.Bel
                 if (!(listBox1.SelectedItem is Category cat))
                     return;
 
-                bool hasNullCategory = m_CategoryService.CitationCategories(VM.CurrentCitation.Id).Any(x => x.CitationId == Id.Null);
-                bool hasMainCategory = m_CategoryService.CitationCategories(VM.CurrentCitation.Id).Any(x => x.IsMain);
+                bool hasNullCategory = m_CategoryService.CitationHasNullCategory(VM.CurrentCitation.Id);
+                bool hasMainCategory = m_CategoryService.CitationHasMainCategory(VM.CurrentCitation.Id);
 
                 bool isMain = (flowLayoutPanel_Categories.Controls.Count == 0) || hasNullCategory || !hasMainCategory;
 
@@ -716,8 +716,8 @@ namespace Dek.Bel
                     return;
                 }
 
-                bool hasNullCategory = m_CategoryService.CitationCategories(VM.CurrentCitation.Id).Any(x => x.CitationId == Id.Null);
-                bool hasMainCategory = m_CategoryService.CitationCategories(VM.CurrentCitation.Id).Any(x => x.IsMain);
+                bool hasNullCategory = m_CategoryService.CitationCategoriesByCitation(VM.CurrentCitation.Id).Any(x => x.CitationId == Id.Null);
+                bool hasMainCategory = m_CategoryService.CitationCategoriesByCitation(VM.CurrentCitation.Id).Any(x => x.IsMain);
 
                 bool isMain = (flowLayoutPanel_Categories.Controls.Count == 0) || hasNullCategory || !hasMainCategory;
 
@@ -1276,9 +1276,7 @@ namespace Dek.Bel
 
         private void categoriesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FormCategory fc = new FormCategory(m_CategoryService);
-            fc.ShowDialog();
-            LoadCategoryControl();
+            Button2_Click_1(sender, e);
         }
 
         private void closeToolStripMenuItem1_Click(object sender, EventArgs e)
@@ -1310,6 +1308,11 @@ namespace Dek.Bel
             f.ShowDialog(this);
         }
 
+        private void showVolumeOutlineToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            toolStripButton1_Click_2(sender, e);
+        }
+
         #endregion Hamburger ======================================================================
         // end Hamburger ==========================================================================
 
@@ -1339,10 +1342,27 @@ namespace Dek.Bel
                 PdfService.RecreateTheWholeThing(VM, m_VolumeService);
         }
 
+        // Show Form Category
+        FormCategory m_FormCategory = null;
         private void Button2_Click_1(object sender, EventArgs e)
         {
-            FormCategory fc = new FormCategory(m_CategoryService);
-            fc.ShowDialog();
+            if (m_FormCategory == null)
+            {
+                m_FormCategory = new FormCategory(m_CategoryService);
+                m_FormCategory.Show(this);
+                m_FormCategory.CategoryChanged += OnCategoryChagedInFormCategory;
+                m_FormCategory.FormClosed += (_, __) =>
+                {
+                    m_FormCategory.CategoryChanged -= OnCategoryChagedInFormCategory;
+                    m_FormCategory = null;
+                };
+            }
+            else
+                m_FormCategory.Visible = !m_FormCategory.Visible;
+        }
+
+        private void OnCategoryChagedInFormCategory(object sender, CategoryEventArgs e)
+        {
             LoadCategoryControl();
         }
 
@@ -1573,5 +1593,6 @@ namespace Dek.Bel
 
 
         #endregion Books tab ==============================================
+
     }
 }

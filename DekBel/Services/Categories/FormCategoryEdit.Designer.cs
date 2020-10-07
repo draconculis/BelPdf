@@ -38,12 +38,13 @@
             this.textBoxName = new System.Windows.Forms.TextBox();
             this.textBoxCode = new System.Windows.Forms.TextBox();
             this.label_warn = new System.Windows.Forms.Label();
+            this.buttonRestore = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // buttonOK
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonOK.Location = new System.Drawing.Point(282, 131);
+            this.buttonOK.Location = new System.Drawing.Point(282, 168);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(92, 24);
             this.buttonOK.TabIndex = 100;
@@ -55,7 +56,7 @@
             // 
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.buttonCancel.Location = new System.Drawing.Point(380, 131);
+            this.buttonCancel.Location = new System.Drawing.Point(380, 168);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(92, 24);
             this.buttonCancel.TabIndex = 110;
@@ -105,8 +106,9 @@
             this.textBoxDesc.Multiline = true;
             this.textBoxDesc.Name = "textBoxDesc";
             this.textBoxDesc.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBoxDesc.Size = new System.Drawing.Size(467, 56);
+            this.textBoxDesc.Size = new System.Drawing.Size(467, 77);
             this.textBoxDesc.TabIndex = 30;
+            this.textBoxDesc.TextChanged += new System.EventHandler(this.textBoxDesc_TextChanged);
             // 
             // textBoxName
             // 
@@ -129,14 +131,27 @@
             // 
             // label_warn
             // 
+            this.label_warn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label_warn.AutoSize = true;
             this.label_warn.ForeColor = System.Drawing.Color.Maroon;
-            this.label_warn.Location = new System.Drawing.Point(6, 136);
+            this.label_warn.Location = new System.Drawing.Point(6, 149);
             this.label_warn.Name = "label_warn";
             this.label_warn.Size = new System.Drawing.Size(41, 15);
             this.label_warn.TabIndex = 307;
             this.label_warn.Text = "label4";
             this.label_warn.Visible = false;
+            // 
+            // buttonRestore
+            // 
+            this.buttonRestore.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.buttonRestore.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.buttonRestore.Location = new System.Drawing.Point(5, 168);
+            this.buttonRestore.Name = "buttonRestore";
+            this.buttonRestore.Size = new System.Drawing.Size(145, 24);
+            this.buttonRestore.TabIndex = 308;
+            this.buttonRestore.Text = "Restore Category";
+            this.buttonRestore.UseVisualStyleBackColor = true;
+            this.buttonRestore.Click += new System.EventHandler(this.buttonRestore_Click);
             // 
             // FormCategoryEdit
             // 
@@ -145,7 +160,8 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ControlLight;
             this.CancelButton = this.buttonCancel;
-            this.ClientSize = new System.Drawing.Size(477, 161);
+            this.ClientSize = new System.Drawing.Size(477, 198);
+            this.Controls.Add(this.buttonRestore);
             this.Controls.Add(this.label_warn);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
@@ -182,5 +198,6 @@
         private System.Windows.Forms.TextBox textBoxName;
         private System.Windows.Forms.TextBox textBoxCode;
         private System.Windows.Forms.Label label_warn;
+        private System.Windows.Forms.Button buttonRestore;
     }
 }

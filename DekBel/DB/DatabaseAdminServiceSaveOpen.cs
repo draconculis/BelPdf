@@ -8,6 +8,13 @@ using Dek.Bel.Core.Services;
 
 namespace Dek.Bel.DB
 {
+    /*
+    Proper backup:
+
+    https://stackoverflow.com/questions/25675314/how-to-backup-sqlite-database
+    https://stackoverflow.com/questions/41744297/do-the-sqlite3-backup-and-dump-commands-lock-the-database
+    */
+
     [Export]
     public class DatabaseAdminServiceSaveOpen
     {

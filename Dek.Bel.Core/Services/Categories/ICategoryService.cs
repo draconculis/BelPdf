@@ -11,12 +11,17 @@ namespace Dek.Bel.Core.Services
         event EventHandler<CategoryEventArgs> CategoryUpdated;
 
         IEnumerable<Category> Categories { get; }
-        List<CitationCategory> CitationCategories(Id citationId);
+
+        // Citation 
+        List<CitationCategory> CitationCategoriesByCitation(Id citationId);
+        List<CitationCategory> CitationCategoriesByCategory(Id categoryId);
+        bool CitationHasNullCategory(Id citationId);
+        bool CitationHasMainCategory(Id citationId);
 
         Category CreateNewCategory(string code, string name, string description = null);
         Category InsertOrUpdate(Category cat);
         Category InsertOrUpdate(string code, string name, string desc);
-        void Remove(Category cat);
+        void Remove(Category cat, bool force = true);
 
         void AddCategoryToCitation(Id citationId, Id categoryId, int weight, bool isMain);
         void SetMainCategory(CitationCategory citationCategory);

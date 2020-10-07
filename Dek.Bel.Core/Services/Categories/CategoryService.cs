@@ -46,7 +46,7 @@ namespace Dek.Bel.Core.Services
         /// <exception cref="ArgumentException">Throws arg exception if code not unique</exception>
         public Category InsertOrUpdate(Category cat)
         {
-            Category existingCat = Categories.FirstOrDefault(x => x.Code == cat.Code);
+            Category existingCat = Categories.FirstOrDefault(x => x.Code.ToLower() == cat.Code.ToLower());
 
             if (cat.Id == Id.Null)
                 cat.Id =
@@ -88,14 +88,29 @@ namespace Dek.Bel.Core.Services
         }
 
 
-        public void Remove(Category cat)
+        /// <summary>
+        /// Delete a category. 
+        /// If force and in use, then remove all references to this category, otherwise throw.
+        /// </summary>
+        public void Remove(Category cat, bool force = false)
         {
-            List<CitationCategory> referencedCitations = m_DBService.Select<CitationCategory>($"`CategoryId`='{cat.Id}'");
+            if (cat.Id.IsNull)
+                throw new Exception($"The id of category {cat.Code} is zero. This nil-category cannot be removed.");
+
+            List<CitationCategory> referencedCitations = CitationCategoriesByCategory(cat.Id);
             if (referencedCitations.Any())
             {
-                IEnumerable<Id> ids = referencedCitations.Select(x => x.CitationId).OrderBy(x => x).ToList();
-                string idString = string.Join($"{Environment.NewLine}", ids.Select(x => x.ToString()).ToArray());
-                throw new Exception($"The following {referencedCitations.Count} citations reference this category: " + idString);
+                if (force) 
+                { 
+                    foreach(CitationCategory citCat in referencedCitations)
+                        m_DBService.Delete(citCat);
+                }
+                else
+                {
+                    IEnumerable<Id> ids = referencedCitations.Select(x => x.CitationId).OrderBy(x => x).ToList();
+                    string idString = string.Join($"{Environment.NewLine}", ids.Select(x => x.ToString()).ToArray());
+                    throw new Exception($"The following {referencedCitations.Count} citations reference this category: " + idString);
+                }
             }
 
             m_DBService.Delete(cat);
@@ -150,7 +165,7 @@ namespace Dek.Bel.Core.Services
 
         public void SetMainCategory(CitationCategory citationCategory)
         {
-            var cgs = CitationCategories(citationCategory.CitationId);
+            var cgs = CitationCategoriesByCitation(citationCategory.CitationId);
             if (cgs == null || cgs.Count < 1)
                 return;
 
@@ -184,7 +199,7 @@ namespace Dek.Bel.Core.Services
         public CitationCategory GetMainCitationCategory(string citationId) => GetMainCitationCategory(new Id(citationId));
         public CitationCategory GetMainCitationCategory(Id citationId)
         {
-            var cgs = CitationCategories(citationId);
+            var cgs = CitationCategoriesByCitation(citationId);
             var mainCitCat = cgs.SingleOrDefault(x => x.IsMain);
             if (mainCitCat == null)
             {
@@ -202,29 +217,32 @@ namespace Dek.Bel.Core.Services
 
         public void SetWeight(Id citationId, Id categoryId, int weight)
         {
-            var cg = CitationCategories(citationId).SingleOrDefault(x => x.CitationId == citationId && x.CategoryId == categoryId);
+            var cg = CitationCategoriesByCitation(citationId).SingleOrDefault(x => x.CitationId == citationId && x.CategoryId == categoryId);
             cg.Weight = weight;
 
             m_DBService.InsertOrUpdate(cg);
         }
 
-        public List<CitationCategory> CitationCategories(Id citationId) => 
+        public List<CitationCategory> CitationCategoriesByCitation(Id citationId) =>
             m_DBService.Select<CitationCategory>($"`CitationId` = '{citationId}'");
-
-
-        //public void ClearNullCategoriesFromCitation(Id citationId)
-        //{
-        //    var citCats = CitationCategories(citationId).Where(x => x.CitationId == citationId && x.CategoryId == Id.Null);
-        //    foreach(CitationCategory citCat in citCats)
-        //    {
-        //        m_DBService.Delete(citCat);
-        //    }
-        //}
+        
+        public List<CitationCategory> CitationCategoriesByCategory(Id categoryId) =>
+            m_DBService.Select<CitationCategory>($"`CategoryId`='{categoryId}'");
 
         private void RemoveUncategorizedForCitation(Id citationId)
         {
-            if (CitationCategories(citationId).Any(x => x.CategoryId == Id.Null))
+            if (CitationCategoriesByCitation(citationId).Any(x => x.CategoryId == Id.Null))
                 m_DBService.Delete<CitationCategory>($"`CitationId`='{citationId}' and `CategoryId`='{Id.Null}'");
+        }
+
+        public bool CitationHasNullCategory(Id citationId)
+        {
+            return CitationCategoriesByCitation(citationId).Any(x => x.CitationId == Id.Null);
+        }
+
+        public bool CitationHasMainCategory(Id citationId)
+        {
+            return CitationCategoriesByCitation(citationId).Any(x => x.IsMain);
         }
     }
 }

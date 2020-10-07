@@ -64,7 +64,7 @@
             this.button_done.Name = "button_done";
             this.button_done.Size = new System.Drawing.Size(83, 24);
             this.button_done.TabIndex = 300;
-            this.button_done.Text = "Close";
+            this.button_done.Text = "Hide";
             this.button_done.UseVisualStyleBackColor = true;
             this.button_done.Click += new System.EventHandler(this.button_done_Click);
             // 
@@ -161,6 +161,7 @@
             this.dataGridView1.TabIndex = 20;
             this.dataGridView1.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellClick);
             this.dataGridView1.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick);
+            this.dataGridView1.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellDoubleClick);
             this.dataGridView1.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.DataGridView1_CellFormatting);
             this.dataGridView1.Resize += new System.EventHandler(this.dataGridView1_Resize);
             // 
