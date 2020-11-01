@@ -7,12 +7,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Syncfusion.WinForms.DataGrid;
 
 namespace Dek.Bel.Services.Report
 {
     public partial class Form_ReportColumns : Form
     {
         private DataGridView dgv;
+        private SfDataGrid sfdg;
 
         public Form_ReportColumns(DataGridView dataGridView)
         {
@@ -29,12 +31,26 @@ namespace Dek.Bel.Services.Report
             listView1.ItemChecked += ListView1_ItemChecked;
         }
 
+        public Form_ReportColumns(SfDataGrid sfDataGrid)
+        {
+            InitializeComponent();
+            sfdg = sfDataGrid;
+            foreach (GridColumn col in sfdg.Columns)
+            {
+                ListViewItem item = new ListViewItem();
+                item.Checked = col.Visible;
+                item.Text = col.HeaderText;
+                listView1.Items.Add(item);
+            }
+
+            listView1.ItemChecked += ListView1_ItemChecked;
+        }
+
         private void ListView1_ItemChecked(object sender, ItemCheckedEventArgs e)
         {
-            //MessageBox.Show(e.Item.Text + $": {e.Item.Checked}");
             try
             {
-                dgv.Columns[e.Item.Text].Visible = e.Item.Checked;
+                sfdg.Columns[e.Item.Text].Visible = e.Item.Checked;
             }
             catch(Exception ex)
             {

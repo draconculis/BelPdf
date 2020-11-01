@@ -29,12 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form_Report));
-            this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.Columns = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.toolStripMenuItem_columns = new System.Windows.Forms.ToolStripMenuItem();
             this.button1 = new System.Windows.Forms.Button();
@@ -44,61 +39,21 @@
             this.button3 = new System.Windows.Forms.Button();
             this.button4 = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
-            this.button5 = new System.Windows.Forms.Button();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
+            this.button_ShowHtml = new System.Windows.Forms.Button();
+            this.sfDataGrid1 = new Syncfusion.WinForms.DataGrid.SfDataGrid();
+            this.buttonShowFilter = new System.Windows.Forms.Button();
+            this.button6 = new System.Windows.Forms.Button();
+            this.button7 = new System.Windows.Forms.Button();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.button_ExportExcel = new System.Windows.Forms.Button();
+            this.button_ExportPdf = new System.Windows.Forms.Button();
+            this.button_ExportHtml = new System.Windows.Forms.Button();
+            this.button_ExportCsv = new System.Windows.Forms.Button();
+            this.button_SelectAndClose = new System.Windows.Forms.Button();
             this.Columns.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.sfDataGrid1)).BeginInit();
+            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // dataGridView1
-            // 
-            this.dataGridView1.AllowUserToAddRows = false;
-            this.dataGridView1.AllowUserToDeleteRows = false;
-            this.dataGridView1.AllowUserToOrderColumns = true;
-            dataGridViewCellStyle1.BackColor = System.Drawing.Color.WhiteSmoke;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.Color.LightSteelBlue;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.ControlText;
-            this.dataGridView1.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
-            this.dataGridView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.dataGridView1.BackgroundColor = System.Drawing.SystemColors.Control;
-            this.dataGridView1.ClipboardCopyMode = System.Windows.Forms.DataGridViewClipboardCopyMode.EnableWithoutHeaderText;
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = System.Drawing.Color.Khaki;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Corbel", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.Goldenrod;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
-            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.ContextMenuStrip = this.Columns;
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Corbel", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.Color.LightSkyBlue;
-            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridView1.DefaultCellStyle = dataGridViewCellStyle3;
-            this.dataGridView1.GridColor = System.Drawing.SystemColors.Control;
-            this.dataGridView1.Location = new System.Drawing.Point(1, 3);
-            this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.ReadOnly = true;
-            this.dataGridView1.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle4.BackColor = System.Drawing.Color.Pink;
-            dataGridViewCellStyle4.Font = new System.Drawing.Font("Corbel", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.Color.PaleVioletRed;
-            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridView1.RowHeadersDefaultCellStyle = dataGridViewCellStyle4;
-            this.dataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
-            this.dataGridView1.ShowCellErrors = false;
-            this.dataGridView1.ShowEditingIcon = false;
-            this.dataGridView1.Size = new System.Drawing.Size(798, 365);
-            this.dataGridView1.TabIndex = 0;
             // 
             // Columns
             // 
@@ -118,9 +73,9 @@
             // button1
             // 
             this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button1.Location = new System.Drawing.Point(659, 416);
+            this.button1.Location = new System.Drawing.Point(659, 454);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(140, 31);
+            this.button1.Size = new System.Drawing.Size(140, 27);
             this.button1.TabIndex = 1;
             this.button1.Text = "Close";
             this.button1.UseVisualStyleBackColor = true;
@@ -130,26 +85,26 @@
             // 
             this.label_time.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label_time.AutoSize = true;
-            this.label_time.Location = new System.Drawing.Point(4, 434);
+            this.label_time.Location = new System.Drawing.Point(4, 467);
             this.label_time.Name = "label_time";
-            this.label_time.Size = new System.Drawing.Size(35, 13);
+            this.label_time.Size = new System.Drawing.Size(34, 14);
             this.label_time.TabIndex = 2;
             this.label_time.Text = "Took:";
             // 
             // textBox1
             // 
             this.textBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.textBox1.Location = new System.Drawing.Point(622, 391);
+            this.textBox1.Location = new System.Drawing.Point(68, 454);
             this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(100, 20);
+            this.textBox1.Size = new System.Drawing.Size(100, 22);
             this.textBox1.TabIndex = 4;
             // 
             // button2
             // 
             this.button2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.button2.Location = new System.Drawing.Point(724, 389);
+            this.button2.Location = new System.Drawing.Point(170, 452);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(75, 23);
+            this.button2.Size = new System.Drawing.Size(75, 25);
             this.button2.TabIndex = 6;
             this.button2.Text = "Filter";
             this.button2.UseVisualStyleBackColor = true;
@@ -158,9 +113,9 @@
             // button3
             // 
             this.button3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.button3.Location = new System.Drawing.Point(127, 370);
+            this.button3.Location = new System.Drawing.Point(354, 324);
             this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(75, 23);
+            this.button3.Size = new System.Drawing.Size(75, 25);
             this.button3.TabIndex = 7;
             this.button3.Text = "Columns...";
             this.button3.UseVisualStyleBackColor = true;
@@ -169,9 +124,9 @@
             // button4
             // 
             this.button4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.button4.Location = new System.Drawing.Point(208, 370);
+            this.button4.Location = new System.Drawing.Point(435, 324);
             this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(75, 23);
+            this.button4.Size = new System.Drawing.Size(75, 25);
             this.button4.TabIndex = 8;
             this.button4.Text = "Show all";
             this.button4.UseVisualStyleBackColor = true;
@@ -181,29 +136,152 @@
             // 
             this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(619, 371);
+            this.label1.Location = new System.Drawing.Point(65, 433);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(72, 13);
+            this.label1.Size = new System.Drawing.Size(107, 14);
             this.label1.TabIndex = 9;
-            this.label1.Text = "MainCategory";
+            this.label1.Text = "Main Category Filter";
             // 
-            // button5
+            // button_ShowHtml
             // 
-            this.button5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.button5.Location = new System.Drawing.Point(127, 420);
-            this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(187, 23);
-            this.button5.TabIndex = 10;
-            this.button5.Text = "HTML (Show in browser)";
-            this.button5.UseVisualStyleBackColor = true;
-            this.button5.Click += new System.EventHandler(this.Button5_Click);
+            this.button_ShowHtml.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.button_ShowHtml.Location = new System.Drawing.Point(594, 21);
+            this.button_ShowHtml.Name = "button_ShowHtml";
+            this.button_ShowHtml.Size = new System.Drawing.Size(187, 25);
+            this.button_ShowHtml.TabIndex = 10;
+            this.button_ShowHtml.Text = "HTML (Show in browser)";
+            this.button_ShowHtml.UseVisualStyleBackColor = true;
+            this.button_ShowHtml.Click += new System.EventHandler(this.Button5_Click);
+            // 
+            // sfDataGrid1
+            // 
+            this.sfDataGrid1.AccessibleName = "Table";
+            this.sfDataGrid1.AllowDraggingColumns = true;
+            this.sfDataGrid1.AllowFiltering = true;
+            this.sfDataGrid1.AllowResizingColumns = true;
+            this.sfDataGrid1.AllowTriStateSorting = true;
+            this.sfDataGrid1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.sfDataGrid1.FilterRowPosition = Syncfusion.WinForms.DataGrid.Enums.RowPosition.Top;
+            this.sfDataGrid1.Font = new System.Drawing.Font("Corbel", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.sfDataGrid1.HeaderRowHeight = 28;
+            this.sfDataGrid1.Location = new System.Drawing.Point(1, 2);
+            this.sfDataGrid1.Name = "sfDataGrid1";
+            this.sfDataGrid1.PasteOption = Syncfusion.WinForms.DataGrid.Enums.PasteOptions.None;
+            this.sfDataGrid1.ShowGroupDropArea = true;
+            this.sfDataGrid1.ShowRowHeaderErrorIcon = false;
+            this.sfDataGrid1.Size = new System.Drawing.Size(797, 311);
+            this.sfDataGrid1.TabIndex = 11;
+            this.sfDataGrid1.Text = "sfDataGrid1";
+            this.sfDataGrid1.CurrentCellBeginEdit += new Syncfusion.WinForms.DataGrid.Events.CurrentCellBeginEditEventHandler(this.sfDataGrid1_CurrentCellBeginEdit);
+            // 
+            // buttonShowFilter
+            // 
+            this.buttonShowFilter.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.buttonShowFilter.Location = new System.Drawing.Point(12, 320);
+            this.buttonShowFilter.Name = "buttonShowFilter";
+            this.buttonShowFilter.Size = new System.Drawing.Size(106, 29);
+            this.buttonShowFilter.TabIndex = 12;
+            this.buttonShowFilter.Text = "Show filter";
+            this.buttonShowFilter.UseVisualStyleBackColor = true;
+            this.buttonShowFilter.Click += new System.EventHandler(this.buttonShowFilter_Click);
+            // 
+            // button6
+            // 
+            this.button6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.button6.Location = new System.Drawing.Point(124, 320);
+            this.button6.Name = "button6";
+            this.button6.Size = new System.Drawing.Size(106, 29);
+            this.button6.TabIndex = 13;
+            this.button6.Text = "Clear filter";
+            this.button6.UseVisualStyleBackColor = true;
+            this.button6.Click += new System.EventHandler(this.button6_Click);
+            // 
+            // button7
+            // 
+            this.button7.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.button7.Location = new System.Drawing.Point(237, 320);
+            this.button7.Name = "button7";
+            this.button7.Size = new System.Drawing.Size(109, 29);
+            this.button7.TabIndex = 14;
+            this.button7.Text = "Columns...";
+            this.button7.UseVisualStyleBackColor = true;
+            this.button7.Click += new System.EventHandler(this.button7_Click);
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox1.Controls.Add(this.button_ExportCsv);
+            this.groupBox1.Controls.Add(this.button_ExportHtml);
+            this.groupBox1.Controls.Add(this.button_ExportPdf);
+            this.groupBox1.Controls.Add(this.button_ExportExcel);
+            this.groupBox1.Controls.Add(this.button_ShowHtml);
+            this.groupBox1.Location = new System.Drawing.Point(7, 360);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(791, 59);
+            this.groupBox1.TabIndex = 15;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Export";
+            // 
+            // button_ExportExcel
+            // 
+            this.button_ExportExcel.Location = new System.Drawing.Point(10, 21);
+            this.button_ExportExcel.Name = "button_ExportExcel";
+            this.button_ExportExcel.Size = new System.Drawing.Size(111, 25);
+            this.button_ExportExcel.TabIndex = 11;
+            this.button_ExportExcel.Text = "Excel...";
+            this.button_ExportExcel.UseVisualStyleBackColor = true;
+            // 
+            // button_ExportPdf
+            // 
+            this.button_ExportPdf.Location = new System.Drawing.Point(244, 21);
+            this.button_ExportPdf.Name = "button_ExportPdf";
+            this.button_ExportPdf.Size = new System.Drawing.Size(111, 25);
+            this.button_ExportPdf.TabIndex = 12;
+            this.button_ExportPdf.Text = "Pdf...";
+            this.button_ExportPdf.UseVisualStyleBackColor = true;
+            // 
+            // button_ExportHtml
+            // 
+            this.button_ExportHtml.Location = new System.Drawing.Point(361, 21);
+            this.button_ExportHtml.Name = "button_ExportHtml";
+            this.button_ExportHtml.Size = new System.Drawing.Size(111, 25);
+            this.button_ExportHtml.TabIndex = 13;
+            this.button_ExportHtml.Text = "Html...";
+            this.button_ExportHtml.UseVisualStyleBackColor = true;
+            // 
+            // button_ExportCsv
+            // 
+            this.button_ExportCsv.Location = new System.Drawing.Point(127, 21);
+            this.button_ExportCsv.Name = "button_ExportCsv";
+            this.button_ExportCsv.Size = new System.Drawing.Size(111, 25);
+            this.button_ExportCsv.TabIndex = 14;
+            this.button_ExportCsv.Text = "CSV...";
+            this.button_ExportCsv.UseVisualStyleBackColor = true;
+            // 
+            // button_SelectAndClose
+            // 
+            this.button_SelectAndClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.button_SelectAndClose.Location = new System.Drawing.Point(513, 454);
+            this.button_SelectAndClose.Name = "button_SelectAndClose";
+            this.button_SelectAndClose.Size = new System.Drawing.Size(140, 27);
+            this.button_SelectAndClose.TabIndex = 16;
+            this.button_SelectAndClose.Text = "Select and Close";
+            this.button_SelectAndClose.UseVisualStyleBackColor = true;
             // 
             // Form_Report
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 14F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Controls.Add(this.button5);
+            this.ClientSize = new System.Drawing.Size(800, 485);
+            this.Controls.Add(this.button_SelectAndClose);
+            this.Controls.Add(this.groupBox1);
+            this.Controls.Add(this.button7);
+            this.Controls.Add(this.button6);
+            this.Controls.Add(this.buttonShowFilter);
+            this.Controls.Add(this.sfDataGrid1);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.button4);
             this.Controls.Add(this.button3);
@@ -211,20 +289,19 @@
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.label_time);
             this.Controls.Add(this.button1);
-            this.Controls.Add(this.dataGridView1);
+            this.Font = new System.Drawing.Font("Corbel", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Form_Report";
             this.Text = "Report";
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.Columns.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.sfDataGrid1)).EndInit();
+            this.groupBox1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
         }
 
         #endregion
-
-        private System.Windows.Forms.DataGridView dataGridView1;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.ContextMenuStrip Columns;
         private System.Windows.Forms.Label label_time;
@@ -234,6 +311,16 @@
         private System.Windows.Forms.Button button4;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem_columns;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Button button5;
+        private System.Windows.Forms.Button button_ShowHtml;
+        private Syncfusion.WinForms.DataGrid.SfDataGrid sfDataGrid1;
+        private System.Windows.Forms.Button buttonShowFilter;
+        private System.Windows.Forms.Button button6;
+        private System.Windows.Forms.Button button7;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.Button button_ExportCsv;
+        private System.Windows.Forms.Button button_ExportHtml;
+        private System.Windows.Forms.Button button_ExportPdf;
+        private System.Windows.Forms.Button button_ExportExcel;
+        private System.Windows.Forms.Button button_SelectAndClose;
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Dek.Cls;
 using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace Dek.Bel.Core.Services
 {
@@ -28,7 +29,8 @@ namespace Dek.Bel.Core.Services
         public string MainCategory { get; set; }
         public int MainCategoryWeight { get; set; }
 
-        // Hidden
+        // Hidden, but needed in grid to handle printout of citations
+        //[Display(AutoGenerateField = false, Description = "Emphasis field is not generated in UI")]
         public string Emphasis { get; set; }
     }
 }

@@ -76,6 +76,7 @@
       <HintPath>..\sumatra\vs2017\packages\itext7.7.1.12\lib\net40\itext.svg.dll</HintPath>
     </Reference>
     <Reference Include="PresentationCore" />
+    <Reference Include="Syncfusion.SfDataGrid.WinForms, Version=18.3460.0.35, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Annotations, Version=4.2.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\sumatra\vs2017\packages\System.ComponentModel.Annotations.4.7.0\lib\net461\System.ComponentModel.Annotations.dll</HintPath>
