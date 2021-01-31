@@ -31,11 +31,13 @@ bld/
 dbg/
 dbg64/
 dbg64_unix/
+rel_*
 rel/
 rel64/
 rel64_unix/
 relPrefast/
 relPrefast64/
+Bel_*
 *.suo
 *.aps
 *.opensdf
