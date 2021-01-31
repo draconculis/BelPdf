@@ -45,11 +45,12 @@
             this.button6 = new System.Windows.Forms.Button();
             this.button7 = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.button_ExportExcel = new System.Windows.Forms.Button();
-            this.button_ExportPdf = new System.Windows.Forms.Button();
-            this.button_ExportHtml = new System.Windows.Forms.Button();
             this.button_ExportCsv = new System.Windows.Forms.Button();
+            this.button_ExportHtml = new System.Windows.Forms.Button();
+            this.button_ExportPdf = new System.Windows.Forms.Button();
+            this.button_ExportExcel = new System.Windows.Forms.Button();
             this.button_SelectAndClose = new System.Windows.Forms.Button();
+            this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.Columns.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.sfDataGrid1)).BeginInit();
             this.groupBox1.SuspendLayout();
@@ -225,23 +226,15 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Export";
             // 
-            // button_ExportExcel
+            // button_ExportCsv
             // 
-            this.button_ExportExcel.Location = new System.Drawing.Point(10, 21);
-            this.button_ExportExcel.Name = "button_ExportExcel";
-            this.button_ExportExcel.Size = new System.Drawing.Size(111, 25);
-            this.button_ExportExcel.TabIndex = 11;
-            this.button_ExportExcel.Text = "Excel...";
-            this.button_ExportExcel.UseVisualStyleBackColor = true;
-            // 
-            // button_ExportPdf
-            // 
-            this.button_ExportPdf.Location = new System.Drawing.Point(244, 21);
-            this.button_ExportPdf.Name = "button_ExportPdf";
-            this.button_ExportPdf.Size = new System.Drawing.Size(111, 25);
-            this.button_ExportPdf.TabIndex = 12;
-            this.button_ExportPdf.Text = "Pdf...";
-            this.button_ExportPdf.UseVisualStyleBackColor = true;
+            this.button_ExportCsv.Location = new System.Drawing.Point(127, 21);
+            this.button_ExportCsv.Name = "button_ExportCsv";
+            this.button_ExportCsv.Size = new System.Drawing.Size(111, 25);
+            this.button_ExportCsv.TabIndex = 14;
+            this.button_ExportCsv.Text = "CSV...";
+            this.button_ExportCsv.UseVisualStyleBackColor = true;
+            this.button_ExportCsv.Click += new System.EventHandler(this.button_ExportCsv_Click);
             // 
             // button_ExportHtml
             // 
@@ -251,15 +244,27 @@
             this.button_ExportHtml.TabIndex = 13;
             this.button_ExportHtml.Text = "Html...";
             this.button_ExportHtml.UseVisualStyleBackColor = true;
+            this.button_ExportHtml.Click += new System.EventHandler(this.button_ExportHtml_Click);
             // 
-            // button_ExportCsv
+            // button_ExportPdf
             // 
-            this.button_ExportCsv.Location = new System.Drawing.Point(127, 21);
-            this.button_ExportCsv.Name = "button_ExportCsv";
-            this.button_ExportCsv.Size = new System.Drawing.Size(111, 25);
-            this.button_ExportCsv.TabIndex = 14;
-            this.button_ExportCsv.Text = "CSV...";
-            this.button_ExportCsv.UseVisualStyleBackColor = true;
+            this.button_ExportPdf.Location = new System.Drawing.Point(244, 21);
+            this.button_ExportPdf.Name = "button_ExportPdf";
+            this.button_ExportPdf.Size = new System.Drawing.Size(111, 25);
+            this.button_ExportPdf.TabIndex = 12;
+            this.button_ExportPdf.Text = "Pdf...";
+            this.button_ExportPdf.UseVisualStyleBackColor = true;
+            this.button_ExportPdf.Click += new System.EventHandler(this.button_ExportPdf_Click);
+            // 
+            // button_ExportExcel
+            // 
+            this.button_ExportExcel.Location = new System.Drawing.Point(10, 21);
+            this.button_ExportExcel.Name = "button_ExportExcel";
+            this.button_ExportExcel.Size = new System.Drawing.Size(111, 25);
+            this.button_ExportExcel.TabIndex = 11;
+            this.button_ExportExcel.Text = "Excel...";
+            this.button_ExportExcel.UseVisualStyleBackColor = true;
+            this.button_ExportExcel.Click += new System.EventHandler(this.button_ExportExcel_Click);
             // 
             // button_SelectAndClose
             // 
@@ -322,5 +327,6 @@
         private System.Windows.Forms.Button button_ExportPdf;
         private System.Windows.Forms.Button button_ExportExcel;
         private System.Windows.Forms.Button button_SelectAndClose;
+        private System.Windows.Forms.SaveFileDialog saveFileDialog1;
     }
 }

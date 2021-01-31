@@ -42,16 +42,23 @@
             this.showOriginalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.removeLineEndingsToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.copyToolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
+            this.richTextBox2 = new System.Windows.Forms.RichTextBox();
+            this.contextMenuStrip_Rtb2 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.emphasisToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.cutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.copyToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.pasteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripButton_Reset = new System.Windows.Forms.ToolStripButton();
-            this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripSplitButton1 = new System.Windows.Forms.ToolStripSplitButton();
             this.removeLineEndingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.adjustSpacesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.boldEmphasisToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.underlineEmphasisToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.resetToOriginalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.flipOrientationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.marginsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripButton2 = new System.Windows.Forms.ToolStripButton();
             this.toolStripButton3 = new System.Windows.Forms.ToolStripButton();
@@ -66,12 +73,6 @@
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripButton_AutoUpdate = new System.Windows.Forms.ToolStripButton();
             this.toolStripButton_updatePdf = new System.Windows.Forms.ToolStripButton();
-            this.richTextBox2 = new System.Windows.Forms.RichTextBox();
-            this.contextMenuStrip_Rtb2 = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.emphasisToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.cutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.copyToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.pasteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripDropDownButton1 = new System.Windows.Forms.ToolStripDropDownButton();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -128,19 +129,21 @@
             this.label_PdfMarginBoxColor = new System.Windows.Forms.Label();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage3 = new System.Windows.Forms.TabPage();
-            this.label_volumeTitle = new System.Windows.Forms.Label();
+            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.label_citationVolume = new System.Windows.Forms.Label();
-            this.label_citationNotes = new System.Windows.Forms.Label();
-            this.label_CitationEdited = new System.Windows.Forms.Label();
-            this.label16 = new System.Windows.Forms.Label();
-            this.label_CitationCreated = new System.Windows.Forms.Label();
-            this.label15 = new System.Windows.Forms.Label();
-            this.label_CitationLength = new System.Windows.Forms.Label();
-            this.label13 = new System.Windows.Forms.Label();
-            this.label_CitationStop = new System.Windows.Forms.Label();
-            this.label17 = new System.Windows.Forms.Label();
-            this.label_citationStart = new System.Windows.Forms.Label();
             this.label14 = new System.Windows.Forms.Label();
+            this.label17 = new System.Windows.Forms.Label();
+            this.label_CitationLength = new System.Windows.Forms.Label();
+            this.label_CitationEdited = new System.Windows.Forms.Label();
+            this.label13 = new System.Windows.Forms.Label();
+            this.label_citationStart = new System.Windows.Forms.Label();
+            this.label16 = new System.Windows.Forms.Label();
+            this.label_CitationStop = new System.Windows.Forms.Label();
+            this.label_CitationCreated = new System.Windows.Forms.Label();
+            this.label_volumeTitle = new System.Windows.Forms.Label();
+            this.label15 = new System.Windows.Forms.Label();
+            this.label_citationNotes = new System.Windows.Forms.Label();
+            this.textBox_CitationNotes = new System.Windows.Forms.TextBox();
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.button_Series = new System.Windows.Forms.Button();
             this.label_SeriesName = new System.Windows.Forms.Label();
@@ -185,16 +188,14 @@
             this.checkBox_right = new System.Windows.Forms.CheckBox();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
-            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.textBox_CitationNotes = new System.Windows.Forms.TextBox();
             this.contextMenuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             this.contextMenuStrip_Rtb1.SuspendLayout();
-            this.toolStrip1.SuspendLayout();
             this.contextMenuStrip_Rtb2.SuspendLayout();
+            this.toolStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.contextMenuStrip_Category.SuspendLayout();
@@ -208,6 +209,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_FontSize)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.tabPage3.SuspendLayout();
+            this.tableLayoutPanel1.SuspendLayout();
             this.tabPage4.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer_Volume)).BeginInit();
@@ -219,7 +221,6 @@
             this.tabPage5.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView_Authors)).BeginInit();
             this.tabPage2.SuspendLayout();
-            this.tableLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // contextMenuStrip1
@@ -258,20 +259,20 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.splitContainer1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.splitContainer1.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer1.Location = new System.Drawing.Point(0, 25);
             this.splitContainer1.Name = "splitContainer1";
             this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
             // splitContainer1.Panel1
             // 
             this.splitContainer1.Panel1.Controls.Add(this.richTextBox1);
-            this.splitContainer1.Panel1.Controls.Add(this.toolStrip1);
             // 
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.richTextBox2);
-            this.splitContainer1.Size = new System.Drawing.Size(1170, 176);
-            this.splitContainer1.SplitterDistance = 88;
+            this.splitContainer1.Size = new System.Drawing.Size(1170, 154);
+            this.splitContainer1.SplitterDistance = 70;
+            this.splitContainer1.SplitterWidth = 6;
             this.splitContainer1.TabIndex = 1;
             // 
             // richTextBox1
@@ -282,15 +283,16 @@
             this.richTextBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.richTextBox1.ContextMenuStrip = this.contextMenuStrip_Rtb1;
             this.richTextBox1.DetectUrls = false;
-            this.richTextBox1.Location = new System.Drawing.Point(0, 26);
+            this.richTextBox1.Location = new System.Drawing.Point(0, 0);
+            this.richTextBox1.Margin = new System.Windows.Forms.Padding(0);
             this.richTextBox1.Name = "richTextBox1";
             this.richTextBox1.ReadOnly = true;
             this.richTextBox1.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.ForcedVertical;
             this.richTextBox1.ShowSelectionMargin = true;
-            this.richTextBox1.Size = new System.Drawing.Size(1165, 57);
+            this.richTextBox1.Size = new System.Drawing.Size(1167, 65);
             this.richTextBox1.TabIndex = 2;
-            this.richTextBox1.TabStop = false;
             this.richTextBox1.Text = "";
+            this.richTextBox1.SizeChanged += new System.EventHandler(this.richTextBox1_SizeChanged);
             this.richTextBox1.Enter += new System.EventHandler(this.RichTextBox1_Enter);
             this.richTextBox1.Leave += new System.EventHandler(this.RichTextBox1_Leave);
             // 
@@ -340,15 +342,70 @@
             this.copyToolStripMenuItem3.Text = "Copy";
             this.copyToolStripMenuItem3.Click += new System.EventHandler(this.CopyToolStripMenuItem3_Click);
             // 
+            // richTextBox2
+            // 
+            this.richTextBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.richTextBox2.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.richTextBox2.ContextMenuStrip = this.contextMenuStrip_Rtb2;
+            this.richTextBox2.DetectUrls = false;
+            this.richTextBox2.Location = new System.Drawing.Point(0, 0);
+            this.richTextBox2.Margin = new System.Windows.Forms.Padding(0);
+            this.richTextBox2.Name = "richTextBox2";
+            this.richTextBox2.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.ForcedVertical;
+            this.richTextBox2.ShowSelectionMargin = true;
+            this.richTextBox2.Size = new System.Drawing.Size(1167, 69);
+            this.richTextBox2.TabIndex = 3;
+            this.richTextBox2.Text = "";
+            this.richTextBox2.Enter += new System.EventHandler(this.richTextBox2_Enter);
+            this.richTextBox2.KeyUp += new System.Windows.Forms.KeyEventHandler(this.richTextBox2_KeyUp);
+            this.richTextBox2.Leave += new System.EventHandler(this.richTextBox2_Leave);
+            // 
+            // contextMenuStrip_Rtb2
+            // 
+            this.contextMenuStrip_Rtb2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.emphasisToolStripMenuItem1,
+            this.cutToolStripMenuItem,
+            this.copyToolStripMenuItem1,
+            this.pasteToolStripMenuItem});
+            this.contextMenuStrip_Rtb2.Name = "contextMenuStrip3";
+            this.contextMenuStrip_Rtb2.Size = new System.Drawing.Size(125, 92);
+            // 
+            // emphasisToolStripMenuItem1
+            // 
+            this.emphasisToolStripMenuItem1.Name = "emphasisToolStripMenuItem1";
+            this.emphasisToolStripMenuItem1.Size = new System.Drawing.Size(124, 22);
+            this.emphasisToolStripMenuItem1.Text = "Emphasis";
+            this.emphasisToolStripMenuItem1.Click += new System.EventHandler(this.EmphasisToolStripMenuItem1_Click);
+            // 
+            // cutToolStripMenuItem
+            // 
+            this.cutToolStripMenuItem.Name = "cutToolStripMenuItem";
+            this.cutToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
+            this.cutToolStripMenuItem.Text = "Cut";
+            this.cutToolStripMenuItem.Click += new System.EventHandler(this.CutToolStripMenuItem_Click);
+            // 
+            // copyToolStripMenuItem1
+            // 
+            this.copyToolStripMenuItem1.Name = "copyToolStripMenuItem1";
+            this.copyToolStripMenuItem1.Size = new System.Drawing.Size(124, 22);
+            this.copyToolStripMenuItem1.Text = "Copy";
+            this.copyToolStripMenuItem1.Click += new System.EventHandler(this.CopyToolStripMenuItem1_Click);
+            // 
+            // pasteToolStripMenuItem
+            // 
+            this.pasteToolStripMenuItem.Name = "pasteToolStripMenuItem";
+            this.pasteToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
+            this.pasteToolStripMenuItem.Text = "Paste";
+            this.pasteToolStripMenuItem.Click += new System.EventHandler(this.PasteToolStripMenuItem_Click);
+            // 
             // toolStrip1
             // 
             this.toolStrip1.Font = new System.Drawing.Font("Corbel", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.toolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripButton1,
             this.toolStripSeparator6,
-            this.toolStripButton_Reset,
-            this.toolStripSeparator5,
             this.toolStripSplitButton1,
             this.toolStripSeparator1,
             this.toolStripButton2,
@@ -366,7 +423,7 @@
             this.toolStripButton_updatePdf});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(1168, 26);
+            this.toolStrip1.Size = new System.Drawing.Size(1173, 26);
             this.toolStrip1.TabIndex = 1;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -386,21 +443,6 @@
             this.toolStripSeparator6.Name = "toolStripSeparator6";
             this.toolStripSeparator6.Size = new System.Drawing.Size(6, 26);
             // 
-            // toolStripButton_Reset
-            // 
-            this.toolStripButton_Reset.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.toolStripButton_Reset.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton_Reset.Image")));
-            this.toolStripButton_Reset.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButton_Reset.Name = "toolStripButton_Reset";
-            this.toolStripButton_Reset.Size = new System.Drawing.Size(102, 23);
-            this.toolStripButton_Reset.Text = "Reset to original.";
-            this.toolStripButton_Reset.Click += new System.EventHandler(this.toolStripButton1_Click_1);
-            // 
-            // toolStripSeparator5
-            // 
-            this.toolStripSeparator5.Name = "toolStripSeparator5";
-            this.toolStripSeparator5.Size = new System.Drawing.Size(6, 26);
-            // 
             // toolStripSplitButton1
             // 
             this.toolStripSplitButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
@@ -408,7 +450,10 @@
             this.removeLineEndingsToolStripMenuItem,
             this.adjustSpacesToolStripMenuItem,
             this.boldEmphasisToolStripMenuItem,
-            this.underlineEmphasisToolStripMenuItem});
+            this.underlineEmphasisToolStripMenuItem,
+            this.resetToOriginalToolStripMenuItem,
+            this.flipOrientationToolStripMenuItem,
+            this.marginsToolStripMenuItem});
             this.toolStripSplitButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripSplitButton1.Image")));
             this.toolStripSplitButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripSplitButton1.Name = "toolStripSplitButton1";
@@ -448,6 +493,27 @@
             this.underlineEmphasisToolStripMenuItem.Size = new System.Drawing.Size(209, 22);
             this.underlineEmphasisToolStripMenuItem.Text = "Underline emphasis";
             this.underlineEmphasisToolStripMenuItem.Click += new System.EventHandler(this.UnderlineEmphasisToolStripMenuItem_Click);
+            // 
+            // resetToOriginalToolStripMenuItem
+            // 
+            this.resetToOriginalToolStripMenuItem.Name = "resetToOriginalToolStripMenuItem";
+            this.resetToOriginalToolStripMenuItem.Size = new System.Drawing.Size(209, 22);
+            this.resetToOriginalToolStripMenuItem.Text = "Reset to original...";
+            this.resetToOriginalToolStripMenuItem.Click += new System.EventHandler(this.resetToOriginalToolStripMenuItem_Click);
+            // 
+            // flipOrientationToolStripMenuItem
+            // 
+            this.flipOrientationToolStripMenuItem.Name = "flipOrientationToolStripMenuItem";
+            this.flipOrientationToolStripMenuItem.Size = new System.Drawing.Size(209, 22);
+            this.flipOrientationToolStripMenuItem.Text = "Flip orientation";
+            this.flipOrientationToolStripMenuItem.Click += new System.EventHandler(this.flipOrientationToolStripMenuItem_Click);
+            // 
+            // marginsToolStripMenuItem
+            // 
+            this.marginsToolStripMenuItem.Name = "marginsToolStripMenuItem";
+            this.marginsToolStripMenuItem.Size = new System.Drawing.Size(209, 22);
+            this.marginsToolStripMenuItem.Text = "Margins...";
+            this.marginsToolStripMenuItem.Click += new System.EventHandler(this.marginsToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
@@ -577,61 +643,6 @@
             this.toolStripButton_updatePdf.Size = new System.Drawing.Size(71, 23);
             this.toolStripButton_updatePdf.Text = "Update Pdf";
             this.toolStripButton_updatePdf.Click += new System.EventHandler(this.ToolStripButton_updatePdf_Click);
-            // 
-            // richTextBox2
-            // 
-            this.richTextBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.richTextBox2.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.richTextBox2.ContextMenuStrip = this.contextMenuStrip_Rtb2;
-            this.richTextBox2.Location = new System.Drawing.Point(1, 1);
-            this.richTextBox2.Name = "richTextBox2";
-            this.richTextBox2.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.ForcedVertical;
-            this.richTextBox2.Size = new System.Drawing.Size(1167, 78);
-            this.richTextBox2.TabIndex = 0;
-            this.richTextBox2.Text = "";
-            this.richTextBox2.Enter += new System.EventHandler(this.richTextBox2_Enter);
-            this.richTextBox2.KeyUp += new System.Windows.Forms.KeyEventHandler(this.richTextBox2_KeyUp);
-            this.richTextBox2.Leave += new System.EventHandler(this.richTextBox2_Leave);
-            // 
-            // contextMenuStrip_Rtb2
-            // 
-            this.contextMenuStrip_Rtb2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.emphasisToolStripMenuItem1,
-            this.cutToolStripMenuItem,
-            this.copyToolStripMenuItem1,
-            this.pasteToolStripMenuItem});
-            this.contextMenuStrip_Rtb2.Name = "contextMenuStrip3";
-            this.contextMenuStrip_Rtb2.Size = new System.Drawing.Size(125, 92);
-            // 
-            // emphasisToolStripMenuItem1
-            // 
-            this.emphasisToolStripMenuItem1.Name = "emphasisToolStripMenuItem1";
-            this.emphasisToolStripMenuItem1.Size = new System.Drawing.Size(124, 22);
-            this.emphasisToolStripMenuItem1.Text = "Emphasis";
-            this.emphasisToolStripMenuItem1.Click += new System.EventHandler(this.EmphasisToolStripMenuItem1_Click);
-            // 
-            // cutToolStripMenuItem
-            // 
-            this.cutToolStripMenuItem.Name = "cutToolStripMenuItem";
-            this.cutToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
-            this.cutToolStripMenuItem.Text = "Cut";
-            this.cutToolStripMenuItem.Click += new System.EventHandler(this.CutToolStripMenuItem_Click);
-            // 
-            // copyToolStripMenuItem1
-            // 
-            this.copyToolStripMenuItem1.Name = "copyToolStripMenuItem1";
-            this.copyToolStripMenuItem1.Size = new System.Drawing.Size(124, 22);
-            this.copyToolStripMenuItem1.Text = "Copy";
-            this.copyToolStripMenuItem1.Click += new System.EventHandler(this.CopyToolStripMenuItem1_Click);
-            // 
-            // pasteToolStripMenuItem
-            // 
-            this.pasteToolStripMenuItem.Name = "pasteToolStripMenuItem";
-            this.pasteToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
-            this.pasteToolStripMenuItem.Text = "Paste";
-            this.pasteToolStripMenuItem.Click += new System.EventHandler(this.PasteToolStripMenuItem_Click);
             // 
             // statusStrip1
             // 
@@ -1032,6 +1043,7 @@
             // splitContainer2.Panel1
             // 
             this.splitContainer2.Panel1.Controls.Add(this.splitContainer1);
+            this.splitContainer2.Panel1.Controls.Add(this.toolStrip1);
             // 
             // splitContainer2.Panel2
             // 
@@ -1300,17 +1312,45 @@
             this.tabPage3.Text = "Citation";
             this.tabPage3.UseVisualStyleBackColor = true;
             // 
-            // label_volumeTitle
+            // tableLayoutPanel1
             // 
-            this.label_volumeTitle.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.tableLayoutPanel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.tableLayoutPanel1.SetColumnSpan(this.label_volumeTitle, 3);
-            this.label_volumeTitle.Location = new System.Drawing.Point(75, 146);
-            this.label_volumeTitle.Name = "label_volumeTitle";
-            this.label_volumeTitle.Size = new System.Drawing.Size(513, 20);
-            this.label_volumeTitle.TabIndex = 36;
-            this.label_volumeTitle.Text = "-";
+            this.tableLayoutPanel1.BackColor = System.Drawing.Color.Cornsilk;
+            this.tableLayoutPanel1.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.Single;
+            this.tableLayoutPanel1.ColumnCount = 4;
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 70F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 70F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel1.Controls.Add(this.label_citationVolume, 0, 2);
+            this.tableLayoutPanel1.Controls.Add(this.label14, 0, 3);
+            this.tableLayoutPanel1.Controls.Add(this.label17, 2, 3);
+            this.tableLayoutPanel1.Controls.Add(this.label_CitationLength, 1, 4);
+            this.tableLayoutPanel1.Controls.Add(this.label_CitationEdited, 3, 5);
+            this.tableLayoutPanel1.Controls.Add(this.label13, 0, 4);
+            this.tableLayoutPanel1.Controls.Add(this.label_citationStart, 1, 3);
+            this.tableLayoutPanel1.Controls.Add(this.label16, 2, 5);
+            this.tableLayoutPanel1.Controls.Add(this.label_CitationStop, 3, 3);
+            this.tableLayoutPanel1.Controls.Add(this.label_CitationCreated, 1, 5);
+            this.tableLayoutPanel1.Controls.Add(this.label_volumeTitle, 1, 2);
+            this.tableLayoutPanel1.Controls.Add(this.label15, 0, 5);
+            this.tableLayoutPanel1.Controls.Add(this.label_citationNotes, 0, 0);
+            this.tableLayoutPanel1.Controls.Add(this.textBox_CitationNotes, 0, 1);
+            this.tableLayoutPanel1.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(3, 3);
+            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
+            this.tableLayoutPanel1.RowCount = 4;
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(592, 230);
+            this.tableLayoutPanel1.TabIndex = 37;
             // 
             // label_citationVolume
             // 
@@ -1323,122 +1363,6 @@
             this.label_citationVolume.TabIndex = 35;
             this.label_citationVolume.Text = "Volume";
             this.label_citationVolume.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // label_citationNotes
-            // 
-            this.label_citationNotes.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.tableLayoutPanel1.SetColumnSpan(this.label_citationNotes, 2);
-            this.label_citationNotes.Location = new System.Drawing.Point(4, 1);
-            this.label_citationNotes.Name = "label_citationNotes";
-            this.label_citationNotes.Size = new System.Drawing.Size(288, 20);
-            this.label_citationNotes.TabIndex = 33;
-            this.label_citationNotes.Text = "Notes";
-            this.label_citationNotes.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
-            // 
-            // label_CitationEdited
-            // 
-            this.label_CitationEdited.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.label_CitationEdited.Location = new System.Drawing.Point(370, 209);
-            this.label_CitationEdited.Name = "label_CitationEdited";
-            this.label_CitationEdited.Size = new System.Drawing.Size(218, 20);
-            this.label_CitationEdited.TabIndex = 31;
-            this.label_CitationEdited.Text = "-";
-            // 
-            // label16
-            // 
-            this.label16.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.label16.Location = new System.Drawing.Point(299, 209);
-            this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(64, 20);
-            this.label16.TabIndex = 30;
-            this.label16.Text = "Edited";
-            this.label16.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // label_CitationCreated
-            // 
-            this.label_CitationCreated.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.label_CitationCreated.Location = new System.Drawing.Point(75, 209);
-            this.label_CitationCreated.Name = "label_CitationCreated";
-            this.label_CitationCreated.Size = new System.Drawing.Size(217, 20);
-            this.label_CitationCreated.TabIndex = 29;
-            this.label_CitationCreated.Text = "-";
-            // 
-            // label15
-            // 
-            this.label15.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.label15.Location = new System.Drawing.Point(4, 209);
-            this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(64, 20);
-            this.label15.TabIndex = 28;
-            this.label15.Text = "Created";
-            this.label15.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // label_CitationLength
-            // 
-            this.label_CitationLength.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.label_CitationLength.Location = new System.Drawing.Point(75, 188);
-            this.label_CitationLength.Name = "label_CitationLength";
-            this.label_CitationLength.Size = new System.Drawing.Size(217, 20);
-            this.label_CitationLength.TabIndex = 27;
-            this.label_CitationLength.Text = "-";
-            // 
-            // label13
-            // 
-            this.label13.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.label13.Location = new System.Drawing.Point(4, 188);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(64, 20);
-            this.label13.TabIndex = 26;
-            this.label13.Text = "Length";
-            this.label13.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // label_CitationStop
-            // 
-            this.label_CitationStop.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.label_CitationStop.Location = new System.Drawing.Point(370, 167);
-            this.label_CitationStop.Name = "label_CitationStop";
-            this.label_CitationStop.Size = new System.Drawing.Size(218, 20);
-            this.label_CitationStop.TabIndex = 25;
-            this.label_CitationStop.Text = "-";
-            // 
-            // label17
-            // 
-            this.label17.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.label17.Location = new System.Drawing.Point(299, 167);
-            this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(64, 20);
-            this.label17.TabIndex = 24;
-            this.label17.Text = "Stop";
-            this.label17.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // label_citationStart
-            // 
-            this.label_citationStart.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.label_citationStart.Location = new System.Drawing.Point(75, 167);
-            this.label_citationStart.Name = "label_citationStart";
-            this.label_citationStart.Size = new System.Drawing.Size(217, 20);
-            this.label_citationStart.TabIndex = 23;
-            this.label_citationStart.Text = "-";
             // 
             // label14
             // 
@@ -1453,6 +1377,149 @@
             this.label14.TextAlign = System.Drawing.ContentAlignment.TopRight;
             this.toolTip1.SetToolTip(this.label14, "txt");
             // 
+            // label17
+            // 
+            this.label17.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.label17.Location = new System.Drawing.Point(299, 167);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(64, 20);
+            this.label17.TabIndex = 24;
+            this.label17.Text = "Stop";
+            this.label17.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // label_CitationLength
+            // 
+            this.label_CitationLength.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.label_CitationLength.Location = new System.Drawing.Point(75, 188);
+            this.label_CitationLength.Name = "label_CitationLength";
+            this.label_CitationLength.Size = new System.Drawing.Size(217, 20);
+            this.label_CitationLength.TabIndex = 27;
+            this.label_CitationLength.Text = "-";
+            // 
+            // label_CitationEdited
+            // 
+            this.label_CitationEdited.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.label_CitationEdited.Location = new System.Drawing.Point(370, 209);
+            this.label_CitationEdited.Name = "label_CitationEdited";
+            this.label_CitationEdited.Size = new System.Drawing.Size(218, 20);
+            this.label_CitationEdited.TabIndex = 31;
+            this.label_CitationEdited.Text = "-";
+            // 
+            // label13
+            // 
+            this.label13.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.label13.Location = new System.Drawing.Point(4, 188);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(64, 20);
+            this.label13.TabIndex = 26;
+            this.label13.Text = "Length";
+            this.label13.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // label_citationStart
+            // 
+            this.label_citationStart.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.label_citationStart.Location = new System.Drawing.Point(75, 167);
+            this.label_citationStart.Name = "label_citationStart";
+            this.label_citationStart.Size = new System.Drawing.Size(217, 20);
+            this.label_citationStart.TabIndex = 23;
+            this.label_citationStart.Text = "-";
+            // 
+            // label16
+            // 
+            this.label16.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.label16.Location = new System.Drawing.Point(299, 209);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(64, 20);
+            this.label16.TabIndex = 30;
+            this.label16.Text = "Edited";
+            this.label16.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // label_CitationStop
+            // 
+            this.label_CitationStop.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.label_CitationStop.Location = new System.Drawing.Point(370, 167);
+            this.label_CitationStop.Name = "label_CitationStop";
+            this.label_CitationStop.Size = new System.Drawing.Size(218, 20);
+            this.label_CitationStop.TabIndex = 25;
+            this.label_CitationStop.Text = "-";
+            // 
+            // label_CitationCreated
+            // 
+            this.label_CitationCreated.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.label_CitationCreated.Location = new System.Drawing.Point(75, 209);
+            this.label_CitationCreated.Name = "label_CitationCreated";
+            this.label_CitationCreated.Size = new System.Drawing.Size(217, 20);
+            this.label_CitationCreated.TabIndex = 29;
+            this.label_CitationCreated.Text = "-";
+            // 
+            // label_volumeTitle
+            // 
+            this.label_volumeTitle.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tableLayoutPanel1.SetColumnSpan(this.label_volumeTitle, 3);
+            this.label_volumeTitle.Location = new System.Drawing.Point(75, 146);
+            this.label_volumeTitle.Name = "label_volumeTitle";
+            this.label_volumeTitle.Size = new System.Drawing.Size(513, 20);
+            this.label_volumeTitle.TabIndex = 36;
+            this.label_volumeTitle.Text = "-";
+            // 
+            // label15
+            // 
+            this.label15.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.label15.Location = new System.Drawing.Point(4, 209);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(64, 20);
+            this.label15.TabIndex = 28;
+            this.label15.Text = "Created";
+            this.label15.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // label_citationNotes
+            // 
+            this.label_citationNotes.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tableLayoutPanel1.SetColumnSpan(this.label_citationNotes, 2);
+            this.label_citationNotes.Location = new System.Drawing.Point(4, 1);
+            this.label_citationNotes.Name = "label_citationNotes";
+            this.label_citationNotes.Size = new System.Drawing.Size(288, 20);
+            this.label_citationNotes.TabIndex = 33;
+            this.label_citationNotes.Text = "Notes";
+            this.label_citationNotes.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+            // 
+            // textBox_CitationNotes
+            // 
+            this.textBox_CitationNotes.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBox_CitationNotes.BackColor = System.Drawing.SystemColors.Info;
+            this.textBox_CitationNotes.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.tableLayoutPanel1.SetColumnSpan(this.textBox_CitationNotes, 4);
+            this.textBox_CitationNotes.Location = new System.Drawing.Point(4, 25);
+            this.textBox_CitationNotes.Multiline = true;
+            this.textBox_CitationNotes.Name = "textBox_CitationNotes";
+            this.textBox_CitationNotes.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.textBox_CitationNotes.Size = new System.Drawing.Size(584, 117);
+            this.textBox_CitationNotes.TabIndex = 37;
+            // 
             // tabPage4
             // 
             this.tabPage4.Controls.Add(this.button_Series);
@@ -1464,7 +1531,7 @@
             this.tabPage4.Location = new System.Drawing.Point(4, 24);
             this.tabPage4.Name = "tabPage4";
             this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage4.Size = new System.Drawing.Size(635, 191);
+            this.tabPage4.Size = new System.Drawing.Size(598, 236);
             this.tabPage4.TabIndex = 3;
             this.tabPage4.Text = "Series";
             this.tabPage4.UseVisualStyleBackColor = true;
@@ -1537,7 +1604,7 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 24);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(635, 191);
+            this.tabPage1.Size = new System.Drawing.Size(598, 236);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Volume";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -1727,7 +1794,7 @@
             // 
             this.tabPage6.Location = new System.Drawing.Point(4, 24);
             this.tabPage6.Name = "tabPage6";
-            this.tabPage6.Size = new System.Drawing.Size(635, 191);
+            this.tabPage6.Size = new System.Drawing.Size(598, 236);
             this.tabPage6.TabIndex = 5;
             this.tabPage6.Text = "Books";
             this.tabPage6.UseVisualStyleBackColor = true;
@@ -1740,7 +1807,7 @@
             this.tabPage5.Controls.Add(this.button_authorAdd);
             this.tabPage5.Location = new System.Drawing.Point(4, 24);
             this.tabPage5.Name = "tabPage5";
-            this.tabPage5.Size = new System.Drawing.Size(635, 191);
+            this.tabPage5.Size = new System.Drawing.Size(598, 236);
             this.tabPage5.TabIndex = 4;
             this.tabPage5.Text = "Authors";
             this.tabPage5.UseVisualStyleBackColor = true;
@@ -1814,7 +1881,7 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 24);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(635, 191);
+            this.tabPage2.Size = new System.Drawing.Size(598, 236);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "File";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -1946,60 +2013,9 @@
             this.checkBox_right.UseVisualStyleBackColor = true;
             this.checkBox_right.CheckedChanged += new System.EventHandler(this.CheckBox1_CheckedChanged);
             // 
-            // tableLayoutPanel1
+            // toolTip1
             // 
-            this.tableLayoutPanel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.tableLayoutPanel1.BackColor = System.Drawing.Color.Cornsilk;
-            this.tableLayoutPanel1.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.Single;
-            this.tableLayoutPanel1.ColumnCount = 4;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 70F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 70F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel1.Controls.Add(this.label_citationVolume, 0, 2);
-            this.tableLayoutPanel1.Controls.Add(this.label14, 0, 3);
-            this.tableLayoutPanel1.Controls.Add(this.label17, 2, 3);
-            this.tableLayoutPanel1.Controls.Add(this.label_CitationLength, 1, 4);
-            this.tableLayoutPanel1.Controls.Add(this.label_CitationEdited, 3, 5);
-            this.tableLayoutPanel1.Controls.Add(this.label13, 0, 4);
-            this.tableLayoutPanel1.Controls.Add(this.label_citationStart, 1, 3);
-            this.tableLayoutPanel1.Controls.Add(this.label16, 2, 5);
-            this.tableLayoutPanel1.Controls.Add(this.label_CitationStop, 3, 3);
-            this.tableLayoutPanel1.Controls.Add(this.label_CitationCreated, 1, 5);
-            this.tableLayoutPanel1.Controls.Add(this.label_volumeTitle, 1, 2);
-            this.tableLayoutPanel1.Controls.Add(this.label15, 0, 5);
-            this.tableLayoutPanel1.Controls.Add(this.label_citationNotes, 0, 0);
-            this.tableLayoutPanel1.Controls.Add(this.textBox_CitationNotes, 0, 1);
-            this.tableLayoutPanel1.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(3, 3);
-            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 4;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(592, 230);
-            this.tableLayoutPanel1.TabIndex = 37;
-            // 
-            // textBox_CitationNotes
-            // 
-            this.textBox_CitationNotes.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox_CitationNotes.BackColor = System.Drawing.SystemColors.Info;
-            this.textBox_CitationNotes.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.tableLayoutPanel1.SetColumnSpan(this.textBox_CitationNotes, 4);
-            this.textBox_CitationNotes.Location = new System.Drawing.Point(4, 25);
-            this.textBox_CitationNotes.Multiline = true;
-            this.textBox_CitationNotes.Name = "textBox_CitationNotes";
-            this.textBox_CitationNotes.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBox_CitationNotes.Size = new System.Drawing.Size(584, 117);
-            this.textBox_CitationNotes.TabIndex = 37;
+            this.toolTip1.Popup += new System.Windows.Forms.PopupEventHandler(this.toolTip1_Popup);
             // 
             // BelGui
             // 
@@ -2019,20 +2035,20 @@
             this.Move += new System.EventHandler(this.BelGui_Move);
             this.contextMenuStrip1.ResumeLayout(false);
             this.splitContainer1.Panel1.ResumeLayout(false);
-            this.splitContainer1.Panel1.PerformLayout();
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
             this.contextMenuStrip_Rtb1.ResumeLayout(false);
+            this.contextMenuStrip_Rtb2.ResumeLayout(false);
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
-            this.contextMenuStrip_Rtb2.ResumeLayout(false);
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.contextMenuStrip_Category.ResumeLayout(false);
             this.splitContainer2.Panel1.ResumeLayout(false);
+            this.splitContainer2.Panel1.PerformLayout();
             this.splitContainer2.Panel2.ResumeLayout(false);
             this.splitContainer2.Panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
@@ -2043,6 +2059,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_FontSize)).EndInit();
             this.tabControl1.ResumeLayout(false);
             this.tabPage3.ResumeLayout(false);
+            this.tableLayoutPanel1.ResumeLayout(false);
+            this.tableLayoutPanel1.PerformLayout();
             this.tabPage4.ResumeLayout(false);
             this.tabPage4.PerformLayout();
             this.tabPage1.ResumeLayout(false);
@@ -2058,8 +2076,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView_Authors)).EndInit();
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
-            this.tableLayoutPanel1.ResumeLayout(false);
-            this.tableLayoutPanel1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -2106,8 +2122,6 @@
         private System.Windows.Forms.ToolStripButton toolStripButton7;
         private System.Windows.Forms.ToolStripSplitButton toolStripSplitButton1;
         private System.Windows.Forms.ToolStripMenuItem removeLineEndingsToolStripMenuItem;
-        private System.Windows.Forms.ToolStripButton toolStripButton_Reset;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripButton toolStripButton_Emphasis;
@@ -2223,5 +2237,8 @@
         private System.Windows.Forms.Label label30;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.TextBox textBox_CitationNotes;
+        private System.Windows.Forms.ToolStripMenuItem resetToOriginalToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem flipOrientationToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem marginsToolStripMenuItem;
     }
 }

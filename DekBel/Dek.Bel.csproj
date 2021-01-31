@@ -139,6 +139,7 @@
     <Compile Include="BelGui.Designer.cs">
       <DependentUpon>BelGui.cs</DependentUpon>
     </Compile>
+    <Compile Include="Cls\RichTextBoxExtensions.cs" />
     <Compile Include="Cls\SyncFusion\SfDataGridHelper.cs" />
     <Compile Include="DB\DatabaseAdminServiceSaveOpen.cs" />
     <Compile Include="FormAbout.cs">
@@ -146,6 +147,12 @@
     </Compile>
     <Compile Include="FormAbout.Designer.cs">
       <DependentUpon>FormAbout.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormMargins.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormMargins.Designer.cs">
+      <DependentUpon>FormMargins.cs</DependentUpon>
     </Compile>
     <Compile Include="Services\Authors\AuthorsGridService.cs" />
     <Compile Include="Services\Authors\FormAuthors.cs">
@@ -202,7 +209,6 @@
     <Compile Include="Services\Reference\Form_AddReference.Designer.cs">
       <DependentUpon>Form_AddReference.cs</DependentUpon>
     </Compile>
-    <Compile Include="Cls\RichTextExtensions.cs" />
     <Compile Include="Services\MessageboxService.cs" />
     <Compile Include="Form_RawCitationEditor.cs">
       <SubType>Form</SubType>
@@ -268,6 +274,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FormAbout.resx">
       <DependentUpon>FormAbout.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormMargins.resx">
+      <DependentUpon>FormMargins.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Services\Authors\FormAuthors.resx">
       <DependentUpon>FormAuthors.cs</DependentUpon>

@@ -1,7 +1,6 @@
-﻿using Dek.Bel.Cls;
+﻿using Dek.Cls;
 using Dek.Bel.Core.GUI;
 using Dek.Bel.Core.Services;
-using Dek.Cls;
 using Dek.Cls.SyncFusion;
 using Syncfusion.Data;
 using Syncfusion.WinForms.DataGrid;
@@ -28,6 +27,9 @@ namespace Dek.Bel.Services.Report
         //    nameof(ReportModel.Emphasis)
         //};
 
+        public readonly string DefaultExportSaveFolder;
+        string ExportSaveFolder = string.Empty;
+
         private List<string> DefaultHiddenColumns = new List<string>
         {
         };
@@ -38,6 +40,8 @@ namespace Dek.Bel.Services.Report
             InitializeComponent();
             if (m_ReportService == null)
                 Mef.Compose(this);
+
+            string ExportDefaultSaveFolder = Path.Combine(Environment.SpecialFolder.MyDocuments.ToString(), "BelPdf");
 
             sfDataGrid1.RecordContextMenu = new ContextMenuStrip();
             sfDataGrid1.RecordContextMenu.Items.Add("Copy", null, OnCopyClicked);
@@ -380,5 +384,74 @@ namespace Dek.Bel.Services.Report
             if (e.DataRow.RowType != RowType.FilterRow)
                 e.Cancel = true;
         }
+
+        private void button_ExportExcel_Click(object sender, EventArgs e)
+        {
+            saveFileDialog1.Filter = "Excel files|*.xls;*.xlsx|All files|*.*";
+
+            ShowSaveDialog("Export Excel");
+        }
+
+        private void button_ExportCsv_Click(object sender, EventArgs e)
+        {
+            saveFileDialog1.Filter = "CSV files (*.csv)|*.csv|Text files (*.txt)|*.txt|All files|*.*";
+
+            ShowSaveDialog("Export Csv");
+        }
+
+        private void button_ExportPdf_Click(object sender, EventArgs e)
+        {
+            saveFileDialog1.Filter = "Pdf files|*.pdf|All files|*.*";
+
+            ShowSaveDialog("Export Pdf");
+        }
+
+        private void button_ExportHtml_Click(object sender, EventArgs e)
+        {
+            saveFileDialog1.Filter = "Html files|*.html;*.htm|All files|*.*";
+
+            ShowSaveDialog("Export Html");
+        }
+
+        private void ShowSaveDialog(string header)
+        {
+            saveFileDialog1.InitialDirectory = string.IsNullOrWhiteSpace(ExportSaveFolder) ? DefaultExportSaveFolder : ExportSaveFolder;
+            saveFileDialog1.Title = header;
+
+            var result = saveFileDialog1.ShowDialog(this);
+            if (result == DialogResult.Cancel)
+                return;
+
+            //SaveDialogClosed();
+        }
+
+        //private bool SaveDialogClosed()
+        //{
+        //    // Update default path etc
+        //    string path = saveFileDialog1.FileName;
+        //    string fileName = Path.GetFileName(path);
+        //    string dir = Path.GetDirectoryName(path);
+
+        //    // Possible states
+        //    // fileName is a file - save dir
+        //    // fileName is a dir - save dir
+
+        //    if (File.Exists(path))
+        //    {
+        //        ExportSaveFolder = dir;
+        //        return true;
+        //    }
+        //    else
+        //    {
+
+        //    }
+
+
+        //    FileAttributes attr = File.GetAttributes(@"c:\Temp");
+        //    if (Path.GetFileName)
+
+        //    return true;
+        //}
+
     }
 }

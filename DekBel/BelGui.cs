@@ -20,7 +20,6 @@ using Dek.Bel.Core.GUI;
 using Dek.Bel.Core.Services;
 using Dek.Bel.Core.DB;
 using Dek.Bel.Core.Helpers;
-using OfficeOpenXml.FormulaParsing.Excel.Functions.Text;
 using Dek.Bel.Core.ViewModels;
 using Dek.Bel.Core.Cls;
 
@@ -63,6 +62,8 @@ namespace Dek.Bel
         /// <param name="message"></param>
         public BelGui(EventData message) : this()
         {
+            LoadingControls = true;
+
             if (m_DBService == null)
                 Mef.Initialize(this, new List<Type> { GetType(), typeof(ModelsForViewing) });
 
@@ -142,8 +143,6 @@ namespace Dek.Bel
 
         private void BelGui_Load(object sender, EventArgs e)
         {
-            LoadingControls = true;
-
             label_citationNotes.Font = new Font(Font, FontStyle.Bold);
             label_citationVolume.Font = new Font(Font, FontStyle.Bold);
 
@@ -151,6 +150,8 @@ namespace Dek.Bel
 
             richTextBox1.Font = font;
             richTextBox2.Font = font;
+            richTextBox1.SetInnerMargins(12, 10, 28, 10);
+            richTextBox2.SetInnerMargins(12, 10, 28, 10);
 
             // Init margin box dropdowns
             GuiHelper.LoadAComboBoxWithPdfFonts(comboBox_PdfBoxFont);
@@ -169,7 +170,6 @@ namespace Dek.Bel
 
             OldLeft = Left;
             OldTop = Top;
-
         }
 
         /// <summary>
@@ -407,6 +407,17 @@ namespace Dek.Bel
 
         }
 
+        private void flipOrientationToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            splitContainer1.Orientation = (splitContainer1.Orientation == Orientation.Horizontal) ? Orientation.Vertical : Orientation.Horizontal;
+
+            // Adjustr splitter
+            if (splitContainer1.Orientation == Orientation.Horizontal)
+                splitContainer1.SplitterDistance = (splitContainer1.Height) / 2;
+            else
+                splitContainer1.SplitterDistance = (splitContainer1.Width) / 2;
+        }
+
 
         private void toolStripButton2_Click(object sender, EventArgs e)
         {
@@ -521,6 +532,18 @@ namespace Dek.Bel
         private void textBox2_TextChanged(object sender, EventArgs e)
         {
 
+        }
+
+        // Margins
+        private void marginsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var margins = richTextBox1.GetInnerMargins();
+            FormMargins f = new FormMargins(margins.left, margins.top, margins.right, margins.bottom);
+            if (f.ShowDialog() == DialogResult.Cancel)
+                return;
+
+            richTextBox1.SetInnerMargins(f.Left, f.Top, f.Right, f.Bottom);
+            richTextBox2.SetInnerMargins(f.Left, f.Top, f.Right, f.Bottom);
         }
 
         #region Category logic =============================================================================
@@ -896,6 +919,10 @@ namespace Dek.Bel
             RemoveLineEndingsToolStripMenuItem1_Click(sender, e);
         }
 
+        private void resetToOriginalToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ResetCitation2();
+        }
 
         #endregion ContextMenuStrip  Rtb 1 ==============================================
 
@@ -1592,6 +1619,19 @@ namespace Dek.Bel
 
 
         #endregion Books tab ==============================================
+
+        private void richTextBox1_SizeChanged(object sender, EventArgs e)
+        {
+            if (!(sender is RichTextBox rtb))
+                return;
+
+            rtb.Invalidate();
+        }
+
+        private void toolTip1_Popup(object sender, PopupEventArgs e)
+        {
+
+        }
 
     }
 }

@@ -1,0 +1,80 @@
+﻿using System;
+using System.Drawing;
+using System.Runtime.InteropServices;
+using System.Windows.Forms;
+
+namespace Dek.Cls
+{
+    public static class RichTextBoxExtensions
+    {
+        public static void SetInnerMargins(this TextBoxBase textBox, int left, int top, int right, int bottom)
+        {
+            //Rectangle rect = textBox.GetFormattingRect();
+
+            //var newRect = new Rectangle(left, top, rect.Width - left - right, rect.Height - top - bottom);
+            int rightMargin = textBox.ClientRectangle.Width - (left + right);
+            int bottomMargin = textBox.ClientRectangle.Height - (top + bottom);
+            var newRect = new Rectangle(left, top, rightMargin, bottomMargin);
+            textBox.SetFormattingRect(newRect);
+        }
+
+        public static (int left, int top, int right, int bottom) GetInnerMargins(this TextBoxBase textBox)
+        {
+            Rectangle rect = textBox.GetFormattingRect();
+
+            int rightMargin = textBox.ClientRectangle.Width - (rect.Width + rect.Left);
+            int bottomMargin = textBox.ClientRectangle.Height - (rect.Height + rect.Top);
+
+            var newRect = new Rectangle(rect.Left, rect.Top, rightMargin, bottomMargin); // Width = right, Height = bottom
+            return (newRect.Left , newRect.Top, newRect.Width, newRect.Height);
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        private struct RECT
+        {
+            public int Left;
+            public int Top;
+            public int Right;
+            public int Bottom;
+
+            private RECT(int left, int top, int right, int bottom)
+            {
+                Left = left;
+                Top = top;
+                Right = right;
+                Bottom = bottom;
+            }
+
+            public RECT(Rectangle r) : this(r.Left, r.Top, r.Right, r.Bottom)
+            {
+            }
+        }
+
+        [DllImport(@"User32.dll", EntryPoint = @"SendMessage", CharSet = CharSet.Auto)]
+        private static extern int SendMessageRefRect(IntPtr hWnd, uint msg, int wParam, ref RECT rect);
+
+        [DllImport(@"user32.dll", EntryPoint = @"SendMessage", CharSet = CharSet.Auto)]
+        private static extern int SendMessage(IntPtr hwnd, int wMsg, IntPtr wParam, ref Rectangle lParam);
+
+        private const int EmGetrect = 0xB2;
+        private const int EmSetrect = 0xB3;
+
+        private static void SetFormattingRect(this TextBoxBase textbox, Rectangle rect)
+        {
+            var rc = new RECT(new Rectangle(0,0,0,0));//BUG
+            rc.Left = rect.Left;
+            rc.Top = rect.Top;
+            rc.Right = rect.Width;
+            rc.Bottom = rect.Height;
+
+            SendMessageRefRect(textbox.Handle, EmSetrect, 0, ref rc);
+        }
+
+        private static Rectangle GetFormattingRect(this TextBoxBase textbox)
+        {
+            var rect = new Rectangle();
+            SendMessage(textbox.Handle, EmGetrect, (IntPtr)0, ref rect);
+            return rect;
+        }
+    }
+}
