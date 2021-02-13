@@ -10,13 +10,13 @@ using OfficeOpenXml; // EPPlus
 namespace Dek.Bel.Core.Services.Report.Export
 {
     [Export(typeof(IExporter))]
-    public class HtmlExporter : IExporter
+    public class Excel : IExporter
     {
-        public string Name => "Html";
+        public string Name => "Excel";
 
-        public Stream Export()
+        string IExporter.Export(string title, List<string> colNames, List<List<string>> data)
         {
-            throw new NotImplementedException();
+            return string.Empty;
         }
     }
 }

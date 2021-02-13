@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
 
-namespace Dek.Bel.Core.Services.Report.Export.Models
+namespace Dek.Bel.Core.Services.Report.Export
 {
     [Export]
     public class ExporterProvider

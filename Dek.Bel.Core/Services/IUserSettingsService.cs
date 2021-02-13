@@ -11,6 +11,9 @@ namespace Dek.Bel.Core.Services
         string DBName { get; }
         string DBPath { get; }
         string DBPathBeta { get; }
+        string ReportsFolder { get; set; }
+        string LatestExportSaveFolder { get; set; }
+
         string DeselectionMarker { get; }
         Font CitationFont { get; set; }
         bool BoldEmphasis { get; set; }

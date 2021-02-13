@@ -87,15 +87,17 @@ namespace Dek.Cls
                     return DateTime.MinValue;
             }
 
+            // Exceptions are incredibly slow, esp in debug mode. 300 citation 30 seconds. 
+            // This is the format used in the DB, so least likely to throw.
             try
             {
-                return DateTime.ParseExact(me, sanePattern, CultureInfo.InvariantCulture);
+                return DateTime.ParseExact(me, sanePatternShort, CultureInfo.InvariantCulture);
             }
             catch { }
 
             try
             {
-                return DateTime.ParseExact(me, sanePatternShort, CultureInfo.InvariantCulture);
+                return DateTime.ParseExact(me, sanePattern, CultureInfo.InvariantCulture);
             }
             catch { }
 

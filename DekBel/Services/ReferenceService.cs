@@ -36,7 +36,7 @@ namespace Dek.Bel.Services
         public Page AddPage(EventData message)
         {
             // Need to call in order to not mess up stack
-            var dummy = ArrayStuff.ExtractArrayFromIntPtr(message.SelectionRects, 1);
+            var _ = ArrayStuff.ExtractArrayFromIntPtr(message.SelectionRects, 1);
 
             int decodedPage = message.StartPage;
             if (!string.IsNullOrEmpty(message.Text))

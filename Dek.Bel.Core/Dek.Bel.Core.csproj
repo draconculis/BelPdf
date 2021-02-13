@@ -177,6 +177,7 @@
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="Services\Report\Export\Helper.cs" />
     <Compile Include="Services\Authors\AuthorService.cs" />
     <Compile Include="ViewModels\AuthorsGridViewModel.cs" />
     <Compile Include="Services\Categories\CategoryEventArgs.cs" />
@@ -192,10 +193,10 @@
     <Compile Include="Services\IUserSettingsService.cs" />
     <Compile Include="ViewModels\ModelsForViewing.cs" />
     <Compile Include="Services\PdfService.cs" />
-    <Compile Include="Services\Report\Export\CsvExporter.cs" />
-    <Compile Include="Services\Report\Export\ExcelExporter.cs" />
+    <Compile Include="Services\Report\Export\Csv.cs" />
+    <Compile Include="Services\Report\Export\Excel.cs" />
     <Compile Include="Services\Report\Export\ExporterProvider.cs" />
-    <Compile Include="Services\Report\Export\HtmlExporter.cs" />
+    <Compile Include="Services\Report\Export\Html.cs" />
     <Compile Include="Services\Report\Export\IExporter.cs" />
     <Compile Include="Services\Report\Models\ReportModel.cs" />
     <Compile Include="Services\Report\ReportDataCache.cs" />

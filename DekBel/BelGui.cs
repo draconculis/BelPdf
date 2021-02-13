@@ -22,6 +22,7 @@ using Dek.Bel.Core.DB;
 using Dek.Bel.Core.Helpers;
 using Dek.Bel.Core.ViewModels;
 using Dek.Bel.Core.Cls;
+using System.Diagnostics;
 
 namespace Dek.Bel
 {
@@ -53,8 +54,6 @@ namespace Dek.Bel
         [Import] public CitationPersisterService m_CitationPersisterService { get; set; }
         [Import] public SeriesService m_SeriesService { get; set; }
         [Import] public AuthorService m_AuthorService { get; set; }
-
-        private bool LoadingControls = false;
 
         /// <summary>
         /// Coming in here means add a new citation. We are called from Sumatra.
@@ -106,6 +105,7 @@ namespace Dek.Bel
             else if (message.Code == (int)InterOp.CodesEnum.DEKBELCODE_EDITCITATION)
             {
                 m_VolumeService.LoadCitations(history.VolumeId);
+
                 string cmd = message.Text;
                 string citationId;
                 if(string.IsNullOrEmpty(cmd))
@@ -143,6 +143,8 @@ namespace Dek.Bel
 
         private void BelGui_Load(object sender, EventArgs e)
         {
+            LoadingControls = true;
+
             label_citationNotes.Font = new Font(Font, FontStyle.Bold);
             label_citationVolume.Font = new Font(Font, FontStyle.Bold);
 
@@ -160,6 +162,7 @@ namespace Dek.Bel
             SetComboBoxSelectedIndex(comboBox_PdfBoxFont, Constants.MarginBoxVisualMode.Normal);
 
             LoadControls();
+            LoadingControls = true;
 
             splitContainer2.Focus();
             splitContainer2.Panel2.Focus();
@@ -170,6 +173,8 @@ namespace Dek.Bel
 
             OldLeft = Left;
             OldTop = Top;
+
+            LoadingControls = false;
         }
 
         /// <summary>
@@ -193,6 +198,9 @@ namespace Dek.Bel
         }
 
         #region Control Loading =========================================
+
+        private bool LoadingControls = false;
+
         /// <summary>
         /// Load data into controls
         /// </summary>
@@ -225,9 +233,11 @@ namespace Dek.Bel
 
             // Series
             LoadSeries();
+            LoadingControls = true;
 
             //Authors
             LoadAuthors();
+            LoadingControls = true;
 
             // Load data from storage
             label_fileName.Text = Path.GetFileName(VM.CurrentStorage.FileName);
@@ -237,6 +247,7 @@ namespace Dek.Bel
             LoadCategoryControl();
             LoadReferences();
             LoadPdfMarginBoxControls();
+            LoadingControls = true;
 
             toolStripButton_AutoUpdate.Checked = m_UserSettingsService.AutoWritePdfOnClose;
 
@@ -245,6 +256,7 @@ namespace Dek.Bel
 
         void LoadCategoryControl()
         {
+            LoadingControls = true;
             flowLayoutPanel_Categories.Controls.Clear();
             var cgs = m_CategoryService.CitationCategoriesByCitation(VM.CurrentCitation.Id);
             var categories = m_CategoryService.Categories;
@@ -258,10 +270,14 @@ namespace Dek.Bel
                 if(cat != null)
                     AddCategoryLabel(cg, cat);
             }
+
+            LoadingControls = false;
         }
 
         void LoadPdfMarginBoxControls()
         {
+            LoadingControls = true;
+
             string settingsStr = VM.CurrentCitation.MarginBoxSettings;
             PdfMarginBoxSettings settings = new PdfMarginBoxSettings(settingsStr);
 
@@ -291,10 +307,13 @@ namespace Dek.Bel
             label_PdfUnderLineColor.ForeColor = cu;
             label_PdfMarginBoxColor.BackColor = cm;
 
+            LoadingControls = false;
         }
 
         void LoadReferences()
         {
+            LoadingControls = true;
+
             // Book
             textBox_Book.Text = m_VolumeService.GetBook(VM.CurrentCitation.PhysicalPageStart, VM.CurrentCitation.GlyphStart)?.Title ?? "-";
 
@@ -312,11 +331,15 @@ namespace Dek.Bel
             int stopPage = m_VolumeService.GetPageNumber(VM.CurrentCitation.PhysicalPageStop);
             label_citationStart.Text = $"Page: {startPage} (physical page: {VM.CurrentCitation.PhysicalPageStart}), Character: {VM.CurrentCitation.GlyphStart}";
             label_CitationStop.Text = $"Page: {stopPage} (physical page: {VM.CurrentCitation.PhysicalPageStop}), Character: {VM.CurrentCitation.GlyphStop}";
+
+            LoadingControls = false;
         }
 
         List<Volume> m_VolumesInSeries = null;
         void LoadSeries()
         {
+            LoadingControls = true;
+
             Series series = m_SeriesService.GetSeriesForVolume(VM.CurrentCitation.VolumeId);
             if(series == null)
             {
@@ -330,38 +353,22 @@ namespace Dek.Bel
             textBox_SeriesNote.Text = series.Notes;
             m_VolumesInSeries = m_SeriesService.GetOtherVolumesInSeriesByVolumeId(VM.CurrentCitation.VolumeId).ToList();
             listBox_VolumesInSeries.DataSource = m_VolumesInSeries;
+
+            LoadingControls = false;
         }
 
         List<AuthorsGridViewModel> m_AuthorGridViewModels;
         void LoadAuthors()
         {
+            LoadingControls = true;
             // Set up grid
 
             // Load
+            LoadingControls = false;
         }
 
         #endregion Load Controls ===========================================
 
-        /// <summary>
-        /// Citations dropdown status strip menu click.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        //private void CitationsToolStripMenuItem_Click(object sender, EventArgs e)
-        //{
-        //    if (!(sender is ToolStripMenuItem item))
-        //        return;
-
-        //    Citation citation = m_VolumeService.Citations.SingleOrDefault(x => x.Id == Id.NewId(item.Name));
-        //    if(citation == null)
-        //    {
-        //        MessageBox.Show("Error loading citation");
-        //        return;
-        //    }
-
-        //    VM.CurrentCitation = citation;
-        //    LoadControls();
-        //}
 
         #region Citation text boxes =====================================================
 
@@ -502,52 +509,24 @@ namespace Dek.Bel
         #endregion Toolstrip 1 (top menu row) ===========================================
 
 
-        private void splitContainer2_SplitterMoved(object sender, SplitterEventArgs e)
-        {
+        #region RichTextBox margins =============================================
 
-        }
-
-        private void splitContainer2_MouseClick(object sender, MouseEventArgs e)
-        {
-            var split = sender as SplitContainer;
-        }
-
-        private void toolStripButton6_Click(object sender, EventArgs e)
-        {
-            splitContainer2.Panel2Collapsed = !splitContainer2.Panel2Collapsed;
-        }
-
-        private void statusStrip1_Click(object sender, EventArgs e)
-        {
-            //if (toolStripDropDownButton1.Pressed)
-            //    return;
-
-        }
-
-        private void toolStripSplitButton1_ButtonClick(object sender, EventArgs e)
-        {
-
-        }
-
-        private void textBox2_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        // Margins
         private void marginsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var margins = richTextBox1.GetInnerMargins();
             FormMargins f = new FormMargins(margins.left, margins.top, margins.right, margins.bottom);
-            if (f.ShowDialog() == DialogResult.Cancel)
+            if (f.ShowDialog(this) == DialogResult.Cancel)
                 return;
 
-            richTextBox1.SetInnerMargins(f.Left, f.Top, f.Right, f.Bottom);
-            richTextBox2.SetInnerMargins(f.Left, f.Top, f.Right, f.Bottom);
+            richTextBox1.SetInnerMargins(f.LeftMargin, f.TopMargin, f.RightMargin, f.BottomMargin);
+            richTextBox2.SetInnerMargins(f.LeftMargin, f.TopMargin, f.RightMargin, f.BottomMargin);
         }
 
-        #region Category logic =============================================================================
-        // *************************************************************************************************
+        #endregion RichTextBox margins ==========================================
+
+
+        #region Category logic ==================================================
+        
         static string CategoryAddText = "Add";
         static string CategoryCreateText = "Create";
 
@@ -811,16 +790,10 @@ namespace Dek.Bel
             LoadCategoryControl();
         }
 
-        // *************************************************************************************************
-        #endregion Category logic ==========================================================================
+        #endregion Category logic ===============================================
 
-        private void copyGUIDToolStripMenuItem_Click(object sender, EventArgs e)
-        {
 
-        }
-
-        // toolstrip
-
+        #region Toolstrip 1 ======================================================
 
         /// Exclusion
         private void toolStripButton6_Click_1(object sender, EventArgs e)
@@ -836,6 +809,8 @@ namespace Dek.Bel
             if (VM.CurrentCitation.Citation3.Length > 0)
                 if (m_MessageboxService.ShowYesNo("Edited citation will be overwritten. Continue?", "Citation not empty") == DekDialogResult.No)
                     return;
+
+            splitContainer1.SplitterDistance = 0;
 
             m_CitationManipulationService.BeginEdit();
         }
@@ -879,10 +854,6 @@ namespace Dek.Bel
         }
 
 
-        // --------------------------
-
-        #region ContextMenuStrip  Rtb 1 ==============================================
-
         private void excludeToolStripMenuItem_Click(object sender, EventArgs e)
         {
             toolStripButton8_Click(sender, e);
@@ -897,7 +868,6 @@ namespace Dek.Bel
         {
             ResetCitation2();
         }
-
 
         private void CopyToolStripMenuItem3_Click(object sender, EventArgs e)
         {
@@ -924,7 +894,7 @@ namespace Dek.Bel
             ResetCitation2();
         }
 
-        #endregion ContextMenuStrip  Rtb 1 ==============================================
+        #endregion Toolstrip 1 ===================================================
 
 
         #region ContextMenuStrip Rtb 2 ==============================================
@@ -951,12 +921,6 @@ namespace Dek.Bel
 
         #endregion ContextMenuStrip Rtb 2 ==============================================
 
-
-
-        private void SplitContainer2_Panel2_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
 
         private void DeselectToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -1360,7 +1324,7 @@ namespace Dek.Bel
 
         private void BelGui_FormClosing(object sender, FormClosingEventArgs e)
         {
-            richTextBox1.Focus();
+            richTextBox2.Focus();
 
             SaveMarginBoxSettingsToCitation();
 

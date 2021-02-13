@@ -5,10 +5,10 @@ namespace Dek.Bel
 {
     public partial class FormMargins : Form
     {
-        public int Left => (int)numericUpDown_left.Value;
-        public int Top => (int)numericUpDown_top.Value;
-        public int Right => (int)numericUpDown_right.Value;
-        public int Bottom => (int)numericUpDown_bottom.Value;
+        public int LeftMargin => (int)numericUpDown_left.Value;
+        public int TopMargin => (int)numericUpDown_top.Value;
+        public int RightMargin => (int)numericUpDown_right.Value;
+        public int BottomMargin => (int)numericUpDown_bottom.Value;
 
         private FormMargins()
         {

@@ -13,23 +13,7 @@ namespace Dek.Bel.Services.Report
 {
     public partial class Form_ReportColumns : Form
     {
-        private DataGridView dgv;
         private SfDataGrid sfdg;
-
-        public Form_ReportColumns(DataGridView dataGridView)
-        {
-            InitializeComponent();
-            dgv = dataGridView;
-            foreach (DataGridViewColumn col in dgv.Columns)
-            {
-                ListViewItem item = new ListViewItem();
-                item.Checked = col.Visible;
-                item.Text = col.HeaderText;
-                listView1.Items.Add(item);
-            }
-
-            listView1.ItemChecked += ListView1_ItemChecked;
-        }
 
         public Form_ReportColumns(SfDataGrid sfDataGrid)
         {
@@ -37,6 +21,12 @@ namespace Dek.Bel.Services.Report
             sfdg = sfDataGrid;
             foreach (GridColumn col in sfdg.Columns)
             {
+                if (col.HeaderText == "Emphasis")
+                {
+                    col.Visible = false;
+                    continue;
+                }
+
                 ListViewItem item = new ListViewItem();
                 item.Checked = col.Visible;
                 item.Text = col.HeaderText;
@@ -60,6 +50,7 @@ namespace Dek.Bel.Services.Report
 
         private void Button1_Click(object sender, EventArgs e)
         {
+            listView1.ItemChecked -= ListView1_ItemChecked;
             Close();
         }
 

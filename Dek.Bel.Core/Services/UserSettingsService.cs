@@ -8,11 +8,14 @@ namespace Dek.Bel.Core.Services
     [Export(typeof(IUserSettingsService))]
     public class UserSettingsService : IUserSettingsService
     {
+        private const string belPdfSubfolder = "BelPdf";
         private const string dbSubFolderPathBeta = "data_beta1";
         private const string dbSubFolderPath = "Data";
+        private const string reportsSubFolderPath = "Reports";
         public string DBName { get; } = "BelPdf.sqlite";
         public string DBPathBeta => Path.Combine(StorageFolder, dbSubFolderPathBeta + "\\" + DBName);
         public string DBPath => Path.Combine(StorageFolder, dbSubFolderPath + "\\" + DBName);
+        public string ReportFolder => Path.Combine(StorageFolder, reportsSubFolderPath);
         public string DeselectionMarker => (string)Properties.Settings.Default.DeselectionMarker ?? "…";
         private const string StorageFolderSettingName = "StorageFolder";
         private const string LastSelectedDatabaseFileName = "LastSelectedDatabaseFile";
@@ -23,7 +26,7 @@ namespace Dek.Bel.Core.Services
             get
             {
                 EnsureStorageFolderExists();
-                return Get<string>(StorageFolderSettingName);
+                return Get<string>(StorageFolderSettingName, Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), belPdfSubfolder));
             }
             set
             {
@@ -34,8 +37,20 @@ namespace Dek.Bel.Core.Services
 
         public string LastSelectedDatabaseFile
         {
-            get => Get<string>(LastSelectedDatabaseFileName, Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), DBName));
+            get => Get<string>(LastSelectedDatabaseFileName, Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), belPdfSubfolder, dbSubFolderPath, DBName));
             set => Set(LastSelectedDatabaseFileName, value);
+        }
+
+        public string ReportsFolder
+        {
+            get => Get<string>(nameof(ReportsFolder), Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), belPdfSubfolder, reportsSubFolderPath));
+            set => Set(nameof(ReportsFolder), value);
+        }
+
+        public string LatestExportSaveFolder
+        {
+            get => Get<string>(nameof(LatestExportSaveFolder), ReportsFolder);
+            set => Set(nameof(LatestExportSaveFolder), value);
         }
 
         public Font CitationFont
@@ -174,7 +189,7 @@ namespace Dek.Bel.Core.Services
 
         public void EnsureStorageFolderExists()
         {
-            EnsureSettingExists(StorageFolderSettingName, Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\BelPdf");
+            EnsureSettingExists(StorageFolderSettingName, Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + $"\\{belPdfSubfolder}");
 
             string storageFolderPath = (string)Properties.Settings.Default[StorageFolderSettingName];
             if (!Directory.Exists(storageFolderPath))
@@ -184,6 +199,5 @@ namespace Dek.Bel.Core.Services
             if (!Directory.Exists(dbFolderPath))
                 Directory.CreateDirectory(dbFolderPath);
         }
-
     }
 }
