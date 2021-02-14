@@ -22,6 +22,7 @@ namespace Dek.Bel.Services.Report
         [Import] public IMessageboxService m_MessageBoxService { get; set; }
         [Import] public IUserSettingsService m_UserSettingsService { get; set; }
         [Import] public ExporterProvider m_ExporterProvider { get; set; }
+        [Import] public ICategoryService m_CategoryService { get; set; }
 
         //private List<string> AlwaysHiddenColumns = new List<string> 
         //{
@@ -29,14 +30,20 @@ namespace Dek.Bel.Services.Report
         //};
 
         public readonly string DefaultExportSaveFolder;
-        //public string LatestExportSaveFolder;
+
+        public Id SelectedCitationId { get; private set; } = Id.Null;
+        private readonly Id CurrentVolumeId;
 
         // Data for export
         private List<string> ExportColNames = new List<string>();
         private List<List<string>> ExportData = new List<List<string>>();
 
-        public Form_Report()
+        public Form_Report() : this(Id.Null) { }
+
+        public Form_Report(Id currentVolumeId)
         {
+            CurrentVolumeId = currentVolumeId;
+
             InitializeComponent();
             if (m_ReportService == null)
                 Mef.Compose(this);
@@ -45,15 +52,18 @@ namespace Dek.Bel.Services.Report
 
             if (!Directory.Exists(DefaultExportSaveFolder))
             {
-                DefaultExportSaveFolder = m_UserSettingsService.ReportsFolder;
                 Directory.CreateDirectory(DefaultExportSaveFolder);
             }
 
-            sfDataGrid1.RecordContextMenu = new ContextMenuStrip();
-            sfDataGrid1.RecordContextMenu.Items.Add("Copy", null, OnCopyClicked);
+            sfDataGrid1.RecordContextMenu = contextMenuStrip1;
 
             GenerateData();
             SetDataSource();
+        }
+
+        private void Form_Report_Load(object sender, EventArgs e)
+        {
+            button_SelectAndClose.Enabled = false;
         }
 
         private void GenerateData()
@@ -82,6 +92,7 @@ namespace Dek.Bel.Services.Report
 
         private void Button1_Click(object sender, EventArgs e)
         {
+            SelectedCitationId = Id.Null;
             Close();
         }
 
@@ -96,11 +107,6 @@ namespace Dek.Bel.Services.Report
             {
                 col.Visible = true;
             }
-        }
-
-        private void ContextMenuStrip1_Opening(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-
         }
 
         private void ToolStripMenuItem_columns_Click(object sender, EventArgs e)
@@ -232,24 +238,6 @@ namespace Dek.Bel.Services.Report
                     row.Add(cellValue);
                 }
             }
-        }
-
-        public string GeneratePdf(string title)
-        {
-            MessageBox.Show("Not implemented yet...", "Sorry!");
-            return string.Empty;
-        }
-
-        public string GenerateCsv(string title)
-        {
-            MessageBox.Show("Not implemented yet...", "Sorry!");
-            return string.Empty;
-        }
-
-        public string GenerateExcel(string title)
-        {
-            MessageBox.Show("Not implemented yet...", "Sorry!");
-            return string.Empty;
         }
 
         private bool IsCitation(GridColumn col)
@@ -510,41 +498,164 @@ namespace Dek.Bel.Services.Report
 
         private void button_showReportsFolder_Click(object sender, EventArgs e)
         {
-
+            System.Diagnostics.Process.Start(DefaultExportSaveFolder);
         }
 
         private void button_SelectAndClose_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Not implemented yet...", "Sorry!");
+            SelectedCitationId = Id.Null;
+            int rowIdx = sfDataGrid1.SelectedIndex;
+            try
+            {
+                Id citationId = ((ReportModel)sfDataGrid1.View.GetRecordAt(rowIdx).Data).CitationId;
+                Id volumeId = ((ReportModel)sfDataGrid1.View.GetRecordAt(rowIdx).Data).VolumeId;
+                if (citationId.IsNull || volumeId.IsNull || volumeId != CurrentVolumeId)
+                    throw new Exception();
+
+                SelectedCitationId = citationId;
+                Close();
+            }
+            catch
+            {
+                MessageBox.Show($"Could not select citation at row {rowIdx}.", "Error selecting citation");
+                return;
+            }
         }
 
-        //private bool SaveDialogClosed()
-        //{
-        //    // Update default path etc
-        //    string path = saveFileDialog1.FileName;
-        //    string fileName = Path.GetFileName(path);
-        //    string dir = Path.GetDirectoryName(path);
+        /// <summary>
+        /// Open latest used export folder
+        /// </summary>
+        private void button2_Click(object sender, EventArgs e)
+        {
+            if (!Directory.Exists(m_UserSettingsService.LatestExportSaveFolder))
+            {
+                MessageBox.Show(this, $"Latest export folder could not be found: {Environment.NewLine}{m_UserSettingsService.LatestExportSaveFolder}", "Not found");
+                return;
+            }
 
-        //    // Possible states
-        //    // fileName is a file - save dir
-        //    // fileName is a dir - save dir
+            System.Diagnostics.Process.Start(m_UserSettingsService.LatestExportSaveFolder);
+        }
 
-        //    if (File.Exists(path))
-        //    {
-        //        ExportSaveFolder = dir;
-        //        return true;
-        //    }
-        //    else
-        //    {
+        private void button_expandGroups_Click(object sender, EventArgs e)
+        {
+            sfDataGrid1.AutoExpandGroups = !sfDataGrid1.AutoExpandGroups;
+            if (sfDataGrid1.AutoExpandGroups)
+                sfDataGrid1.ExpandAllGroup();
+            else
+                sfDataGrid1.CollapseAllGroup();
+        }
 
-        //    }
+        private void button_resetGroups_Click(object sender, EventArgs e)
+        {
+            sfDataGrid1.ClearGrouping();
+        }
 
+        private void setCategoryToolStripMenuItem_Click(object sender, EventArgs e)
+        {
 
-        //    FileAttributes attr = File.GetAttributes(@"c:\Temp");
-        //    if (Path.GetFileName)
+        }
 
-        //    return true;
-        //}
+        #region Context menu ====================================================
 
+        private void toolStripMenuItem2_Click(object sender, EventArgs e)
+        {
+            SetCategoryWeight(1);
+        }
+
+        private void toolStripMenuItem3_Click(object sender, EventArgs e)
+        {
+            SetCategoryWeight(2);
+        }
+
+        private void toolStripMenuItem4_Click(object sender, EventArgs e)
+        {
+            SetCategoryWeight(3);
+        }
+
+        private void toolStripMenuItem5_Click(object sender, EventArgs e)
+        {
+            SetCategoryWeight(4);
+        }
+
+        private void toolStripMenuItem6_Click(object sender, EventArgs e)
+        {
+            SetCategoryWeight(5);
+        }
+
+        private void SetCategoryWeight(int weight)
+        {
+            try
+            {
+                int rowIdx = sfDataGrid1.SelectedIndex;
+                Id citationId = ((ReportModel)sfDataGrid1.View.GetRecordAt(rowIdx).Data).CitationId;
+                var mainCat = m_CategoryService.GetMainCategory(citationId);
+                m_CategoryService.SetWeight(citationId, mainCat.Id, weight);
+
+                ReportModel rekord = m_ReportService.Report.SingleOrDefault(x => x.CitationId == citationId);
+                rekord.MainCategoryWeight = weight;
+                sfDataGrid1.Invalidate(true);
+                //GenerateData();
+                //SetDataSource();
+            }
+            catch { }
+        }
+
+        // Block context menu
+        private void contextMenuStrip1_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            int rowIdx = sfDataGrid1.SelectedIndex;
+            if (!sfDataGrid1.View.GetRecordAt(rowIdx).IsRecords)
+                e.Cancel = true;
+
+            return;
+        }
+
+        #endregion Context menu
+
+        // Used to handle selecting new citation
+        private void sfDataGrid1_SelectionChanged(object sender, Syncfusion.WinForms.DataGrid.Events.SelectionChangedEventArgs e)
+        {
+            if (CurrentVolumeId.IsNull)
+            {
+                button_SelectAndClose.Enabled = false;
+                return;
+            }
+
+            try
+            {
+                int rowIdx = sfDataGrid1.SelectedIndex;
+                var record = sfDataGrid1.View.GetRecordAt(rowIdx);
+                Id volumeId = ((ReportModel)record.Data).VolumeId;
+                if (volumeId != CurrentVolumeId || !record.IsRecords)
+                    button_SelectAndClose.Enabled = false;
+                else
+                    button_SelectAndClose.Enabled = true;
+            }
+            catch
+            {
+                button_SelectAndClose.Enabled = false;
+            }
+        }
+
+        private void button_onlyShowCurrentVolume_Click(object sender, EventArgs e)
+        {
+        }
+
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!(sender is CheckBox checkbox))
+                return;
+
+            if (checkbox.Checked)
+                sfDataGrid1.View.Filter = new Predicate<object>(x => 
+                {
+                    var item = x as ReportModel;
+                    return item.VolumeId == CurrentVolumeId;
+                });
+            else
+                sfDataGrid1.View.Filter = new Predicate<object>(x => true);
+
+            sfDataGrid1.View.RefreshFilter(true);
+        }
     }
 }

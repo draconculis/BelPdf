@@ -56,7 +56,7 @@ namespace Dek.Bel
         [Import] public AuthorService m_AuthorService { get; set; }
 
         /// <summary>
-        /// Coming in here means add a new citation. We are called from Sumatra.
+        /// Coming in here means from outer space: We are called from Sumatra.
         /// </summary>
         /// <param name="message"></param>
         public BelGui(EventData message) : this()
@@ -1287,8 +1287,29 @@ namespace Dek.Bel
         // Generate report
         private void ToolStripMenuItem_Report_Click(object sender, EventArgs e)
         {
-            Form_Report fr = new Form_Report();
-            fr.Show();
+            Form_Report fr = new Form_Report(m_VolumeService.CurrentVolume.Id);
+            fr.ShowDialog(this);
+
+            if (fr.SelectedCitationId.IsNull)
+                return;
+
+            // We got a live one
+            var oldCitation = VM.CurrentCitation;
+            Citation newCitation = m_CitationService.GetCitation(m_VolumeService.CurrentVolume.Id, fr.SelectedCitationId);
+            if (newCitation is null)
+            {
+                MessageBox.Show($"Could not select citation with id {newCitation.Id}.");
+                return;
+            }
+
+            if (oldCitation.VolumeId != newCitation.VolumeId)
+            {
+                MessageBox.Show($"Cannot select a citation from a different Volume!{Environment.NewLine}Current volume is {m_VolumeService.CurrentVolume.Title}.", "Different Volume");
+                return;
+            }
+
+            VM.CurrentCitation = newCitation;
+            LoadControls();
         }
 
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)

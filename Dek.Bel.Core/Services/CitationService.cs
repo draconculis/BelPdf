@@ -107,6 +107,7 @@ namespace Dek.Bel.Core.Services
         {
             (int page, int[] rects) citationPageRects = (message.StartPage, ArrayStuff.ExtractArrayFromIntPtr(message.SelectionRects, message.Len * 4));
             string citationText = ComposeCitation(rawCitations, message.Text);
+            string sanitizedCitation = SanitizeCitation(citationText);
             List<(int page, int[] rects)> pageRects = ComposeRectangles(rawCitations, citationPageRects);
 
             (int pageStart, int pageStop, int glyphStart, int glyphStop) boundaries = GetBoundaries(rawCitations, message);
@@ -116,7 +117,7 @@ namespace Dek.Bel.Core.Services
                 Id = Id.NewId(),
                 VolumeId = volumeId,
                 Citation1 = citationText, // Original, never changed (unless it contains stupid greek encoding from hell)
-                Citation2 = citationText, // More of the same, textb 1
+                Citation2 = sanitizedCitation, // More of the same, textb 1
                 Citation3 = "", // More of the same, textb 2
                 CreatedDate = DateTime.Now,
                 EditedDate = DateTime.Now,
@@ -131,6 +132,24 @@ namespace Dek.Bel.Core.Services
             m_DBService.InsertOrUpdate(citation);
 
             return citation;
+        }
+
+        /// <summary>
+        /// Remove line breaks and double spaces
+        /// </summary>
+        private string SanitizeCitation(string citationText)
+        {
+            return citationText
+                .Replace("\r", " ")
+                .Replace("\n", " ")
+                .Replace("\t", " ")
+                .Replace("        ", " ")
+                .Replace("       ", " ")
+                .Replace("      ", " ")
+                .Replace("     ", " ")
+                .Replace("    ", " ")
+                .Replace("   ", " ")
+                .Replace("  ", " ");
         }
 
         public Citation DeleteCitationById(Id volumeId, Id id)

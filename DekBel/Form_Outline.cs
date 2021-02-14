@@ -26,6 +26,7 @@ namespace Dek.Bel
 
         List<Reference> References;
         List<CitationReference> CitationReferences;
+        IList<CitationReference> CitationReferencesFiltered => CitationReferences.Where(x => Filter(x)).ToList();
 
         private EventHandler onCitationSelected;
         // Define the event member using the event keyword.  
@@ -61,7 +62,7 @@ namespace Dek.Bel
 
             listBox1.DrawItem += ListBox1_DrawItem;
             listBox1.MeasureItem += ListBox1_MeasureItem;
-            listBox1.DataSource = CitationReferences;
+            listBox1.DataSource = CitationReferencesFiltered;
 
             CitationReference sel = CitationReferences.SingleOrDefault(x => x.Citation?.Id == currentCitation);
 
@@ -209,6 +210,28 @@ namespace Dek.Bel
         {
             SelectCitation();
         }
+
+        private void textBox_search_TextChanged(object sender, EventArgs e)
+        {
+            listBox1.DataSource = CitationReferencesFiltered;
+            listBox1.Refresh();
+        }
+
+        internal bool Filter(CitationReference x)
+        {
+            if (x.Citation == null)
+                return true;
+
+            if (string.IsNullOrWhiteSpace(textBox_search.Text))
+                return true;
+
+            string searchString = textBox_search.Text.Trim().ToLower();
+
+            return
+                x.Citation.Citation2.ToLower().Contains(searchString)
+                || x.Citation.Id.ToStringShort().StartsWith(searchString, StringComparison.OrdinalIgnoreCase);
+        }
+
     }
 
     public class CitationReference : Reference
