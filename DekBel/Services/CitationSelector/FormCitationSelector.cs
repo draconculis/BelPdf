@@ -198,5 +198,15 @@ namespace Dek.Bel.CitationSelector
 
             return result;
         }
+
+        private void dataGridView1_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            SelectedCitation = GetSelectedCitationFromGrid();
+            if (SelectedCitation == null || SelectedCitation.Id.IsNull)
+                return;
+
+            Cancel = false;
+            Close();
+        }
     }
 }

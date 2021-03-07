@@ -1,6 +1,7 @@
 ﻿using Dek.Cls;
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.Text;
 
 namespace Dek.Bel.Core.Services
 {
@@ -32,5 +33,46 @@ namespace Dek.Bel.Core.Services
         // Hidden, but needed in grid to handle printout of citations
         //[Display(AutoGenerateField = false, Description = "Emphasis field is not generated in UI")]
         public string Emphasis { get; set; }
+
+        #region ToString() ======================================================
+
+        public override string ToString()
+        {
+            StringBuilder sb = new StringBuilder();
+            AppendQcData(sb, Idx.ToString());
+            AppendQcData(sb, VolumeId.ToString());
+            AppendQcData(sb, VolumeTitle);
+            AppendQcData(sb, VolumePublicationDate.ToString());
+
+            AppendQcData(sb, CitationId.ToString());
+            AppendQcData(sb, Page.ToString());
+            AppendQcData(sb, PhysicalPage.ToString());
+
+            AppendQcData(sb, OriginalCitation);
+            AppendQcData(sb, Citation);
+            AppendQcData(sb, CitationAndSource);
+
+            AppendQcData(sb, Book);
+            AppendQcData(sb, BookAuthor);
+            AppendQcData(sb, Chapter);
+            AppendQcData(sb, SubChapter);
+            AppendQcData(sb, Paragraph);
+
+            AppendQcData(sb, MainCategory);
+            AppendQcData(sb, MainCategoryWeight.ToString());
+
+            return sb.ToString();
+        }
+
+        // Quote comma
+        private void AppendQcData(StringBuilder sb, string data)
+        {
+            sb.Append("\"");
+            sb.Append(data);
+            sb.Append("\", ");
+        }
+
+        #endregion
+
     }
 }

@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Hosting;
+using System.Linq;
 
 namespace Dek.Cls
 {
-    public class Mef
+    public static class Mef
     {
         public static void Initialize(object target) => InitializeInternal(target);
         public static void Initialize(object target, List<object> classes) => InitializeInternal(target, classes);
@@ -70,5 +71,7 @@ namespace Dek.Cls
         {
             InitializeInternal(target, new List<object> { target });
         }
+
+        public static IEnumerable<string> CatalogParts => TheCatalog.Catalogs.FirstOrDefault()?.Select(x => x.ToString());
     }
 }

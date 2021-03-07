@@ -15,7 +15,7 @@ namespace Dek.Bel.Services
     {
         public Series SelectedSeries = null;
         private IEnumerable<Series> m_Series;
-        [Import] SeriesService m_SeriesService;
+        [Import] SeriesService m_SeriesService { get; set; }
         private IEnumerable<Volume> m_VolumesInSeries;
 
         public FormSeries(Id volumeId)

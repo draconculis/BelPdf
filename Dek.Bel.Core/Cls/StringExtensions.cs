@@ -82,6 +82,21 @@ namespace Dek.Cls
 
             return ret;
         }
+        public static string RemoveLineBreaks(this string me)
+        {
+            string replacer = "¤#¤£$#¤";
+
+            string ret = me
+                .Replace("\r", replacer)
+                .Replace("\n", replacer)
+                .Replace($"{replacer}{replacer}", replacer)
+                .Replace($" {replacer} ", replacer)
+                .Replace($" {replacer}", replacer)
+                .Replace($"{replacer} ", replacer)
+                .Replace(replacer, " ");
+
+            return ret;
+        }
 
         public static string Left(this string me, int noOfChars, bool ellipsis = false)
         {

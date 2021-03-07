@@ -33,12 +33,12 @@ namespace Dek.Bel.Core.Models
 
         public override string ToString()
         {
-            return $"[{Id.ToStringShort()}]" + " " + Citation1.Left(maxlen, true);
+            return $"[{Id.ToStringShort()}]" + " " + Citation1.RemoveLineBreaks().Left(maxlen, true);
         }
 
         public string ToStringLong()
         {
-            return $"[{Id.ToStringShort()}]" + " " + Citation1;
+            return $"[{Id.ToStringShort()}]" + " " + Citation1.RemoveLineBreaks();
         }
 
         public string ToStringShort()

@@ -6,12 +6,13 @@ using System.Windows.Forms;
 using Dek.DB;
 using Dek.Bel.Core.Services;
 using Dek.Cls;
+using System.Collections.Generic;
 
 namespace Dek.Bel.Services
 {
     public partial class RawCitationEditor : Form
     {
-        [Import] public IDBService m_DBService { get; set; }
+        public IDBService m_DBService { get; }
         StupidEncodingFixer fixer = new StupidEncodingFixer();
         ModelsForViewing VM;
         bool _hasUnsavedChanges;
@@ -26,12 +27,12 @@ namespace Dek.Bel.Services
         }
 
 
-        public RawCitationEditor(ModelsForViewing vm, Font citationFont)
+        public RawCitationEditor(IDBService db, ModelsForViewing vm, Font citationFont)
         {
             VM = vm;
 
             if (m_DBService == null)
-                Mef.Initialize(this);
+                Mef.Initialize(this, new List<object> { vm });
 
             InitializeComponent();
 

@@ -69,6 +69,12 @@ namespace Dek.Bel.Core.Services
 
         public void ReloadCitation(Citation citation)
         {
+            if (citation is null) // not good
+                return;
+
+            if (Citations == null)
+                Citations = new List<Citation>();
+
             var existingCitation = Citations.SingleOrDefault(x => x.Id == citation.Id);
             if (existingCitation != null)
             {

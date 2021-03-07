@@ -13,6 +13,11 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using Dek.Bel.Core.Services.Report.Export;
+using Syncfusion.WinForms.DataGridConverter;
+using Syncfusion.Pdf;
+using System.Drawing;
+using Syncfusion.Pdf.Graphics;
+using Syncfusion.Pdf.Grid;
 
 namespace Dek.Bel.Services.Report
 {
@@ -64,6 +69,7 @@ namespace Dek.Bel.Services.Report
         private void Form_Report_Load(object sender, EventArgs e)
         {
             button_SelectAndClose.Enabled = false;
+            DefaultRowSize = sfDataGrid1.RowHeight;
         }
 
         private void GenerateData()
@@ -94,19 +100,6 @@ namespace Dek.Bel.Services.Report
         {
             SelectedCitationId = Id.Null;
             Close();
-        }
-
-        private void Button3_Click(object sender, EventArgs e)
-        {
-            ShowColumnSelector();
-        }
-
-        private void Button4_Click(object sender, EventArgs e)
-        {
-            foreach (var col in sfDataGrid1.Columns.Where(x => x.HeaderText.ToLower() != "emphasis"))
-            {
-                col.Visible = true;
-            }
         }
 
         private void ToolStripMenuItem_columns_Click(object sender, EventArgs e)
@@ -277,13 +270,6 @@ namespace Dek.Bel.Services.Report
         //        );
         //}
 
-        private void buttonShowFilter_Click(object sender, EventArgs e)
-        {
-            sfDataGrid1.FilterRowPosition = (sfDataGrid1.FilterRowPosition == Syncfusion.WinForms.DataGrid.Enums.RowPosition.None)
-                ? Syncfusion.WinForms.DataGrid.Enums.RowPosition.Top
-                : Syncfusion.WinForms.DataGrid.Enums.RowPosition.None;
-        }
-
 
         /// <summary>
         /// Context menu
@@ -332,11 +318,6 @@ namespace Dek.Bel.Services.Report
             return cellValue;
         }
 
-        private void button6_Click(object sender, EventArgs e)
-        {
-            sfDataGrid1.ClearFilters();
-        }
-
         private void button7_Click(object sender, EventArgs e)
         {
             ColumnChooserPopup columnChooser = new ColumnChooserPopup(this.sfDataGrid1);
@@ -380,11 +361,16 @@ namespace Dek.Bel.Services.Report
             if (string.IsNullOrEmpty(filePath))
                 return;
 
+            var options = new ExcelExportingOptions();
+            options.AllowOutlining = true;
+            var excelEngine = sfDataGrid1.ExportToExcel(sfDataGrid1.View, options);
+            var workBook = excelEngine.Excel.Workbooks[0];
+            workBook.SaveAs(filePath);
 
-            GenerateDataForExport();
-            var exporter = m_ExporterProvider.Provide("Excel");
-            string exportData = exporter.Export(title, ExportColNames, ExportData);
-            File.WriteAllText(filePath, exportData);
+            //GenerateDataForExport();
+            //var exporter = m_ExporterProvider.Provide("Excel");
+            //string exportData = exporter.Export(title, ExportColNames, ExportData);
+            //File.WriteAllText(filePath, exportData);
         }
 
         private void button_ExportCsv_Click(object sender, EventArgs e)
@@ -411,10 +397,43 @@ namespace Dek.Bel.Services.Report
             if (string.IsNullOrEmpty(filePath))
                 return;
 
-            GenerateDataForExport();
-            var exporter = m_ExporterProvider.Provide("Pdf");
-            string exportData = exporter.Export(title, ExportColNames, ExportData);
-            File.WriteAllText(filePath, exportData);
+            PdfExportingOptions options = new PdfExportingOptions();
+            //options.AutoColumnWidth = true;
+            options.AutoRowHeight = true;
+            options.ExcludeColumns = new List<string> {
+                nameof(ReportModel.Emphasis),
+                nameof(ReportModel.VolumeId)
+            };
+            foreach (var col in sfDataGrid1.Columns.Where(x => !x.Visible))
+            {
+                options.ExcludeColumns.Add(col.HeaderText);
+            }
+            options.RepeatHeaders = true;
+            options.FitAllColumnsInOnePage = true;
+            options.AutoColumnWidth = true;
+            options.ExportGroups = true;
+            options.ExportDetailsView = true;
+
+            var document = new PdfDocument();
+            document.PageSettings.Orientation = PdfPageOrientation.Landscape;
+            var page = document.Pages.Add();
+            var PDFGrid = sfDataGrid1.ExportToPdfGrid(sfDataGrid1.View, options);
+            var format = new PdfGridLayoutFormat()
+            {
+                Layout = PdfLayoutType.Paginate,
+                Break = PdfLayoutBreakType.FitPage
+            };
+
+            PDFGrid.Draw(page, new PointF(), format);
+
+            //Syncfusion.Pdf.PdfDocument document = sfDataGrid1.ExportToPdf(options);
+            //document.PageSettings.Orientation = Syncfusion.Pdf.PdfPageOrientation.Landscape;
+            document.Save(filePath);
+
+            //GenerateDataForExport();
+            //var exporter = m_ExporterProvider.Provide("Pdf");
+            //string exportData = exporter.Export(title, ExportColNames, ExportData);
+            //File.WriteAllText(filePath, exportData);
         }
 
 
@@ -536,24 +555,6 @@ namespace Dek.Bel.Services.Report
             System.Diagnostics.Process.Start(m_UserSettingsService.LatestExportSaveFolder);
         }
 
-        private void button_expandGroups_Click(object sender, EventArgs e)
-        {
-            sfDataGrid1.AutoExpandGroups = !sfDataGrid1.AutoExpandGroups;
-            if (sfDataGrid1.AutoExpandGroups)
-                sfDataGrid1.ExpandAllGroup();
-            else
-                sfDataGrid1.CollapseAllGroup();
-        }
-
-        private void button_resetGroups_Click(object sender, EventArgs e)
-        {
-            sfDataGrid1.ClearGrouping();
-        }
-
-        private void setCategoryToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-
-        }
 
         #region Context menu ====================================================
 
@@ -582,6 +583,49 @@ namespace Dek.Bel.Services.Report
             SetCategoryWeight(5);
         }
 
+        private void copyCellToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            int rowIdx = sfDataGrid1.SelectedIndex;
+            int colIdx = sfDataGrid1.CurrentCell.ColumnIndex;
+            if (!sfDataGrid1.View.GetRecordAt(rowIdx).IsRecords)
+                return;
+
+            string val = GetCellValue(rowIdx, colIdx);
+            if (string.IsNullOrEmpty(val))
+                return;
+
+            Clipboard.SetText(val);
+        }
+
+        private void copyRowToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            int rowIdx = sfDataGrid1.SelectedIndex;
+            RecordEntry record = sfDataGrid1.View.GetRecordAt(rowIdx);
+            if (record is null)
+                return;
+
+            if (!(record.Data is ReportModel model) || model is null)
+                return;
+
+            string val = model.ToString()
+                .Replace("\r", " ")
+                .Replace("\n", " ")
+                .Replace("  ", " ")
+                .Replace("  ", " ");
+
+            Clipboard.SetText(val);
+        }
+
+        // Block context menu
+        private void contextMenuStrip1_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            int rowIdx = sfDataGrid1.SelectedIndex;
+            if (!sfDataGrid1.View.GetRecordAt(rowIdx).IsRecords)
+                e.Cancel = true;
+
+            return;
+        }
+
         private void SetCategoryWeight(int weight)
         {
             try
@@ -600,15 +644,38 @@ namespace Dek.Bel.Services.Report
             catch { }
         }
 
-        // Block context menu
-        private void contextMenuStrip1_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        private void setCategoryToolStripMenuItem_Click(object sender, EventArgs e)
         {
             int rowIdx = sfDataGrid1.SelectedIndex;
-            if (!sfDataGrid1.View.GetRecordAt(rowIdx).IsRecords)
-                e.Cancel = true;
+            Id citationId;
+            try
+            {
+                citationId = ((ReportModel)sfDataGrid1.View.GetRecordAt(rowIdx).Data).CitationId;
+                Id volumeId = ((ReportModel)sfDataGrid1.View.GetRecordAt(rowIdx).Data).VolumeId;
+                if (citationId.IsNull || volumeId.IsNull)
+                    return;
+            }
+            catch
+            {
+                return;
+            }
 
-            return;
+            try
+            {
+                var f = new Form_ReportCategory(citationId, contextMenuStrip1.Left, contextMenuStrip1.Top);
+                f.ShowDialog();
+
+                ReportModel rekord = m_ReportService.Report.SingleOrDefault(x => x.CitationId == citationId);
+                var mainCat = m_CategoryService.GetMainCategory(citationId);
+                rekord.MainCategory = mainCat?.ToString() ?? "<None>";
+                var mainCitCat = m_CategoryService.GetMainCitationCategory(citationId);
+                rekord.MainCategoryWeight = mainCitCat.Weight;
+                sfDataGrid1.Invalidate(true);
+            }
+            catch { }
+
         }
+
 
         #endregion Context menu
 
@@ -637,8 +704,31 @@ namespace Dek.Bel.Services.Report
             }
         }
 
-        private void button_onlyShowCurrentVolume_Click(object sender, EventArgs e)
+        #region Button row under grid ===========================================
+
+        private void buttonShowFilter_Click(object sender, EventArgs e)
         {
+            sfDataGrid1.FilterRowPosition = (sfDataGrid1.FilterRowPosition == Syncfusion.WinForms.DataGrid.Enums.RowPosition.None)
+                ? Syncfusion.WinForms.DataGrid.Enums.RowPosition.Top
+                : Syncfusion.WinForms.DataGrid.Enums.RowPosition.None;
+        }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+            sfDataGrid1.ClearFilters();
+        }
+
+        private void Button3_Click(object sender, EventArgs e)
+        {
+            ShowColumnSelector();
+        }
+
+        private void Button4_Click(object sender, EventArgs e)
+        {
+            foreach (var col in sfDataGrid1.Columns.Where(x => x.HeaderText.ToLower() != "emphasis"))
+            {
+                col.Visible = true;
+            }
         }
 
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
@@ -656,6 +746,56 @@ namespace Dek.Bel.Services.Report
                 sfDataGrid1.View.Filter = new Predicate<object>(x => true);
 
             sfDataGrid1.View.RefreshFilter(true);
+        }
+
+        private void button_expandGroups_Click(object sender, EventArgs e)
+        {
+            sfDataGrid1.AutoExpandGroups = !sfDataGrid1.AutoExpandGroups;
+            if (sfDataGrid1.AutoExpandGroups)
+                sfDataGrid1.ExpandAllGroup();
+            else
+                sfDataGrid1.CollapseAllGroup();
+        }
+
+        private void button_resetGroups_Click(object sender, EventArgs e)
+        {
+            sfDataGrid1.ClearGrouping();
+        }
+
+
+        private bool AutoSizeRows { get; set; }
+        private int DefaultRowSize { get; set; }
+        private void button_ToggleRowSize_Click(object sender, EventArgs e)
+        {
+            AutoSizeRows = !AutoSizeRows;
+            sfDataGrid1.Invalidate(true);
+            sfDataGrid1.Refresh();
+            sfDataGrid1.View.Refresh();
+        }
+
+
+        #endregion
+
+        private void sfDataGrid1_QueryRowHeight(object sender, Syncfusion.WinForms.DataGrid.Events.QueryRowHeightEventArgs e)
+        {
+            RowAutoFitOptions autoFitOptions = new RowAutoFitOptions();
+            if (AutoSizeRows)
+            {
+                if (sfDataGrid1.AutoSizeController.GetAutoRowHeight(e.RowIndex, autoFitOptions, out int autoHeight))
+                {
+                    if (autoHeight > DefaultRowSize)
+                    {
+                        e.Height = autoHeight;
+                        e.Handled = true;
+                    }
+                }
+            }
+            else
+            {
+                e.Height = DefaultRowSize;
+                e.Handled = true;
+            }
+
         }
     }
 }

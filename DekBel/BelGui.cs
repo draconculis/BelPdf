@@ -55,6 +55,8 @@ namespace Dek.Bel
         [Import] public SeriesService m_SeriesService { get; set; }
         [Import] public AuthorService m_AuthorService { get; set; }
 
+        #region ctor ============================================================
+
         /// <summary>
         /// Coming in here means from outer space: We are called from Sumatra.
         /// </summary>
@@ -66,6 +68,7 @@ namespace Dek.Bel
             if (m_DBService == null)
                 Mef.Initialize(this, new List<Type> { GetType(), typeof(ModelsForViewing) });
 
+            VM.CurrentCitationChanged += VM_CurrentCitationChanged;
             VM.Message = message;
 
             // Get volume and storage
@@ -78,7 +81,15 @@ namespace Dek.Bel
                 m_VolumeService.LoadCitations(history.VolumeId);
                 if (m_VolumeService.Citations.Count > 1)
                 {
-                    VM.CurrentCitation = SelectCitation();
+                    Citation newCitation  = SelectCitation();
+                    if (newCitation == null)
+                    {
+                        VM.CurrentCitation = m_VolumeService.Citations.First();
+                    }
+                    else
+                    {
+                        VM.CurrentCitation = newCitation;
+                    }
                 }
                 else if (m_VolumeService.Citations.Count < 1)
                 {
@@ -86,7 +97,7 @@ namespace Dek.Bel
                     Close();
                     return;
                 }
-                else
+                else // Exactly one citation found
                 {
                     VM.CurrentCitation = m_VolumeService.Citations?.FirstOrDefault();
                 }
@@ -136,10 +147,22 @@ namespace Dek.Bel
             m_DBService.DeleteAll<RawCitation>(); // These need to go now
 
             m_CitationManipulationService.CitationChanged += OnCitationChanged;
-            comboBox_CategoryWeight.SelectedIndex = 2;
             m_CitationPersisterService.TimeToSave += CitationPersisterService_TimeToSave;
             m_CitationPersisterService.Rtb = richTextBox2;
         }
+
+        // Test
+        public BelGui()
+        {
+            InitializeComponent();
+            this.Text = $"Bel {AssemblyStuff.AssemblyVersion}";
+            toolStripTextBox1.Text = (string)Properties.Settings.Default["DeselectionMarker"];
+        }
+
+        #endregion ctor =========================================================
+
+
+        #region BelGui Form Events ==============================================
 
         private void BelGui_Load(object sender, EventArgs e)
         {
@@ -157,24 +180,32 @@ namespace Dek.Bel
 
             // Init margin box dropdowns
             GuiHelper.LoadAComboBoxWithPdfFonts(comboBox_PdfBoxFont);
-            SetComboBoxSelectedIndex(comboBox_PdfBoxFont, Constants.PdfFont.TIMES_ROMAN);
+            BelGuiHelper.SetComboBoxSelectedIndex(comboBox_PdfBoxFont, Constants.PdfFont.TIMES_ROMAN);
             GuiHelper.LoadAComboBoxWithDisplayModes(comboBox_PdfMarginBoxDisplayMode);
-            SetComboBoxSelectedIndex(comboBox_PdfBoxFont, Constants.MarginBoxVisualMode.Normal);
+            BelGuiHelper.SetComboBoxSelectedIndex(comboBox_PdfBoxFont, Constants.MarginBoxVisualMode.Normal);
 
             LoadControls();
             LoadingControls = true;
 
             splitContainer2.Focus();
             splitContainer2.Panel2.Focus();
-            groupBox1.Focus();
 
-            ActiveControl = textBox_CategorySearch;
-            textBox_CategorySearch.Focus();
+            ActiveControl = categoryUserControl1;
 
             OldLeft = Left;
             OldTop = Top;
 
             LoadingControls = false;
+        }
+
+        /// <summary>
+        /// Event fired from VM when current citation changes.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void VM_CurrentCitationChanged(object sender, EventArgs e)
+        {
+            OnCitationChanged(sender, e);
         }
 
         /// <summary>
@@ -189,13 +220,22 @@ namespace Dek.Bel
             LoadControls();
         }
 
-        // Test
-        public BelGui()
+        private void BelGui_FormClosing(object sender, FormClosingEventArgs e)
         {
-            InitializeComponent();
-            this.Text = $"Bel {AssemblyStuff.AssemblyVersion}";
-            toolStripTextBox1.Text = (string)Properties.Settings.Default["DeselectionMarker"];
+            richTextBox2.Focus();
+
+            SaveMarginBoxSettingsToCitation();
+
+            if (m_UserSettingsService.AutoWritePdfOnClose)
+                PdfService.RecreateTheWholeThing(VM, m_VolumeService);
         }
+
+        private void BelGui_FormClosed(object sender, FormClosedEventArgs e)
+        {
+        }
+
+        #endregion BelGui Form Events ===========================================
+
 
         #region Control Loading =========================================
 
@@ -207,6 +247,9 @@ namespace Dek.Bel
         private void LoadControls()
         {
             LoadingControls = true;
+
+            // Category user control needs to know what current citation is
+            categoryUserControl1.CurrentCitationId = VM.CurrentCitation.Id;
 
             // Show which citation is current
             int len = Math.Min(VM.CurrentCitation.Citation1.Length, 40);
@@ -244,7 +287,7 @@ namespace Dek.Bel
             label_storageName.Text = Path.GetFileName(VM.CurrentStorage.StorageName);
             label1_MD5.Text = VM.CurrentStorage.Hash;
 
-            LoadCategoryControl();
+            categoryUserControl1.Update();
             LoadReferences();
             LoadPdfMarginBoxControls();
             LoadingControls = true;
@@ -254,25 +297,25 @@ namespace Dek.Bel
             LoadingControls = false;
         }
 
-        void LoadCategoryControl()
-        {
-            LoadingControls = true;
-            flowLayoutPanel_Categories.Controls.Clear();
-            var cgs = m_CategoryService.CitationCategoriesByCitation(VM.CurrentCitation.Id);
-            var categories = m_CategoryService.Categories;
+        //void LoadCategoryControl()
+        //{
+        //    LoadingControls = true;
+        //    flowLayoutPanel_Categories.Controls.Clear();
+        //    var cgs = m_CategoryService.CitationCategoriesByCitation(VM.CurrentCitation.Id);
+        //    var categories = m_CategoryService.Categories;
 
-            foreach (var cg in cgs)
-            {
-                if (cg.CategoryId.IsNull)
-                    continue;
+        //    foreach (var cg in cgs)
+        //    {
+        //        if (cg.CategoryId.IsNull)
+        //            continue;
 
-                Category cat = categories.SingleOrDefault(x => x.Id == cg.CategoryId);
-                if(cat != null)
-                    AddCategoryLabel(cg, cat);
-            }
+        //        Category cat = categories.SingleOrDefault(x => x.Id == cg.CategoryId);
+        //        if(cat != null)
+        //            AddCategoryLabel(cg, cat);
+        //    }
 
-            LoadingControls = false;
-        }
+        //    LoadingControls = false;
+        //}
 
         void LoadPdfMarginBoxControls()
         {
@@ -281,8 +324,8 @@ namespace Dek.Bel
             string settingsStr = VM.CurrentCitation.MarginBoxSettings;
             PdfMarginBoxSettings settings = new PdfMarginBoxSettings(settingsStr);
 
-            SetComboBoxSelectedIndex(comboBox_PdfBoxFont, settings.Font);
-            SetComboBoxSelectedIndex(comboBox_PdfMarginBoxDisplayMode, settings.DisplayMode);
+            BelGuiHelper.SetComboBoxSelectedIndex(comboBox_PdfBoxFont, settings.Font);
+            BelGuiHelper.SetComboBoxSelectedIndex(comboBox_PdfMarginBoxDisplayMode, settings.DisplayMode);
 
             checkBox_right.Checked = settings.RightMargin;
             numericUpDown_FontSize.Value = (decimal)settings.FontSize;
@@ -370,47 +413,17 @@ namespace Dek.Bel
         #endregion Load Controls ===========================================
 
 
-        #region Citation text boxes =====================================================
-
-        private void richTextBox2_Enter(object sender, EventArgs e)
-        {
-            toolStripButton_Emphasis.Enabled = true;
-        }
-
-        private void CitationPersisterService_TimeToSave(object sender, CitationPersisterService.TimeToSaveEventArgs e)
-        {
-            if (e.TheControl == richTextBox2)
-            {
-                VM.CurrentCitation.Citation3 = richTextBox2.Text;
-                m_DBService.InsertOrUpdate(VM.CurrentCitation);
-                //richTextBox2.BackColor = Color.White;
-            }
-        }
-
-        private void richTextBox2_KeyUp(object sender, KeyEventArgs e)
-        {
-            //richTextBox2.BackColor = Color.Beige;
-        }
-
-        private void richTextBox2_Leave(object sender, EventArgs e)
-        {
-            VM.CurrentCitation.Citation3 = richTextBox2.Text;
-            m_VolumeService.SaveAndReloadCitation(VM.CurrentCitation);
-
-            if (toolStripButton_Emphasis.Selected)
-                return;
-
-            toolStripButton_Emphasis.Enabled = false;
-        }
-
-
-        #endregion Citation text boxes ==================================================
-
-
         #region Toolstrip 1 (top menu row) ==============================================
 
-        private void toolStripDropDownButton1_Click(object sender, EventArgs e)
+        private void ToolStripSplitButton2_ButtonClick(object sender, EventArgs e)
         {
+            FormVolume fm = new FormVolume();
+
+            if (fm.ShowDialog() == DialogResult.OK || fm.SelectedCitation != VM.CurrentCitation) // Citation might be deleted
+            {
+                VM.CurrentCitation = fm.SelectedCitation ?? VM.CurrentCitation;
+                LoadControls();
+            }
 
         }
 
@@ -496,304 +509,67 @@ namespace Dek.Bel
 
         }
 
-        private void removeToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (((sender as ToolStripMenuItem)?.Owner as ContextMenuStrip)?.SourceControl is Label label)
-            {
-                var cc = (CitationCategory)label.Tag;
-                m_DBService.Delete<CitationCategory>($"`{nameof(CitationCategory.CitationId)}`='{cc.CitationId}' AND `{nameof(CitationCategory.CategoryId)}`='{cc.CategoryId}'");
-                flowLayoutPanel_Categories.Controls.Remove(label);
-            }
-        }
+        //private void removeToolStripMenuItem_Click(object sender, EventArgs e)
+        //{
+        //    if (((sender as ToolStripMenuItem)?.Owner as ContextMenuStrip)?.SourceControl is Label label)
+        //    {
+        //        var cc = (CitationCategory)label.Tag;
+        //        m_DBService.Delete<CitationCategory>($"`{nameof(CitationCategory.CitationId)}`='{cc.CitationId}' AND `{nameof(CitationCategory.CategoryId)}`='{cc.CategoryId}'");
+        //        flowLayoutPanel_Categories.Controls.Remove(label);
+        //    }
+        //}
 
         #endregion Toolstrip 1 (top menu row) ===========================================
 
 
-        #region RichTextBox margins =============================================
+        #region Toolstrip 1 =====================================================
 
-        private void marginsToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ToolStripButton_updatePdf_Click(object sender, EventArgs e)
         {
-            var margins = richTextBox1.GetInnerMargins();
-            FormMargins f = new FormMargins(margins.left, margins.top, margins.right, margins.bottom);
-            if (f.ShowDialog(this) == DialogResult.Cancel)
+            PdfService.RecreateTheWholeThing(VM, m_VolumeService);
+        }
+
+        private void ToolStripButton_AutoUpdate_CheckedChanged(object sender, EventArgs e)
+        {
+            m_UserSettingsService.AutoWritePdfOnClose = toolStripButton_AutoUpdate.Checked;
+        }
+
+        /// <summary>
+        /// Toolstrip menu item UNDERLINE emphasis
+        /// </summary>
+        private void UnderlineEmphasisToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (!(sender is ToolStripMenuItem item))
                 return;
 
-            richTextBox1.SetInnerMargins(f.LeftMargin, f.TopMargin, f.RightMargin, f.BottomMargin);
-            richTextBox2.SetInnerMargins(f.LeftMargin, f.TopMargin, f.RightMargin, f.BottomMargin);
-        }
-
-        #endregion RichTextBox margins ==========================================
-
-
-        #region Category logic ==================================================
-        
-        static string CategoryAddText = "Add";
-        static string CategoryCreateText = "Create";
-
-        private void setAsMainCategoryToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (((sender as ToolStripMenuItem)?.Owner as ContextMenuStrip)?.SourceControl is Label label)
-            {
-                m_CategoryService.SetMainCategory(label.Tag as CitationCategory);
-                m_CategoryLabelService.ClearMainStyleFromLabels(flowLayoutPanel_Categories.Controls.OfType<Label>());
-                m_CategoryLabelService.SetMainStyleOnLabel(label);
-            }
-        }
-
-        private void textBox1_CategorySearch_TextChanged(object sender, EventArgs e)
-        {
+            m_UserSettingsService.UnderlineEmphasis = item.Checked;
+            LoadControls();
 
         }
 
-        private void textBox1_CategorySearch_KeyDown(object sender, KeyEventArgs e)
+        /// <summary>
+        /// Remove duplicate spaces from rtf box 1 + 2
+        /// </summary>
+        private void AdjustSpacesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (e.KeyCode == Keys.Return)
-            {
-                e.Handled = true;
-                e.SuppressKeyPress = true;
-                return;
-            }
-
-            //if (string.IsNullOrWhiteSpace(textBox_CategorySearch.Text))
-            //    return;
-        }
-
-        private void textBox1_CategorySearch_KeyUp(object sender, KeyEventArgs e)
-        {
-            if (!(sender is TextBox textbox))
-                return;
-
-            if (e.KeyCode == Keys.Return)
-            {
-                if (button_CategoryAddCreate.Text == CategoryCreateText)
-                {
-                    Button_CategoryAddCreate_Click(sender, e);
-                }
-                else
-                {
-                    if(listBox1.Visible)
-                        listBox1_Click(sender, e);
-                }
-
-                e.Handled = true;
-                e.SuppressKeyPress = true;
-                return;
-            }
-
-            if (e.KeyCode == Keys.Down && listBox1.Visible)
-            {
-                if (listBox1.SelectedIndex + 1 == listBox1.Items.Count)
-                    return;
-
-                listBox1.SelectedIndex++;
-
-                return;
-            }
-
-            if (e.KeyCode == Keys.Up && listBox1.Visible)
-            {
-                if (listBox1.SelectedIndex == 0)
-                    return;
-
-                listBox1.SelectedIndex--;
-
-                return;
-            }
-
-            listBox1.Items.Clear();
-            var citCats = m_CategoryService.CitationCategoriesByCitation(VM.CurrentCitation.Id);
-            //var cats = m_CategoryService.Categories
-            //    .Where(x =>
-            //    x.Code.ToLower().Contains(textbox.Text.ToLower())
-            //    || x.Name.ToLower().Contains(textbox.Text.ToLower()))
-            //    .Where(c => c.Id != Id.Null)
-            //    .Where(d => !citCats.Any(f => f.CategoryId == d.Id))
-            //    .ToList();
-
-            if(textbox.Text.TrimStart().IndexOf(" ") > 1)
-            {
-                button_CategoryAddCreate.Text = CategoryCreateText;
-                listBox1.Visible = false;
-            }
+            // Exclude
+            if (richTextBox1.SelectionLength > 0)
+                m_CitationManipulationService.AdjustSpacesInCitation2(richTextBox1.SelectionStart, richTextBox1.SelectionStart + richTextBox1.SelectionLength - 1);
             else
-            {
-                button_CategoryAddCreate.Text = CategoryAddText;
-
-                var cats = m_CategoryService.Categories
-                    .Where(x =>
-                        x.Code.ToLower().Contains(textbox.Text.ToLower())
-                       || x.Name.ToLower().Contains(textbox.Text.ToLower()))
-                    .Where(c => c.Id != Id.Null)
-                    .Where(d => !citCats.Any(f => f.CategoryId == d.Id))
-                    .ToList();
-
-                if (cats.Count < 1 || textbox.Text.Length < 2)
-                {
-                    listBox1.Visible = false;
-                    return;
-                }
-
-                foreach (var c in cats)
-                    listBox1.Items.Add(c);
-
-                listBox1.SelectedIndex = 0;
-                if (!listBox1.Visible)
-                {
-                    listBox1.SelectedIndex = 0;
-                    listBox1.Top = textbox.Top + textbox.Height;
-                    listBox1.Left = textbox.Left;
-                    listBox1.Width = textbox.Width;
-                    listBox1.Visible = true;
-                }
-            }
-
+                m_CitationManipulationService.AdjustSpacesInCitation2(0, richTextBox1.Text.Length - 1);
         }
 
-
-        // Add category
-        private void listBox1_Click(object sender, EventArgs e)
+        /// <summary>
+        /// Toolstrip menu item BOLD emphasis
+        /// </summary>
+        private void BoldEmphasisToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (!(listBox1.SelectedItem is Category cat))
+            if (!(sender is ToolStripMenuItem item))
                 return;
 
-            bool hasNullCategory = m_CategoryService.CitationHasNullCategory(VM.CurrentCitation.Id);
-            bool hasMainCategory = m_CategoryService.CitationHasMainCategory(VM.CurrentCitation.Id);
-
-            //bool hasNullCategory = flowLayoutPanel_Categories.Controls.Count == 1
-            //    && ((CitationCategory)((Label)flowLayoutPanel_Categories.Controls[0]).Tag).CategoryId == Id.Null;
-
-            bool isMain = (flowLayoutPanel_Categories.Controls.Count == 0) || hasNullCategory || !hasMainCategory;
-
-            //m_CategoryService.AddCategoryToCitation(VM.CurrentCitation.Id, cat.Id, int.Parse((comboBox_CategoryWeight.SelectedItem as string)??"1"), isMain);
-            //LoadCategoryControl();
-
-            textBox_CategorySearch.Text = cat.ToString();
-
-            listBox1.Visible = false;
-            //textBox_CategorySearch.Text = "";
+            m_UserSettingsService.BoldEmphasis = item.Checked;
+            LoadControls();
         }
-
-        private void Button_CategoryAddCreate_Click(object sender, EventArgs e)
-        {
-            if (button_CategoryAddCreate.Text == CategoryAddText)
-            {
-                if (!(listBox1.SelectedItem is Category cat))
-                    return;
-
-                bool hasNullCategory = m_CategoryService.CitationHasNullCategory(VM.CurrentCitation.Id);
-                bool hasMainCategory = m_CategoryService.CitationHasMainCategory(VM.CurrentCitation.Id);
-
-                bool isMain = (flowLayoutPanel_Categories.Controls.Count == 0) || hasNullCategory || !hasMainCategory;
-
-                m_CategoryService.AddCategoryToCitation(VM.CurrentCitation.Id, cat.Id, int.Parse((comboBox_CategoryWeight.SelectedItem as string) ?? "1"), isMain);
-                LoadCategoryControl();
-
-                textBox_CategorySearch.Text = "";
-            }
-            else
-            {
-                if (textBox_CategorySearch.Focused)
-                    return;
-
-                string s = textBox_CategorySearch.Text.Trim().Replace("-", " ").Replace("   ", " ").Replace("  ", " ").Replace("  ", " ").Replace("  ", " ").Replace("  ", " ");
-                if (string.IsNullOrWhiteSpace(s))
-                    return;
-
-                Regex regex = new Regex(@"^\w+ +\w+$");
-                if(!regex.IsMatch(s))
-                {
-                    MessageBox.Show($"To create new category, please use the following format:{Environment.NewLine}Code Name", "Invalid format");
-                    textBox_CategorySearch.Focus();
-                    return;
-                }
-
-                string[] parts = s.Split(' ');
-
-                // Create new category
-                Category newCategory = m_CategoryService.CreateNewCategory(parts[0], parts[1]);
-                if(newCategory == null)
-                {
-                    MessageBox.Show($"New category cannot be added, category with code '{parts[0]}' already exists.", "Category exists");
-                    textBox_CategorySearch.Focus();
-                    return;
-                }
-
-                bool hasNullCategory = m_CategoryService.CitationCategoriesByCitation(VM.CurrentCitation.Id).Any(x => x.CitationId == Id.Null);
-                bool hasMainCategory = m_CategoryService.CitationCategoriesByCitation(VM.CurrentCitation.Id).Any(x => x.IsMain);
-
-                bool isMain = (flowLayoutPanel_Categories.Controls.Count == 0) || hasNullCategory || !hasMainCategory;
-
-                m_CategoryService.AddCategoryToCitation(VM.CurrentCitation.Id, newCategory.Id, int.Parse((comboBox_CategoryWeight.SelectedItem as string) ?? "1"), isMain);
-                LoadCategoryControl();
-
-                textBox_CategorySearch.Text = "";
-                button_CategoryAddCreate.Text = CategoryAddText;
-            }
-        }
-
-        
-
-
-        private void textBox_CategorySearch_TextChanged(object sender, EventArgs e)
-        {
-        }
-
-        // Called from load controls
-        private void AddCategoryLabel(CitationCategory citationCat, Category cat)
-        {
-            Label l = m_CategoryLabelService.CreateCategoryLabelControl(citationCat, cat, contextMenuStrip_Category, toolTip1);
-
-            if (citationCat.IsMain)
-                m_CategoryLabelService.SetMainStyleOnLabel(l);
-
-            flowLayoutPanel_Categories.Controls.Add(l);
-            textBox_CategorySearch.Focus();
-        }
-
-        // Weights
-        private void SetWeight1ToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (sender is ToolStripMenuItem item)
-                SetWeight(item, 1);
-        }
-
-        private void SetWeight2ToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (sender is ToolStripMenuItem item)
-                SetWeight(item, 2);
-        }
-
-        private void SetWeight3ToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (sender is ToolStripMenuItem item)
-                SetWeight(item, 3);
-        }
-
-        private void SetWeight4ToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (sender is ToolStripMenuItem item)
-                SetWeight(item, 4);
-        }
-
-        private void SetWeight5ToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (sender is ToolStripMenuItem item)
-                SetWeight(item, 5);
-        }
-
-        private void SetWeight(ToolStripMenuItem item, int weight)
-        {
-            if (!(((System.Windows.Forms.ContextMenuStrip)item.GetCurrentParent()).SourceControl.Tag is CitationCategory citationCategory))
-                return;
-
-            m_CategoryService.SetWeight(VM.CurrentCitation.Id, citationCategory.CategoryId, weight);
-            LoadCategoryControl();
-        }
-
-        #endregion Category logic ===============================================
-
-
-        #region Toolstrip 1 ======================================================
 
         /// Exclusion
         private void toolStripButton6_Click_1(object sender, EventArgs e)
@@ -853,6 +629,140 @@ namespace Dek.Bel
             }
         }
 
+        private void RemoveLineEndingsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            RemoveLineEndingsToolStripMenuItem1_Click(sender, e);
+        }
+
+        private void resetToOriginalToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ResetCitation2();
+        }
+
+        private void toolStripStatusLabel_CitationSelector_Click(object sender, EventArgs e)
+        {
+            var oldCitation = VM.CurrentCitation;
+            // Please note that after this call, the number of selected citations may have changed
+            // and there may even be zero citations.
+            Citation newCitation = SelectCitation();
+            
+            if (!m_VolumeService.Citations.Any())
+            {
+                m_MessageboxService.Show(
+                    "No Citations", 
+                    $"No Citations found for current Volume. {Environment.NewLine}Bel must now close!");
+                Close();
+                return;
+            }
+
+            if (newCitation != null)
+            {
+                VM.CurrentCitation = newCitation;
+            }
+            else
+            {
+                // Try to reselect previous citation
+                if (oldCitation != null && m_VolumeService.Citations.Any(c => c.Id == oldCitation.Id))
+                    VM.CurrentCitation = oldCitation;
+                else
+                    VM.CurrentCitation = m_VolumeService.Citations.First();
+            }
+
+            LoadControls();
+        }
+
+        private void ToolStripStatusLabel1_Click(object sender, EventArgs e)
+        {
+            splitContainer2.Panel2Collapsed = !splitContainer2.Panel2Collapsed;
+            if (splitContainer2.Panel2Collapsed)
+                toolStripStatusLabel1.Image = global::Dek.Bel.Properties.Resources.metaopen;
+            else
+                toolStripStatusLabel1.Image = global::Dek.Bel.Properties.Resources.metaclose;
+        }
+
+        private void ToolStripDropDownButton_Citation_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        #endregion Toolstrip 1 ==================================================
+
+
+        #region Rtb1 (Citation 2) ===============================================
+
+        private void richTextBox1_SizeChanged(object sender, EventArgs e)
+        {
+            if (!(sender is RichTextBox rtb))
+                return;
+
+            rtb.Invalidate();
+        }
+
+        private void RichTextBox1_Leave(object sender, EventArgs e)
+        {
+            if (toolStripButton6.Selected)
+                return;
+
+            toolStripButton6.Enabled = false;
+        }
+
+        private void RichTextBox1_Enter(object sender, EventArgs e)
+        {
+            toolStripButton6.Enabled = true;
+        }
+
+
+        #endregion Rtb1 (Citation 2) ============================================
+
+
+        #region Rtb2 (Citation 3) ================================================
+
+        private void richTextBox2_Enter(object sender, EventArgs e)
+        {
+            toolStripButton_Emphasis.Enabled = true;
+        }
+
+        private void richTextBox2_Leave(object sender, EventArgs e)
+        {
+            VM.CurrentCitation.Citation3 = richTextBox2.Text;
+            m_VolumeService.SaveAndReloadCitation(VM.CurrentCitation);
+
+            if (toolStripButton_Emphasis.Selected)
+                return;
+
+            toolStripButton_Emphasis.Enabled = false;
+        }
+
+        private void CitationPersisterService_TimeToSave(object sender, CitationPersisterService.TimeToSaveEventArgs e)
+        {
+            if (e.TheControl == richTextBox2)
+            {
+                VM.CurrentCitation.Citation3 = richTextBox2.Text;
+                m_DBService.InsertOrUpdate(VM.CurrentCitation);
+                //richTextBox2.BackColor = Color.White;
+            }
+        }
+
+        #endregion Rtb2 (Citation 3) =============================================
+
+
+        #region RichTextBox margins =============================================
+
+        private void marginsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var margins = richTextBox1.GetInnerMargins();
+            FormMargins f = new FormMargins(margins.left, margins.top, margins.right, margins.bottom);
+            if (f.ShowDialog(this) == DialogResult.Cancel)
+                return;
+
+            richTextBox1.SetInnerMargins(f.LeftMargin, f.TopMargin, f.RightMargin, f.BottomMargin);
+            richTextBox2.SetInnerMargins(f.LeftMargin, f.TopMargin, f.RightMargin, f.BottomMargin);
+        }
+
+        #endregion RichTextBox margins ==========================================
+
+
+        #region ContextMenuStrip Rtb 1 ==========================================
 
         private void excludeToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -869,12 +779,7 @@ namespace Dek.Bel
             ResetCitation2();
         }
 
-        private void CopyToolStripMenuItem3_Click(object sender, EventArgs e)
-        {
-            richTextBox1.Copy();
-        }
-
-        // Citation2 - Remove line endings in selected text 
+        // Remove line endings in selected text 
         private void RemoveLineEndingsToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             // Exclude
@@ -884,20 +789,15 @@ namespace Dek.Bel
                 m_CitationManipulationService.RemoveLinebreakInCitation2(0, richTextBox1.Text.Length - 1);
         }
 
-        private void RemoveLineEndingsToolStripMenuItem_Click(object sender, EventArgs e)
+        private void CopyToolStripMenuItem3_Click(object sender, EventArgs e)
         {
-            RemoveLineEndingsToolStripMenuItem1_Click(sender, e);
+            richTextBox1.Copy();
         }
 
-        private void resetToOriginalToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            ResetCitation2();
-        }
-
-        #endregion Toolstrip 1 ===================================================
+        #endregion ==============================================================
 
 
-        #region ContextMenuStrip Rtb 2 ==============================================
+        #region ContextMenuStrip Rtb 2 ==========================================
 
         private void EmphasisToolStripMenuItem1_Click(object sender, EventArgs e)
         {
@@ -919,99 +819,66 @@ namespace Dek.Bel
             richTextBox2.Paste();
         }
 
-        #endregion ContextMenuStrip Rtb 2 ==============================================
+        #endregion ContextMenuStrip Rtb 2 =======================================
 
+        // **** TABS ************************************************************
 
-        private void DeselectToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void RichTextBox1_Leave(object sender, EventArgs e)
-        {
-            if (toolStripButton6.Selected)
-                return;
-
-            toolStripButton6.Enabled = false;
-        }
-
-        private void RichTextBox1_Enter(object sender, EventArgs e)
-        {
-            toolStripButton6.Enabled = true;
-        }
-
-        private void ToolStripStatusLabel1_Click(object sender, EventArgs e)
-        {
-            splitContainer2.Panel2Collapsed = !splitContainer2.Panel2Collapsed;
-            if (splitContainer2.Panel2Collapsed)
-                toolStripStatusLabel1.Image = global::Dek.Bel.Properties.Resources.metaopen;
-            else
-                toolStripStatusLabel1.Image = global::Dek.Bel.Properties.Resources.metaclose;
-        }
-
-        private void ToolStripDropDownButton_Citation_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void TextBox_Book_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        /// <summary>
-        /// Remove duplicate spaces from rtf box 1 + 2
-        /// </summary>
-        private void AdjustSpacesToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            // Exclude
-            if (richTextBox1.SelectionLength > 0)
-                m_CitationManipulationService.AdjustSpacesInCitation2(richTextBox1.SelectionStart, richTextBox1.SelectionStart + richTextBox1.SelectionLength - 1);
-            else
-                m_CitationManipulationService.AdjustSpacesInCitation2(0, richTextBox1.Text.Length - 1);
-        }
-
-        /// <summary>
-        /// Toolstrip menu item BOLD emphasis
-        /// </summary>
-        private void BoldEmphasisToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (!(sender is ToolStripMenuItem item))
-                return;
-
-            m_UserSettingsService.BoldEmphasis = item.Checked;
-            LoadControls();
-        }
-
-        /// <summary>
-        /// Toolstrip menu item UNDERLINE emphasis
-        /// </summary>
-        private void UnderlineEmphasisToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (!(sender is ToolStripMenuItem item))
-                return;
-
-            m_UserSettingsService.UnderlineEmphasis = item.Checked;
-            LoadControls();
-
-        }
-
-        private void ToolStripButton_updatePdf_Click(object sender, EventArgs e)
-        {
-            PdfService.RecreateTheWholeThing(VM, m_VolumeService);
-        }
-
-        private void ToolStripButton_AutoUpdate_CheckedChanged(object sender, EventArgs e)
-        {
-            m_UserSettingsService.AutoWritePdfOnClose = toolStripButton_AutoUpdate.Checked;
-        }
-
+        #region TAB CITATION ====================================================
 
         private void TextBox_CitationNotes_Leave(object sender, EventArgs e)
         {
             VM.CurrentCitation.Notes = textBox_CitationNotes.Text;
             m_VolumeService.SaveAndReloadCitation(VM.CurrentCitation);
         }
+
+        #endregion ==============================================================
+
+
+        #region TAB SERIES ======================================================
+
+        private void button_EditSeries_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button_Series_Click(object sender, EventArgs e)
+        {
+            VolumeSeries volumeSeries = m_SeriesService.GetVolumeSeriesByVolumeId(VM.CurrentCitation.VolumeId);
+
+            FormSeries f = new FormSeries(VM.CurrentCitation.VolumeId);
+            f.ShowDialog();
+
+            if (f.SelectedSeries == null && volumeSeries == null)
+            {
+                return; // Safe to return, nothing happened
+            }
+            if (f.SelectedSeries == null && volumeSeries != null)
+            {
+                m_SeriesService.DetachVolumeFromSeries(VM.CurrentCitation.VolumeId);
+                LoadSeries();
+                return;
+            }
+
+            if (volumeSeries == null)
+            {
+                // Selected somthing new
+                m_SeriesService.AttachVolumeToSeries(VM.CurrentCitation.VolumeId, f.SelectedSeries.Id);
+            }
+            else
+            {
+                // Selected somthing new
+                m_SeriesService.DetachVolumeFromSeries(VM.CurrentCitation.VolumeId);
+                m_SeriesService.AttachVolumeToSeries(VM.CurrentCitation.VolumeId, f.SelectedSeries.Id);
+            }
+
+            LoadSeries();
+        }
+
+
+        #endregion ==============================================================
+
+
+        #region TAB VOLUME ======================================================
 
         /// <summary>
         /// Update volume data.
@@ -1030,26 +897,54 @@ namespace Dek.Bel
             label_volumeTitle.Text = m_VolumeService.CurrentVolume.Title;
         }
 
-        private void TextChanged_ValidateTextBoxDate(object sender, EventArgs e)
-        {
-            if (!(sender is TextBox tb))
-                return;
 
-            if (tb.Text.IsValidSaneDate())
-                tb.BackColor = textBox_VolumeTitle.BackColor;
-            else
-                tb.BackColor = Color.LightPink;
+        #endregion ==============================================================
+
+
+        #region TAB BOOKS =======================================================
+
+
+        #endregion ==============================================================
+
+
+        #region TAB AUTHORS =====================================================
+
+        private void button_authorEdit_Click(object sender, EventArgs e)
+        {
+            FormAuthors fa = new FormAuthors();
+            fa.ShowDialog();
         }
 
-        private void ToolStripStatusLabel2_Click(object sender, EventArgs e)
+        private void button_authorAdd_Click(object sender, EventArgs e)
         {
 
         }
 
+        private void button_authorRemove_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        #endregion ==============================================================
 
 
+        #region TAB FILE ========================================================
+        #endregion ==============================================================
 
-        #region Colors ===========================================================
+        //**** TABS *************************************************************
+
+
+        #region Category UserControl Logic ======================================
+
+        private void categoryUserControl1_CategoryChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        #endregion Category UserControl Logic ===================================
+
+
+        #region Colors ==========================================================
 
         private void Label_PdfHighlightColor_Click(object sender, EventArgs e)
         {
@@ -1104,9 +999,10 @@ namespace Dek.Bel
             m_VolumeService.SaveAndReloadCitation(VM.CurrentCitation);
         }
 
-        #endregion Colors =========================================================
+        #endregion Colors =======================================================
 
-        #region Pdf Margin Box Settings ===========================================
+
+        #region Pdf Margin Box Settings =========================================
 
         private void NumericUpDown_borderThickness_Leave(object sender, EventArgs e)
         {
@@ -1236,27 +1132,10 @@ namespace Dek.Bel
         }
 
 
-        #endregion Pdf Margin Box Settings ========================================
+        #endregion Pdf Margin Box Settings ======================================
 
 
-        private void SetComboBoxSelectedIndex(ComboBox theComboBox, string text)
-        {
-            int idx = 0;
-            foreach(string item in theComboBox.Items)
-            {
-                if(item.Equals(text, StringComparison.OrdinalIgnoreCase))
-                {
-                    theComboBox.SelectedIndex = idx;
-                    return;
-                }
-                idx++;
-            }
-        }
-
-
-
-        // Hamburger ==============================================================================
-        #region Hamburger =========================================================================
+        #region Hamburger =======================================================
 
         private void AuthorsToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -1264,9 +1143,27 @@ namespace Dek.Bel
             fa.ShowDialog();
         }
 
+        FormCategory m_FormCategory = null;
         private void categoriesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Button2_Click_1(sender, e);
+            if (m_FormCategory == null)
+            {
+                m_FormCategory = new FormCategory(m_CategoryService);
+                m_FormCategory.Show(this);
+                m_FormCategory.CategoryChanged += OnCategoryChagedInFormCategory;
+                m_FormCategory.FormClosed += (_, __) =>
+                {
+                    m_FormCategory.CategoryChanged -= OnCategoryChagedInFormCategory;
+                    m_FormCategory = null;
+                };
+            }
+            else
+                m_FormCategory.Visible = !m_FormCategory.Visible;
+        }
+
+        private void OnCategoryChagedInFormCategory(object sender, CategoryEventArgs e)
+        {
+            categoryUserControl1.Update();
         }
 
         private void closeToolStripMenuItem1_Click(object sender, EventArgs e)
@@ -1277,8 +1174,8 @@ namespace Dek.Bel
         // Pops up Edit Raw Citation window
         private void EditRawCitationToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            RawCitationEditor rced = new RawCitationEditor(VM, m_UserSettingsService.CitationFont);
-            rced.Show();
+            RawCitationEditor rced = new RawCitationEditor(m_DBService, VM, m_UserSettingsService.CitationFont);
+            rced.ShowDialog(this);
             LoadControls();
 
             MessageBox.Show("To use the edited raw citation, press 'Reset to original'.", "Raw citation edited.");
@@ -1324,90 +1221,10 @@ namespace Dek.Bel
             toolStripButton1_Click_2(sender, e);
         }
 
-        #endregion Hamburger ======================================================================
-        // end Hamburger ==========================================================================
+        #endregion Hamburger ====================================================
 
 
-        // Main toolstrip =========================================================================
-
-        // Elipsis - show Volume outline
-        private void ToolStripSplitButton2_ButtonClick(object sender, EventArgs e)
-        {
-            FormVolume fm = new FormVolume();
-
-            if (fm.ShowDialog() == DialogResult.OK || fm.SelectedCitation != VM.CurrentCitation) // Citation might be deleted
-            {
-                VM.CurrentCitation = fm.SelectedCitation ?? VM.CurrentCitation;
-                LoadControls();
-            }
-
-        }
-
-        private void BelGui_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            richTextBox2.Focus();
-
-            SaveMarginBoxSettingsToCitation();
-
-            if (m_UserSettingsService.AutoWritePdfOnClose)
-                PdfService.RecreateTheWholeThing(VM, m_VolumeService);
-        }
-
-        // Show Form Category
-        FormCategory m_FormCategory = null;
-        private void Button2_Click_1(object sender, EventArgs e)
-        {
-            if (m_FormCategory == null)
-            {
-                m_FormCategory = new FormCategory(m_CategoryService);
-                m_FormCategory.Show(this);
-                m_FormCategory.CategoryChanged += OnCategoryChagedInFormCategory;
-                m_FormCategory.FormClosed += (_, __) =>
-                {
-                    m_FormCategory.CategoryChanged -= OnCategoryChagedInFormCategory;
-                    m_FormCategory = null;
-                };
-            }
-            else
-                m_FormCategory.Visible = !m_FormCategory.Visible;
-        }
-
-        private void OnCategoryChagedInFormCategory(object sender, CategoryEventArgs e)
-        {
-            LoadCategoryControl();
-        }
-
-        private void toolStripStatusLabel_CitationSelector_Click(object sender, EventArgs e)
-        {
-            // Please note that after this call, the number of selected citations may have changed
-            // and there may even be zero citations.
-            var oldCitation = VM.CurrentCitation;
-            VM.CurrentCitation = SelectCitation();
-            if(!m_VolumeService.Citations.Any())
-            {
-                m_MessageboxService.Show("No Citations", "No Citations found for current Volume.");
-                Close();
-                return;
-            }
-
-            if(VM.CurrentCitation == null)
-            {
-                // Try to reselect previous citation
-                if (oldCitation != null && m_VolumeService.Citations.Any(c => c.Id == oldCitation.Id))
-                    VM.CurrentCitation = oldCitation;
-                else
-                    VM.CurrentCitation = m_VolumeService.Citations.First();
-            }
-
-            LoadControls();
-        }
-
-        private Citation SelectCitation()
-        {
-            return m_CitationSelectorService.ShowSelector(VM);
-        }
-
-        #region Database admin ============================================================
+        #region Database admin ==================================================
 
         /// <summary>
         /// Make backup of database.
@@ -1472,14 +1289,10 @@ namespace Dek.Bel
                 "Not working yet");
         }
 
-        #endregion Database admin ==========================================================
+        #endregion Database admin ===============================================
 
-        private void BelGui_FormClosed(object sender, FormClosedEventArgs e)
-        {
-            
-        }
 
-        #region Outline ====================================================================
+        #region Outline =========================================================
 
         bool FormOutlineOpen = false;
         Form_Outline FormOutline;
@@ -1534,88 +1347,12 @@ namespace Dek.Bel
             OldTop = Top;
         }
 
-        #endregion Outline =================================================================
+        #endregion Outline ======================================================
 
 
-        #region Series ============================================================
-
-        private void button_EditSeries_Click(object sender, EventArgs e)
+        private Citation SelectCitation()
         {
-
-        }
-
-        private void button_Series_Click(object sender, EventArgs e)
-        {
-            VolumeSeries volumeSeries = m_SeriesService.GetVolumeSeriesByVolumeId(VM.CurrentCitation.VolumeId);
-
-            FormSeries f = new FormSeries(VM.CurrentCitation.VolumeId);
-            f.ShowDialog();
-            
-            if(f.SelectedSeries == null && volumeSeries == null)
-            {
-                return; // Safe to return, nothing happened
-            }
-            if (f.SelectedSeries == null && volumeSeries != null)
-            {
-                m_SeriesService.DetachVolumeFromSeries(VM.CurrentCitation.VolumeId);
-                LoadSeries();
-                return;
-            }
-
-            if (volumeSeries == null)
-            {
-                // Selected somthing new
-                m_SeriesService.AttachVolumeToSeries(VM.CurrentCitation.VolumeId, f.SelectedSeries.Id);
-            }
-            else
-            {
-                // Selected somthing new
-                m_SeriesService.DetachVolumeFromSeries(VM.CurrentCitation.VolumeId);
-                m_SeriesService.AttachVolumeToSeries(VM.CurrentCitation.VolumeId, f.SelectedSeries.Id);
-            }
-
-            LoadSeries();
-        }
-
-        #endregion Series =========================================================
-
-        #region Authors tab ===============================================
-
-        private void button_authorEdit_Click(object sender, EventArgs e)
-        {
-            FormAuthors fa = new FormAuthors();
-            fa.ShowDialog();
-        }
-
-        private void button_authorAdd_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void button_authorRemove_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        #endregion Authors tab ============================================
-
-        #region Books tab =================================================
-
-
-
-        #endregion Books tab ==============================================
-
-        private void richTextBox1_SizeChanged(object sender, EventArgs e)
-        {
-            if (!(sender is RichTextBox rtb))
-                return;
-
-            rtb.Invalidate();
-        }
-
-        private void toolTip1_Popup(object sender, PopupEventArgs e)
-        {
-
+            return m_CitationSelectorService.ShowSelector(VM);
         }
 
     }

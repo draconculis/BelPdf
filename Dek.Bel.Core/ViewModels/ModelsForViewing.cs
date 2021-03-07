@@ -4,6 +4,8 @@ using Dek.Bel.Core.Models;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using Dek.Bel.Core.ViewModels;
+using iText.Kernel.Events;
+using System;
 
 namespace Dek.Bel.Core.Services
 {
@@ -15,7 +17,22 @@ namespace Dek.Bel.Core.Services
     {
         // Current data
         public EventData Message { get; set; }
-        public Citation CurrentCitation { get; set; }
+
+        public event EventHandler CurrentCitationChanged;
+        private Citation currentCitation;
+        public Citation CurrentCitation {
+            get => currentCitation;
+            set {
+                currentCitation = value;
+                FireCurrentCitationChanged(value);
+            } 
+        }
+
+        private void FireCurrentCitationChanged(Citation value)
+        {
+            CurrentCitationChanged?.Invoke(this, new EventArgs());
+        }
+
         public Storage CurrentStorage { get; set; }
 
         public List<DekRange> Emphasis { get; set; } = new List<DekRange>();

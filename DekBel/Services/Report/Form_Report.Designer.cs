@@ -62,6 +62,8 @@
             this.toolStripMenuItem6 = new System.Windows.Forms.ToolStripMenuItem();
             this.setCategoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
+            this.button_ToggleRowSize = new System.Windows.Forms.Button();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.Columns.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.sfDataGrid1)).BeginInit();
             this.groupBox1.SuspendLayout();
@@ -153,11 +155,15 @@
             this.sfDataGrid1.Name = "sfDataGrid1";
             this.sfDataGrid1.PasteOption = Syncfusion.WinForms.DataGrid.Enums.PasteOptions.None;
             this.sfDataGrid1.ShowGroupDropArea = true;
+            this.sfDataGrid1.ShowHeaderToolTip = true;
             this.sfDataGrid1.ShowRowHeaderErrorIcon = false;
             this.sfDataGrid1.Size = new System.Drawing.Size(1239, 311);
+            this.sfDataGrid1.Style.CellStyle.TextColor = System.Drawing.Color.Black;
+            this.sfDataGrid1.Style.CellStyle.VerticalAlignment = System.Windows.Forms.VisualStyles.VerticalAlignment.Top;
             this.sfDataGrid1.TabIndex = 11;
             this.sfDataGrid1.Text = "sfDataGrid1";
             this.sfDataGrid1.SelectionChanged += new Syncfusion.WinForms.DataGrid.Events.SelectionChangedEventHandler(this.sfDataGrid1_SelectionChanged);
+            this.sfDataGrid1.QueryRowHeight += new Syncfusion.WinForms.DataGrid.Events.QueryRowHeightEventHandler(this.sfDataGrid1_QueryRowHeight);
             this.sfDataGrid1.CurrentCellBeginEdit += new Syncfusion.WinForms.DataGrid.Events.CurrentCellBeginEditEventHandler(this.sfDataGrid1_CurrentCellBeginEdit);
             // 
             // buttonShowFilter
@@ -207,7 +213,7 @@
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(182, 25);
             this.button2.TabIndex = 16;
-            this.button2.Text = "Show latest reports folder...";
+            this.button2.Text = "Open latest reports folder...";
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
@@ -218,7 +224,7 @@
             this.button_showReportsFolder.Name = "button_showReportsFolder";
             this.button_showReportsFolder.Size = new System.Drawing.Size(182, 25);
             this.button_showReportsFolder.TabIndex = 15;
-            this.button_showReportsFolder.Text = "Show default reports folder...";
+            this.button_showReportsFolder.Text = "Open default reports folder...";
             this.button_showReportsFolder.UseVisualStyleBackColor = true;
             this.button_showReportsFolder.Click += new System.EventHandler(this.button_showReportsFolder_Click);
             // 
@@ -300,23 +306,26 @@
             this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.copyCellToolStripMenuItem,
             this.copyRowToolStripMenuItem,
-            this.setCategoryWeightToolStripMenuItem,
-            this.setCategoryToolStripMenuItem});
+            this.toolStripSeparator1,
+            this.setCategoryToolStripMenuItem,
+            this.setCategoryWeightToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(179, 92);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(181, 120);
             this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
             // 
             // copyCellToolStripMenuItem
             // 
             this.copyCellToolStripMenuItem.Name = "copyCellToolStripMenuItem";
-            this.copyCellToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
+            this.copyCellToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.copyCellToolStripMenuItem.Text = "Copy Cell";
+            this.copyCellToolStripMenuItem.Click += new System.EventHandler(this.copyCellToolStripMenuItem_Click);
             // 
             // copyRowToolStripMenuItem
             // 
             this.copyRowToolStripMenuItem.Name = "copyRowToolStripMenuItem";
-            this.copyRowToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
-            this.copyRowToolStripMenuItem.Text = "Copy row";
+            this.copyRowToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.copyRowToolStripMenuItem.Text = "Copy Row";
+            this.copyRowToolStripMenuItem.Click += new System.EventHandler(this.copyRowToolStripMenuItem_Click);
             // 
             // setCategoryWeightToolStripMenuItem
             // 
@@ -327,49 +336,49 @@
             this.toolStripMenuItem5,
             this.toolStripMenuItem6});
             this.setCategoryWeightToolStripMenuItem.Name = "setCategoryWeightToolStripMenuItem";
-            this.setCategoryWeightToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
-            this.setCategoryWeightToolStripMenuItem.Text = "Category weight";
+            this.setCategoryWeightToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.setCategoryWeightToolStripMenuItem.Text = "Category Weight";
             // 
             // toolStripMenuItem2
             // 
             this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(80, 22);
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(180, 22);
             this.toolStripMenuItem2.Text = "1";
             this.toolStripMenuItem2.Click += new System.EventHandler(this.toolStripMenuItem2_Click);
             // 
             // toolStripMenuItem3
             // 
             this.toolStripMenuItem3.Name = "toolStripMenuItem3";
-            this.toolStripMenuItem3.Size = new System.Drawing.Size(80, 22);
+            this.toolStripMenuItem3.Size = new System.Drawing.Size(180, 22);
             this.toolStripMenuItem3.Text = "2";
             this.toolStripMenuItem3.Click += new System.EventHandler(this.toolStripMenuItem3_Click);
             // 
             // toolStripMenuItem4
             // 
             this.toolStripMenuItem4.Name = "toolStripMenuItem4";
-            this.toolStripMenuItem4.Size = new System.Drawing.Size(80, 22);
+            this.toolStripMenuItem4.Size = new System.Drawing.Size(180, 22);
             this.toolStripMenuItem4.Text = "3";
             this.toolStripMenuItem4.Click += new System.EventHandler(this.toolStripMenuItem4_Click);
             // 
             // toolStripMenuItem5
             // 
             this.toolStripMenuItem5.Name = "toolStripMenuItem5";
-            this.toolStripMenuItem5.Size = new System.Drawing.Size(80, 22);
+            this.toolStripMenuItem5.Size = new System.Drawing.Size(180, 22);
             this.toolStripMenuItem5.Text = "4";
             this.toolStripMenuItem5.Click += new System.EventHandler(this.toolStripMenuItem5_Click);
             // 
             // toolStripMenuItem6
             // 
             this.toolStripMenuItem6.Name = "toolStripMenuItem6";
-            this.toolStripMenuItem6.Size = new System.Drawing.Size(80, 22);
+            this.toolStripMenuItem6.Size = new System.Drawing.Size(180, 22);
             this.toolStripMenuItem6.Text = "5";
             this.toolStripMenuItem6.Click += new System.EventHandler(this.toolStripMenuItem6_Click);
             // 
             // setCategoryToolStripMenuItem
             // 
             this.setCategoryToolStripMenuItem.Name = "setCategoryToolStripMenuItem";
-            this.setCategoryToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
-            this.setCategoryToolStripMenuItem.Text = "Set main category...";
+            this.setCategoryToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.setCategoryToolStripMenuItem.Text = "Category...";
             this.setCategoryToolStripMenuItem.Click += new System.EventHandler(this.setCategoryToolStripMenuItem_Click);
             // 
             // checkBox1
@@ -385,11 +394,28 @@
             this.checkBox1.UseVisualStyleBackColor = true;
             this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
             // 
+            // button_ToggleRowSize
+            // 
+            this.button_ToggleRowSize.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.button_ToggleRowSize.Location = new System.Drawing.Point(599, 320);
+            this.button_ToggleRowSize.Name = "button_ToggleRowSize";
+            this.button_ToggleRowSize.Size = new System.Drawing.Size(91, 29);
+            this.button_ToggleRowSize.TabIndex = 21;
+            this.button_ToggleRowSize.Text = "Toggle row size";
+            this.button_ToggleRowSize.UseVisualStyleBackColor = true;
+            this.button_ToggleRowSize.Click += new System.EventHandler(this.button_ToggleRowSize_Click);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(177, 6);
+            // 
             // Form_Report
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 14F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1242, 485);
+            this.Controls.Add(this.button_ToggleRowSize);
             this.Controls.Add(this.checkBox1);
             this.Controls.Add(this.button_resetGroups);
             this.Controls.Add(this.button_expandGroups);
@@ -449,5 +475,7 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem6;
         private System.Windows.Forms.ToolStripMenuItem setCategoryToolStripMenuItem;
         private System.Windows.Forms.CheckBox checkBox1;
+        private System.Windows.Forms.Button button_ToggleRowSize;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
     }
 }
