@@ -1,4 +1,6 @@
-﻿namespace Dek.Bel
+﻿using Dek.Bel.Services.Categories;
+
+namespace Dek.Bel
 {
     partial class BelGui
     {

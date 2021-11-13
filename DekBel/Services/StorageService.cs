@@ -33,9 +33,11 @@ namespace Dek.Bel.Services
         }
 
         // The meat, entry point from interop
+        // Called when Sumatra opens a file
         public ResultFileStorageData GetStorage(RequestFileStorageData fileStorageData)
         {
             string srcPath = fileStorageData.FilePath;
+
             if (!File.Exists(srcPath))
                 return new ResultFileStorageData
                 {
@@ -49,21 +51,23 @@ namespace Dek.Bel.Services
             Storage storage = m_StorageRepo.GetStorageByHash(srcHash);
             if (storage == null)
                 storage = CreateNewStorageForFile(fileStorageData, srcHash);
-
-            if(VM.CurrentStorage == null)
-                VM.CurrentStorage = storage;
-
-            VM.CurrentStorage.FilePath = srcPath;
-
-            // Hmm file in store has been removed (this is not bad) - recreate it.
-            if (!File.Exists(Path.Combine(UserSettingsService.StorageFolder, storage.StorageName)))
+            // Has source file been moved / renamed?
+            else if(storage.FilePath != srcPath || storage.FileName != Path.GetFileName(srcPath))
             {
-                //Volume vol = m_DBService.SelectById<Volume>(storage.VolumeId);
-                //Citation citation = m_DBService.Select<Citation>($"`{nameof(Citation.VolumeId)}` = '{storage.VolumeId}'").FirstOrDefault();
-                // TODO: RECREATE STUFF IN THE FILE FROM DB!! <============================================ o_O
-                // Current citation not loaded at this point... Get current citation from db
+                StorageHelperService.DeleteOldStorageFiles(Path.Combine(UserSettingsService.StorageFolder, storage.StorageName));
+                storage.FilePath = srcPath;
+                storage.FileName = Path.GetFileName(srcPath);
+                storage.StorageName = StorageHelperService.GetUniqueStoName(fileStorageData.FilePath);
+                m_DBService.InsertOrUpdate(storage);
+            }
+            
+            VM.CurrentStorage = storage;
 
-                //VolumeService volSvc = new VolumeService();
+            string storagePath = Path.Combine(UserSettingsService.StorageFolder, storage.StorageName);
+
+            // Hmm storage file has been removed (this is not bad) - just recreate it.
+            if (!File.Exists(storagePath))
+            {
                 m_VolumeService.LoadVolume(storage.VolumeId);
                 m_VolumeService.LoadCitations();
                 if(m_VolumeService.Citations.Any())
@@ -84,7 +88,7 @@ namespace Dek.Bel.Services
 
             var res = new ResultFileStorageData
             {
-                StorageFilePath = Path.Combine(UserSettingsService.StorageFolder, storage.StorageName),
+                StorageFilePath = storagePath,
                 Cancel = false,
             };
 
@@ -119,8 +123,8 @@ namespace Dek.Bel.Services
             {
                 Id = Id.NewId(),
                 Hash = sourceHash,
-                FileName = Path.GetFileName(fileStorageData.FilePath),
                 FilePath = fileStorageData.FilePath,
+                FileName = Path.GetFileName(fileStorageData.FilePath),
                 StorageName = stoFileName,
                 VolumeId = volume.Id,
                 Date = DateTime.Now,

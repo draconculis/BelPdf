@@ -1,18 +1,17 @@
-﻿using BelManagedLib;
-using Dek.Bel.Services;
-using Dek.Cls;
-using Dek.DB;
-using Dek.Bel.Core.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
-using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using BelManagedLib;
+using Dek.Bel.Services;
+using Dek.Bel.Services.Categories;
+using Dek.Cls;
+using Dek.DB;
+using Dek.Bel.Core.Models;
 using Dek.Bel.Services.Report;
-using System.Text.RegularExpressions;
 using Dek.Bel.Helpers;
 using Dek.Bel.CitationSelector;
 using Dek.Bel.DB;
@@ -21,8 +20,6 @@ using Dek.Bel.Core.Services;
 using Dek.Bel.Core.DB;
 using Dek.Bel.Core.Helpers;
 using Dek.Bel.Core.ViewModels;
-using Dek.Bel.Core.Cls;
-using System.Diagnostics;
 
 namespace Dek.Bel
 {
@@ -287,7 +284,7 @@ namespace Dek.Bel
             label_storageName.Text = Path.GetFileName(VM.CurrentStorage.StorageName);
             label1_MD5.Text = VM.CurrentStorage.Hash;
 
-            categoryUserControl1.Update();
+            categoryUserControl1.UpdateControl();
             LoadReferences();
             LoadPdfMarginBoxControls();
             LoadingControls = true;
@@ -1163,7 +1160,7 @@ namespace Dek.Bel
 
         private void OnCategoryChagedInFormCategory(object sender, CategoryEventArgs e)
         {
-            categoryUserControl1.Update();
+            categoryUserControl1.UpdateControl();
         }
 
         private void closeToolStripMenuItem1_Click(object sender, EventArgs e)

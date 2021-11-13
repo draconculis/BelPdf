@@ -40,7 +40,7 @@ namespace Dek.Bel.Services.Categories
                 }
 
                 if(m_CategoryService != null)
-                    Update();
+                    UpdateControl();
             }
         }
 
@@ -49,7 +49,7 @@ namespace Dek.Bel.Services.Categories
         private const string CategoryAddText = "Add";
         private const string CategoryCreateText = "Create";
 
-        private bool LoadingControls = true;
+        //private bool LoadingControls = true;
         FormCategory m_FormCategory = null;
 
         public CategoryUserControl()
@@ -60,7 +60,7 @@ namespace Dek.Bel.Services.Categories
 
         }
 
-        public void Update()
+        public void UpdateControl()
         {
             Enabled = CurrentCitationId.IsNotNull;
 
@@ -87,7 +87,7 @@ namespace Dek.Bel.Services.Categories
             if (Site?.DesignMode ?? false)
                 return;
 
-            LoadingControls = true;
+            //LoadingControls = true;
             flowLayoutPanel_Categories.Controls.Clear();
             if (CurrentCitationId.IsNull || m_CategoryService == null)
                 return;
@@ -106,7 +106,7 @@ namespace Dek.Bel.Services.Categories
                     AddCategoryLabel(cg, cat);
             }
 
-            LoadingControls = false;
+            //LoadingControls = false;
         }
 
         private void UserControl_Category_Enter(object sender, EventArgs e)
